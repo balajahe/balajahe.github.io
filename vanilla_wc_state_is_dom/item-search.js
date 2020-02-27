@@ -28,6 +28,7 @@ customElements.define('item-search',
                 w.querySelector('button').focus()
                 w.querySelector('button').addEventListener('click', (ev) => {
                     document.body.removeChild(w)
+                    this.querySelector('input').value = ''
                     document.querySelector('item-list').focus()
                 })
             })
