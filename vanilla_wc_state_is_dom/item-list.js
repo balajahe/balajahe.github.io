@@ -7,7 +7,7 @@ customElements.define('item-list',
             super()
             this.innerHTML = `
                 <form action="#">
-                    <input type="text" required placeholder="Message text..." style="width:50vw"/>
+                    <input type="text" required placeholder="Message text..." style="width:30vw"/>
                     <input type="submit" value="Send"/>
                 </form>
                 <ol style="display:flex; flex-direction:column-reverse"></ol>
