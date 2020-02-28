@@ -4,7 +4,7 @@ customElements.define('input-text',
             super()
             this.setAttribute('type', 'text')
             this.addEventListener('input', ev => {
-                this.value = this.value.replace('<', '&lt;')
+                this.value = this.value.replace(/</g, '&lt;')
             })
         }
     },
