@@ -3,7 +3,7 @@ customElements.define('input-text',
         constructor() {
             super()
             this.setAttribute('type', 'text')
-            this.addEventListener('blur', ev => {
+            this.addEventListener('input', ev => {
                 this.value = this.value.replace('<', '&lt;')
             })
         }
