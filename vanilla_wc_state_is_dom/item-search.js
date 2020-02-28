@@ -4,7 +4,7 @@ customElements.define('item-search',
             super()
             this.innerHTML = `
                 <form action="#" style="display:inline">
-                    <input type="text" required placeholder="Search text (alt-shift-s)..." accesskey="s"/> 
+                    <input is="input-text" required placeholder="Search text (alt-shift-s)..." accesskey="s"/> 
                     <input type="submit" value="Search"/>
                 </form>
             `

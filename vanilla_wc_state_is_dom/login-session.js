@@ -7,7 +7,7 @@ customElements.define('login-session',
             super()
             this.innerHTML = `
                 <form action="#">
-                    <input type="text" required placeholder="Your name..."/>
+                    <input is="input-text" required placeholder="Your name..."/>
                     <input type="submit" value="Enter"/>
                 </form>
                 <div>
