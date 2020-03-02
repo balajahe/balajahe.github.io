@@ -1,1 +1,1 @@
-Public web samples
+Web application examples
