@@ -39,7 +39,8 @@ customElements.define('video-detector',
       const img = await this.capture.grabFrame()
       this.canvas.drawImage(img, 0, 0)
       const predictions = await this.model.detect(this.canvas.getImageData(0, 0, this.W, this.H))
-      if (predictions[0]?.class === 'person') {
+      const person = predictions.find(v => v.class === 'person')
+      if (person !== undefined) {
         this.drawAim(this.canvas, this.W/2, this.H/2)
         this.alarm.play()
       } else {
