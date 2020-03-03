@@ -1,1 +1,1 @@
-Web application examples
+Web application examples, see subdirectories.

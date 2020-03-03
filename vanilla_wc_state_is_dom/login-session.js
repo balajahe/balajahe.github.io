@@ -32,14 +32,13 @@ customElements.define('login-session',
         }
 
         display(mode) {
-            if (mode === 'login') {
-                location.hash = '#login'    
+            if (mode === 'login') { 
                 this.querySelector('form').style.display = 'block'
                 this.querySelector('div').style.display = 'none'
                 document.querySelector('input').focus()  
+                document.querySelector('input').select()  
             } 
-            else if (mode === 'item_list') {
-                location.hash = '#item_list'    
+            else if (mode === 'item_list') {  
                 this.querySelector('form').style.display = 'none'
                 this.querySelector('div').style.display = 'block'
                 this.querySelector('a').innerHTML = this.login_name
