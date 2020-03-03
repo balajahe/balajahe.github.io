@@ -32,7 +32,7 @@ customElements.define('video-detector',
       this.H = this.canvas.height = img.height
       this.canvas = this.canvas.getContext('2d')
 
-      this.grab()
+      await this.grab()
     }
 
     async grab() {
