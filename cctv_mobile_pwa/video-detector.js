@@ -4,12 +4,11 @@ customElements.define('video-detector',
     video = null
     aim = null
     canvas = null
+    buttons = null
     alarm = null
     stream = null
     recorder = null
-    chunk = null
-    chunk_url = null
-    chunk_a = null
+    chunks = []
     W = 0
     H = 0
     stop = true
@@ -20,24 +19,26 @@ customElements.define('video-detector',
           <video autoplay muted></video>
           <canvas style="position:fixed; top:0; left:0"></canvas>
           <canvas style="display:none"></canvas>
-          <div style="display:none">
-            <button>Start detection</button>&emsp;
-            <button>Stop detection</button>&emsp;
-            <a target="_blank">Last video chunk</a>
+          <div style="display:none; width: 100vw">
+            <button>Start detection</button><br>
           </div>
           <audio loop src="./alarm.mp3"></audio>
       `
       this.video = this.querySelector('video')
       this.aim = this.querySelectorAll('canvas')[0]
       this.canvas = this.querySelectorAll('canvas')[1]
+      this.buttons = this.querySelector('div')
       this.alarm = this.querySelector('audio')
       this.chunk_a = this.querySelector('a')
-      this.querySelectorAll('button')[0].addEventListener('click', (_) => { 
-        this.stop = false; 
-        this.grab() 
-      })
-      this.querySelectorAll('button')[1].addEventListener('click', (_) => { 
-        this.stop = true 
+      this.querySelector('button').addEventListener('click', (ev) => { 
+        if (this.stop) {
+          this.stop = false
+          this.grab()
+          ev.target.innerHTML = 'Stop detection'
+        } else {
+          this.stop = true 
+          ev.target.innerHTML = 'Start detection'
+        }
       })
 
       const msg = this.querySelector('p')
@@ -55,16 +56,20 @@ customElements.define('video-detector',
 
       this.recorder = new MediaRecorder(this.stream, {mimeType : "video/webm"})
       this.recorder.addEventListener('dataavailable', (ev) => {
-        this.chunk = ev.data
-        URL.revokeObjectURL(this.chunk_url)
-        this.chunk_url = URL.createObjectURL(this.chunk)
-        this.chunk_a.href = this.chunk_url
+        const url = URL.createObjectURL(ev.data)
+        this.chunks.push({data: ev.data, url})
+        const a = document.createElement('a')
+        a.href = url
+        a.target = '_blank'
+        a.innerHTML = this.chunks.length
+        this.buttons.appendChild(document.createTextNode(' '))
+        this.buttons.appendChild(a)
       })
       this.recorder.start()
       setInterval(() => {
         this.recorder.stop()
         this.recorder.start()
-      }, 5200)
+      }, 5100)
 
       msg.remove()
       this.querySelector('div').style.display = 'block'
