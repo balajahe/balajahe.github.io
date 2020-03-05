@@ -1,83 +1,99 @@
 customElements.define('video-detector',
   class extends HTMLElement {
-
-    welcome = null
+    video = null
+    aim = null
     canvas = null
     alarm = null
+    stream = null
     capture = null
+    recorder = null
     model = null
     W = 0
     H = 0
+    stop = false
 
     async connectedCallback() {
       this.innerHTML = `
           <p></p>
-          <canvas></canvas>
+          <p style="display:none">
+            <button>Start detection</button>&emsp;
+            <button>Stop detection</button>
+          </p>
+          <video autoplay style="position:absolute"></video>
+          <canvas style="position:absolute"></canvas>
+          <canvas style="display:none"></canvas>
           <audio loop src="./alarm.mp3"></audio>
       `
-      this.welcome = this.querySelector('p')
-      this.canvas = this.querySelector('canvas')
+      this.video = this.querySelector('video')
+      this.aim = this.querySelectorAll('canvas')[0]
+      this.canvas = this.querySelectorAll('canvas')[1]
       this.alarm = this.querySelector('audio')
+      this.querySelectorAll('button')[0].addEventListener('click', _ => { this.stop = false; this.grab() })
+      this.querySelectorAll('button')[1].addEventListener('click', _ => { this.stop = true })
 
-      this.welcome.innerHTML = 'Loading camera...'
-      const stream = await navigator.mediaDevices.getUserMedia({video: {facingMode: {ideal: "environment"}}})
-      this.capture = new ImageCapture(stream.getVideoTracks()[0])
+      const loading = this.querySelector('p')
+      loading.innerHTML = 'Loading neural network...'
+      this.model = await cocoSsd.load()
 
-      this.welcome.innerHTML = 'Loading neural network...'
-      this.model = (await cocoSsd.load())
-      this.welcome.remove()
-    
+      loading.innerHTML = 'Loading camera...'
+      this.stream = await navigator.mediaDevices.getUserMedia({video: {facingMode: {ideal: "environment"}}})
+      this.video.srcObject = this.stream
+
+      this.capture = new ImageCapture(this.stream.getVideoTracks()[0])
       const img = await this.capture.grabFrame()
-      this.W = this.canvas.width = img.width
-      this.H = this.canvas.height = img.height
+      this.W = this.aim.width = this.canvas.width = img.width
+      this.H = this.aim.height = this.canvas.height = img.height
+
+      this.aim = this.aim.getContext('2d')
       this.canvas = this.canvas.getContext('2d')
 
-      await this.grab()
+      loading.remove()
+      this.querySelector('p').style.display = 'block'
     }
 
     async grab() {
-      const img = await this.capture.grabFrame()
-      this.canvas.drawImage(img, 0, 0)
-      const predictions = await this.model.detect(this.canvas.getImageData(0, 0, this.W, this.H))
-      const person = predictions.find(v => v.class === 'person')
-      if (person !== undefined) {
-        const xy = person.bbox
-        this.drawAim(this.canvas, (xy[0]*2 + xy[2]) / 2, (xy[1]*2 + xy[3]) / 2)
-        this.alarm.play()
-      } else {
-        this.alarm.pause()
-        this.alarm.currentTime = 0
-      }
-      window.requestAnimationFrame(this.grab.bind(this))
-      /*    
-      const img2 = this.canvas.getImageData(0, 0, W, H);
-      const pp = img2.data
-      const ppl = pp.length / 4;
-      for (let i = 0; i < ppl; i++) {
-        const bw = (pp[i * 4 + 0] + pp[i * 4 + 1] + pp[i * 4 + 2]) / 3
-        pp[i * 4 + 0] = pp[i * 4 + 1] = pp[i * 4 + 2] = bw
-      }
-      can2.putImageData(img2, 0, 0);
-      */
+      if (!this.stop) {
+        this.canvas.drawImage(this.video, 0, 0)
+        const predictions = await this.model.detect(this.canvas.getImageData(0, 0, this.W, this.H))
+        const person = predictions.find(v => v.class === 'person')
+        if (person !== undefined) {
+          const xy = person.bbox
+          this.draw_aim((xy[0]*2 + xy[2]) / 2, (xy[1]*2 + xy[3]) / 2)
+          this.alarm.play()
+        } else {
+          this.draw_aim(0, 0)
+          this.alarm.pause()
+          this.alarm.currentTime = 0
+        }
+          window.requestAnimationFrame(this.grab.bind(this))
+        } else {
+          this.draw_aim(0, 0)
+          this.alarm.pause()
+          this.alarm.currentTime = 0
+        }
     }
 
-    drawAim(can, x0, y0) {
-      can.lineWidth = 2;
-      can.strokeStyle = 'rgba(255,255,255,0.5)'
+    draw_aim(x, y) {
+      const can = this.aim
+      can.clearRect(0, 0, this.W, this.H)
+      if (x !== 0 && y !== 0) {
+        can.lineWidth = 2;
+        can.strokeStyle = 'rgba(255,255,255,0.5)'
 
-      can.beginPath()
-      can.arc(x0, y0, 30, 0, Math.PI*2, false)
-      can.stroke()
+        can.beginPath()
+        can.arc(x, y, 30, 0, Math.PI*2, false)
+        can.stroke()
 
-      can.beginPath()
-      can.moveTo(x0-10, y0)
-      can.lineTo(x0+10, y0)
-      can.stroke()
+        can.beginPath()
+        can.moveTo(x-10, y)
+        can.lineTo(x+10, y)
+        can.stroke()
 
-      can.beginPath()
-      can.moveTo(x0, y0-10)
-      can.lineTo(x0, y0+10)
-      can.stroke()
+        can.beginPath()
+        can.moveTo(x, y-10)
+        can.lineTo(x, y+10)
+        can.stroke()
+      }
     }
   }
 )
