@@ -8,10 +8,13 @@ customElements.define('video-detector',
     alarm = null
     stream = null
     recorder = null
+    chunk0 = null
     chunks = []
     W = 0
     H = 0
-    stop = true
+    detecting = false
+    detected = false
+    recording = false
 
     async connectedCallback() {
       this.innerHTML = `
@@ -31,12 +34,12 @@ customElements.define('video-detector',
       this.alarm = this.querySelector('audio')
       this.chunk_a = this.querySelector('a')
       this.querySelector('button').addEventListener('click', (ev) => { 
-        if (this.stop) {
-          this.stop = false
+        if (!this.detecting) {
+          this.detecting = true
           this.grab()
           ev.target.innerHTML = 'Stop detection'
         } else {
-          this.stop = true 
+          this.detecting = false 
           ev.target.innerHTML = 'Start detection'
         }
       })
@@ -56,14 +59,13 @@ customElements.define('video-detector',
 
       this.recorder = new MediaRecorder(this.stream, {mimeType : "video/webm"})
       this.recorder.addEventListener('dataavailable', (ev) => {
-        const url = URL.createObjectURL(ev.data)
-        this.chunks.push({data: ev.data, url})
-        const a = document.createElement('a')
-        a.href = url
-        a.target = '_blank'
-        a.innerHTML = this.chunks.length
-        this.buttons.appendChild(document.createTextNode(' '))
-        this.buttons.appendChild(a)
+        if (this.detected) {
+          this.send(ev.data)
+        } else if (this.recording) {
+          this.send(ev.data)
+          this.recording = false
+        }
+        this.chunk0 = ev.data
       })
       this.recorder.start()
       setInterval(() => {
@@ -76,27 +78,46 @@ customElements.define('video-detector',
     }
 
     async grab() {
-      if (!this.stop) {
+      if (this.detecting) {
         this.canvas.drawImage(this.video, 0, 0)
         const predictions = await this.model.detect(this.canvas.getImageData(0, 0, this.W, this.H))
         const person = predictions.find(v => v.class === 'person')
         if (person !== undefined) {
-          if (this.recorder.state !== 'recording') this.recorder.start(5000)
+          this.detected = true
+          if (!this.recording) {
+            this.send(this.chunk0)
+            this.recording = true
+          }
           this.draw(person.bbox)
           this.alarm.play()
         } else {
-          this.stop_grab()
+          this.stop_alarm()
         }
-        window.requestAnimationFrame(this.grab.bind(this))
+        //window.requestAnimationFrame(this.grab.bind(this))
+        setTimeout(this.grab.bind(this), 100)
       } else {
-        this.stop_grab()
+        this.stop_alarm()
       }
     }
 
-    stop_grab() {
+    stop_alarm() {
+      this.detected = false
       this.draw(null)
       this.alarm.pause()
-      this.alarm.currentTime = 0
+      //this.alarm.currentTime = 0
+    }
+
+    send(data) {
+      if (data !== null && data.size > 0) {
+        const url = URL.createObjectURL(data)
+        this.chunks.push({data, url})
+        const a = document.createElement('a')
+        a.href = url
+        a.target = '_blank'
+        a.innerHTML = this.chunks.length
+        this.buttons.appendChild(document.createTextNode(' '))
+        this.buttons.appendChild(a)
+      }
     }
 
     draw(b) {
@@ -106,29 +127,6 @@ customElements.define('video-detector',
         c.lineWidth = 2;
         c.strokeStyle = 'rgba(255,255,255,0.5)'
         c.strokeRect(b[0], b[1], b[2], b[3])
-      }
-    }
-
-    draw_aim(x, y) {
-      const can = this.aim
-      can.clearRect(0, 0, this.W, this.H)
-      if (x !== 0 && y !== 0) {
-        can.lineWidth = 2;
-        can.strokeStyle = 'rgba(255,255,255,0.5)'
-
-        can.beginPath()
-        can.arc(x, y, 30, 0, Math.PI*2, false)
-        can.stroke()
-
-        can.beginPath()
-        can.moveTo(x-10, y)
-        can.lineTo(x+10, y)
-        can.stroke()
-
-        can.beginPath()
-        can.moveTo(x, y-10)
-        can.lineTo(x, y+10)
-        can.stroke()
       }
     }
   }
