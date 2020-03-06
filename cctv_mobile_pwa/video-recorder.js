@@ -1,19 +1,18 @@
+const CHUNK_DURATION = 7000
+
 customElements.define('video-recorder',
   class extends HTMLElement {
     worker = null
     video = null
-    aim = null
+    bbox = null
     canvas = null
-    controls = null
     alarm = null
-    stream = null
-    recorder = null
-    chunk = {data: null, num: 0}
-    W = 0
-    H = 0
+    recorder = {rec: null, interval: null, num: 0}
     detecting = false
     detected = false
-    recording = 0
+    chunk = null
+    W = 0
+    H = 0
 
     async connectedCallback() {
       this.innerHTML = `
@@ -29,16 +28,24 @@ customElements.define('video-recorder',
           <audio loop src="./alarm.mp3"></audio>
       `
       this.video = this.querySelector('video')
-      this.aim = this.querySelectorAll('canvas')[0]
+      this.bbox = this.querySelectorAll('canvas')[0]
       this.canvas = this.querySelectorAll('canvas')[1]
-      this.controls = this.querySelector('div')
       this.alarm = this.querySelector('audio')
       this.querySelector('button').addEventListener('click', (ev) => { 
         if (!this.detecting) {
+          this.recorder.rec.start()
+          this.recorder.interval = setInterval(() => {
+            this.recorder.rec.stop()
+            this.recorder.rec.start()
+          }, CHUNK_DURATION)
+          this.recorder.num = 0
+          this.chunk = null
           this.detecting = true
           this.grab_video()
           ev.target.className = 'recording'
         } else {
+          this.recorder.rec.stop()
+          clearInterval(this.recorder.interval)
           this.detecting = false 
           ev.target.className = ''
         }
@@ -46,52 +53,50 @@ customElements.define('video-recorder',
 
       const msg = this.querySelector('p')
       msg.innerHTML = 'Loading camera...'
-      this.stream = await navigator.mediaDevices.getUserMedia({video: {facingMode: {ideal: "environment"}}, audio: true})
-      this.video.srcObject = this.stream
+      const stream = await navigator.mediaDevices.getUserMedia(
+        {video: {facingMode: {ideal: "environment"}}, audio: true}
+      )
+      this.video.srcObject = stream
       this.video.addEventListener('loadedmetadata', (_) => {
-        this.W = this.aim.width = this.canvas.width = this.video.videoWidth
-        this.H = this.aim.height = this.canvas.height = this.video.videoHeight
-        this.aim = this.aim.getContext('2d')
+        this.W = this.bbox.width = this.canvas.width = this.video.videoWidth
+        this.H = this.bbox.height = this.canvas.height = this.video.videoHeight
+        this.bbox = this.bbox.getContext('2d')
         this.canvas = this.canvas.getContext('2d')
         this.video.style.display = 'block'
       })
 
-      this.recorder = new MediaRecorder(this.stream, {mimeType : "video/webm"})
-      this.recorder.addEventListener('dataavailable', (ev) => {
-        this.chunk.data = ev.data
+      this.recorder.rec = new MediaRecorder(stream, {mimeType : "video/webm"})
+      this.recorder.rec.addEventListener('dataavailable', (ev) => {
+        this.chunk = ev.data
         if (this.detected) {
           this.send_chunk()
-        } else if (this.recording > 0) {
+        } else if (this.recorder.num > 0) {
           this.send_chunk()
-          this.recording--
+          this.recorder.num--
         }
       })
-      this.recorder.start()
-      setInterval(() => {
-        this.recorder.stop()
-        this.recorder.start()
-      }, 7000)
 
       msg.innerHTML = 'Loading neural network...'
       this.worker = new Worker('./video-detector.js')
       this.worker.onmessage = (_) => {
         msg.remove()
-        this.controls.style.display = 'block'
+        this.querySelector('div').style.display = 'block'
       }
     }
 
     async grab_video() {
       if (this.detecting) {
         this.canvas.drawImage(this.video, 0, 0)
-        this.worker.postMessage(this.canvas.getImageData(0, 0, this.W, this.H))
+        const img = this.canvas.getImageData(0, 0, this.W, this.H)
+        this.worker.postMessage(img)
         const result = await new Promise((resolve, reject) => {
           this.worker.onmessage = (ev) => resolve(ev.data)
         })
         if (result.ok) {
           this.detected = true
-          if (!this.recording) {
+          if (this.recorder.num === 0) {
             this.send_chunk()
-            this.recording = 2
+            this.recorder.num = 2
           }
           this.draw_frame(result.bbox)
           this.alarm.play()
@@ -113,18 +118,17 @@ customElements.define('video-recorder',
     }
 
     send_chunk() {
-      if (this.chunk.data !== null && this.chunk.data.size > 0) {
-        this.chunk.num++
+      if (this.chunk !== null && this.chunk.size > 0) {
         const a = this.querySelector('a')
         URL.revokeObjectURL(a.href)
-        a.href = URL.createObjectURL(this.chunk.data)
-        a.download = '_' + new Date().toISOString() + '.webm'
+        a.href = URL.createObjectURL(this.chunk)
+        a.download = '__' + new Date().toISOString() + '.webm'
         a.click()
       }
     }
 
     draw_frame(b) {
-      const c = this.aim
+      const c = this.bbox
       c.clearRect(0, 0, this.W, this.H)
       if (b !== null) {
         c.lineWidth = 2;
