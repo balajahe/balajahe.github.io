@@ -12,9 +12,9 @@
     const result = await model.detect(ev.data)
     const person = result.find(v => v.class === 'person')
     if (person !== undefined) {
-      postMessage({ok: true, bbox: person.bbox})
+      self.postMessage({ok: true, bbox: person.bbox})
     } else {
-      postMessage({ok: false, bbox: null})
+      self.postMessage({ok: false, bbox: null})
     }
   }
 })()

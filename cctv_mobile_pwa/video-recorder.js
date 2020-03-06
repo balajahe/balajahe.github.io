@@ -20,10 +20,10 @@ customElements.define('video-recorder',
           <canvas style="position:fixed; top:0; left:0"></canvas>
           <canvas style="display:none"></canvas>
           <p>Loading...</p>
-          <div style="display:none">
-            <button>Start / Stop detection</button>&nbsp;
+          <p style="display:none">
+            <button>Start / Stop</button>&nbsp;
             Email: <input type="email"/>
-          </div>
+          </p>
           <a style="display:none"></a>
           <audio loop src="./alarm.mp3"></audio>
       `
@@ -62,7 +62,7 @@ customElements.define('video-recorder',
         this.H = this.bbox.height = this.canvas.height = this.video.videoHeight
         this.bbox = this.bbox.getContext('2d')
         this.canvas = this.canvas.getContext('2d')
-        this.video.style.display = 'block'
+        this.video.style.display = ''
       })
 
       this.recorder.rec = new MediaRecorder(stream, {mimeType : "video/webm"})
@@ -80,7 +80,7 @@ customElements.define('video-recorder',
       this.worker = new Worker('./video-detector.js')
       this.worker.onmessage = (_) => {
         msg.remove()
-        this.querySelector('div').style.display = 'block'
+        this.querySelector('p').style.display = ''
       }
     }
 
