@@ -8,8 +8,7 @@ customElements.define('video-detector',
     alarm = null
     stream = null
     recorder = null
-    chunk = null
-    chunks = []
+    chunk = {data: null, num: 0}
     W = 0
     H = 0
     detecting = false
@@ -22,11 +21,12 @@ customElements.define('video-detector',
           <canvas style="position:fixed; top:0; left:0"></canvas>
           <canvas style="display:none"></canvas>
           <p>Loading...</p>
-          <div style="display:none; width: 100vw">
+          <div style="display:none">
+            <button>Start / Stop detection</button>&nbsp;
             Email to send:
-            <input type="email"/>&nbsp;
-            <button>Start / Stop detection</button><br>
+            <input type="email"/>
           </div>
+          <a style="display:none"></a>
           <audio loop src="./alarm.mp3"></audio>
       `
       this.video = this.querySelector('video')
@@ -39,8 +39,10 @@ customElements.define('video-detector',
         if (!this.detecting) {
           this.detecting = true
           this.grab_video()
+          ev.target.className = 'recording'
         } else {
           this.detecting = false 
+          ev.target.className = ''
         }
       })
 
@@ -58,7 +60,7 @@ customElements.define('video-detector',
 
       this.recorder = new MediaRecorder(this.stream, {mimeType : "video/webm"})
       this.recorder.addEventListener('dataavailable', (ev) => {
-        this.chunk = ev.data
+        this.chunk.data = ev.data
         if (this.detected) {
           this.send_chunk()
         } else if (this.recording > 0) {
@@ -70,7 +72,7 @@ customElements.define('video-detector',
       setInterval(() => {
         this.recorder.stop()
         this.recorder.start()
-      }, 5500)
+      }, 7000)
 
       msg.innerHTML = 'Loading neural network...'
       this.model = await cocoSsd.load()
@@ -110,16 +112,13 @@ customElements.define('video-detector',
     }
 
     send_chunk() {
-      if (this.chunk !== null && this.chunk.size > 0) {
-        this.chunks.push(this.chunk)
-        const i = this.chunks.length
-        const url = URL.createObjectURL(this.chunks[i-1])
-        const a = document.createElement('a')
-        a.href = url
-        a.target = '_blank'
-        a.innerHTML = ''+i
-        this.controls.appendChild(document.createTextNode(' '))
-        this.controls.appendChild(a)
+      if (this.chunk.data !== null && this.chunk.data.size > 0) {
+        this.chunk.num++
+        const a = this.querySelector('a')
+        URL.revokeObjectURL(a.href)
+        a.href = URL.createObjectURL(this.chunk.data)
+        a.download = '_' + new Date().toISOString() + '.webm'
+        a.click()
       }
     }
 
