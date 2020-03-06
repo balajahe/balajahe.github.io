@@ -95,8 +95,8 @@ customElements.define('video-detector',
         } else {
           this.stop_alarm()
         }
-        //window.requestAnimationFrame(this.grab_video.bind(this))
-        setTimeout(this.grab_video.bind(this), 100)
+        window.requestAnimationFrame(this.grab_video.bind(this))
+        //setTimeout(this.grab_video.bind(this), 100)
       } else {
         this.stop_alarm()
       }
