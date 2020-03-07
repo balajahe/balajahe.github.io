@@ -17,21 +17,24 @@ customElements.define('video-recorder',
     async connectedCallback() {
       this.innerHTML = `
           <video autoplay muted style="display:none"></video>
-          <canvas style="position:fixed; top:0; left:0"></canvas>
           <canvas style="display:none"></canvas>
-          <p>Loading...</p>
-          <p style="display:none">
-            <button>Start / Stop</button>&nbsp;
-            Email: <input type="email"/>
-          </p>
+          <canvas style="position:fixed; top:0; left:0"></canvas>
+          <div>Loading...</div>
+          <div style="display:none">
+            <button id="start">Start / Stop detection and recording</button>
+            <form action="#">
+              <input type="email" required placeholder="Email to send..."/>
+              <input type="submit" value="Test"/>
+            </form>
+          </div>
           <a style="display:none"></a>
           <audio loop src="./alarm.mp3"></audio>
       `
       this.video = this.querySelector('video')
-      this.bbox = this.querySelectorAll('canvas')[0]
-      this.canvas = this.querySelectorAll('canvas')[1]
+      this.canvas = this.querySelectorAll('canvas')[0]
+      this.bbox = this.querySelectorAll('canvas')[1]
       this.alarm = this.querySelector('audio')
-      this.querySelector('button').addEventListener('click', (ev) => { 
+      this.querySelectorAll('button')[0].addEventListener('click', (ev) => { 
         if (!this.detecting) {
           this.recorder.rec.start()
           this.recorder.interval = setInterval(() => {
@@ -50,8 +53,11 @@ customElements.define('video-recorder',
           ev.target.className = ''
         }
       })
+      this.querySelector('form').addEventListener('submit', (_) => { 
+        alert('Check your mailbox !')
+      })
 
-      const msg = this.querySelector('p')
+      const msg = this.querySelector('div')
       msg.innerHTML = 'Loading camera...'
       const stream = await navigator.mediaDevices.getUserMedia(
         {video: {facingMode: {ideal: "environment"}}, audio: true}
@@ -80,7 +86,7 @@ customElements.define('video-recorder',
       this.worker = new Worker('./video-detector.js')
       this.worker.onmessage = (_) => {
         msg.remove()
-        this.querySelector('p').style.display = ''
+        this.querySelector('div').style.display = ''
       }
     }
 
@@ -98,7 +104,7 @@ customElements.define('video-recorder',
             this.send_chunk()
             this.recorder.num = 2
           }
-          this.draw_frame(result.bbox)
+          this.draw_bbox(result.bbox)
           this.alarm.play()
         } else {
           this.stop_alarm()
@@ -112,7 +118,7 @@ customElements.define('video-recorder',
 
     stop_alarm() {
       this.detected = false
-      this.draw_frame(null)
+      this.draw_bbox(null)
       this.alarm.pause()
       this.alarm.currentTime = 0
     }
@@ -127,7 +133,7 @@ customElements.define('video-recorder',
       }
     }
 
-    draw_frame(b) {
+    draw_bbox(b) {
       const c = this.bbox
       c.clearRect(0, 0, this.W, this.H)
       if (b !== null) {
