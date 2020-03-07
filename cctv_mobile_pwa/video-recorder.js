@@ -2,10 +2,10 @@ const CHUNK_DURATION = 7000
 
 customElements.define('video-recorder',
   class extends HTMLElement {
-    worker = null
+    detector = null
     video = null
-    bbox = null
     canvas = null
+    bbox = null
     alarm = null
     recorder = {rec: null, interval: null, num: 0}
     detecting = false
@@ -21,8 +21,8 @@ customElements.define('video-recorder',
           <canvas style="position:fixed; top:0; left:0"></canvas>
           <div>Loading...</div>
           <div style="display:none">
-            <button id="start">Start / Stop detection and recording</button>
-            <form action="#">
+            <button id="start">Start / Stop detecting and recording</button>
+            <form>
               <input type="email" required placeholder="Email to send..."/>
               <input type="submit" value="Test"/>
             </form>
@@ -34,7 +34,7 @@ customElements.define('video-recorder',
       this.canvas = this.querySelectorAll('canvas')[0]
       this.bbox = this.querySelectorAll('canvas')[1]
       this.alarm = this.querySelector('audio')
-      this.querySelectorAll('button')[0].addEventListener('click', (ev) => { 
+      this.querySelector('button#start').addEventListener('click', (ev) => { 
         if (!this.detecting) {
           this.recorder.rec.start()
           this.recorder.interval = setInterval(() => {
@@ -53,7 +53,8 @@ customElements.define('video-recorder',
           ev.target.className = ''
         }
       })
-      this.querySelector('form').addEventListener('submit', (_) => { 
+      this.querySelector('form').addEventListener('submit', (ev) => { 
+        ev.preventDefault()
         alert('Check your mailbox !')
       })
 
@@ -83,8 +84,8 @@ customElements.define('video-recorder',
       })
 
       msg.innerHTML = 'Loading neural network...'
-      this.worker = new Worker('./video-detector.js')
-      this.worker.onmessage = (_) => {
+      this.detector = new Worker('./video-detector.js')
+      this.detector.onmessage = (_) => {
         msg.remove()
         this.querySelector('div').style.display = ''
       }
@@ -94,9 +95,9 @@ customElements.define('video-recorder',
       if (this.detecting) {
         this.canvas.drawImage(this.video, 0, 0)
         const img = this.canvas.getImageData(0, 0, this.W, this.H)
-        this.worker.postMessage(img)
+        this.detector.postMessage(img)
         const result = await new Promise((resolve, reject) => {
-          this.worker.onmessage = (ev) => resolve(ev.data)
+          this.detector.onmessage = (ev) => resolve(ev.data)
         })
         if (result.ok) {
           this.detected = true
