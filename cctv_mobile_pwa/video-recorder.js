@@ -129,6 +129,7 @@ customElements.define('video-recorder',
                await document.querySelector('video-mailer').send(this.chunk)
             } catch(e) {
                console.log(e)
+               console.log('Cannot send email, saved locally !')
                a.href = URL.createObjectURL(this.chunk)
                a.download = '__' + new Date().toISOString() + '.webm'
                a.click()
