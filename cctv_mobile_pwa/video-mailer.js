@@ -12,26 +12,20 @@ customElements.define('video-mailer',
             </form>
          `
          await import('https://apis.google.com/js/api.js')
-         gapi.load('client:auth2', () => {
-            gapi.client.init({
-               apiKey: API_KEY,
-               clientId: CLIENT_ID,
-               discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest'],
-               scope: 'https://www.googleapis.com/auth/gmail.send'
-            })       
-            .then(() => {
-               gapi.auth2.getAuthInstance().signIn()
-               // Listen for sign-in state changes.
-               //.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-
-               // Handle the initial sign-in state.
-               //updateSigninStatus(.auth2.getAuthInstance().isSignedIn.get());
+         gapi.load('client:auth2', async () => {
+            try {
+               await gapi.client.init({
+                  apiKey: API_KEY,
+                  clientId: CLIENT_ID,
+                  discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest'],
+                  scope: 'https://www.googleapis.com/auth/gmail.send'
+               }) 
+               await gapi.auth2.getAuthInstance().signIn()
                this.querySelector('p').remove()
                this.querySelector('form').style.display = ''
-            })
-            .catch((err) => {
-               this.querySelector('p').innerHTML = JSON.stringify(err, null, 2)
-            })
+            } catch(e) {
+               this.querySelector('p').innerHTML = JSON.stringify(e, null, 2)
+            }
          })
          this.querySelector('form').onsubmit = async (ev) => { 
             ev.preventDefault()

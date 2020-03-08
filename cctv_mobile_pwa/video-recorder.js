@@ -22,11 +22,11 @@ customElements.define('video-recorder',
                <video autoplay muted style="display:none"></video>
                <canvas style="display:none"></canvas>
                <canvas style="position:fixed; top:0; left:0"></canvas>
-               <p>Loading...</p>
-               <button style="display:none">Start / Stop detecting and recording</button>
-               <a style="display:none"></a>
-               <audio loop src="./alarm.mp3"></audio>
             </div>
+            <p>Loading...</p>
+            <button style="display:none">Start / Stop detecting and recording</button>
+            <a style="display:none"></a>
+            <audio loop src="./alarm.mp3"></audio>
          `
          this.video = this.querySelector('video')
          this.canvas = this.querySelectorAll('canvas')[0]

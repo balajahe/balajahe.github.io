@@ -1,5 +1,5 @@
-Example: the state of a web application - this is the DOM when we use vanilla web components.
-<br>
+Example demonstrating the state management of a web application developed on vanilla web components.
+<br><br>
 Demo: https://balajahe.github.io/vanilla_wc_state_is_dom/
-<br>
+<br><br>
 Article: https://habr.com/ru/post/490216/

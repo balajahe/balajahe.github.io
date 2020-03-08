@@ -10,7 +10,7 @@ customElements.define('init-app',
                   The application will request permission for the camera, microphone and google authorization (for sending emails through the current account).
                </p>
                <p>
-                  <a href="https://github.com/balajahe/balajahe.github.io/tree/master/cctv_mobile_pwa">Project on GitHub</a>
+                  <a href="https://github.com/balajahe/balajahe.github.io/tree/master/cctv_mobile_pwa">Sources on GitHub</a>
                </p>
                <button>Start</button>
             </div>
