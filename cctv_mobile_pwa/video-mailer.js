@@ -7,7 +7,7 @@ customElements.define('video-mailer',
          this.innerHTML = `
             <p>Connecting to Gmail...</p>
             <form style="display:none">
-               <input type="email" required placeholder="Email to send..."/>
+               <input type="email" required placeholder="Email to send..." value = "balajahe@gmail.com"/>
                <input type="submit" value="Test Gmail"/>
             </form>
          `
@@ -20,7 +20,9 @@ customElements.define('video-mailer',
                   discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest'],
                   scope: 'https://www.googleapis.com/auth/gmail.send'
                }) 
-               await gapi.auth2.getAuthInstance().signIn()
+               if (!await gapi.auth2.getAuthInstance().isSignedIn) {
+                  await gapi.auth2.getAuthInstance().signIn()
+               }
                this.querySelector('p').remove()
                this.querySelector('form').style.display = ''
             } catch(e) {
@@ -29,12 +31,32 @@ customElements.define('video-mailer',
          })
          this.querySelector('form').onsubmit = async (ev) => { 
             ev.preventDefault()
-            alert('Check your mailbox !')
+            const headers = {
+               'From': '',
+               'To': this.querySelector('input').value,
+               'Subject': 'Balajahe CCTV: ' + new Date().toISOString(),
+               'Content-Type': 'text/html; charset="UTF-8"'
+            }
+            let mail = ''
+            for (const [k, v] of Object.entries(headers))  mail += k + ': ' + v + '\r\n'
+            mail += '\r\nTest'
+            const request = gapi.client.gmail.users.messages.send({
+               'userId': 'me',
+               'resource': { 'raw': btoa(mail) }
+            })
+            request.execute((r) => {
+               if (r.code) {
+                  console.log(r)
+                  alert('Error sending message:\n' + r.message)
+               } else {
+                  alert('Test message sent, check your mailbox !')
+               }
+            })
          }
       }
 
       async send(chunk) {
-         console.log(chunk)
+         //console.log(chunk)
          throw 'Cannot send using Gmail, attempt to save locally !'
       }
    }
