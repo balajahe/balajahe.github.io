@@ -24,7 +24,7 @@ customElements.define('video-mailer',
                this.querySelector('p').remove()
                this.querySelector('form').style.display = ''
             } catch(e) {
-               this.querySelector('p').innerHTML = JSON.stringify(e, null, 2)
+               this.querySelector('p').innerHTML = 'Gmail authorization error: ' + JSON.stringify(e, null, 2)
             }
          })
          this.querySelector('form').onsubmit = async (ev) => { 
