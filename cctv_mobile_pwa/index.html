@@ -4,23 +4,24 @@
   <title>Balajahe CCTV</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
-  <script type="module" src="./init-app.js"></script>
+  <script type="module" src="./app-init.js"></script>
   <script type="module" src="./video-recorder.js"></script>
-  <script type="module" src="./video-mailer.js"></script>
+  <script type="module" src="./video-sender.js"></script>
   <style>
-    form {margin-top: 0.5em; white-space:nowrap;}
+    nav {margin-bottom: 0.2em; white-space:nowrap;}
     input {height: 2em; font-size: large;}
-    button {width: 100%; height: 2.5em; margin-top: 0.3em; font-size:large;}
-    button.recording {background-color: red;}
+    button {height: 2.3em; font-size:large;}
+    button:active {background-color: red;}
+    button.true {background-color: red;}
   </style>
 </head>
 <body>
   <div style="width:20em">
-    <init-app></init-app>
+    <app-init></app-init>
   </div>
-  <div>
+  <div style="width:100vw">
     <video-recorder></video-recorder>
-    <video-mailer></video-mailer>
+    <video-sender></video-sender>
   </div>
 </body>
 </html>

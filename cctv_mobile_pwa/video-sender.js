@@ -1,18 +1,22 @@
 const API_KEY = 'AIzaSyDWwZB5DbLaT_11i4C7L9Ch_0rslAncDro'
 const CLIENT_ID = '62101814784-23re0bkiiihnb99sid30pgt21spu9ubk.apps.googleusercontent.com'
 
-customElements.define('video-mailer',
+customElements.define('video-sender',
    class extends HTMLElement {
+      msg = null
       get email() { return this.querySelector('input').value }
 
       async init() {
          this.innerHTML = `
-            <p>Connecting to Gmail...</p>
-            <form style="display:none">
+            <nav style="display:none">
                <input type="email" required placeholder="Email to send..." value = "balajahe@gmail.com"/>
-               <input type="submit" value="Test"/>
-            </form>
+               <button>Test</button>
+            </nav>
+            <div>Connecting to Gmail...</div>
+            <a style="display:none"></a>
+
          `
+         this.msg = this.querySelector('div')
 
          await import('https://apis.google.com/js/api.js')
          gapi.load('client:auth2', async () => {
@@ -26,18 +30,17 @@ customElements.define('video-mailer',
                if (!gapi.auth2.getAuthInstance().isSignedIn.je) {
                   await gapi.auth2.getAuthInstance().signIn()
                }
-               this.querySelector('p').remove()
-               this.querySelector('form').style.display = ''
+               this.msg.innerHTML = ''
+               this.querySelector('nav').style.display = ''
             } catch(e) {
-               this.querySelector('p').innerHTML = 'Gmail authorization error: ' + JSON.stringify(e, null, 2)
+               this.msg.innerHTML = 'Gmail authorization error: ' + JSON.stringify(e, null, 2)
             }
          })
 
-         this.querySelector('form').onsubmit = async (ev) => { 
-            ev.preventDefault()
+         this.querySelector('button').onclick = async (ev) => { 
             try {
-               await this.send_mail('text/html; charset="UTF-8"', btoa('Test message'))
-               alert('Test email sent.\nCheck your mailbox.')
+               await this.send_mail('Test message', 'text/html; charset="UTF-8"', btoa('Test message'))
+               alert('Test message sent.\nCheck your mailbox.')
             } catch(e) {
                console.error(e)
                alert('Error sending email !\n' + e.message)
@@ -45,20 +48,33 @@ customElements.define('video-mailer',
          }
       }
 
-      async send(chunk) {
-         const reader = new FileReader()
-         reader.readAsDataURL(chunk)
-         const chunk1 = await new Promise((resolve, reject) => {
-            reader.onloadend = () => resolve(reader.result.split(',')[1])
-         })
-         await this.send_mail('video/webm', chunk1)
+      async send(type, name, chunk) {
+         const a = this.querySelector('a')
+         URL.revokeObjectURL(a.href)
+
+         try {
+            const reader = new FileReader()
+            reader.readAsDataURL(chunk)
+            const chunk64 = await new Promise((resolve, reject) => {
+               reader.onloadend = () => resolve(reader.result.split(',')[1])
+            })
+            await this.send_mail(type, 'video/webm; name="' + name + '"', chunk64)
+            this.msg.innerHTML += '&uarr;'
+         } catch(e) {
+            console.error(e)
+            console.warn('Cannot send email, saving locally !')
+            a.href = URL.createObjectURL(chunk)
+            a.download = name
+            a.click()
+            this.msg.innerHTML += '&darr;'
+         }
       }
 
-      async send_mail(mime_type, body) {
+      async send_mail(subject, mime_type, body) {
          const headers = {
             'From': '',
             'To': this.email,
-            'Subject': 'Balajahe CCTV: ' + new Date().toISOString(),
+            'Subject': 'Balajahe CCTV: ' + subject,
             'Content-Type': mime_type,
             'Content-transfer-encoding': 'base64'
          }

@@ -1,4 +1,4 @@
-customElements.define('init-app',
+customElements.define('app-init',
    class extends HTMLElement {
       connectedCallback() {
          this.innerHTML = `
@@ -12,13 +12,16 @@ customElements.define('init-app',
                <p>
                   <a href="https://github.com/balajahe/balajahe.github.io/tree/master/cctv_mobile_pwa">Sources on GitHub</a>
                </p>
-               <button>Start</button>
+               <button style="width:100%">Start</button>
             </div>
          `
          this.querySelector('button').onclick = async (ev) => {
             this.querySelector('div').remove()
-            document.querySelector('video-recorder').init()
-            document.querySelector('video-mailer').init()
+            const proms = [
+               document.querySelector('video-recorder').init(),
+               document.querySelector('video-sender').init()
+            ]
+            await Promise.all(proms)
             //navigator.serviceWorker.register('/cctv_mobile_pwa/sw.js').catch(e => console.log(e))
          }
       }
