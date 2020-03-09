@@ -22,7 +22,7 @@ customElements.define('app-init',
                document.querySelector('video-sender').init()
             ]
             await Promise.all(proms)
-            //await navigator.serviceWorker.register('/cctv_mobile_pwa/app-sw.js')
+            await navigator.serviceWorker.register('/cctv_mobile_pwa/app-sw.js')
          }
       }
    }

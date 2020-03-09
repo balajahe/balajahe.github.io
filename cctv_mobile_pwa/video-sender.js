@@ -12,7 +12,7 @@ customElements.define('video-sender',
                <input type="email" required placeholder="Email to send..."/>
                <button>Test</button>
             </nav>
-            <div>Connecting to Gmail...</div>
+            <div>Connecting to Gmail...<br></div>
             <a style="display:none"></a>
 
          `
@@ -33,7 +33,7 @@ customElements.define('video-sender',
                this.msg.innerHTML = ''
                this.querySelector('nav').style.display = ''
             } catch(e) {
-               this.msg.innerHTML = 'Gmail authorization error: ' + JSON.stringify(e, null, 2)
+               this.msg.innerHTML = 'Gmail authorization error: ' + JSON.stringify(e, null, 2) + '<br>'
             }
          })
 

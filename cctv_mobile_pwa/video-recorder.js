@@ -24,7 +24,7 @@ customElements.define('video-recorder',
             <canvas style="display:none"></canvas>
             <canvas style="position:absolute; top:0; left:0"></canvas>
             <p>Loading...</p>
-            <nav style="display:none; white-space:nowrap; text-align:center">
+            <nav style="display:none; text-align:center">
                <button id="detecting" style="width:69%">Start / Stop detecting & recording</button>
                <button id="sound_alarm" class="true" style="width:30%">Sound alarm</button>
             </nav>

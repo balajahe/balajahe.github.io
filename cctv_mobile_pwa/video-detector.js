@@ -6,7 +6,6 @@
   self.postMessage({})
 
   self.onmessage = async (ev) => {
-    if (!model) model = await cocoSsd.load()
     const result = await model.detect(ev.data)
     const person = result.find(v => v.class === 'person')
     if (person) 
