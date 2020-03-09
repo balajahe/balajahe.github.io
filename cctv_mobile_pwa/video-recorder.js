@@ -112,7 +112,8 @@ customElements.define('video-recorder',
                this.stop_alarm()
             }
             //setTimeout(this.grab_video.bind(this), 100)
-            window.requestAnimationFrame(this.grab_video.bind(this))
+            //window.requestAnimationFrame(this.grab_video.bind(this))
+            this.grab_video()
          } else {
             this.stop_alarm()
          }
