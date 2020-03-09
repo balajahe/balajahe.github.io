@@ -9,7 +9,7 @@ customElements.define('video-sender',
       async init() {
          this.innerHTML = `
             <nav style="display:none">
-               <input type="email" required placeholder="Email to send..." value = "balajahe@gmail.com"/>
+               <input type="email" required placeholder="Email to send..."/>
                <button>Test</button>
             </nav>
             <div>Connecting to Gmail...</div>
@@ -51,7 +51,6 @@ customElements.define('video-sender',
       async send(type, name, chunk) {
          const a = this.querySelector('a')
          URL.revokeObjectURL(a.href)
-
          try {
             const reader = new FileReader()
             reader.readAsDataURL(chunk)
@@ -86,11 +85,8 @@ customElements.define('video-sender',
          })
          return new Promise((resolve, reject) => {
             request.execute((res) => {
-               if (!res.code) {
-                  resolve() 
-               } else { 
-                  reject(res)
-               }
+               if (!res.code) resolve() 
+               else reject(res)
             })
          })
       }
