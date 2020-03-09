@@ -22,7 +22,7 @@ customElements.define('video-recorder',
          this.innerHTML = `
             <video autoplay muted style="display:none"></video>
             <canvas style="display:none"></canvas>
-            <canvas style="position:fixed; top:0; left:0"></canvas>
+            <canvas style="position:absolute; top:0; left:0"></canvas>
             <p>Loading...</p>
             <nav style="display:none; white-space:nowrap; text-align:center">
                <button id="detecting" style="width:69%">Start / Stop detecting & recording</button>
