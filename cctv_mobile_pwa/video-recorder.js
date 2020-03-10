@@ -18,7 +18,7 @@ customElements.define('video-recorder',
       H = 0
 
       get detecting() { return this.querySelector('#detecting').className === 'true' }
-      get without_sound() { return this.querySelector('#without_sound').className === 'true' }
+      get no_sound() { return this.querySelector('#no_sound').className === 'true' }
 
       async init() {
          this.innerHTML = `
@@ -27,9 +27,9 @@ customElements.define('video-recorder',
             <canvas style="position:absolute; top:0; left:0"></canvas>
             <p>Loading...</p>
             <nav style="display:none; text-align:center">
-               <button id="detecting" style="width:49%">Start / Stop detecting</button>
-               <button id="without_video" style="width:25%">Without video</button>
-               <button id="without_sound" style="width:25%">Without sound</button>
+               <button id="detecting" style="width:48%">Start / Stop detecting</button>
+               <button id="no_video" style="width:25%">No video</button>
+               <button id="no_sound" style="width:25%">No sound</button>
             </nav>
             <audio loop src="./alarm.mp3"></audio>
          `
@@ -84,14 +84,14 @@ customElements.define('video-recorder',
                clearInterval(this.recorder.interval)
             }
          }
-         this.querySelector('#without_video').onclick = (ev) => { 
+         this.querySelector('#no_video').onclick = (ev) => { 
             ev.target.className = !(ev.target.className === 'true')
             if (ev.target.className === 'true') this.video.pause()
             else this.video.play()
          }
-         this.querySelector('#without_sound').onclick = (ev) => { 
+         this.querySelector('#no_sound').onclick = (ev) => { 
             ev.target.className = !(ev.target.className === 'true')
-            if (this.without_sound) this.audio.pause()
+            if (this.no_sound) this.audio.pause()
          }
 
          this.msg.innerHTML = 'Loading neural network...'
@@ -118,7 +118,7 @@ customElements.define('video-recorder',
                   this.recorder.num = 2
                }
                this.draw_bbox(result.bbox)
-               if (!this.without_sound) this.audio.play()
+               if (!this.no_sound) this.audio.play()
             } else {
                this.stop_alarm()
             }
