@@ -2,6 +2,7 @@ const CHUNK_DURATION = 7000
 
 customElements.define('video-recorder',
    class extends HTMLElement {
+      detector = null
       video = null
       canvas = null
       bbox = null
@@ -11,7 +12,6 @@ customElements.define('video-recorder',
       stream = null
       capture = null
       recorder = {rec: null, num: 0, interval: null}
-      detector = null
       detected = false
       chunk = null
       W = 0
@@ -86,8 +86,10 @@ customElements.define('video-recorder',
          }
          this.querySelector('#no_video').onclick = (ev) => { 
             ev.target.className = !(ev.target.className === 'true')
-            if (ev.target.className === 'true') this.video.pause()
-            else this.video.play()
+            if (ev.target.className === 'true') 
+               this.video.pause()
+            else 
+               this.video.play()
          }
          this.querySelector('#no_sound').onclick = (ev) => { 
             ev.target.className = !(ev.target.className === 'true')

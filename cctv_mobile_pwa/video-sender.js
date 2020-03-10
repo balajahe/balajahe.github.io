@@ -85,8 +85,10 @@ customElements.define('video-sender',
          })
          return new Promise((resolve, reject) => {
             request.execute((res) => {
-               if (!res.code) resolve() 
-               else reject(res)
+               if (!res.code) 
+                  resolve() 
+               else 
+                  reject(res)
             })
          })
       }
