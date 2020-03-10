@@ -2,7 +2,7 @@
   self.importScripts('https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js')
   self.importScripts('https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd')
 
-  let model = await cocoSsd.load()
+  const model = await cocoSsd.load()
   self.postMessage({})
 
   self.onmessage = async (ev) => {

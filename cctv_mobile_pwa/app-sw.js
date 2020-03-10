@@ -1,4 +1,4 @@
-const VERSION = 'cctv_mobile_pwa.v1'
+const VERSION = 'cctv_mobile_pwa.v3'
 const CACHED = [
   '/cctv_mobile_pwa/',
   '/cctv_mobile_pwa/app-init.js',

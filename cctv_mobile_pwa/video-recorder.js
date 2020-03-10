@@ -2,21 +2,23 @@ const CHUNK_DURATION = 7000
 
 customElements.define('video-recorder',
    class extends HTMLElement {
-      detector = null
       video = null
       canvas = null
       bbox = null
       msg = null
       nav = null
       audio = null
+      stream = null
+      capture = null
       recorder = {rec: null, num: 0, interval: null}
+      detector = null
       detected = false
       chunk = null
       W = 0
       H = 0
 
       get detecting() { return this.querySelector('#detecting').className === 'true' }
-      get sound_alarm() { return this.querySelector('#sound_alarm').className === 'true' }
+      get without_sound() { return this.querySelector('#without_sound').className === 'true' }
 
       async init() {
          this.innerHTML = `
@@ -25,8 +27,9 @@ customElements.define('video-recorder',
             <canvas style="position:absolute; top:0; left:0"></canvas>
             <p>Loading...</p>
             <nav style="display:none; text-align:center">
-               <button id="detecting" style="width:69%">Start / Stop detecting & recording</button>
-               <button id="sound_alarm" class="true" style="width:30%">Sound alarm</button>
+               <button id="detecting" style="width:49%">Start / Stop detecting & recording</button>
+               <button id="without_video" style="width:25%">Without video</button>
+               <button id="without_sound" style="width:25%">Without sound</button>
             </nav>
             <audio loop src="./alarm.mp3"></audio>
          `
@@ -38,26 +41,29 @@ customElements.define('video-recorder',
          this.audio = this.querySelector('audio')
 
          this.msg.innerHTML = 'Loading camera...'
-         const stream = await navigator.mediaDevices.getUserMedia(
+         this.stream = await navigator.mediaDevices.getUserMedia(
             {video: {facingMode: {ideal: "environment"}}, audio: true}
          )
-         this.video.srcObject = stream
-         this.video.onloadedmetadata = (_) => {
-            this.W = this.bbox.width = this.canvas.width = this.video.videoWidth
-            this.H = this.bbox.height = this.canvas.height = this.video.videoHeight
-            this.nav.style.width = this.W + 'px'
-            this.bbox = this.bbox.getContext('2d')
-            this.canvas = this.canvas.getContext('2d')
-            this.video.style.display = ''
-         }
+         this.capture = new ImageCapture(this.stream.getVideoTracks()[0])
 
-         this.recorder.rec = new MediaRecorder(stream, {mimeType : "video/webm"})
-         this.recorder.rec.ondataavailable = async (ev) => {
+         this.video.srcObject = this.stream
+         await new Promise((resolve, reject) => {
+            this.video.onloadedmetadata = (_) => resolve()
+         })
+         this.W = this.bbox.width = this.canvas.width = this.video.videoWidth
+         this.H = this.bbox.height = this.canvas.height = this.video.videoHeight
+         this.nav.style.width = this.W + 'px'
+         this.bbox = this.bbox.getContext('2d')
+         this.canvas = this.canvas.getContext('2d')
+         this.video.style.display = ''
+
+         this.recorder.rec = new MediaRecorder(this.stream, {mimeType : "video/webm"})
+         this.recorder.rec.ondataavailable = (ev) => {
             this.chunk = ev.data
             if (this.detected) {
-               await this.send_chunk()
+               this.send_chunk()
             } else if (this.recorder.num > 0) {
-               await this.send_chunk()
+               this.send_chunk()
                this.recorder.num--
             }
          }
@@ -78,23 +84,28 @@ customElements.define('video-recorder',
                clearInterval(this.recorder.interval)
             }
          }
-
-         this.querySelector('#sound_alarm').onclick = (ev) => { 
+         this.querySelector('#without_video').onclick = (ev) => { 
             ev.target.className = !(ev.target.className === 'true')
-            if (!this.sound_alarm) this.audio.pause()
+            if (ev.target.className === 'true') this.video.pause()
+            else this.video.play()
+         }
+         this.querySelector('#without_sound').onclick = (ev) => { 
+            ev.target.className = !(ev.target.className === 'true')
+            if (this.without_sound) this.audio.pause()
          }
 
          this.msg.innerHTML = 'Loading neural network...'
          this.detector = new Worker('./video-detector.js')
-         this.detector.onmessage = (_) => {
-            this.msg.remove()
-            this.nav.style.display = ''
-         }
+         await new Promise((resolve, reject) => {
+            this.detector.onmessage = (_) => resolve()
+         })
+         this.msg.remove()
+         this.nav.style.display = ''
       }
 
       async grab_video() {
          if (this.detecting) {
-            this.canvas.drawImage(this.video, 0, 0)
+            this.canvas.drawImage(await this.capture.grabFrame(), 0, 0)
             const img = this.canvas.getImageData(0, 0, this.W, this.H)
             this.detector.postMessage(img)
             const result = await new Promise((resolve, reject) => {
@@ -103,11 +114,11 @@ customElements.define('video-recorder',
             if (result.ok) {
                this.detected = true
                if (this.recorder.num === 0) {
-                  await this.send_chunk()
+                  this.send_chunk()
                   this.recorder.num = 2
                }
                this.draw_bbox(result.bbox)
-               if (this.sound_alarm) this.audio.play()
+               if (!this.without_sound) this.audio.play()
             } else {
                this.stop_alarm()
             }
@@ -130,7 +141,7 @@ customElements.define('video-recorder',
          if (this.chunk !== null && this.chunk.size > 0) {
             const type = this.recorder.num === 0 ? 'before' : this.recorder.num === 2 ? 'during' : 'after'
             const name = '__' + new Date().toISOString() + '_' + type + '.webm'
-            await document.querySelector('video-sender').send(type, name, this.chunk)
+            await document.querySelector('video-sender').send(type, name, this.chunk.slice())
          }
       }
 
