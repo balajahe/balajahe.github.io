@@ -1,47 +1,39 @@
-const VERSION = 'cctv_mobile_pwa.v6'
-const CACHED = [
-  '/cctv_mobile_pwa/',
-  '/cctv_mobile_pwa/app-init.js',
-  '/cctv_mobile_pwa/video-detector.js',
-  '/cctv_mobile_pwa/video-recorder.js',
-  '/cctv_mobile_pwa/video-sender.js',
-  '/cctv_mobile_pwa/alarm.mp3',
-  'https://cdn.jsdelivr.net/npm/@tensorflow/tfjs/dist/tf.min.js',
-  'https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd'
-]
+const VERSION = 'cctv_mobile_pwa.v10'
 
-self.addEventListener('install', (ev) => {
+self.oninstall = (ev) => {
   ev.waitUntil(
-    caches.open(VERSION).then(
-      (cache) => cache.addAll(CACHED)
-    )
+    caches.open(VERSION)
   )
-})
+}
 
-self.addEventListener('activate', (event) => {
-  var cacheKeeplist = [VERSION]
-  event.waitUntil(
-    caches.keys().then((keyList) => {
-      return Promise.all(keyList.map((key) => {
-        if (cacheKeeplist.indexOf(key) === -1) {
-          return caches.delete(key);
-        }
-      }))
+self.onactivate = (ev) => {
+  ev.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.map((key) => {
+          if ([VERSION].indexOf(key) === -1) {
+            return caches.delete(key);
+          }
+        })
+      )
     })
   )
-})
+}
 
-self.addEventListener('fetch', (ev) => {
+self.onfetch = (ev) => {
   ev.respondWith(
-    caches.match(ev.request).then(
-      (resp) => resp || fetch(ev.request).then(
-        (resp1) => caches.open(VERSION).then(
-          (cache) => {
-            cache.put(ev.request, resp1.clone())
-            return resp1
-          }
-        )
-      )
-    )
+    (async () => {
+      try {
+        const resp = await fetch(ev.request)
+        if (resp) {
+          (await caches.open(VERSION)).put(ev.request, resp.clone())
+          return resp
+        } else {
+          return caches.match(ev.request)
+        }
+      } catch(e) {
+        return caches.match(ev.request)
+      }
+    })()
   )
-})
+}

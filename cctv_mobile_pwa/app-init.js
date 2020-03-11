@@ -17,12 +17,9 @@ customElements.define('app-init',
          `
          this.querySelector('button').onclick = async (ev) => {
             this.querySelector('div').remove()
-            const proms = [
-               document.querySelector('video-recorder').init(),
-               document.querySelector('video-sender').init()
-            ]
-            await Promise.all(proms)
             await navigator.serviceWorker.register('/cctv_mobile_pwa/app-sw.js')
+            document.querySelector('video-recorder').init()
+            document.querySelector('video-sender').init()
          }
       }
    }
