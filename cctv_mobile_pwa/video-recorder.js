@@ -101,6 +101,7 @@ customElements.define('video-recorder',
          await new Promise((resolve, reject) => {
             this.detector.onmessage = (_) => resolve()
          })
+         
          this.msg.remove()
          this.nav.style.display = ''
       }
