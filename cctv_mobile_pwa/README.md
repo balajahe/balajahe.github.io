@@ -2,4 +2,4 @@ CCTV system based on a power web application and COCO-SSD neural network. Detect
 <br><br>
 Demo: https://balajahe.github.io/cctv_mobile_pwa/
 <br><br>
-Article: https://nanonets.com/blog/object-detection-tensorflow-js/
+Article: https://habr.com/ru/post/492006/
