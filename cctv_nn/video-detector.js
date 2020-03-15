@@ -7,7 +7,7 @@
 
   self.onmessage = async (ev) => {
     const result = await model.detect(ev.data)
-    const person = result.find(v => v.class === 'person')
+    const person = result.find((v) => v.class === 'person')
     if (person) 
       self.postMessage({ok: true, bbox: person.bbox})
     else
