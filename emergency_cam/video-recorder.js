@@ -1,26 +1,31 @@
-const CHUNK_DURATION = 5000
+import WeirdComponent from './weird-component.js'
+
+const CHUNK_DURATION = 7000
 
 customElements.define('video-recorder',
-   class extends HTMLElement {
+   class extends WeirdComponent {
       video = null
-      button = null
-      recorder = {rec: null, interval: null}
       location = null
-
-      get recording() { return this.button.className === 'true' }
+      recorder = {rec: null, interval: null}
 
       async connectedCallback() {
          this.innerHTML = `
             <p>Loading camera...</p>
-            <div style="display: none">
-               <video autoplay muted></video>
-               <nav>
-                  <button style="width:100%">Start / Stop recording</button>
-               </nav>
+            <div style="display: none; flex-direction: column;">
+               <video el="video" autoplay muted></video>
+               <button el="rec" vl="recording">Start / Stop recording</button>
+               <button el="conn" style="display: none">Connect to Gmail</button>
+               <input vl="email" type="email" required placeholder="Email to send..."/>
             </div>
+            <div el="log"></div>
+            <a style="display:none"></a>
+            <form el="lock" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh;">
+               To unlock screen enter "123":
+               <input type="text"/>
+            </form>
          `
-         this.video = this.querySelector('video')
-         this.button = this.querySelector('button')
+         this.genGetSet()
+         this.email = localStorage.getItem('email')
 
          const stream = await navigator.mediaDevices.getUserMedia(
             {video: {facingMode: {ideal: "environment"}}, audio: true}
@@ -32,11 +37,12 @@ customElements.define('video-recorder',
             const date = new Date().toISOString().replace(/:/g, '.').replace(/T/g, ', ').slice(0, -5)
             const subj = this.location?.latitude + ', ' + this.location?.longitude
             let name = '__' + date + ', ' + subj + '.webm'
-            document.querySelector('video-sender').send(subj, name, ev.data.slice())
+            console.log(name)
+            document.querySelector('video-sender').send(this.email, subj, name, ev.data.slice())
          }
 
-         this.button.onclick = (ev) => { 
-            ev.target.className = !(ev.target.className === 'true')
+         this.rec.onclick = (ev) => { 
+            this.recording = !this.recording
             if (this.recording) {
                this.recorder.rec.start()
                this.recorder.interval = setInterval(() => {
@@ -48,7 +54,28 @@ customElements.define('video-recorder',
                clearInterval(this.recorder.interval)
             }
          }
-         this.button.click()
+
+         this.conn.onclick = async (ev) => {
+            try {
+               await document.querySelector('video-sender').connect()
+               this.conn.style.dislpay = 'none'
+            } catch(e) {
+               console.error(e)
+               this.conn.style.display = ''
+            }
+         }
+
+         this.lock.onsubmit = (ev) => {
+            ev.preventDefault()
+            const rep = ev.target.querySelector('input')
+            if (rep.value === '123') {
+               rep.value = ''
+               ev.target.style.display = 'none'
+               this.recording = false
+               this.recorder.rec.stop()
+               clearInterval(this.recorder.interval)
+            }
+         }
 
          navigator.geolocation.getCurrentPosition(
             (loc) => this.location = loc.coords
@@ -57,12 +84,14 @@ customElements.define('video-recorder',
             (loc) => this.location = loc.coords
          )
 
-         await new Promise((resolve, reject) => {
-            this.video.onloadedmetadata = (_) => resolve()
-         })
-         document.querySelector('#app').style.width = this.video.videoWidth + 'px'
-         this.querySelector('p').remove()
-         this.querySelector('div').style.display = ''
+         this.video.onloadedmetadata = (ev) => {
+            document.querySelector('#app').style.width = ev.target.videoWidth + 'px'
+            this.q('p').remove()
+            this.q('div').style.display = 'flex'
+         }
+
+         this.rec.click()
+         this.conn.click()
       }
    }
 )
