@@ -11,7 +11,7 @@ customElements.define('video-recorder', class extends WC {
          <p>Loading camera...</p>
          <div style='display: none; flex-direction: column'>
             <video el='video' autoplay muted></video>
-            <button el='rec' vl='recording'>Double click to Start / Stop recording</button>
+            <button el='rec' vl='recording'>Start / Stop recording</button>
             <button el='conn' style='display: none'>Connect to Gmail</button>
             <input vl='email' type='email' required placeholder='Email to send...'/>
          </div>
@@ -33,7 +33,7 @@ customElements.define('video-recorder', class extends WC {
          document.querySelector('video-sender').send(this.email, subj, name, ev.data.slice())
       }
 
-      this.rec.ondblclick = (ev) => { 
+      this.rec.onclick = (ev) => { 
          this.recording = !this.recording
          if (this.recording) {
             this.recorder.rec.start()
@@ -70,7 +70,7 @@ customElements.define('video-recorder', class extends WC {
          this.q('div').style.display = 'flex'
       }
 
-      this.rec.ondblclick()
+      this.rec.onclick()
       this.conn.onclick()
    }
 })
