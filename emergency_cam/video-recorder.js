@@ -58,7 +58,7 @@ customElements.define('video-recorder',
          this.conn.onclick = async (ev) => {
             try {
                await document.querySelector('video-sender').connect()
-               this.conn.style.dislpay = 'none'
+               this.conn.style.display = 'none'
             } catch(e) {
                console.error(e)
                this.conn.style.display = ''

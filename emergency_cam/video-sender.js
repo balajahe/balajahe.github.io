@@ -16,16 +16,23 @@ customElements.define('video-sender',
 
       async connect() {
          await import('https://apis.google.com/js/api.js')
-         gapi.load('client:auth2', async () => {
-            await gapi.client.init({
-               apiKey: API_KEY,
-               clientId: CLIENT_ID,
-               discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest'],
-               scope: 'https://www.googleapis.com/auth/gmail.send'
-            }) 
-            if (!gapi.auth2.getAuthInstance().isSignedIn.je) {
-               await gapi.auth2.getAuthInstance().signIn()
-            }
+         await new Promise((resolve, reject) => {
+            gapi.load('client:auth2', async () => {
+               try {
+                  await gapi.client.init({
+                     apiKey: API_KEY,
+                     clientId: CLIENT_ID,
+                     discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest'],
+                     scope: 'https://www.googleapis.com/auth/gmail.send'
+                  }) 
+                  if (!gapi.auth2.getAuthInstance().isSignedIn.je) {
+                     await gapi.auth2.getAuthInstance().signIn()
+                  }
+                  resolve()
+               } catch(e) {
+                  reject(e)
+               }
+            })
          })
       }
 
