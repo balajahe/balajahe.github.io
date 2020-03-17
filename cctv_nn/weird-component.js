@@ -1,4 +1,4 @@
-export default class extends HTMLElement {
+export default class extends HTMLElement { 
     q(s, i) { 
         if (i === undefined)
             return this.querySelector(s)
