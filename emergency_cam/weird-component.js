@@ -7,26 +7,26 @@ export default class extends HTMLElement {
     }    
 
     generate_props() {
-        for (const el of this.querySelectorAll('[elm]')) {
-            Object.defineProperty(this, el.getAttribute('elm'), {
+        for (const el of this.querySelectorAll('[el]')) {
+            Object.defineProperty(this, el.getAttribute('el'), {
                 get: () => el
             })
         }
-        for (const el of this.querySelectorAll('[val]')) {
+        for (const el of this.querySelectorAll('[vl]')) {
             if (el.tagName === 'INPUT') {
-                Object.defineProperty(this, el.getAttribute('val'), {
+                Object.defineProperty(this, el.getAttribute('vl'), {
                     get: () => el.value,
                     set: (val) => el.value = val
                 })
             } else if (el.tagName === 'BUTTON') {
-                Object.defineProperty(this, el.getAttribute('val'), {
+                Object.defineProperty(this, el.getAttribute('vl'), {
                     get: () => el.className === 'true',
                     set: (val) => el.className = '' + val
                 })
             }
         }
-        for (const el of this.querySelectorAll('[inh]')) {
-            Object.defineProperty(this, el.getAttribute('inh'), {
+        for (const el of this.querySelectorAll('[ih]')) {
+            Object.defineProperty(this, el.getAttribute('ih'), {
                 get: () => el.innerHTML,
                 set: (val) => el.innerHTML = val
             })
