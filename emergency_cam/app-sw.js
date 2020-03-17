@@ -1,5 +1,5 @@
 const APP = 'emergency_cam'
-const VERSION = '.v3'
+const VERSION = '.v5'
 
 self.oninstall = (ev) => ev.waitUntil(
   caches.open(APP + VERSION)
@@ -20,7 +20,7 @@ self.onactivate = (ev) => ev.waitUntil(
 self.onfetch = (ev) => ev.respondWith(
   caches.match(ev.request).then(
     (resp) => resp || fetch(ev.request).then(
-      (resp1) => caches.open(VERSION).then(
+      (resp1) => caches.open(APP + VERSION).then(
         (cache) => {
           cache.put(ev.request, resp1.clone())
           return resp1

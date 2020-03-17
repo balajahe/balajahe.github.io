@@ -1,33 +1,32 @@
 export default class extends HTMLElement {
-    q(s) {
-        return this.querySelector(s)
-    }
-    
-    qq(s, i) {
-        return this.querySelectorAll(s)[i]
-    }
+    q(s, i) { 
+        if (i === undefined)
+            return this.querySelector(s)
+        else
+            return this.querySelectorAll(s)[i]
+    }    
 
-    genGetSet() {
-        for (const el of this.querySelectorAll('[el]')) {
-            Object.defineProperty(this, el.getAttribute('el'), {
+    generate_props() {
+        for (const el of this.querySelectorAll('[elm]')) {
+            Object.defineProperty(this, el.getAttribute('elm'), {
                 get: () => el
             })
         }
-        for (const el of this.querySelectorAll('[vl]')) {
+        for (const el of this.querySelectorAll('[val]')) {
             if (el.tagName === 'INPUT') {
-                Object.defineProperty(this, el.getAttribute('vl'), {
+                Object.defineProperty(this, el.getAttribute('val'), {
                     get: () => el.value,
                     set: (val) => el.value = val
                 })
             } else if (el.tagName === 'BUTTON') {
-                Object.defineProperty(this, el.getAttribute('vl'), {
+                Object.defineProperty(this, el.getAttribute('val'), {
                     get: () => el.className === 'true',
                     set: (val) => el.className = '' + val
                 })
             }
         }
-        for (const el of this.querySelectorAll('[ih]')) {
-            Object.defineProperty(this, el.getAttribute('ih'), {
+        for (const el of this.querySelectorAll('[inh]')) {
+            Object.defineProperty(this, el.getAttribute('inh'), {
                 get: () => el.innerHTML,
                 set: (val) => el.innerHTML = val
             })

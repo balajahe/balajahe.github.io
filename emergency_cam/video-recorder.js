@@ -1,9 +1,9 @@
-import WeirdComponent from './weird-component.js'
+import WC from './weird-component.js'
 
 const CHUNK_DURATION = 7000
 
 customElements.define('video-recorder',
-   class extends WeirdComponent {
+   class extends WC {
       video = null
       location = null
       recorder = {rec: null, interval: null}
@@ -11,20 +11,14 @@ customElements.define('video-recorder',
       async connectedCallback() {
          this.innerHTML = `
             <p>Loading camera...</p>
-            <div style="display: none; flex-direction: column;">
-               <video el="video" autoplay muted></video>
-               <button el="rec" vl="recording">Start / Stop recording</button>
-               <button el="conn" style="display: none">Connect to Gmail</button>
-               <input vl="email" type="email" required placeholder="Email to send..."/>
+            <div style='display: none; flex-direction: column'>
+               <video elm='video' autoplay muted></video>
+               <button elm='rec' val='recording'>Double click to Start / Stop recording</button>
+               <button elm='conn' style='display: none'>Connect to Gmail</button>
+               <input val='email' type='email' required placeholder='Email to send...'/>
             </div>
-            <div el="log"></div>
-            <a style="display:none"></a>
-            <form el="lock" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh;">
-               To unlock screen enter "123":
-               <input type="text"/>
-            </form>
          `
-         this.genGetSet()
+         this.generate_props()
          this.email = localStorage.getItem('email')
 
          const stream = await navigator.mediaDevices.getUserMedia(
@@ -41,7 +35,7 @@ customElements.define('video-recorder',
             document.querySelector('video-sender').send(this.email, subj, name, ev.data.slice())
          }
 
-         this.rec.onclick = (ev) => { 
+         this.rec.ondblclick = (ev) => { 
             this.recording = !this.recording
             if (this.recording) {
                this.recorder.rec.start()
@@ -65,18 +59,6 @@ customElements.define('video-recorder',
             }
          }
 
-         this.lock.onsubmit = (ev) => {
-            ev.preventDefault()
-            const rep = ev.target.querySelector('input')
-            if (rep.value === '123') {
-               rep.value = ''
-               ev.target.style.display = 'none'
-               this.recording = false
-               this.recorder.rec.stop()
-               clearInterval(this.recorder.interval)
-            }
-         }
-
          navigator.geolocation.getCurrentPosition(
             (loc) => this.location = loc.coords
          )
@@ -90,8 +72,8 @@ customElements.define('video-recorder',
             this.q('div').style.display = 'flex'
          }
 
-         this.rec.click()
-         this.conn.click()
+         this.rec.ondblclick()
+         this.conn.onclick()
       }
    }
 )
