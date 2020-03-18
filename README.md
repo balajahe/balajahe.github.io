@@ -6,5 +6,6 @@ Power web application examples:
 <br/><br/>
 <a href="/vanilla_wc_state_is_dom/">vanilla_wc_state_is_dom</a> - Example demonstrating the state management of a web application developed on vanilla web components.
 <br/><br/>
-<b>Privacy policy:</b><br>
-These applications do not store any personal information, and do not transmit it in any form to third parties. Information is sent only to the email address that you yourself specify.
+Live demo of all these apps: <a href="https://balajahe.github.io/">balajahe.github.io</a>
+<br/><br/>
+<a href="./privacy-policy.html" target="_blank">Privacy policy</a>
