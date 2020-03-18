@@ -19,7 +19,7 @@ customElements.define('video-recorder', class extends WC {
          <canvas el='c_bbox' style='position:absolute; top:0; left:0'></canvas>
          <div ih='msg'>Loading...</div>
          <nav el='nav' style='display:none'>
-            <button el='detect' vl='detecting'>Start / Stop detecting</button>
+            <button el='b_detect' vl='detecting'>Start / Stop detecting</button>
             <button el='b_noplayer' vl='noplayer'>No player</button>
             <button el='b_noalarm' vl='noalarm'>No alarm</button>
          </nav>
@@ -41,7 +41,6 @@ customElements.define('video-recorder', class extends WC {
       })
       this.W = this.c_bbox.width = this.c_canvas.width = this.video.videoWidth
       this.H = this.c_bbox.height = this.c_canvas.height = this.video.videoHeight
-      //this.nav.style.width = this.W + 'px'
       document.querySelector('#app').style.width = this.W + 'px'
       this.video.style.display = ''
 
@@ -56,7 +55,7 @@ customElements.define('video-recorder', class extends WC {
          }
       }
 
-      this.detect.onclick = (ev) => { 
+      this.b_detect.onclick = (ev) => {
          this.detecting = !this.detecting
          if (this.detecting) {
             this.recorder.rec.start()
@@ -72,14 +71,16 @@ customElements.define('video-recorder', class extends WC {
             clearInterval(this.recorder.interval)
          }
       }
-      this.b_noplayer.onclick = (ev) => { 
+
+      this.b_noplayer.onclick = (ev) => {
          this.noplayer = !this.noplayer
-         if (this.noplayer) 
+         if (this.noplayer)
             this.video.pause()
-         else 
+         else
             this.video.play()
       }
-      this.b_noalarm.onclick = (ev) => { 
+
+      this.b_noalarm.onclick = (ev) => {
          this.noalarm = !this.noalarm
          if (this.noalarm) this.alarm.pause()
       }
@@ -89,7 +90,7 @@ customElements.define('video-recorder', class extends WC {
       await new Promise((resolve, reject) => {
          this.detector.onmessage = (_) => resolve()
       })
-      
+
       this.msg = ''
       this.nav.style.display = ''
    }
