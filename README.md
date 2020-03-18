@@ -7,5 +7,7 @@ Power web application examples:
 <a href="/vanilla_wc_state_is_dom/">vanilla_wc_state_is_dom</a> - Example demonstrating the state management of a web application developed on vanilla web components.
 <br/><br/>
 Live demo of all these apps: <a href="https://balajahe.github.io/">balajahe.github.io</a>
+<br/>
 <a href="https://github.com/balajahe/balajahe.github.io">Sources on GitHub</a>
+<br/>
 <a href="./privacy-policy.html">Privacy policy</a>
