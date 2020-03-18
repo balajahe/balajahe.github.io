@@ -3,7 +3,7 @@ import WC from './weird-component.js'
 customElements.define('wc-demo', class extends WC {
    connectedCallback() {
       this.innerHTML = `
-         <p>Weird-component demo: <small val='time'></small></p>
+         <p>Weird Component Demo: <small val='time'></small></p>
          <p>
             <input val='num1' type='number' placeholder='Enter first number...'/>
             <input val='num2' type='number' placeholder='Enter second number...'/>
@@ -36,11 +36,14 @@ customElements.define('wc-demo', class extends WC {
             </select>
             <span val='selm1'></span>
          </p>
-         <p>
-            <div val='ed' contenteditable='true' style='display:inline-block; width:49%; height:10em; overflow:auto; border:1px solid black'>
-               <small>Enter some text</small>...
-            </div>
+         <div>
+            Enter some formatted text:<br>
+            <div val='ed' contenteditable='true' style='display:inline-block; width:49%; height:10em; overflow:auto; border:1px solid silver'></div>
             <div val='ed1' style='display:inline-block; width:49%; height:10em; overflow:auto'></div>
+         </div>
+         <p>
+            Summary:
+             <div val='summary'></div>
          </p>
       `
       this.generate_props()
@@ -50,31 +53,38 @@ customElements.define('wc-demo', class extends WC {
       }, 500)
 
       const calcnum = () => this.num12 = this.num1 + this.num2
-      this.num1_el.addEventListener('ch', calcnum)
-      this.num2_el.addEventListener('ch', calcnum)
+      this._num1.addEventListener('val_input', calcnum)
+      this._num2.addEventListener('val_input', calcnum)
 
       const calcdat = () => this.dat12 = (this.dat2 - this.dat1) / 86400000
-      this.dat1_el.addEventListener('ch', calcdat)
-      this.dat2_el.addEventListener('ch', calcdat)
+      this._dat1.addEventListener('val_input', calcdat)
+      this._dat2.addEventListener('val_input', calcdat)
 
-      this.but_el.addEventListener('ch', (_) => {
-         this.but1 = this.but
-      })
+      this._but.addEventListener('val_input', (ev) => this.but1 = ev.val)
 
-      this.ch_el.addEventListener('ch', () => {
-         this.ch1 = this.ch
-      })
+      this._ch.addEventListener('val_input', (ev) => this.ch1 = ev.val)
 
-      this.sel_el.addEventListener('ch', () => {
-         this.sel1 = JSON.stringify(this.sel)
-      })
+      this._sel.addEventListener('val_input', (ev) => this.sel1 = ev.val)
 
-      this.selm_el.addEventListener('ch', () => {
-         this.selm1 = JSON.stringify(this.selm)
-      })
+      this._selm.addEventListener('val_input', (ev) => this.selm1 = ev.val)
 
-      this.ed_el.addEventListener('ch', () => {
-         this.ed1 = this.ed.toUpperCase()
-      })
+      this._ed.addEventListener('val_input', (ev) => this.ed1 = ev.val.toUpperCase())
+
+      const summary = (_) => {
+         this.summary = `
+<pre>
+   num1 = ${this.num1}
+   num2 = ${this.num2}
+   dat1 = ${this.dat1}
+   dat2 = ${this.dat2}
+   but = ${this.but}
+   ch = ${this.ch}
+   sel = ${this.sel}
+   selm = ${this.selm}
+</pre>
+${this.ed}
+         `
+      }
+      this._ed.addEventListener('val_input', summary)
    }
 })

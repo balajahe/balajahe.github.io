@@ -9,8 +9,17 @@ export default class extends HTMLElement {
    generate_props() {
       for (const el of this.querySelectorAll('[val]')) {
          const name = el.getAttribute('val')
-         const ch = (v) => el.dispatchEvent(new CustomEvent('ch', { val: v }))
-         Object.defineProperty(this, name + '_el', {
+         const vch = (v) => {
+            let ev = new Event('val_change')
+            ev.val = v
+            el.dispatchEvent(ev)
+         }
+         const vin = (v) => {
+            let ev = new Event('val_input')
+            ev.val = v
+            el.dispatchEvent(ev)
+         }
+         Object.defineProperty(this, '_' + name, {
             get: () => el
          })
 
@@ -19,40 +28,40 @@ export default class extends HTMLElement {
             if (el.type == 'number') {
                Object.defineProperty(this, name, {
                   get: () => Number(el.value),
-                  set: (v) => { el.value = v; ch(v) }
+                  set: (v) => { el.value = v; vch(v) }
                })
-               el.addEventListener('input', (ev) => el.dispatchEvent(new CustomEvent('ch', { val: Number(el.value) })))
+               el.addEventListener('input', (ev) => vin(Number(el.value)))
 
             } else if (el.type == 'date') {
                Object.defineProperty(this, name, {
                   get: () => Date.parse(el.value),
-                  set: (v) => { el.value = v; ch(v) }
+                  set: (v) => { el.value = v; vch(v) }
                })
-               el.addEventListener('input', (ev) => el.dispatchEvent(new CustomEvent('ch', { val: Date.parse(el.value) })))
+               el.addEventListener('input', (ev) => vin(Date.parse(el.value)))
 
             } else if (el.type == 'checkbox') {
                Object.defineProperty(this, name, {
                   get: () => el.checked,
-                  set: (v) => { el.checked = v; ch(v) }
+                  set: (v) => { el.checked = v; vch(v) }
                })
-               el.addEventListener('input', (ev) => el.dispatchEvent(new CustomEvent('ch', { val: el.checked })))
+               el.addEventListener('input', (ev) => vin(el.checked))
 
             } else {
                Object.defineProperty(this, name, {
                   get: () => el.value,
-                  set: (v) => { el.value = v; ch(v) }
+                  set: (v) => { el.value = v; vch(v) }
                })
-               el.addEventListener('input', (ev) => el.dispatchEvent(new CustomEvent('ch', { val: el.value })))
+               el.addEventListener('input', (ev) => vin(el.value))
             }
 
          } else if (el.tagName === 'BUTTON') {
             Object.defineProperty(this, name, {
                get: () => el.className === 'true',
-               set: (v) => { el.className = '' + v; ch(v) }
+               set: (v) => { el.className = '' + v; vch(v) }
             })
             el.addEventListener('click', (ev) => {
                el.className = '' + el.className !== 'true'
-               el.dispatchEvent(new CustomEvent('ch', { val: el.className === 'true' }))
+               vin(el.className === 'true')
             })
 
          } else if (el.tagName === 'SELECT') {
@@ -66,24 +75,24 @@ export default class extends HTMLElement {
                   get: () => val(el),
                   set: (v) => {
                      // доделать !!! el.value = v
-                     ch(v)
+                     vch(v)
                   }
                })
-               el.addEventListener('input', (ev) => el.dispatchEvent(new CustomEvent('ch', { val: val(el) })))
+               el.addEventListener('input', (ev) => vin(val(el)))
             } else {
                Object.defineProperty(this, name, {
                   get: () => el.value,
-                  set: (v) => { el.value = v; ch(v) } // !!!
+                  set: (v) => { el.value = v; vch(v) } // !!!
                })
-               el.addEventListener('input', (ev) => el.dispatchEvent(new CustomEvent('ch', { val: el.value })))
+               el.addEventListener('input', (ev) => vin(el.value))
             }
 
          } else {
             Object.defineProperty(this, name, {
                get: () => el.innerHTML,
-               set: (v) => { el.innerHTML = v; ch(v) }
+               set: (v) => { el.innerHTML = v; vch(v) }
             })
-            el.addEventListener('input', (ev) => el.dispatchEvent(new CustomEvent('ch', { val: el.innerHTML })))
+            el.addEventListener('input', (ev) => vin(el.innerHTML))
          }
       }
    }
