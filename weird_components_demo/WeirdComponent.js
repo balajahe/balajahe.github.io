@@ -57,6 +57,12 @@ export default class extends HTMLElement {
             el.addEventListener('input', (ev) => winput())
             el.addEventListener('change', (ev) => wchange())
 
+         } else if (el.tagName === 'TEXTAREA') {
+            el._getVal = () => el.value
+            el._setVal = (v) => el.value = v
+            el.addEventListener('input', (ev) => winput())
+            el.addEventListener('blur', (ev) => wchange())
+
          } else if (el.tagName === 'BUTTON') {
             el._getVal = () => el.className === 'true'
             el._setVal = (v) => el.className = '' + v === 'true'
@@ -78,7 +84,7 @@ export default class extends HTMLElement {
             set: (v) => { el._setVal(v); wchange() }
          })
 
-         el.addFormula = (ev_type, deps, formula) => {
+         el.setFormula = (ev_type, deps, formula) => {
             for (const dep of deps) {
                dep.addEventListener(ev_type, (() => {
                   el.val = formula()
