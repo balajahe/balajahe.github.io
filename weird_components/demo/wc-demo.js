@@ -48,7 +48,7 @@ customElements.define('wc-demo', class extends WC {
             Summary:
              <div w-name='/summary' style='border:1px solid silver'></div>
          </div></p>
-         <a href='https://github.com/balajahe/balajahe.github.io/tree/master/weird_components/demo'>Sources on GitHub</a>
+         <a href='https://github.com/balajahe/balajahe.github.io/tree/master/weird_components/'>Sources on GitHub</a>
       `
       this.generate_props()
 
