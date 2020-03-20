@@ -18,8 +18,8 @@ customElements.define('wc-demo', class extends WC {
             <label>Check me<input w-name='check/ch' type='checkbox'/></label>
             <span w-name='check1/ch1'></span>
             &emsp;
-            <button w-name='butt/b'>Press me</button>
-            <span w-name='butt1/b1'></span>
+            <button w-name='but/b'>Press me</button>
+            <span w-name='but1/b1'></span>
          </p>
          <p style='display:flex; flex-flow:row nowrap'>
             <select w-name='sel/se' style='height:1.6em'>
@@ -67,7 +67,7 @@ customElements.define('wc-demo', class extends WC {
       )
 
       this.check.addEventListener('w-change', (ev) => this.ch1 = this.ch)
-      this.butt.onclick = () => { this.b = !this.b; this.b1 = this.b }
+      this.but.addEventListener('w-change', (ev) => { this.but.className = this.b; this.b1 = this.b })
 
       this.sel.addEventListener('w-change', (ev) => this.sel1.val = this.sel.val)
       this.selm.addEventListener('w-change', (ev) => this.selm1.val = ev.val)
@@ -76,7 +76,7 @@ customElements.define('wc-demo', class extends WC {
       this.div.addEventListener('w-input', (ev) => this.div1.val = ev.val.toUpperCase())
 
       this.setFormula('summary', 'w-input',
-         [this.num1, this.num2, this.dat1, this.dat2, this.check, this.butt, this.sel, this.selm, this.txar, this.div],
+         [this.num1, this.num2, this.dat1, this.dat2, this.check, this.but, this.sel, this.selm, this.txar, this.div],
          () => {
             return `
                num1 = ${this.n1}<br>

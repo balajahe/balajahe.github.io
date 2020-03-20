@@ -63,9 +63,11 @@ export default class extends HTMLElement {
             el.addEventListener('blur', (ev) => wchange())
 
          } else if (el.tagName === 'BUTTON') {
-            el._w_get_val = () => el.className === 'true'
-            el._w_set_val = (v) => el.className = '' + v === 'true'
+            el._w_val = false
+            el._w_get_val = () => el._w_val
+            el._w_set_val = (v) => el._w_val = v
             el.addEventListener('click', (ev) => {
+               el._w_val = !el._w_val
                winput()
                wchange()
             })

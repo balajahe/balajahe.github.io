@@ -1,4 +1,4 @@
-import WC from './WeirdComponent.js'
+import WC from '../weird_components/WeirdComponent.js'
 
 const CHUNK_DURATION = 5000
 
@@ -33,7 +33,7 @@ customElements.define('video-recorder', class extends WC {
          document.querySelector('video-sender').send(this.email, subj, name, ev.data.slice())
       }
 
-      this.conn.onclick = async (ev) => {
+      this.conn.addEventListener('w-change', async (ev) => {
          try {
             await document.querySelector('video-sender').connect()
             this.conn.style.display = 'none'
@@ -41,11 +41,11 @@ customElements.define('video-recorder', class extends WC {
             console.error(e)
             this.conn.style.display = ''
          }
-      }
-      this.conn.onclick()
+      })
+      this.conn.click()
 
-      this.rec.onclick = (ev) => {
-         this.recording = !this.recording
+      this.rec.addEventListener('w-change', (ev) => {
+         this.rec.className = '' + this.recording
          if (this.recording) {
             this.recorder.rec.start()
             this.recorder.interval = setInterval(() => {
@@ -56,8 +56,8 @@ customElements.define('video-recorder', class extends WC {
             this.recorder.rec.stop()
             clearInterval(this.recorder.interval)
          }
-      }
-      this.rec.onclick()
+      })
+      this.rec.click()
 
       navigator.geolocation.getCurrentPosition(
          (loc) => this.location = loc.coords
