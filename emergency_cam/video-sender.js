@@ -1,4 +1,4 @@
-import WC from './weird-component.js'
+import WC from './WeirdComponent.js'
 
 const API_KEY = 'AIzaSyDWwZB5DbLaT_11i4C7L9Ch_0rslAncDro'
 const CLIENT_ID = '62101814784-23re0bkiiihnb99sid30pgt21spu9ubk.apps.googleusercontent.com'
@@ -6,10 +6,10 @@ const CLIENT_ID = '62101814784-23re0bkiiihnb99sid30pgt21spu9ubk.apps.googleuserc
 customElements.define('video-sender', class extends WC {
    connectedCallback() {
       this.innerHTML = `
-         <a el='a' style='display:none'></a>
-         <div ih='log'></div>
+         <a w-name='a' style='display:none'></a>
+         <div w-name='/log'></div>
       `
-      this.generate_props()
+      this.generateProps()
    }
 
    async connect() {
@@ -22,7 +22,7 @@ customElements.define('video-sender', class extends WC {
                   clientId: CLIENT_ID,
                   discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest'],
                   scope: 'https://www.googleapis.com/auth/gmail.send'
-               }) 
+               })
                if (!gapi.auth2.getAuthInstance().isSignedIn.je) {
                   await gapi.auth2.getAuthInstance().signIn()
                }
@@ -71,7 +71,7 @@ customElements.define('video-sender', class extends WC {
       })
       return new Promise((resolve, reject) => {
          request.execute((res) => {
-            if (!res.code) resolve() 
+            if (!res.code) resolve()
             else reject(res)
          })
       })

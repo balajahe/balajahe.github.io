@@ -50,24 +50,24 @@ customElements.define('wc-demo', class extends WC {
          </div></p>
          <a href='https://github.com/balajahe/balajahe.github.io/tree/master/weird_components/'>Sources on GitHub</a>
       `
-      this.generate_props()
+      this.generateProps()
 
       setInterval(() => {
          this.time = (new Date()).toLocaleString()
       }, 500)
 
-      this.set_formula('n12', 'w-input',
+      this.setFormula('n12', 'w-input',
          [this.num1, this.num2],
          () => this.n1 + this.n2
       )
 
-      this.set_formula('d12', 'w-input',
+      this.setFormula('d12', 'w-input',
          [this.dat1, this.dat2],
          () => (this.d2 - this.d1) / 86400000
       )
 
       this.check.addEventListener('w-change', (ev) => this.ch1 = this.ch)
-      this.butt.addEventListener('w-change', (ev) => this.b1 = this.b)
+      this.butt.onclick = () => { this.b = !this.b; this.b1 = this.b }
 
       this.sel.addEventListener('w-change', (ev) => this.sel1.val = this.sel.val)
       this.selm.addEventListener('w-change', (ev) => this.selm1.val = ev.val)
@@ -75,7 +75,7 @@ customElements.define('wc-demo', class extends WC {
       this.txar.addEventListener('w-input', (ev) => this.txar1.val = ev.val.toUpperCase())
       this.div.addEventListener('w-input', (ev) => this.div1.val = ev.val.toUpperCase())
 
-      this.set_formula('summary', 'w-input',
+      this.setFormula('summary', 'w-input',
          [this.num1, this.num2, this.dat1, this.dat2, this.check, this.butt, this.sel, this.selm, this.txar, this.div],
          () => {
             return `

@@ -1,6 +1,6 @@
-import WC from './weird-component.js'
+import WC from './WeirdComponent.js'
 
-const CHUNK_DURATION = 7000
+const CHUNK_DURATION = 5000
 
 customElements.define('video-recorder', class extends WC {
    location = null
@@ -10,13 +10,13 @@ customElements.define('video-recorder', class extends WC {
       this.innerHTML = `
          <p>Loading camera...</p>
          <div style='display: none; flex-direction: column'>
-            <video el='video' autoplay muted></video>
-            <button el='rec' vl='recording'>Start / Stop recording</button>
-            <button el='conn' style='display: none'>Connect to Gmail</button>
-            <input vl='email' type='email' required placeholder='Email to send...'/>
+            <video w-name='video' autoplay muted></video>
+            <button w-name='rec/recording'>Start / Stop recording</button>
+            <button w-name='conn' style='display: none'>Connect to Gmail</button>
+            <input w-name='/email' type='email' required placeholder='Email to send...'/>
          </div>
       `
-      this.generate_props()
+      this.generateProps()
       this.email = localStorage.getItem('email')
 
       const stream = await navigator.mediaDevices.getUserMedia(
@@ -33,7 +33,18 @@ customElements.define('video-recorder', class extends WC {
          document.querySelector('video-sender').send(this.email, subj, name, ev.data.slice())
       }
 
-      this.rec.onclick = (ev) => { 
+      this.conn.onclick = async (ev) => {
+         try {
+            await document.querySelector('video-sender').connect()
+            this.conn.style.display = 'none'
+         } catch(e) {
+            console.error(e)
+            this.conn.style.display = ''
+         }
+      }
+      this.conn.onclick()
+
+      this.rec.onclick = (ev) => {
          this.recording = !this.recording
          if (this.recording) {
             this.recorder.rec.start()
@@ -46,16 +57,7 @@ customElements.define('video-recorder', class extends WC {
             clearInterval(this.recorder.interval)
          }
       }
-
-      this.conn.onclick = async (ev) => {
-         try {
-            await document.querySelector('video-sender').connect()
-            this.conn.style.display = 'none'
-         } catch(e) {
-            console.error(e)
-            this.conn.style.display = ''
-         }
-      }
+      this.rec.onclick()
 
       navigator.geolocation.getCurrentPosition(
          (loc) => this.location = loc.coords
@@ -69,8 +71,5 @@ customElements.define('video-recorder', class extends WC {
          this.q('p').remove()
          this.q('div').style.display = 'flex'
       }
-
-      this.rec.onclick()
-      this.conn.onclick()
    }
 })
