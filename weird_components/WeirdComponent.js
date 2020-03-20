@@ -6,96 +6,109 @@ export default class extends HTMLElement {
       else return this.querySelectorAll(s)[i]
    }
 
-   generateProps() {
+   generate_props() {
       for (const el of this.querySelectorAll('[w-name]')) {
-         const wname = el.getAttribute('w-name')
          const wchange = () => {
             let ev = new Event('w-change')
-            ev.val = el._getVal()
+            ev.val = el._w_get_val()
             el.dispatchEvent(ev)
          }
          const winput = () => {
             let ev = new Event('w-input')
-            ev.val = el._getVal()
+            ev.val = el._w_get_val()
             el.dispatchEvent(ev)
          }
-         Object.defineProperty(this, '_' + wname, { get: () => el })
 
          if (el.tagName === 'INPUT') {
             if (el.type == 'number') {
-               el._getVal = () => Number(el.value)
-               el._setVal = (v) => el.value = v
+               el._w_get_val = () => Number(el.value)
+               el._w_set_val = (v) => el.value = v
             } else if (el.type == 'date') {
-               el._getVal = () => Date.parse(el.value)
-               el._setVal = (v) => el.value = v
+               el._w_get_val = () => Date.parse(el.value)
+               el._w_set_val = (v) => el.value = v
             } else if (el.type == 'checkbox') {
-               el._getVal = () => el.checked
-               el._setVal = (v) => el.checked = v
+               el._w_get_val = () => el.checked
+               el._w_set_val = (v) => el.checked = v
             } else {
-               el._getVal = () => el.value
-               el._setVal = (v) => el.value = v
+               el._w_get_val = () => el.value
+               el._w_set_val = (v) => el.value = v
             }
             el.addEventListener('input', (ev) => winput())
             el.addEventListener('change', (ev) => wchange())
 
          } else if (el.tagName === 'SELECT') {
             if (!el.multiple) {
-               el._getVal = () => el.value
-               el._setVal = (v) => {
-                  el.value = v
+               el._w_get_val = () => el.value
+               el._w_set_val = (v) => {
+                  throw 'доделать !'
                }
             } else {
-               el._getVal = () => {
+               el._w_get_val = () => {
                   let res = []
                   for (const op of el.selectedOptions) res.push(op.value)
                   return res
                }
-               el._setVal = (v) => {
-                  el.value = v
+               el._w_set_val = (v) => {
+                  throw 'доделать !'
                }
             }
             el.addEventListener('input', (ev) => winput())
             el.addEventListener('change', (ev) => wchange())
 
          } else if (el.tagName === 'TEXTAREA') {
-            el._getVal = () => el.value
-            el._setVal = (v) => el.value = v
+            el._w_get_val = () => el.value
+            el._w_set_val = (v) => el.value = v
             el.addEventListener('input', (ev) => winput())
             el.addEventListener('blur', (ev) => wchange())
 
          } else if (el.tagName === 'BUTTON') {
-            el._getVal = () => el.className === 'true'
-            el._setVal = (v) => el.className = '' + v === 'true'
+            el._w_get_val = () => el.className === 'true'
+            el._w_set_val = (v) => el.className = '' + v === 'true'
             el.addEventListener('click', (ev) => {
-               el._setVal(!el._getVal())
+               el._w_set_val(!el._w_get_val())
                winput()
                wchange()
             })
 
          } else {
-            el._getVal = () => el.innerHTML
-            el._setVal = (v) => el.innerHTML = v
+            el._w_get_val = () => el.innerHTML
+            el._w_set_val = (v) => el.innerHTML = v
             el.addEventListener('input', (ev) => winput())
             el.addEventListener('blur', (ev) => wchange())
          }
 
          Object.defineProperty(el, 'val', {
-            get: () => el._getVal(),
-            set: (v) => { el._setVal(v); wchange() }
+            get: () => el._w_get_val(),
+            set: (v) => { el._w_set_val(v); wchange() }
          })
-
-         el.setFormula = (ev_type, deps, formula) => {
+         /*
+         el.set_formula = (ev_type, deps, formula) => {
             for (const dep of deps) {
                dep.addEventListener(ev_type, (() => {
                   el.val = formula()
                }).bind(this))
             }
          }
-
-         Object.defineProperty(this, wname, {
-            get: () => el.val,
-            set: (v) => el.val = v
-         })
+         */
+         const [wname, wval] = el.getAttribute('w-name').split('/')
+         if (wname) {
+            Object.defineProperty(this, wname, { get: () => el })
+         }
+         if (wval) {
+            Object.defineProperty(this, wval, {
+               get: () => el.val,
+               set: (v) => el.val = v
+            })
+         }
       }
+   }
+
+   set_formula(var_name, ev_name, deps, formula) {
+      for (const dep of deps) {
+         dep.addEventListener(ev_name, (() => {
+            this[var_name] = formula()
+         }).bind(this))
+      }
+      this[var_name] = formula()
    }
 }

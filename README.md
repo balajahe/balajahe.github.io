@@ -4,7 +4,7 @@ Power web application examples:
 <br><br>
 <a href="/emergency_cam/">emergency_cam</a> - Emergency camera - at startup, the application starts recording video, and sends video fragments with geotagging to the email specified last time. The application will request permission for the camera, microphone, location, and google authorization (for sending emails through the current account).
 <br><br>
-<a href="/weird_components_demo/">weird_components_demo</a> - Weird Components library demonstrates the use of vanilla web components in extracting data from HTML controls and responsiveness based on custom DOM events.
+<a href="/weird_components/demo/">weird_components/demo</a> - Weird Components library demonstrates the use of vanilla web components in extracting data from HTML controls and responsiveness based on custom DOM events.
 <br><br>
 <a href="/vanilla_wc_state_is_dom/">vanilla_wc_state_is_dom</a> - Example demonstrating the state management of a web application developed on vanilla web components.
 <br><br>
