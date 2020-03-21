@@ -8,8 +8,8 @@ customElements.define('video-recorder', class extends WC {
 
    async connectedCallback() {
       this.innerHTML = `
-         <p>Loading camera...</p>
-         <div style='display: none; flex-direction: column'>
+         <p w-name='msg'>Loading camera...</p>
+         <div w-name='div' style='display: none; flex-direction: column'>
             <video w-name='video' autoplay muted></video>
             <button w-name='rec/recording'>Start / Stop recording</button>
             <button w-name='gmail' style='display: none'>Connect to Gmail</button>
@@ -36,10 +36,10 @@ customElements.define('video-recorder', class extends WC {
       this.gmail.on('w-change', async (_) => {
          try {
             await document.querySelector('video-sender').connect()
-            this.gmail.style.display = 'none'
+            this.gmail.show(false)
          } catch(e) {
             console.error(e)
-            this.gmail.style.display = ''
+            this.gmail.show()
          }
       })
       this.gmail.click()
@@ -68,8 +68,8 @@ customElements.define('video-recorder', class extends WC {
 
       this.video.onloadedmetadata = (ev) => {
          document.querySelector('#app').style.width = ev.target.videoWidth + 'px'
-         this.q('p').remove()
-         this.q('div').style.display = 'flex'
+         this.msg.remove()
+         this.div.show('flex')
       }
    }
 })

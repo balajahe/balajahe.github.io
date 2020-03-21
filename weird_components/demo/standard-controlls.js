@@ -75,7 +75,7 @@ customElements.define('standard-controlls', class extends WC {
       })
       this.hide.on('w-change', (_) => {
          if (this.hide.val) {
-            this.summary.hide()
+            this.summary.show(false)
             this.hide.innerHTML = 'Show summary'
          } else {
             this.summary.show()

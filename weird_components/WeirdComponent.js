@@ -88,12 +88,13 @@ export default class extends HTMLElement {
          if (wname) {
             Object.defineProperty(this, wname, { get: () => el })
             el.on = (ev_name, listener) => el.addEventListener(ev_name, listener)
-            el.hide = () => {
-               el._saveDisplay = el.style.display
-               el.style.display = 'none'
-            }
-            el.show = () => {
-               el.style.display = el._saveDisplay !== undefined ? el._saveDisplay : ''
+            el.show = (onoff = true) => {
+               if (onoff) {
+                  el.style.display = onoff === true ? el._saveDisplay !== undefined ? el._saveDisplay : '' : onoff
+               } else {
+                  el._saveDisplay = el.style.display
+                  el.style.display = 'none'
+               }
             }
          }
          if (wval) {
