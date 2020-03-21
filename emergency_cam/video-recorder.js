@@ -12,7 +12,7 @@ customElements.define('video-recorder', class extends WC {
          <div style='display: none; flex-direction: column'>
             <video w-name='video' autoplay muted></video>
             <button w-name='rec/recording'>Start / Stop recording</button>
-            <button w-name='conn' style='display: none'>Connect to Gmail</button>
+            <button w-name='gmail' style='display: none'>Connect to Gmail</button>
             <input w-name='/email' type='email' required placeholder='Email to send...'/>
          </div>
       `
@@ -33,19 +33,19 @@ customElements.define('video-recorder', class extends WC {
          document.querySelector('video-sender').send(this.email, subj, name, ev.data.slice())
       }
 
-      this.conn.addEventListener('w-change', async (ev) => {
+      this.gmail.on('w-change', async (_) => {
          try {
             await document.querySelector('video-sender').connect()
-            this.conn.style.display = 'none'
+            this.gmail.style.display = 'none'
          } catch(e) {
             console.error(e)
-            this.conn.style.display = ''
+            this.gmail.style.display = ''
          }
       })
-      this.conn.click()
+      this.gmail.click()
 
-      this.rec.addEventListener('w-change', (ev) => {
-         this.rec.className = '' + this.recording
+      this.rec.on('w-change', (_) => {
+         this.rec.className = this.recording
          if (this.recording) {
             this.recorder.rec.start()
             this.recorder.interval = setInterval(() => {
