@@ -11,7 +11,9 @@ customElements.define('app-init', class extends WC {
                The application will request permission for the camera, microphone and google authorization (for sending emails through the current account).
             </p>
             <p>
-               <a href='https://github.com/balajahe/balajahe.github.io/tree/master/cctv_nn'>Sources on GitHub</a>
+               <a href="https://github.com/balajahe/balajahe.github.io/tree/master/cctv_nn" target="_blank">Sources on GitHub</a>
+               <br>
+               <a href="/privacy-policy.html" target="_blank">Privacy policy</a>
             </p>
             <button el='do' style='width:100%'>Start</button>
          </div>

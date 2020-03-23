@@ -12,4 +12,4 @@ Power web application examples:
 <br>
 <a href="https://github.com/balajahe/balajahe.github.io">Sources on GitHub</a>
 <br>
-<a href="./privacy-policy.html">Privacy policy</a>
+<a href="/privacy-policy.html">Privacy policy</a>
