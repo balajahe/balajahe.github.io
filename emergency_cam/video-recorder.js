@@ -16,7 +16,7 @@ customElements.define('video-recorder', class extends HTMLElement {
             <input w-name='/email' type='email' required placeholder='Email to send...'/>
          </div>
       `
-      new WC(this)
+      new WC().bind(this)
       this.email = localStorage.getItem('email')
 
       const stream = await navigator.mediaDevices.getUserMedia(
@@ -30,7 +30,8 @@ customElements.define('video-recorder', class extends HTMLElement {
          const subj = this.location?.latitude + ', ' + this.location?.longitude
          let name = '__' + date + ', ' + subj + '.webm'
          console.log(name)
-         document.querySelector('video-sender').send(this.email, subj, name, ev.data.slice())
+         document.querySelector('video-sender').send(this.email, subj, name, ev.data)
+         localStorage.setItem('email', this.email)
       }
 
       this.gmail.on('w-change', async (_) => {

@@ -1,7 +1,7 @@
 // WeirdComponentMixin.js
 // v0.0.2
 export default class {
-   constructor(obj) {
+   bind(obj) {
       obj.q = this.q.bind(obj)
       obj.on = this.on.bind(obj)
       obj.generateProps = this.generateProps.bind(obj)

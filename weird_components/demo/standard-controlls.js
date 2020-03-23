@@ -52,7 +52,7 @@ customElements.define('standard-controlls', class extends HTMLElement {
          </div></p>
          <a href='https://github.com/balajahe/balajahe.github.io/tree/master/weird_components/'>Sources on GitHub</a>
       `
-      new WC(this)
+      new WC().bind(this)
 
       setInterval(() => {
          this.time = (new Date()).toLocaleString()
