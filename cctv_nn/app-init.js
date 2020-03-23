@@ -1,9 +1,9 @@
-import WC from './weird-component.js'
+import WC from '../weird_components/WeirdComponentMixin.js'
 
-customElements.define('app-init', class extends WC {
+customElements.define('app-init', class extends HTMLElement {
    connectedCallback() {
       this.innerHTML = `
-         <div el='msg'>
+         <div w-name='msg'>
             <p>
                CCTV system based on a power web application and COCO-SSD neural network. Detects people, records video, and sends it to an email.
             </p>
@@ -15,10 +15,10 @@ customElements.define('app-init', class extends WC {
                <br>
                <a href="/privacy-policy.html" target="_blank">Privacy policy</a>
             </p>
-            <button el='do' style='width:100%'>Start</button>
+            <button w-name='do' style='width:100%'>Start</button>
          </div>
       `
-      this.generate_props()
+      new WC().bind(this)
 
       this.do.onclick = async (ev) => {
          this.msg.remove()

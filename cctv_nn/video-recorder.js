@@ -1,8 +1,8 @@
-import WC from './weird-component.js'
+import WC from '../weird_components/WeirdComponentMixin.js'
 
 const CHUNK_DURATION = 7000
 
-customElements.define('video-recorder', class extends WC {
+customElements.define('video-recorder', class extends HTMLElement {
    detector = null
    stream = null
    capture = null
@@ -14,18 +14,18 @@ customElements.define('video-recorder', class extends WC {
 
    async init() {
       this.innerHTML = `
-         <video el='video' autoplay muted style='display:none'></video>
-         <canvas el='c_canvas' style='display:none'></canvas>
-         <canvas el='c_bbox' style='position:absolute; top:0; left:0'></canvas>
-         <div ih='msg'>Loading...</div>
-         <nav el='nav' style='display:none'>
-            <button el='b_detect' vl='detecting'>Start / Stop detecting</button>
-            <button el='b_noplayer' vl='noplayer'>No player</button>
-            <button el='b_noalarm' vl='noalarm'>No alarm</button>
+         <video w-name='video' autoplay muted style='display:none'></video>
+         <canvas w-name='c_canvas' style='display:none'></canvas>
+         <canvas w-name='c_bbox' style='position:absolute; top:0; left:0'></canvas>
+         <div w-name='/msg'>Loading...</div>
+         <nav w-name='nav' style='display:none'>
+            <button w-name='b_detect/detecting'>Start / Stop detecting</button>
+            <button w-name='b_noplayer/noplayer'>No player</button>
+            <button w-name='b_noalarm/noalarm'>No alarm</button>
          </nav>
-         <audio el='alarm' loop src='./alarm.mp3'></audio>
+         <audio w-name='alarm' loop src='./alarm.mp3'></audio>
       `
-      this.generate_props()
+      new WC().bind(this)
       this.canvas = this.c_canvas.getContext('2d')
       this.bbox = this.c_bbox.getContext('2d')
 
@@ -42,7 +42,7 @@ customElements.define('video-recorder', class extends WC {
       this.W = this.c_bbox.width = this.c_canvas.width = this.video.videoWidth
       this.H = this.c_bbox.height = this.c_canvas.height = this.video.videoHeight
       document.querySelector('#app').style.width = this.W + 'px'
-      this.video.style.display = ''
+      this.video.show()
 
       this.recorder.rec = new MediaRecorder(this.stream, {mimeType : 'video/webm'})
       this.recorder.rec.ondataavailable = (ev) => {
@@ -55,8 +55,8 @@ customElements.define('video-recorder', class extends WC {
          }
       }
 
-      this.b_detect.onclick = (ev) => {
-         this.detecting = !this.detecting
+      this.b_detect.on('w-change', (_) => {
+         this.b_detect.className = this.b_detect.val
          if (this.detecting) {
             this.recorder.rec.start()
             this.recorder.num = 0
@@ -70,20 +70,20 @@ customElements.define('video-recorder', class extends WC {
             this.recorder.rec.stop()
             clearInterval(this.recorder.interval)
          }
-      }
+      })
 
-      this.b_noplayer.onclick = (ev) => {
-         this.noplayer = !this.noplayer
+      this.b_noplayer.on('w-change', (_) => {
+         this.b_noplayer.className = this.b_noplayer.val
          if (this.noplayer)
             this.video.pause()
          else
             this.video.play()
-      }
+      })
 
-      this.b_noalarm.onclick = (ev) => {
-         this.noalarm = !this.noalarm
+      this.b_noalarm.on('w-change', (_) => {
+         this.b_noalarm.className = this.b_noalarm.val
          if (this.noalarm) this.alarm.pause()
-      }
+      })
 
       this.msg = 'Loading neural network...'
       this.detector = new Worker('./video-detector.js')
@@ -92,7 +92,7 @@ customElements.define('video-recorder', class extends WC {
       })
 
       this.msg = ''
-      this.nav.style.display = ''
+      this.nav.show()
    }
 
    async grab_video() {

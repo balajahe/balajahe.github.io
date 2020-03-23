@@ -1,18 +1,18 @@
-import WC from './weird-component.js'
+import WC from '../weird_components/WeirdComponentMixin.js'
 
 const API_KEY = 'AIzaSyDWwZB5DbLaT_11i4C7L9Ch_0rslAncDro'
 const CLIENT_ID = '62101814784-23re0bkiiihnb99sid30pgt21spu9ubk.apps.googleusercontent.com'
 
-customElements.define('video-sender', class extends WC {
+customElements.define('video-sender', class extends HTMLElement {
    async init() {
       this.innerHTML = `
-         <nav el='nav' style="display:none">
-            <input vl='email' type='email' required placeholder='Email to send...'/>
+         <nav w-name='nav' style="display:none">
+            <input w-name='/email' type='email' required placeholder='Email to send...'/>
          </nav>
-         <div ih='msg'>Connecting to Gmail...<br></div>
-         <a el='a' style="display:none"></a>
+         <div w-name='/msg'>Connecting to Gmail...<br></div>
+         <a w-name='a' style="display:none"></a>
       `
-      this.generate_props()
+      new WC().bind(this)
       this.email = localStorage.getItem('email')
 
       await import('https://apis.google.com/js/api.js')
@@ -23,7 +23,7 @@ customElements.define('video-sender', class extends WC {
                clientId: CLIENT_ID,
                discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest'],
                scope: 'https://www.googleapis.com/auth/gmail.send'
-            }) 
+            })
             if (!gapi.auth2.getAuthInstance().isSignedIn.je) {
                await gapi.auth2.getAuthInstance().signIn()
             }
@@ -72,7 +72,7 @@ customElements.define('video-sender', class extends WC {
       })
       return new Promise((resolve, reject) => {
          request.execute((res) => {
-            if (!res.code) resolve() 
+            if (!res.code) resolve()
             else reject(res)
          })
       })
