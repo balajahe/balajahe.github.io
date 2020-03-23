@@ -1,15 +1,15 @@
-import WC from '../weird_components/WeirdComponent.js'
+import WC from '../weird_components/WeirdComponentMixin.js'
 
 const API_KEY = 'AIzaSyDWwZB5DbLaT_11i4C7L9Ch_0rslAncDro'
 const CLIENT_ID = '62101814784-23re0bkiiihnb99sid30pgt21spu9ubk.apps.googleusercontent.com'
 
-customElements.define('video-sender', class extends WC {
+customElements.define('video-sender', class extends HTMLElement {
    connectedCallback() {
       this.innerHTML = `
          <a w-name='a' style='display:none'></a>
          <div w-name='/log'></div>
       `
-      this.generateProps()
+      new WC(this)
    }
 
    async connect() {

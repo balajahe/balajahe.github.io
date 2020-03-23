@@ -1,8 +1,8 @@
-import WC from '../weird_components/WeirdComponent.js'
+import WC from '../weird_components/WeirdComponentMixin.js'
 
 const CHUNK_DURATION = 5000
 
-customElements.define('video-recorder', class extends WC {
+customElements.define('video-recorder', class extends HTMLElement {
    location = null
    recorder = {rec: null, interval: null}
 
@@ -16,7 +16,7 @@ customElements.define('video-recorder', class extends WC {
             <input w-name='/email' type='email' required placeholder='Email to send...'/>
          </div>
       `
-      this.generateProps()
+      new WC(this)
       this.email = localStorage.getItem('email')
 
       const stream = await navigator.mediaDevices.getUserMedia(

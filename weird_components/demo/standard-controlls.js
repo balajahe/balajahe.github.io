@@ -1,6 +1,6 @@
-import WC from '../WeirdComponent.js'
+import WC from '../WeirdComponentMixin.js'
 
-customElements.define('standard-controlls', class extends WC {
+customElements.define('standard-controlls', class extends HTMLElement {
    connectedCallback() {
       this.innerHTML = `
          <p>Weird Components Demo: <small w-name='/time'></small></p>
@@ -52,7 +52,7 @@ customElements.define('standard-controlls', class extends WC {
          </div></p>
          <a href='https://github.com/balajahe/balajahe.github.io/tree/master/weird_components/'>Sources on GitHub</a>
       `
-      this.generateProps()
+      new WC(this)
 
       setInterval(() => {
          this.time = (new Date()).toLocaleString()

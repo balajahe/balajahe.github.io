@@ -1,10 +1,23 @@
-// WeirdComponent.js
-// v0.0.1
+// WeirdComponentMixin.js
+// v0.0.2
+export default class {
+   constructor(obj) {
+      obj.q = this.q.bind(obj)
+      obj.on = this.on.bind(obj)
+      obj.generateProps = this.generateProps.bind(obj)
+      obj.generateProps()
+   }
 
-export default class extends HTMLElement {
    q(s, i) {
       if (i === undefined) return this.querySelector(s)
       else return this.querySelectorAll(s)[i]
+   }
+
+   on(ev_name, deps, listener, fire) {
+      for (const dep of deps) {
+         dep.addEventListener(ev_name, listener)
+      }
+      if (fire) listener()
    }
 
    generateProps() {
@@ -104,12 +117,5 @@ export default class extends HTMLElement {
             })
          }
       }
-   }
-
-   on(ev_name, deps, listener, fire) {
-      for (const dep of deps) {
-         dep.addEventListener(ev_name, listener)
-      }
-      if (fire) listener()
    }
 }
