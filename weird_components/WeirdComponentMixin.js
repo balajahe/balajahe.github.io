@@ -41,6 +41,7 @@ export default class {
 
       for (const el of this.querySelectorAll('[w-name]')) {
          if (el._getVal !== undefined) continue
+
          if (el.tagName === 'INPUT') {
             if (el.type == 'number') {
                el._getVal = () => Number(el.value)
@@ -61,17 +62,17 @@ export default class {
          } else if (el.tagName === 'SELECT') {
             if (!el.multiple) {
                el._getVal = () => el.value
-               el._setVal = (v) => {
-                  throw 'доделать !'
-               }
+               el._setVal = (v) => el.value = v
             } else {
                el._getVal = () => {
                   let res = []
                   for (const op of el.selectedOptions) res.push(op.value)
                   return res
                }
-               el._setVal = (v) => {
-                  throw 'доделать !'
+               el._setVal = (vv) => {
+                  for (const op of el.querySelectorAll('option')) {
+                     op.selected = vv.includes(op.value)
+                  }
                }
             }
             el.addEventListener('input', (ev) => winput(el))
@@ -100,16 +101,18 @@ export default class {
             el.addEventListener('blur', (ev) => wchange(el))
          }
 
-         //if (Object.getOwnPropertyDescriptor(el, 'val') === undefined) {
+         try {
             Object.defineProperty(el, 'val', {
                get: () => el._getVal(),
-               set: (v) => { el._setVal(v); wchange(el) }
+               set: (v) => { el._setVal(v); winput(el); wchange(el) }
             })
-         //}
+         } catch(e) { console.error(e) }
 
          const [wname, wval] = el.getAttribute('w-name').split('/')
          if (wname) {
-            Object.defineProperty(this, wname, { get: () => el })
+            try {
+               Object.defineProperty(this, wname, { get: () => el })
+            } catch(e) { console.error(e) }
 
             if (el.on === undefined) {
                el.on = (ev_type, listener, fire, options) => {
@@ -127,14 +130,16 @@ export default class {
                      el.style.display = 'none'
                   }
                }
-            }
+            } else { throw 'Method "show" already exists in element "' + el.getAttribute('w-name') +'" ' }
          }
 
          if (wval) {
-            Object.defineProperty(this, wval, {
-               get: () => el.val,
-               set: (v) => el.val = v
-            })
+            try {
+               Object.defineProperty(this, wval, {
+                  get: () => el.val,
+                  set: (v) => el.val = v
+               })
+            } catch(e) { console.error(e) }
          }
       }
    }

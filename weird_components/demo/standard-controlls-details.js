@@ -1,4 +1,4 @@
-import WC from '../WeirdComponentMixin.js'
+import WC from '/weird_components/WeirdComponentMixin.js'
 
 customElements.define('standard-controlls-details', class extends HTMLElement {
    connectedCallback() {
@@ -20,18 +20,20 @@ customElements.define('standard-controlls-details', class extends HTMLElement {
             <button w-name='button/but'>Press me</button>
             <span w-name='/but1'></span>
             &emsp;
-            <select w-name='select/sel' style='height:1.6em'>
-               <option value="s1">Single select 1</option>
-               <option value="s2">Single select 2</option>
-               <option value="s3">Single select 3</option>
-            </select>
-            <span w-name='/sel1'></span>
+            <button w-name='setsel'>Select "v2"</button>
          </p>
          <p>
+            <select w-name='select/sel' style='height:1.6em'>
+               <option value="v1">Select 1</option>
+               <option value="v2">Select 2</option>
+               <option value="v3">Select 3</option>
+            </select>
+            <span w-name='/sel1'></span>
+            &emsp;
             <select w-name='selectm/selm' multiple>
-               <option value="m1">Multiple select 1</option>
-               <option value="m2">Multiple select 2</option>
-               <option value="m3">Multiple select 3</option>
+               <option value="v1">Multi-select 1</option>
+               <option value="v2">Multi-select 2</option>
+               <option value="v3">Multi-select 3</option>
             </select>
             <span w-name='/selm1'></span>
             &emsp;
@@ -62,6 +64,10 @@ customElements.define('standard-controlls-details', class extends HTMLElement {
       this.button.on('w-input', (_) => {
          this.button.className = this.but
          this.but1 = this.but
+      })
+      this.setsel.on('w-change', () => {
+         this.sel = 'v2'
+         this.selm = ['v2']
       })
 
       this.select.on('w-input', (_) => this.sel1 = this.sel)

@@ -1,4 +1,4 @@
-import WC from '../weird_components/WeirdComponentMixin.js'
+import WC from '/weird_components/WeirdComponentMixin.js'
 
 const CHUNK_DURATION = 5000
 

@@ -1,4 +1,4 @@
-import WC from '../WeirdComponentMixin.js'
+import WC from '/weird_components/WeirdComponentMixin.js'
 import './standard-controlls-details.js'
 
 customElements.define('standard-controlls-summary', class extends HTMLElement {
