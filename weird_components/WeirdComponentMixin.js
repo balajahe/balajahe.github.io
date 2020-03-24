@@ -3,17 +3,11 @@
 export default class {
    static bind(obj) {
       const wc = new this()
-      obj.q = wc.q.bind(obj)
-      obj.qq = wc.qq.bind(obj)
       obj.on = wc.on.bind(obj)
       obj.onAny = wc.onAny.bind(obj)
       obj.generateProps = wc.generateProps.bind(obj)
       obj.generateProps()
    }
-
-   q(s, i) { return this.querySelector(s) }
-
-   qq(s) { return this.querySelectorAll(s)[i] }
 
    on(ev_type, listener, fire, options) {
       this.addEventListener(ev_type, listener, options)
