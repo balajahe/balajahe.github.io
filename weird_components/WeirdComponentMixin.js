@@ -1,38 +1,46 @@
 // WeirdComponentMixin.js
 // v0.0.2
 export default class {
-   bind(obj) {
-      obj.q = this.q.bind(obj)
-      obj.on = this.on.bind(obj)
-      obj.generateProps = this.generateProps.bind(obj)
+   static bind(obj) {
+      const wc = new this()
+      obj.q = wc.q.bind(obj)
+      obj.qq = wc.qq.bind(obj)
+      obj.on = wc.on.bind(obj)
+      obj.onAny = wc.onAny.bind(obj)
+      obj.generateProps = wc.generateProps.bind(obj)
       obj.generateProps()
    }
 
-   q(s, i) {
-      if (i === undefined) return this.querySelector(s)
-      else return this.querySelectorAll(s)[i]
+   q(s, i) { return this.querySelector(s) }
+
+   qq(s) { return this.querySelectorAll(s)[i] }
+
+   on(ev_type, listener, fire, options) {
+      this.addEventListener(ev_type, listener, options)
+      if (fire) listener()
    }
 
-   on(ev_name, deps, listener, fire) {
-      for (const dep of deps) {
-         dep.addEventListener(ev_name, listener)
+   onAny(ev_type, elements, listener, fire, options) {
+      for (const el of elements) {
+         el.addEventListener(ev_type, listener, options)
       }
       if (fire) listener()
    }
 
    generateProps() {
       const winput = (el) => {
-         const ev1 = new Event('w-input')
+         const ev1 = new Event('w-input', {"bubbles":true})
          ev1.val = el._getVal()
          el.dispatchEvent(ev1)
       }
       const wchange = (el) => {
-         const ev1 = new Event('w-change')
+         const ev1 = new Event('w-change', {"bubbles":true})
          ev1.val = el._getVal()
          el.dispatchEvent(ev1)
       }
 
       for (const el of this.querySelectorAll('[w-name]')) {
+         if (el._getVal !== undefined) continue
          if (el.tagName === 'INPUT') {
             if (el.type == 'number') {
                el._getVal = () => Number(el.value)
@@ -92,24 +100,36 @@ export default class {
             el.addEventListener('blur', (ev) => wchange(el))
          }
 
-         Object.defineProperty(el, 'val', {
-            get: () => el._getVal(),
-            set: (v) => { el._setVal(v); wchange(el) }
-         })
+         //if (Object.getOwnPropertyDescriptor(el, 'val') === undefined) {
+            Object.defineProperty(el, 'val', {
+               get: () => el._getVal(),
+               set: (v) => { el._setVal(v); wchange(el) }
+            })
+         //}
 
          const [wname, wval] = el.getAttribute('w-name').split('/')
          if (wname) {
             Object.defineProperty(this, wname, { get: () => el })
-            el.on = (ev_name, listener) => el.addEventListener(ev_name, listener)
-            el.show = (onoff = true) => {
-               if (onoff) {
-                  el.style.display = onoff === true ? el._saveDisplay !== undefined ? el._saveDisplay : '' : onoff
-               } else {
-                  el._saveDisplay = el.style.display
-                  el.style.display = 'none'
+
+            if (el.on === undefined) {
+               el.on = (ev_type, listener, fire, options) => {
+                  el.addEventListener(ev_type, listener, options)
+                  if (fire) listener()
+               }
+            }
+
+            if (el.show === undefined) {
+               el.show = (par = true) => {
+                  if (par) {
+                     el.style.display = (par === true ? el._oldDisplay !== undefined ? el._oldDisplay : '' : par)
+                  } else {
+                     el._oldDisplay = el.style.display
+                     el.style.display = 'none'
+                  }
                }
             }
          }
+
          if (wval) {
             Object.defineProperty(this, wval, {
                get: () => el.val,

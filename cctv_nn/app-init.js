@@ -18,7 +18,7 @@ customElements.define('app-init', class extends HTMLElement {
             <button w-name='do' style='width:100%'>Start</button>
          </div>
       `
-      new WC().bind(this)
+      WC.bind(this)
 
       this.do.onclick = async (ev) => {
          this.msg.remove()

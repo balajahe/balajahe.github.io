@@ -25,7 +25,7 @@ customElements.define('video-recorder', class extends HTMLElement {
          </nav>
          <audio w-name='alarm' loop src='./alarm.mp3'></audio>
       `
-      new WC().bind(this)
+      WC.bind(this)
       this.canvas = this.c_canvas.getContext('2d')
       this.bbox = this.c_bbox.getContext('2d')
 

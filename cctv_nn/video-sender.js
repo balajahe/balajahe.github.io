@@ -12,7 +12,7 @@ customElements.define('video-sender', class extends HTMLElement {
          <div w-name='/msg'>Connecting to Gmail...<br></div>
          <a w-name='a' style="display:none"></a>
       `
-      new WC().bind(this)
+      WC.bind(this)
       this.email = localStorage.getItem('email')
 
       await import('https://apis.google.com/js/api.js')

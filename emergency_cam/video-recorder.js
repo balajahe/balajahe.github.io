@@ -16,7 +16,7 @@ customElements.define('video-recorder', class extends HTMLElement {
             <input w-name='/email' type='email' required placeholder='Email to send...'/>
          </div>
       `
-      new WC().bind(this)
+      WC.bind(this)
       this.email = localStorage.getItem('email')
 
       const stream = await navigator.mediaDevices.getUserMedia(

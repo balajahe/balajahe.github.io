@@ -12,7 +12,7 @@ customElements.define('video-sender', class extends HTMLElement {
          <a w-name='a' style='display:none'></a>
          <div w-name='/log'></div>
       `
-      new WC().bind(this)
+      WC.bind(this)
    }
 
    async connect() {
