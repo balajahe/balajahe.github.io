@@ -54,13 +54,13 @@ customElements.define('standard-controlls-details', class extends HTMLElement {
          true
       )
 
-      this.onAny('w-input',
+      this.onAny('w-change',
          [this.dat1, this.dat2],
          (_) => this.d12 = (this.d2 - this.d1) / 86400000,
          true
       )
 
-      this.check.on('w-input', (_) => this.ch1 = this.ch)
+      this.check.on('w-change', (_) => this.ch1 = this.ch)
       this.button.on('w-input', (_) => {
          this.button.className = this.but
          this.but1 = this.but
@@ -70,8 +70,8 @@ customElements.define('standard-controlls-details', class extends HTMLElement {
          this.selm = ['v2']
       })
 
-      this.select.on('w-input', (_) => this.sel1 = this.sel)
-      this.selectm.on('w-input', (_) => this.selm1 = this.selm)
+      this.select.on('w-change', (_) => this.sel1 = this.sel)
+      this.selectm.on('w-change', (_) => this.selm1 = this.selm)
 
       this.txar.on('w-input', (ev) => this.txar1.val = ev.val.toUpperCase())
       this.div.on('w-input', (ev) => this.div1.val = ev.val.toUpperCase())
