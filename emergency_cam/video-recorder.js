@@ -19,7 +19,7 @@ customElements.define('video-recorder', class extends HTMLElement {
    async connectedCallback() {
       this.innerHTML = `
          <p w-name='msg'>Loading camera...</p>
-         <div w-name='div' style='display:none; flex-flow:column'>
+         <div w-name='div' style='display:none1; flex-flow:column'>
             <video w-name='video' autoplay muted></video>
             <nav style='display:flex; flex-flow:row nowrap'>
                <button w-name='rec/recording/className' style='flex-grow:3'>Start / Stop recording</button>
@@ -36,7 +36,7 @@ customElements.define('video-recorder', class extends HTMLElement {
       const stream = await navigator.mediaDevices.getUserMedia(
          {video: {facingMode: {ideal: "environment"}}, audio: true}
       )
-      this.video.srcObject = stream
+      //this.video.srcObject = stream
 
       this.recorder.rec = new MediaRecorder(stream, {mimeType : "video/webm"})
       this.recorder.rec.ondataavailable = async (ev) => {
