@@ -9,8 +9,8 @@ customElements.define('video-sender', class extends HTMLElement {
 
    connectedCallback() {
       this.innerHTML = `
-         <a w-name='a' style='display:none'></a>
          <div w-name='/log'></div>
+         <a w-name='a' style='display:none'></a>
       `
       WC.bind(this)
    }
@@ -44,14 +44,15 @@ customElements.define('video-sender', class extends HTMLElement {
       this.a.click()
       this.log += '&darr;'
 
-      const reader = new FileReader()
-      reader.readAsDataURL(chunk)
-      const chunk64 = await new Promise((resolve, reject) => {
-         reader.onloadend = () => resolve(reader.result.split(',')[1])
-      })
-
-      this.mails.push({subject, name, body: chunk64})
-      this._send_all()
+      if (to) {
+         const reader = new FileReader()
+         reader.readAsDataURL(chunk)
+         const chunk64 = await new Promise((resolve, reject) => {
+            reader.onloadend = () => resolve(reader.result.split(',')[1])
+         })
+         this.mails.push({subject, name, body: chunk64})
+         this._send_all()
+      }
    }
 
    async _send_all() {

@@ -3,25 +3,24 @@
 <head>
    <title>Balajahe CCTV NN</title>
    <meta charset="utf-8">
-   <meta name="viewport" content="width=device-width">
    <script type="module" src="./app-init.js"></script>
    <script type="module" src="./video-recorder.js"></script>
    <script type="module" src="./video-sender.js"></script>
+   <meta name="viewport" content="width=device-width, initial-scale=1">
    <style>
       body {margin: 0;}
       a {text-decoration: none;}
-      nav {margin-top: 0.15em; margin-bottom: 0.3em; display: flex; flex-direction: row}
-      button {height: 3em; font-size:large; flex-grow: 1;}
-      input {height: 2em; font-size: large; flex-grow: 1;}
-      button:active {background-color: red;}
+      button {height: 3em; font-size: large; margin-top: 0.2em;}
+      input {height: 2em; font-size: large; margin-top: 0.2em;}
       button.true {background-color: red;}
+      footer {margin-top: 0.5em;}
    </style>
 </head>
 <body>
    <div style="width:20em; padding-left: 0.5em;">
       <app-init></app-init>
    </div>
-   <div id='app'>
+   <div id="app">
       <video-recorder></video-recorder>
       <video-sender></video-sender>
    </div>

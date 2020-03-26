@@ -17,7 +17,7 @@ customElements.define('standard-controlls-details', class extends HTMLElement {
             <label>Check me<input w-name='check/ch' type='checkbox'/></label>
             <span w-name='/ch1'></span>
             &emsp;
-            <button w-name='button/but'>Press me</button>
+            <button w-name='button/but/className'>Press me</button>
             <span w-name='/but1'></span>
             &emsp;
             <button w-name='setsel'>Select "v2"</button>
@@ -61,10 +61,7 @@ customElements.define('standard-controlls-details', class extends HTMLElement {
       )
 
       this.check.on('w-change', (_) => this.ch1 = this.ch)
-      this.button.on('w-input', (_) => {
-         this.button.className = this.but
-         this.but1 = this.but
-      })
+      this.button.on('w-input', (_) => this.but1 = this.but)
       this.setsel.on('w-change', () => {
          this.sel = 'v2'
          this.selm = ['v2']

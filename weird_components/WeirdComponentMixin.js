@@ -22,12 +22,14 @@ export default class {
    }
 
    generateProps() {
-      const winput = (el) => {
+      const winput = (ev) => {
+         const el = ev.target
          const ev1 = new Event('w-input', {"bubbles":true})
          ev1.val = el._getVal()
          el.dispatchEvent(ev1)
       }
-      const wchange = (el) => {
+      const wchange = (ev) => {
+         const el = ev.target
          const ev1 = new Event('w-change', {"bubbles":true})
          ev1.val = el._getVal()
          el.dispatchEvent(ev1)
@@ -46,12 +48,15 @@ export default class {
             } else if (el.type == 'checkbox') {
                el._getVal = () => el.checked
                el._setVal = (v) => el.checked = v
+            } else if (el.type == 'radio') {
+               el._getVal = () => el.checked ? el.value : false
+               el._setVal = (v) => el.checked = v
             } else {
                el._getVal = () => el.value
                el._setVal = (v) => el.value = v
             }
-            el.addEventListener('input', (ev) => winput(el))
-            el.addEventListener('change', (ev) => wchange(el))
+            el.addEventListener('input', (ev) => winput(ev))
+            el.addEventListener('change', (ev) => wchange(ev))
 
          } else if (el.tagName === 'SELECT') {
             if (!el.multiple) {
@@ -69,14 +74,14 @@ export default class {
                   }
                }
             }
-            el.addEventListener('input', (ev) => winput(el))
-            el.addEventListener('change', (ev) => wchange(el))
+            el.addEventListener('input', (ev) => winput(ev))
+            el.addEventListener('change', (ev) => wchange(ev))
 
          } else if (el.tagName === 'TEXTAREA') {
             el._getVal = () => el.value
             el._setVal = (v) => el.value = v
-            el.addEventListener('input', (ev) => winput(el))
-            el.addEventListener('blur', (ev) => wchange(el))
+            el.addEventListener('input', (ev) => winput(ev))
+            el.addEventListener('blur', (ev) => wchange(ev))
 
          } else if (el.tagName === 'BUTTON') {
             el._val = false
@@ -84,25 +89,33 @@ export default class {
             el._setVal = (v) => el._val = v
             el.addEventListener('click', (ev) => {
                el._val = !el._val
-               winput(el)
-               wchange(el)
+               winput(ev)
+               wchange(ev)
             })
 
          } else {
             el._getVal = () => el.innerHTML
             el._setVal = (v) => el.innerHTML = v
-            el.addEventListener('input', (ev) => winput(el))
-            el.addEventListener('blur', (ev) => wchange(el))
+            el.addEventListener('input', (ev) => winput(ev))
+            el.addEventListener('blur', (ev) => wchange(ev))
          }
 
          try {
             Object.defineProperty(el, 'val', {
                get: () => el._getVal(),
-               set: (v) => { el._setVal(v); winput(el); wchange(el) }
+               set: (v) => {
+                  el._setVal(v)
+                  let ev1 = new Event('w-input', {"bubbles":true})
+                  ev1.val = el._getVal()
+                  el.dispatchEvent(ev1)
+                  ev1 = new Event('w-change', {"bubbles":true})
+                  ev1.val = el._getVal()
+                  el.dispatchEvent(ev1)
+               }
             })
          } catch(e) { console.error(e) }
 
-         const [wname, wval] = el.getAttribute('w-name').split('/')
+         const [wname, wval, wval1] = el.getAttribute('w-name').split('/')
          if (wname) {
             try {
                Object.defineProperty(this, wname, { get: () => el })
@@ -114,7 +127,6 @@ export default class {
                   if (fire) listener()
                }
             }
-
             if (el.show === undefined) {
                el.show = (par = true) => {
                   if (par) {
@@ -126,7 +138,6 @@ export default class {
                }
             } else { throw 'Method "show" already exists in element "' + el.getAttribute('w-name') +'" ' }
          }
-
          if (wval) {
             try {
                Object.defineProperty(this, wval, {
@@ -134,6 +145,11 @@ export default class {
                   set: (v) => el.val = v
                })
             } catch(e) { console.error(e) }
+         }
+         if (wval1) {
+            el.addEventListener('w-change', (ev) =>
+               ev.target[wval1] = ev.target.val
+            )
          }
       }
    }

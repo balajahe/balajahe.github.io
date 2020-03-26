@@ -14,15 +14,17 @@ customElements.define('video-recorder', class extends HTMLElement {
 
    async init() {
       this.innerHTML = `
-         <video w-name='video' autoplay muted style='display:none'></video>
-         <canvas w-name='c_canvas' style='display:none'></canvas>
-         <canvas w-name='c_bbox' style='position:absolute; top:0; left:0'></canvas>
-         <div w-name='/msg'>Loading...</div>
-         <nav w-name='nav' style='display:none'>
-            <button w-name='b_detect/detecting'>Start / Stop detecting</button>
-            <button w-name='b_noplayer/noplayer'>No player</button>
-            <button w-name='b_noalarm/noalarm'>No alarm</button>
-         </nav>
+         <div w-name='div' style='display:none; flex-flow:column'>
+            <video w-name='video' autoplay muted></video>
+            <canvas w-name='c_canvas' style='display:none'></canvas>
+            <canvas w-name='c_bbox' style='position:absolute; top:0; left:0'></canvas>
+            <div w-name='el_msg/msg'>Loading...</div>
+            <nav w-name='nav' style='display:none; flex-flow:row nowrap'>
+               <button w-name='b_detect/detecting/className' style='flex-grow:3'>Start / Stop detecting</button>
+               &nbsp;<button w-name='b_noplayer/noplayer/className' style='flex-grow:1'>No player</button>
+               &nbsp;<button w-name='b_noalarm/noalarm/className' style='flex-grow:1'>No alarm</button>
+            </nav>
+         </div>
          <audio w-name='alarm' loop src='./alarm.mp3'></audio>
       `
       WC.bind(this)
@@ -42,7 +44,7 @@ customElements.define('video-recorder', class extends HTMLElement {
       this.W = this.c_bbox.width = this.c_canvas.width = this.video.videoWidth
       this.H = this.c_bbox.height = this.c_canvas.height = this.video.videoHeight
       document.querySelector('#app').style.width = this.W + 'px'
-      this.video.show()
+      this.div.show('flex')
 
       this.recorder.rec = new MediaRecorder(this.stream, {mimeType : 'video/webm'})
       this.recorder.rec.ondataavailable = (ev) => {
@@ -56,7 +58,6 @@ customElements.define('video-recorder', class extends HTMLElement {
       }
 
       this.b_detect.on('w-change', (_) => {
-         this.b_detect.className = this.b_detect.val
          if (this.detecting) {
             this.recorder.rec.start()
             this.recorder.num = 0
@@ -73,7 +74,6 @@ customElements.define('video-recorder', class extends HTMLElement {
       })
 
       this.b_noplayer.on('w-change', (_) => {
-         this.b_noplayer.className = this.b_noplayer.val
          if (this.noplayer)
             this.video.pause()
          else
@@ -81,7 +81,6 @@ customElements.define('video-recorder', class extends HTMLElement {
       })
 
       this.b_noalarm.on('w-change', (_) => {
-         this.b_noalarm.className = this.b_noalarm.val
          if (this.noalarm) this.alarm.pause()
       })
 
@@ -91,8 +90,8 @@ customElements.define('video-recorder', class extends HTMLElement {
          this.detector.onmessage = (_) => resolve()
       })
 
-      this.msg = ''
-      this.nav.show()
+      this.el_msg.remove()
+      this.nav.show('flex')
    }
 
    async grab_video() {

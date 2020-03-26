@@ -4,14 +4,28 @@ const CHUNK_DURATION = 5000
 
 customElements.define('video-recorder', class extends HTMLElement {
    location = null
-   recorder = {rec: null, interval: null}
+   recorder = {
+      rec: null,
+      interval: null,
+      setInterval: () => {
+         this.recorder.interval = setInterval(() => {
+            this.recorder.rec.stop()
+            this.recorder.rec.start()
+         }, CHUNK_DURATION)
+      },
+      clearInterval: () => clearInterval(this.recorder.interval)
+   }
 
    async connectedCallback() {
       this.innerHTML = `
          <p w-name='msg'>Loading camera...</p>
-         <div w-name='div' style='display: none; flex-direction: column'>
+         <div w-name='div' style='display:none; flex-flow:column'>
             <video w-name='video' autoplay muted></video>
-            <button w-name='rec/recording'>Start / Stop recording</button>
+            <nav style='display:flex; flex-flow:row nowrap'>
+               <button w-name='rec/recording/className' style='flex-grow:3'>Start / Stop recording</button>
+               &nbsp;<button w-name='/noemail/className' style='flex-grow:1'>No email</button>
+               &nbsp;<button w-name='no_chunk/nochunk/className' style='flex-grow:1'>No chunks</button>
+            </nav>
             <button w-name='gmail' style='display: none'>Connect to Gmail</button>
             <input w-name='/email' type='email' required placeholder='Email to send...'/>
          </div>
@@ -30,8 +44,12 @@ customElements.define('video-recorder', class extends HTMLElement {
          const subj = this.location?.latitude + ', ' + this.location?.longitude
          let name = '__' + date + ', ' + subj + '.webm'
          console.log(name)
-         document.querySelector('video-sender').send(this.email, subj, name, ev.data)
-         localStorage.setItem('email', this.email)
+         if (!this.noemail) {
+            document.querySelector('video-sender').send(this.email, subj, name, ev.data)
+            localStorage.setItem('email', this.email)
+         } else {
+            document.querySelector('video-sender').send(null, subj, name, ev.data)
+         }
       }
 
       this.gmail.on('w-change', async (_) => {
@@ -46,19 +64,23 @@ customElements.define('video-recorder', class extends HTMLElement {
       this.gmail.click()
 
       this.rec.on('w-change', (_) => {
-         this.rec.className = this.recording
          if (this.recording) {
             this.recorder.rec.start()
-            this.recorder.interval = setInterval(() => {
-               this.recorder.rec.stop()
-               this.recorder.rec.start()
-            }, CHUNK_DURATION)
+            if (!this.nochunk) this.recorder.setInterval()
          } else {
             this.recorder.rec.stop()
-            clearInterval(this.recorder.interval)
+            this.recorder.clearInterval()
          }
       })
       this.rec.click()
+
+      this.no_chunk.on('w-change', (ev) => {
+         if (this.nochunk) {
+            this.recorder.clearInterval()
+         } else {
+            this.recorder.setInterval()
+         }
+      })
 
       navigator.geolocation.getCurrentPosition(
          (loc) => this.location = loc.coords

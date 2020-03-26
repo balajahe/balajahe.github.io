@@ -6,10 +6,8 @@ const CLIENT_ID = '62101814784-23re0bkiiihnb99sid30pgt21spu9ubk.apps.googleuserc
 customElements.define('video-sender', class extends HTMLElement {
    async init() {
       this.innerHTML = `
-         <nav w-name='nav' style="display:none">
-            <input w-name='/email' type='email' required placeholder='Email to send...'/>
-         </nav>
-         <div w-name='/msg'>Connecting to Gmail...<br></div>
+         <input w-name='el_email/email' type='email' style='display:none; width:99.5%' required placeholder='Email to send...'/>
+         <div w-name='/log'>Connecting to Gmail...<br></div>
          <a w-name='a' style="display:none"></a>
       `
       WC.bind(this)
@@ -27,10 +25,10 @@ customElements.define('video-sender', class extends HTMLElement {
             if (!gapi.auth2.getAuthInstance().isSignedIn.je) {
                await gapi.auth2.getAuthInstance().signIn()
             }
-            this.msg = ''
-            this.nav.style.display = ''
+            this.log = ''
+            this.el_email.show()
          } catch(e) {
-            this.msg = 'Gmail authorization error: ' + JSON.stringify(e, null, 2) + '<br>'
+            this.log = 'Gmail authorization error: ' + JSON.stringify(e, null, 2) + '<br>'
          }
       })
    }
@@ -45,14 +43,14 @@ customElements.define('video-sender', class extends HTMLElement {
          })
          await this.send_mail(type, 'video/webm; name="' + name + '"', chunk64)
          localStorage.setItem('email', this.email)
-         this.msg += '&uarr;'
+         this.log += '&uarr;'
       } catch(e) {
          console.error(e)
          console.warn('Cannot send email, saving locally !')
          this.a.href = URL.createObjectURL(chunk)
          this.a.download = name
          this.a.click()
-         this.msg += '&darr;'
+         this.log += '&darr;'
       }
    }
 
