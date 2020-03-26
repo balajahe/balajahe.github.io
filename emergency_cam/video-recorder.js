@@ -19,12 +19,17 @@ customElements.define('video-recorder', class extends HTMLElement {
    async connectedCallback() {
       this.innerHTML = `
          <p w-name='msg'>Loading camera...</p>
-         <div w-name='div' style='display:none1; flex-flow:column'>
+         <div w-name='div' style='display:none; flex-flow:column'>
             <video w-name='video' autoplay muted></video>
+            <div w-name='iframe' style='display:none; position:absolute; height:100vh; flex-flow:column'>
+               <iframe src='https://ru.wikipedia.org' style='width:100%; height:95vh' sandbox='allow-forms allow-scripts'></iframe>
+               <button w-name='unlock' style='width:100%; height:5vw; margin:0'>Unlock</button>
+            </div>
             <nav style='display:flex; flex-flow:row nowrap'>
-               <button w-name='rec/recording/className' style='flex-grow:3'>Start / Stop recording</button>
+               <button w-name='rec/recording/className' style='flex-grow:4'>Start / Stop recording</button>
                &nbsp;<button w-name='/noemail/className' style='flex-grow:1'>No email</button>
                &nbsp;<button w-name='no_chunk/nochunk/className' style='flex-grow:1'>No chunks</button>
+               &nbsp;<button w-name='lock' style='flex-grow:1'>Lock</button>
             </nav>
             <button w-name='gmail' style='display: none'>Connect to Gmail</button>
             <input w-name='/email' type='email' required placeholder='Email to send...'/>
@@ -36,7 +41,7 @@ customElements.define('video-recorder', class extends HTMLElement {
       const stream = await navigator.mediaDevices.getUserMedia(
          {video: {facingMode: {ideal: "environment"}}, audio: true}
       )
-      //this.video.srcObject = stream
+       this.video.srcObject = stream
 
       this.recorder.rec = new MediaRecorder(stream, {mimeType : "video/webm"})
       this.recorder.rec.ondataavailable = async (ev) => {
@@ -82,6 +87,9 @@ customElements.define('video-recorder', class extends HTMLElement {
          }
       })
 
+      this.lock.on('w-change', (ev) => this.iframe.show('flex'))
+      this.unlock.on('w-change', (ev) => this.iframe.show(false))
+
       navigator.geolocation.getCurrentPosition(
          (loc) => this.location = loc.coords
       )
@@ -90,7 +98,9 @@ customElements.define('video-recorder', class extends HTMLElement {
       )
 
       this.video.onloadedmetadata = (ev) => {
-         document.querySelector('#app').style.width = ev.target.videoWidth + 'px'
+         const w = ev.target.videoWidth + 'px'
+         document.querySelector('#app').style.width = w
+         this.iframe.style.width = w
          this.msg.remove()
          this.div.show('flex')
       }
