@@ -26,9 +26,9 @@ customElements.define('video-recorder', class extends HTMLElement {
                <button w-name='unlock' style='width:100%; height:5vw; margin:0'>Unlock</button>
             </div>
             <nav style='display:flex; flex-flow:row nowrap'>
-               <button w-name='rec/recording/className' style='flex-grow:4'>Start / Stop recording</button>
+               <button w-name='rec/recording/className' style='flex-grow:3'>Start / Stop recording</button>
                &nbsp;<button w-name='/noemail/className' style='flex-grow:1'>No email</button>
-               &nbsp;<button w-name='no_chunk/nochunk/className' style='flex-grow:1'>No chunks</button>
+               &nbsp;<button w-name='no_chunk/nochunk/className' style='flex-grow:1'>No chunk</button>
                &nbsp;<button w-name='lock' style='flex-grow:1'>Lock</button>
             </nav>
             <button w-name='gmail' style='display: none'>Connect to Gmail</button>
