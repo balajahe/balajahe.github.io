@@ -1,5 +1,5 @@
 const APP = 'emergency_cam'
-const VERSION = '.v20'
+const VERSION = '.v21'
 
 self.oninstall = (ev) => ev.waitUntil(
   caches.open(APP + VERSION)
