@@ -30,8 +30,8 @@ customElements.define('video-recorder', class extends HTMLElement {
             <button w-name='gmail' style='display:none'>Connect to Gmail</button>
             <input w-name='/email' type='email' required placeholder='Email to send...'/>
          </div>
-         <div w-name='iframe' style='display:none; flex-flow:column; position:fixed; top:0; left:0; width:100vw; height:100vh'>
-            <button w-name='unlock' style='width:100%; height:4%; margin:0'>Unlock</button>
+         <div w-name='locdiv' id='locdiv' style='display:none; flex-flow:column; position:fixed; top:0; left:0; width:100vw; height:100vh'>
+            <button w-name='unlock' style='width:100%; height:4%'>Unlock</button>
             <iframe src='https://ru.wikipedia.org' style='width:100%; height:96%' sandbox='allow-forms allow-scripts'></iframe>
          </div>
       `
@@ -87,8 +87,8 @@ customElements.define('video-recorder', class extends HTMLElement {
          }
       })
 
-      this.lock.on('w-change', (ev) => this.iframe.display('flex'))
-      this.unlock.on('w-change', (ev) => this.iframe.display(false))
+      this.lock.on('w-change', (ev) => this.locdiv.display('flex'))
+      this.unlock.on('w-change', (ev) => this.locdiv.display(false))
 
       navigator.geolocation.getCurrentPosition(
          (loc) => this.location = loc.coords
