@@ -26,7 +26,7 @@ customElements.define('video-sender', class extends HTMLElement {
                await gapi.auth2.getAuthInstance().signIn()
             }
             this.log = ''
-            this.el_email.show()
+            this.el_email.display()
          } catch(e) {
             this.log = 'Gmail authorization error: ' + JSON.stringify(e, null, 2) + '<br>'
          }

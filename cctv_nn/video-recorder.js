@@ -44,7 +44,7 @@ customElements.define('video-recorder', class extends HTMLElement {
       this.W = this.c_bbox.width = this.c_canvas.width = this.video.videoWidth
       this.H = this.c_bbox.height = this.c_canvas.height = this.video.videoHeight
       document.querySelector('#app').style.width = this.W + 'px'
-      this.div.show('flex')
+      this.div.display('flex')
 
       this.recorder.rec = new MediaRecorder(this.stream, {mimeType : 'video/webm'})
       this.recorder.rec.ondataavailable = (ev) => {
@@ -91,7 +91,7 @@ customElements.define('video-recorder', class extends HTMLElement {
       })
 
       this.el_msg.remove()
-      this.nav.show('flex')
+      this.nav.display('flex')
    }
 
    async grab_video() {

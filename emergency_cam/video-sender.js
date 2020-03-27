@@ -43,7 +43,6 @@ customElements.define('video-sender', class extends HTMLElement {
       this.a.download = name
       this.a.click()
       this.log += '&darr;'
-
       if (to) {
          const reader = new FileReader()
          reader.readAsDataURL(chunk)

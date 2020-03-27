@@ -127,8 +127,9 @@ export default class {
                   if (fire) listener()
                }
             }
-            if (el.show === undefined) {
-               el.show = (par = true) => {
+
+            if (el.display === undefined) {
+               el.display = (par = true) => {
                   if (par) {
                      el.style.display = (par === true ? el._oldDisplay !== undefined ? el._oldDisplay : '' : par)
                   } else {
@@ -136,8 +137,9 @@ export default class {
                      el.style.display = 'none'
                   }
                }
-            } else { throw 'Method "show" already exists in element "' + el.getAttribute('w-name') +'" ' }
+            } else { throw 'Method "display" already exists in element "' + el.getAttribute('w-name') +'" ' }
          }
+
          if (wval) {
             try {
                Object.defineProperty(this, wval, {
@@ -146,6 +148,7 @@ export default class {
                })
             } catch(e) { console.error(e) }
          }
+         
          if (wval1) {
             el.addEventListener('w-change', (ev) =>
                ev.target[wval1] = ev.target.val

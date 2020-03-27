@@ -21,10 +21,10 @@ customElements.define('standard-controlls-summary', class extends HTMLElement {
 
       this.hide.on('w-change', (_) => {
          if (this.hide.val) {
-            this.summary.show(false)
+            this.summary.display(false)
             this.hide.innerHTML = 'Show summary'
          } else {
-            this.summary.show()
+            this.summary.display()
             this.hide.innerHTML = 'Hide summary'
          }
       })

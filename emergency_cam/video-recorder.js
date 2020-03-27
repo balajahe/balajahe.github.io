@@ -19,12 +19,8 @@ customElements.define('video-recorder', class extends HTMLElement {
    async connectedCallback() {
       this.innerHTML = `
          <p w-name='msg'>Loading camera...</p>
-         <div w-name='div' style='display:none; flex-flow:column'>
+         <div w-name='recdiv' id='recdiv' style='display:none; flex-flow:column'>
             <video w-name='video' autoplay muted></video>
-            <div w-name='iframe' style='display:none; position:absolute; height:100vh; flex-flow:column'>
-               <iframe src='https://ru.wikipedia.org' style='width:100%; height:95vh' sandbox='allow-forms allow-scripts'></iframe>
-               <button w-name='unlock' style='width:100%; height:5vw; margin:0'>Unlock</button>
-            </div>
             <nav style='display:flex; flex-flow:row nowrap'>
                <button w-name='rec/recording/className' style='flex-grow:3'>Start / Stop recording</button>
                &nbsp;<button w-name='/noemail/className' style='flex-grow:1'>No email</button>
@@ -33,6 +29,10 @@ customElements.define('video-recorder', class extends HTMLElement {
             </nav>
             <button w-name='gmail' style='display: none'>Connect to Gmail</button>
             <input w-name='/email' type='email' required placeholder='Email to send...'/>
+         </div>
+         <div w-name='iframe' style='display:none; flex-flow:column; position:fixed; top:0; left:0; width:100vw; height:100vh'>
+            <iframe src='https://ru.wikipedia.org' style='width:100%; height:96%' sandbox='allow-forms allow-scripts'></iframe>
+            <button w-name='unlock' style='width:100%; height:4%; margin:0'>Unlock</button>
          </div>
       `
       WC.bind(this)
@@ -60,10 +60,10 @@ customElements.define('video-recorder', class extends HTMLElement {
       this.gmail.on('w-change', async (_) => {
          try {
             await document.querySelector('video-sender').connect()
-            this.gmail.show(false)
+            this.gmail.display(false)
          } catch(e) {
             console.error(e)
-            this.gmail.show()
+            this.gmail.display()
          }
       })
       this.gmail.click()
@@ -87,8 +87,8 @@ customElements.define('video-recorder', class extends HTMLElement {
          }
       })
 
-      this.lock.on('w-change', (ev) => this.iframe.show('flex'))
-      this.unlock.on('w-change', (ev) => this.iframe.show(false))
+      this.lock.on('w-change', (ev) => this.iframe.display('flex'))
+      this.unlock.on('w-change', (ev) => this.iframe.display(false))
 
       navigator.geolocation.getCurrentPosition(
          (loc) => this.location = loc.coords
@@ -98,11 +98,8 @@ customElements.define('video-recorder', class extends HTMLElement {
       )
 
       this.video.onloadedmetadata = (ev) => {
-         const w = ev.target.videoWidth + 'px'
-         document.querySelector('#app').style.width = w
-         this.iframe.style.width = w
          this.msg.remove()
-         this.div.show('flex')
+         this.recdiv.display('flex')
       }
    }
 })
