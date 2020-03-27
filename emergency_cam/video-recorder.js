@@ -27,12 +27,12 @@ customElements.define('video-recorder', class extends HTMLElement {
                &nbsp;<button w-name='no_chunk/nochunk/className' style='flex-grow:1'>No chunk</button>
                &nbsp;<button w-name='lock' style='flex-grow:1'>Lock</button>
             </nav>
-            <button w-name='gmail' style='display: none'>Connect to Gmail</button>
+            <button w-name='gmail' style='display:none'>Connect to Gmail</button>
             <input w-name='/email' type='email' required placeholder='Email to send...'/>
          </div>
          <div w-name='iframe' style='display:none; flex-flow:column; position:fixed; top:0; left:0; width:100vw; height:100vh'>
-            <iframe src='https://ru.wikipedia.org' style='width:100%; height:96%' sandbox='allow-forms allow-scripts'></iframe>
             <button w-name='unlock' style='width:100%; height:4%; margin:0'>Unlock</button>
+            <iframe src='https://ru.wikipedia.org' style='width:100%; height:96%' sandbox='allow-forms allow-scripts'></iframe>
          </div>
       `
       WC.bind(this)

@@ -4,19 +4,20 @@
    <title>Balajahe Emergency Cam</title>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1">
-   <script type="module">//navigator.serviceWorker.register('./app-sw.js')</script>
+   <script type="module">navigator.serviceWorker.register('./app-sw.js')</script>
    <script type="module" src="./video-recorder.js"></script>
    <script type="module" src="./video-sender.js"></script>
    <style>
       body {margin: 0;}
       #recdiv {width:100vw; max-width:640px;}
       #recdiv > * {width:100vw; max-width:640px;}
-      a {text-decoration: none;}
+      iframe {background-color: white;}
       button {height: 3em; font-size: large; margin-top: 0.2em;}
-      input {height: 2em; font-size: large; margin-top: 0.2em;}
+      input {box-sizing: border-box; height: 2em; font-size: large; margin-top: 0.2em;}
       button.true {background-color: red;}
       button:active {background-color: red;}
       footer {margin-top: 0.5em;}
+      a {text-decoration: none;}
    </style>
 </head>
 <body>
