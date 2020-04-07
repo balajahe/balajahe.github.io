@@ -1,64 +1,62 @@
 const app = require('express')()
 const PORT = 3000
-const waits = []
+const sessions = []
 
-app.get('/srv', (request, response) => {
-   const sid = request.query.sid
-   const sdp = request.query.sdp
-   console.log('SRV: sid = ' + sid + ', sdp = ' + sdp)
-   if (sid) { // ответ на клиентский запрос
-      const i = waits.findIndex(v => v.sid === sid && v.side === 'cli')
-      if (i >= 0) {
-         const wait = waits[i]
-         wait.response.send({sid, sdp})
-         waits.splice(i,1)
-         response.send({ok: true})
-      } else { // клиент отвалился, ждем может еще придет
-         add_wait('srv', undefined, sdp, request, response)
-      }
-   } else { // обслуживание новых клиентов
-      add_wait('srv', undefined, sdp, request, response)
-      try_match()
-   }
-})
-
-app.get('/cli', (request, response) => {
-   const sid = request.query.sid
-   const sdp = request.query.sdp
-   console.log('CLI: sid = ' + sid + ', sdp = ' + sdp)
-   let i = waits.findIndex(v => v.sid === sid && v.side === 'srv')
-   if (i >= 0) {
-      const wait = waits[i]
-      wait.response.send({sid, sdp})
-      waits.splice(i,1)
-   } else {
-      add_wait('cli', sid, sdp, request, response)
-      try_match()
-   }
-})
-
-function try_match() {
-   const isrv = waits.findIndex(v => v.sid === undefined && v.side === 'srv')
-   if (isrv >= 0) {
-      const srv = waits[isrv]
-      const cli = waits.find(v => !v.processing && v.side === 'cli')
-      if (cli) {
-         cli.processing = true
-         srv.response.send({sid: cli.sid, sdp: cli.sdp})
-         waits.splice(isrv,1)
-      }
-   }
-}
-
-function add_wait(side, sid, sdp, request, response) {
-   response.setHeader('Content-Type', 'application/json; charset=utf-8')
-   response.setHeader("Cache-Control", "no-cache, must-revalidate")
-   waits.push({side, sid, sdp, response})
+function new_session(sid, sdp, request, response) {
+   const ses = {sid, sdp, request, response}
+   sessions.push(ses)
    request.on('close', () => {
-      const i = waits.findIndex(v => v.response === response)
-      if (i >= 0) waits.splice(i,1)
+      const i = sessions.findIndex(v => v.request === request)
+      if (i >= 0) {
+         console.log('closed: ' + sessions[i].sid);
+         del_session(i)
+      }
    })
+   return ses
 }
+
+function del_session(i) {
+   //console.log('deleted: ' + sessions[i].sid)
+   sessions.splice(i,1)
+}
+
+app.get('/', (request, response) => {
+   const sid = request.query.sid
+   const sdp = request.query.sdp
+   console.log('sid = ' + sid + ', sdp = ' + sdp)
+
+   if (sid === 'srv' || sid === 'cli') { // пришел серверный листнер или новый клиент, пробуем сопоставить
+      new_session(sid, sdp, request, response)
+      const isrv = sessions.findIndex(v => v.sid === 'srv')
+      if (isrv >= 0) {
+         srv = sessions[isrv]
+         const icli = sessions.findIndex(v => v.sid === 'cli')
+         if (icli >= 0) {
+            cli = sessions[icli]
+            const sid_new = Math.random()
+            srv.response.send({sid: sid_new, sdp: cli.sdp})
+            cli.response.send({sid: sid_new, ok: true})
+            del_session(isrv)
+            del_session(icli)
+         }
+      }
+   } else { // пришел серверный или клиентский запрос в рамках существующей сессии
+      const i = sessions.findIndex(v => v.sid === sid)
+      if (i === -1) { // другая сторона неготова принять, ждем
+         new_session(sid, sdp, request, response)
+      } else { // запросы клиента и сервера сопоставлены, определяем направление данных
+         ses = sessions[i]
+         if (sdp) {
+            ses.response.send({sid, sdp})
+            response.send({sid, ok: true})
+         } else if (ses.sdp) {
+            response.send({sid, sdp: ses.sdp})
+            ses.response.send({sid, ok: true})
+         }
+         del_session(i)
+      }
+   }
+})
 
 app.listen(PORT,() => {
    console.log('Signaling server running on port ' + PORT)
