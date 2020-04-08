@@ -8,16 +8,22 @@ function new_session(sid, sdp, request, response) {
    request.on('close', () => {
       const i = sessions.findIndex(v => v.request === request)
       if (i >= 0) {
-         console.log('closed: ' + sessions[i].sid);
          del_session(i)
+         console.log('closed: ' + request.url)
       }
    })
    return ses
 }
 
 function del_session(i) {
-   //console.log('deleted: ' + sessions[i].sid)
    sessions.splice(i,1)
+}
+
+function send(res, body) {
+   res.setHeader('Content-Type', 'application/json; charset=utf-8')
+   res.setHeader("Cache-Control", "no-cache, must-revalidate")
+   res.setHeader("Access-Control-Allow-Origin", "*")
+   res.send(body)
 }
 
 app.get('/', (request, response) => {
@@ -34,10 +40,10 @@ app.get('/', (request, response) => {
          if (icli >= 0) {
             cli = sessions[icli]
             const sid_new = Math.random()
-            srv.response.send({sid: sid_new, sdp: cli.sdp})
-            cli.response.send({sid: sid_new, ok: true})
-            del_session(isrv)
+            send(cli.response, {sid: sid_new, ok: true})
+            send(srv.response, {sid: sid_new, sdp: cli.sdp})
             del_session(icli)
+            del_session(isrv)
          }
       }
    } else { // пришел серверный или клиентский запрос в рамках существующей сессии
@@ -47,11 +53,11 @@ app.get('/', (request, response) => {
       } else { // запросы клиента и сервера сопоставлены, определяем направление данных
          ses = sessions[i]
          if (sdp) {
-            ses.response.send({sid, sdp})
-            response.send({sid, ok: true})
+            send(ses.response, {sid, sdp})
+            send(response, {sid, ok: true})
          } else if (ses.sdp) {
-            response.send({sid, sdp: ses.sdp})
-            ses.response.send({sid, ok: true})
+            send(response, {sid, sdp: ses.sdp})
+            send(ses.response, {sid, ok: true})
          }
          del_session(i)
       }
