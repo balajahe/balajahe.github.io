@@ -2,8 +2,8 @@ const app = require('express')()
 const PORT = 3000
 const sessions = []
 
-function new_session(sid, sdp, request, response) {
-   const ses = {sid, sdp, request, response}
+function new_session(sid, data, request, response) {
+   const ses = {sid, data, request, response}
    sessions.push(ses)
    request.on('close', () => {
       const i = sessions.findIndex(v => v.request === request)
@@ -28,11 +28,11 @@ function send(res, body) {
 
 app.get('/', (request, response) => {
    const sid = request.query.sid
-   const sdp = request.query.sdp
-   console.log('sid = ' + sid + ', sdp = ' + sdp)
+   const data = request.query.data
+   console.log('sid = ' + sid + ', data = ' + data)
 
    if (sid === 'srv' || sid === 'cli') { // пришел серверный листнер или новый клиент, пробуем сопоставить
-      new_session(sid, sdp, request, response)
+      new_session(sid, data, request, response)
       const isrv = sessions.findIndex(v => v.sid === 'srv')
       if (isrv >= 0) {
          srv = sessions[isrv]
@@ -41,7 +41,7 @@ app.get('/', (request, response) => {
             cli = sessions[icli]
             const sid_new = Math.random()
             send(cli.response, {sid: sid_new, ok: true})
-            send(srv.response, {sid: sid_new, sdp: cli.sdp})
+            send(srv.response, {sid: sid_new, data: cli.data})
             del_session(icli)
             del_session(isrv)
          }
@@ -49,14 +49,14 @@ app.get('/', (request, response) => {
    } else { // пришел серверный или клиентский запрос в рамках существующей сессии
       const i = sessions.findIndex(v => v.sid === sid)
       if (i === -1) { // другая сторона неготова принять, ждем
-         new_session(sid, sdp, request, response)
+         new_session(sid, data, request, response)
       } else { // запросы клиента и сервера сопоставлены, определяем направление данных
          ses = sessions[i]
-         if (sdp) {
-            send(ses.response, {sid, sdp})
+         if (data) {
+            send(ses.response, {sid, data})
             send(response, {sid, ok: true})
-         } else if (ses.sdp) {
-            send(response, {sid, sdp: ses.sdp})
+         } else if (ses.data) {
+            send(response, {sid, data: ses.data})
             send(ses.response, {sid, ok: true})
          }
          del_session(i)

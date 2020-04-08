@@ -46,7 +46,7 @@ customElements.define('video-recorder', class extends HTMLElement {
       this.email = localStorage.getItem('email')
 
       this.start_srv.on('w-change', async () => {
-         const {sid, sdp: offer} = await (await fetch(this.signaling + '?sid=srv')).json()
+         const {sid, data: offer} = await (await fetch(this.signaling + '?sid=srv')).json()
          this.rtc = new RTCPeerConnection(
             {configuration: {offerToReceiveAudio: true, offerToReceiveVideo: true}}
          )
@@ -54,13 +54,22 @@ customElements.define('video-recorder', class extends HTMLElement {
 
          const answer = await this.rtc.createAnswer()
          await this.rtc.setLocalDescription(answer)
-         const {ok} = await (await fetch(this.signaling + '?sid=' + sid + '&sdp=' + encodeURI(answer.sdp))).json()
-
-         this.rtc.onicecandidate = (ev) => {
+         const {ok} = await (await fetch(this.signaling + '?sid=' + sid + '&data=' + encodeURI(answer.sdp))).json()
+/*
+         this.rtc.onaddstream = (ev) => {
+            console.log(ev)
+            this.video.srcObject = ev.stream
+         }
+*/
+         this.rtc.onicecandidate = async (ev) => {
             if (ev.candidate) {
-               console.log(ev.candidate)
+               //console.log(ev.candidate)
+               const {ok} = await (await fetch(this.signaling + '?sid=' + sid + '&data=' + encodeURI(JSON.stringify(ev.candidate)))).json()
             }
          }
+         const {data: ice} = await (await fetch(this.signaling + '?sid=' + sid)).json()
+         console.log(JSON.parse(ice))
+         await this.rtc.addIceCandidate(JSON.parse(ice))
       })
 
       this.start_cli.on('w-change', async () => {
@@ -73,16 +82,20 @@ customElements.define('video-recorder', class extends HTMLElement {
          stream.getTracks().forEach(track => this.rtc.addTrack(track, stream))
          const offer = await this.rtc.createOffer()
          await this.rtc.setLocalDescription(offer)
-         const {sid, ok} = await (await fetch(this.signaling + '?sid=cli&sdp=' + encodeURI(offer.sdp))).json()
+         const {sid, ok} = await (await fetch(this.signaling + '?sid=cli&data=' + encodeURI(offer.sdp))).json()
 
-         const {sdp: answer} = await (await fetch(this.signaling + '?sid=' + sid)).json()
+         const {data: answer} = await (await fetch(this.signaling + '?sid=' + sid)).json()
          await this.rtc.setRemoteDescription({type: 'answer', sdp: answer})
 
-         this.rtc.onicecandidate = (ev) => {
+         this.rtc.onicecandidate = async (ev) => {
             if (ev.candidate) {
-               console.log(ev.candidate)
+               //console.log(ev.candidate)
+               const {ok} = await (await fetch(this.signaling + '?sid=' + sid + '&data=' + encodeURI(JSON.stringify(ev.candidate)))).json()
             }
          }
+         const {data: ice} = await (await fetch(this.signaling + '?sid=' + sid)).json()
+         console.log(JSON.parse(ice))
+         await this.rtc.addIceCandidate(JSON.parse(ice))
       })
 
 /*
