@@ -2,14 +2,14 @@ const app = require('express')()
 const PORT = 3000
 const sessions = []
 
-function new_session(sid, data, request, response) {
-   const ses = {sid, data, request, response}
+function new_session(side, sid, data, request, response) {
+   const ses = {side, sid, data, request, response}
    sessions.push(ses)
    request.on('close', () => {
       const i = sessions.findIndex(v => v.request === request)
       if (i >= 0) {
          del_session(i)
-         console.log('closed: ' + request.url)
+         console.log('closed: ' + request.url.slice(0, request.url.split('\n')[0]))
       }
    })
    return ses
@@ -27,16 +27,17 @@ function send(res, body) {
 }
 
 app.get('/', (request, response) => {
+   const side = request.query.side
    const sid = request.query.sid
    const data = request.query.data
-   console.log('sid = ' + sid + ', data = ' + data)
+   console.log('side = ' + side + ', sid = ' + sid + ', data = ' + data.split('\n')[0])
 
-   if (sid === 'srv' || sid === 'cli') { // пришел серверный листнер или новый клиент, пробуем сопоставить
-      new_session(sid, data, request, response)
-      const isrv = sessions.findIndex(v => v.sid === 'srv')
+   if (!sid) { // пришел серверный листнер или новый клиент, пробуем сопоставить
+      new_session(side, sid, data, request, response)
+      const isrv = sessions.findIndex(v => v.side === 'srv' && !v.sid)
       if (isrv >= 0) {
          srv = sessions[isrv]
-         const icli = sessions.findIndex(v => v.sid === 'cli')
+         const icli = sessions.findIndex(v => v.side === 'cli' && !v.sid)
          if (icli >= 0) {
             cli = sessions[icli]
             const sid_new = Math.random()
@@ -44,12 +45,13 @@ app.get('/', (request, response) => {
             send(srv.response, {sid: sid_new, data: cli.data})
             del_session(icli)
             del_session(isrv)
+            console.log('delivered !')
          }
       }
    } else { // пришел серверный или клиентский запрос в рамках существующей сессии
-      const i = sessions.findIndex(v => v.sid === sid)
+      const i = sessions.findIndex(v => v.side !== side && v.sid === sid && (!v.data && data || !data && v.data))
       if (i === -1) { // другая сторона неготова принять, ждем
-         new_session(sid, data, request, response)
+         new_session(side, sid, data, request, response)
       } else { // запросы клиента и сервера сопоставлены, определяем направление данных
          ses = sessions[i]
          if (data) {
@@ -60,6 +62,7 @@ app.get('/', (request, response) => {
             send(ses.response, {sid, ok: true})
          }
          del_session(i)
+         console.log('delivered !')
       }
    }
 })

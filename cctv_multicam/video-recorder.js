@@ -3,8 +3,10 @@ import WC from '/weird_components/WeirdComponentMixin.js'
 const CHUNK_DURATION = 10
 
 customElements.define('video-recorder', class extends HTMLElement {
-   signaling = 'http://localhost:3000/'
+   signal_srv = 'http://localhost:3000/'
    rtc = null
+   side = ''
+   sid = ''
    location = null
    recorder = {
       rec: null,
@@ -16,6 +18,24 @@ customElements.define('video-recorder', class extends HTMLElement {
          }, CHUNK_DURATION * 1000)
       },
       clearInterval: () => clearInterval(this.recorder.interval)
+   }
+
+   async signal(data = '') {
+      return (await fetch(this.signal_srv + '?side=' + this.side + '&sid=' + this.sid + '&data=' + data)).json()
+   }
+
+   async exchange_ice() {
+      this.rtc.onicecandidate = async (ev) => {
+         if (ev.candidate) {
+            console.log(ev.candidate)
+            const {ok} = await this.signal(encodeURI(JSON.stringify(ev.candidate)))
+         }
+      }
+      while (true) {
+         const {data: ice} = await this.signal()
+         console.log(JSON.parse(ice))
+         await this.rtc.addIceCandidate(JSON.parse(ice))
+      }
    }
 
    async connectedCallback() {
@@ -46,30 +66,23 @@ customElements.define('video-recorder', class extends HTMLElement {
       this.email = localStorage.getItem('email')
 
       this.start_srv.on('w-change', async () => {
-         const {sid, data: offer} = await (await fetch(this.signaling + '?sid=srv')).json()
+         this.side = 'srv'
+         const {sid, data: offer} = await this.signal()
+         this.sid = sid
          this.rtc = new RTCPeerConnection(
             {configuration: {offerToReceiveAudio: true, offerToReceiveVideo: true}}
          )
+         this.rtc.ontrack = (ev) => {
+            console.log(ev)
+            this.video.srcObject = ev.streams[0]
+         }
          await this.rtc.setRemoteDescription({type: 'offer', sdp: offer})
 
          const answer = await this.rtc.createAnswer()
          await this.rtc.setLocalDescription(answer)
-         const {ok} = await (await fetch(this.signaling + '?sid=' + sid + '&data=' + encodeURI(answer.sdp))).json()
-/*
-         this.rtc.onaddstream = (ev) => {
-            console.log(ev)
-            this.video.srcObject = ev.stream
-         }
-*/
-         this.rtc.onicecandidate = async (ev) => {
-            if (ev.candidate) {
-               //console.log(ev.candidate)
-               const {ok} = await (await fetch(this.signaling + '?sid=' + sid + '&data=' + encodeURI(JSON.stringify(ev.candidate)))).json()
-            }
-         }
-         const {data: ice} = await (await fetch(this.signaling + '?sid=' + sid)).json()
-         console.log(JSON.parse(ice))
-         await this.rtc.addIceCandidate(JSON.parse(ice))
+         const {ok} = await this.signal(encodeURI(answer.sdp))
+
+         this.exchange_ice()
       })
 
       this.start_cli.on('w-change', async () => {
@@ -82,20 +95,14 @@ customElements.define('video-recorder', class extends HTMLElement {
          stream.getTracks().forEach(track => this.rtc.addTrack(track, stream))
          const offer = await this.rtc.createOffer()
          await this.rtc.setLocalDescription(offer)
-         const {sid, ok} = await (await fetch(this.signaling + '?sid=cli&data=' + encodeURI(offer.sdp))).json()
+         this.side = 'cli'
+         const {sid, ok} = await this.signal(encodeURI(offer.sdp))
+         this.sid = sid
 
-         const {data: answer} = await (await fetch(this.signaling + '?sid=' + sid)).json()
+         const {data: answer} = await this.signal()
          await this.rtc.setRemoteDescription({type: 'answer', sdp: answer})
 
-         this.rtc.onicecandidate = async (ev) => {
-            if (ev.candidate) {
-               //console.log(ev.candidate)
-               const {ok} = await (await fetch(this.signaling + '?sid=' + sid + '&data=' + encodeURI(JSON.stringify(ev.candidate)))).json()
-            }
-         }
-         const {data: ice} = await (await fetch(this.signaling + '?sid=' + sid)).json()
-         console.log(JSON.parse(ice))
-         await this.rtc.addIceCandidate(JSON.parse(ice))
+         this.exchange_ice()
       })
 
 /*
