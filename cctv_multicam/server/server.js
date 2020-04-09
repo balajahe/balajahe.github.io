@@ -9,7 +9,7 @@ function new_session(side, sid, data, request, response) {
       const i = sessions.findIndex(v => v.request === request)
       if (i >= 0) {
          del_session(i)
-         console.log('closed: ' + request.url.slice(0, request.url.split('\n')[0]))
+         console.log('closed: ' + request.url.slice(0,100).replace(/\r\n/g, ' '))
       }
    })
    return ses
@@ -30,7 +30,7 @@ app.get('/', (request, response) => {
    const side = request.query.side
    const sid = request.query.sid
    const data = request.query.data
-   console.log('side = ' + side + ', sid = ' + sid + ', data = ' + data.split('\n')[0])
+   console.log('side = ' + side + ', sid = ' + sid + ', data = ' + (data ? data.slice(0,100).replace(/\r\n/g, ' ') : data))
 
    if (!sid) { // пришел серверный листнер или новый клиент, пробуем сопоставить
       new_session(side, sid, data, request, response)
@@ -45,7 +45,7 @@ app.get('/', (request, response) => {
             send(srv.response, {sid: sid_new, data: cli.data})
             del_session(icli)
             del_session(isrv)
-            console.log('delivered !')
+            console.log('DELIVERED !')
          }
       }
    } else { // пришел серверный или клиентский запрос в рамках существующей сессии
@@ -62,7 +62,7 @@ app.get('/', (request, response) => {
             send(ses.response, {sid, ok: true})
          }
          del_session(i)
-         console.log('delivered !')
+         console.log('DELIVERED !')
       }
    }
 })

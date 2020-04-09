@@ -20,21 +20,23 @@ customElements.define('video-recorder', class extends HTMLElement {
       clearInterval: () => clearInterval(this.recorder.interval)
    }
 
-   async signal(data = '') {
-      return (await fetch(this.signal_srv + '?side=' + this.side + '&sid=' + this.sid + '&data=' + data)).json()
+   async signal(data) {
+      let url = this.signal_srv + '?side=' + this.side + '&sid=' + this.sid
+      if (data) url += '&data=' + data
+      return (await fetch(url)).json()
    }
 
    async exchange_ice() {
       this.rtc.onicecandidate = async (ev) => {
          if (ev.candidate) {
-            console.log(ev.candidate)
             const {ok} = await this.signal(encodeURI(JSON.stringify(ev.candidate)))
+            console.log(ev.candidate)
          }
       }
       while (true) {
          const {data: ice} = await this.signal()
-         console.log(JSON.parse(ice))
          await this.rtc.addIceCandidate(JSON.parse(ice))
+         console.log(JSON.parse(ice))
       }
    }
 
@@ -44,7 +46,7 @@ customElements.define('video-recorder', class extends HTMLElement {
             <button w-name='start_srv'>Start DVR (server)</button>
             <button w-name='start_cli'>Start Videcam (client)</button>
          </nav>
-         <div w-name='recdiv' id='recdiv' style='display:none; flex-flow:column'>
+         <div w-name='recdiv' id='recdiv' style='display:none1; flex-flow:column'>
             <video w-name='video' autoplay muted></video>
             <nav style='display:flex; flex-flow:row nowrap'>
                <button w-name='rec/recording/className' style='flex-grow:3'>Start / Stop translating</button>
@@ -70,7 +72,7 @@ customElements.define('video-recorder', class extends HTMLElement {
          const {sid, data: offer} = await this.signal()
          this.sid = sid
          this.rtc = new RTCPeerConnection(
-            {configuration: {offerToReceiveAudio: true, offerToReceiveVideo: true}}
+            {offerToReceiveAudio: true, offerToReceiveVideo: true}
          )
          this.rtc.ontrack = (ev) => {
             console.log(ev)
@@ -91,7 +93,9 @@ customElements.define('video-recorder', class extends HTMLElement {
          )
          this.video.srcObject = stream
 
-         this.rtc = new RTCPeerConnection()
+         this.rtc = new RTCPeerConnection(
+            {offerToReceiveAudio: true, offerToReceiveVideo: true}
+         )
          stream.getTracks().forEach(track => this.rtc.addTrack(track, stream))
          const offer = await this.rtc.createOffer()
          await this.rtc.setLocalDescription(offer)
