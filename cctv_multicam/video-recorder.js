@@ -1,9 +1,9 @@
 import WC from '/weird_components/WeirdComponentMixin.js'
 
+const SIGNAL_SRV = 'http://localhost:3000/'
 const CHUNK_DURATION = 10
 
 customElements.define('video-recorder', class extends HTMLElement {
-   signal_srv = 'http://localhost:3000/'
    rtc = null
    side = ''
    sid = ''
@@ -43,6 +43,7 @@ customElements.define('video-recorder', class extends HTMLElement {
    async connectedCallback() {
       this.innerHTML = `
          <nav id='start'>
+            <label>Signaling server:&nbsp;<input w-name='/signal_srv'/></label>
             <button w-name='start_srv'>Start DVR (server)</button>
             <button w-name='start_cli'>Start Videcam (client)</button>
          </nav>
@@ -66,14 +67,14 @@ customElements.define('video-recorder', class extends HTMLElement {
 */
       WC.bind(this)
       this.email = localStorage.getItem('email')
+      this.signal_srv = localStorage.getItem('signal_srv')
+      if (!this.signal_srv) this.signal_srv = SIGNAL_SRV
 
       this.start_srv.on('w-change', async () => {
          this.side = 'srv'
          const {sid, data: offer} = await this.signal()
          this.sid = sid
-         this.rtc = new RTCPeerConnection(
-            {offerToReceiveAudio: true, offerToReceiveVideo: true}
-         )
+         this.rtc = new RTCPeerConnection({"iceServers": [{"url": "stun:stun.l.google.com:19302"}]})
          this.rtc.ontrack = (ev) => {
             console.log(ev)
             this.video.srcObject = ev.streams[0]
@@ -93,9 +94,7 @@ customElements.define('video-recorder', class extends HTMLElement {
          )
          this.video.srcObject = stream
 
-         this.rtc = new RTCPeerConnection(
-            {offerToReceiveAudio: true, offerToReceiveVideo: true}
-         )
+         this.rtc = new RTCPeerConnection({"iceServers": [{"url": "stun:stun.l.google.com:19302"}]})
          stream.getTracks().forEach(track => this.rtc.addTrack(track, stream))
          const offer = await this.rtc.createOffer()
          await this.rtc.setLocalDescription(offer)
@@ -166,7 +165,7 @@ customElements.define('video-recorder', class extends HTMLElement {
       )
 
       this.video.onloadedmetadata = (ev) => {
-         //this.querySelector('#start').remove()
+         this.querySelector('#start').remove()
          this.recdiv.display('flex')
       }
    }
