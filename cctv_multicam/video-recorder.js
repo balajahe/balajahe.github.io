@@ -2,9 +2,10 @@ import WC from '/weird_components/WeirdComponentMixin.js'
 
 const SIGNAL_SRV = 'http://localhost:3000/'
 const STUN_SRVS = [
-   'stun:stun2.l.google.com:19302',
-   'stun:stun3.l.google.com:19302',
-   'stun:stun4.l.google.com:19302'
+   'stun:stun.voipcheap.co.uk:3478',
+   'stun:stun.voipcheap.com:3478',
+   'stun:stun.voipbuster.com:3478',
+   'stun:stun.voipbusterpro.com:3478'
 ]
 const CHUNK_DURATION = 10
 
@@ -25,26 +26,6 @@ customElements.define('video-recorder', class extends HTMLElement {
       clearInterval: () => clearInterval(this.recorder.interval)
    }
 
-   async signal(data) {
-      let url = this.signal_srv + '?side=' + this.side + '&sid=' + this.sid
-      if (data) url += '&data=' + data
-      return (await fetch(url)).json()
-   }
-
-   async exchange_ice() {
-      this.rtc.onicecandidate = async (ev) => {
-         if (ev.candidate) {
-            const {ok} = await this.signal(encodeURI(JSON.stringify(ev.candidate)))
-            console.log(ev.candidate)
-         }
-      }
-      while (true) {
-         const {data: ice} = await this.signal()
-         await this.rtc.addIceCandidate(JSON.parse(ice))
-         console.log(JSON.parse(ice))
-      }
-   }
-
    async connectedCallback() {
       this.innerHTML = `
          <nav id='start'>
@@ -52,17 +33,19 @@ customElements.define('video-recorder', class extends HTMLElement {
             <button w-name='start_srv'>Start DVR (server)</button>
             <button w-name='start_cli'>Start Videcam (client)</button>
          </nav>
-         <div w-name='recdiv' id='recdiv' style='display:none1; flex-flow:column'>
-            <video w-name='video' autoplay muted></video>
-            <nav style='display:flex; flex-flow:row nowrap'>
-               <button w-name='rec/recording/className' style='flex-grow:3'>Start / Stop translating</button>
-               &nbsp;<button w-name='/noemail/className' style='flex-grow:1'>No email</button>
-               &nbsp;<button w-name='no_chunk/nochunk/className' style='flex-grow:1'>No chunk</button>
-               &nbsp;<button w-name='lock' style='flex-grow:1'>Lock</button>
-            </nav>
-            <button w-name='gmail' style='display:none'>Connect to Gmail</button>
-            <input w-name='/email' type='email' required placeholder='Email to send...'/>
-         </div>
+         <template w-name='recdiv'>
+            <div class='recdiv'>
+               <video w-name='video' autoplay muted></video>
+               <nav style='display:flex; flex-flow:row nowrap'>
+                  <button w-name='rec/recording/className' style='flex-grow:3'>Start / Stop translating</button>
+                  &nbsp;<button w-name='/noemail/className' style='flex-grow:1'>No email</button>
+                  &nbsp;<button w-name='no_chunk/nochunk/className' style='flex-grow:1'>No chunk</button>
+                  &nbsp;<button w-name='lock' style='flex-grow:1'>Lock</button>
+               </nav>
+               <button w-name='gmail' style='display:none'>Connect to Gmail</button>
+               <input w-name='/email' type='email' required placeholder='Email to send...'/>
+            </div>
+         </template>
       `
 /*
       <div w-name='locdiv' id='locdiv' style='display:none; flex-flow:column; position:fixed; top:0; left:0; width:100vw; height:100vh'>
@@ -76,10 +59,12 @@ customElements.define('video-recorder', class extends HTMLElement {
       if (!this.signal_srv) this.signal_srv = SIGNAL_SRV
 
       this.start_srv.on('w-change', async () => {
-         localStorage.setItem('signal_srv', this.signal_srv)
+         this.start()
          this.side = 'srv'
          const {sid, data: offer} = await this.signal()
+         console.log(offer)
          this.sid = sid
+         //this.rtc = new RTCPeerConnection()
          this.rtc = new RTCPeerConnection({"iceServers": [{"urls": STUN_SRVS}]})
          this.rtc.ontrack = (ev) => {
             console.log(ev)
@@ -95,12 +80,13 @@ customElements.define('video-recorder', class extends HTMLElement {
       })
 
       this.start_cli.on('w-change', async () => {
-         localStorage.setItem('signal_srv', this.signal_srv)
+         this.start()
          const stream = await navigator.mediaDevices.getUserMedia(
             {video: {facingMode: {ideal: "environment"}}, audio: true}
          )
          this.video.srcObject = stream
 
+         //this.rtc = new RTCPeerConnection()
          this.rtc = new RTCPeerConnection({"iceServers": [{"urls": STUN_SRVS}]})
          stream.getTracks().forEach(track => this.rtc.addTrack(track, stream))
          const offer = await this.rtc.createOffer()
@@ -110,6 +96,7 @@ customElements.define('video-recorder', class extends HTMLElement {
          this.sid = sid
 
          const {data: answer} = await this.signal()
+         console.log(answer)
          await this.rtc.setRemoteDescription({type: 'answer', sdp: answer})
 
          this.exchange_ice()
@@ -130,6 +117,13 @@ customElements.define('video-recorder', class extends HTMLElement {
          }
       }
 */
+   }
+
+   start() {
+      this.querySelector('#start').remove()
+      this.insertAdjacentHTML('beforeend', this.recdiv.innerHTML)
+      WC.bind(this)
+      localStorage.setItem('signal_srv', this.signal_srv)
 
       this.gmail.on('w-change', async (_) => {
          try {
@@ -172,8 +166,31 @@ customElements.define('video-recorder', class extends HTMLElement {
       )
 
       this.video.onloadedmetadata = (ev) => {
-         this.querySelector('#start').remove()
-         this.recdiv.display('flex')
+      }
+   }
+
+   async signal(data) {
+      let url = this.signal_srv + '?side=' + this.side + '&sid=' + this.sid
+      if (data) url += '&data=' + data
+      return (await fetch(url)).json()
+   }
+
+   async exchange_ice() {
+      this.rtc.onicecandidate = async (ev) => {
+         if (ev.candidate) {
+            const {ok} = await this.signal(encodeURI(JSON.stringify(ev.candidate)))
+            console.log(ev.candidate)
+         }
+      }
+      const ice = {
+         candidate: `candidate:2539918381 1 tcp 1518280447 192.168.42.51 9 typ host tcptype active generation 0 ufrag cvsF network-id 1 network-cost 50`,
+         sdpMid: "0",
+         sdpMLineIndex: 0
+      }
+      while (true) {
+         const {data: ice} = await this.signal()
+         await this.rtc.addIceCandidate(JSON.parse(ice))
+         console.log(JSON.parse(ice))
       }
    }
 })
