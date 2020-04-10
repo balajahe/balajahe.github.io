@@ -1,6 +1,11 @@
 import WC from '/weird_components/WeirdComponentMixin.js'
 
 const SIGNAL_SRV = 'http://localhost:3000/'
+const STUN_SRVS = [
+   'stun:stun2.l.google.com:19302',
+   'stun:stun3.l.google.com:19302',
+   'stun:stun4.l.google.com:19302'
+]
 const CHUNK_DURATION = 10
 
 customElements.define('video-recorder', class extends HTMLElement {
@@ -71,10 +76,11 @@ customElements.define('video-recorder', class extends HTMLElement {
       if (!this.signal_srv) this.signal_srv = SIGNAL_SRV
 
       this.start_srv.on('w-change', async () => {
+         localStorage.setItem('signal_srv', this.signal_srv)
          this.side = 'srv'
          const {sid, data: offer} = await this.signal()
          this.sid = sid
-         this.rtc = new RTCPeerConnection({"iceServers": [{"url": "stun:stun.l.google.com:19302"}]})
+         this.rtc = new RTCPeerConnection({"iceServers": [{"urls": STUN_SRVS}]})
          this.rtc.ontrack = (ev) => {
             console.log(ev)
             this.video.srcObject = ev.streams[0]
@@ -89,12 +95,13 @@ customElements.define('video-recorder', class extends HTMLElement {
       })
 
       this.start_cli.on('w-change', async () => {
+         localStorage.setItem('signal_srv', this.signal_srv)
          const stream = await navigator.mediaDevices.getUserMedia(
             {video: {facingMode: {ideal: "environment"}}, audio: true}
          )
          this.video.srcObject = stream
 
-         this.rtc = new RTCPeerConnection({"iceServers": [{"url": "stun:stun.l.google.com:19302"}]})
+         this.rtc = new RTCPeerConnection({"iceServers": [{"urls": STUN_SRVS}]})
          stream.getTracks().forEach(track => this.rtc.addTrack(track, stream))
          const offer = await this.rtc.createOffer()
          await this.rtc.setLocalDescription(offer)
