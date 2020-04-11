@@ -35,6 +35,7 @@ customElements.define('video-recorder', class extends HTMLElement {
          </nav>
          <template w-name='recdiv'>
             <div class='recdiv'>
+               <div w-name='msgdiv/msg'></div>
                <video w-name='video' autoplay muted></video>
                <nav style='display:flex; flex-flow:row nowrap'>
                   <button w-name='rec/recording/className' style='flex-grow:3'>Start / Stop translating</button>
@@ -54,12 +55,13 @@ customElements.define('video-recorder', class extends HTMLElement {
       </div>
 */
       WC.bind(this)
-      this.email = localStorage.getItem('email')
       this.signal_srv = localStorage.getItem('signal_srv')
       if (!this.signal_srv) this.signal_srv = SIGNAL_SRV
+      this.email = localStorage.getItem('email')
 
       this.start_srv.on('w-change', async () => {
          this.start()
+         this.msg = 'waiting clients...'
          this.side = 'srv'
          const {sid, data: offer} = await this.signal()
          console.log(offer)
@@ -76,18 +78,21 @@ customElements.define('video-recorder', class extends HTMLElement {
          await this.rtc.setLocalDescription(answer)
          const {ok} = await this.signal(encodeURI(answer.sdp))
 
+         this.msgdiv.remove()
          this.exchange_ice()
       })
 
       this.start_cli.on('w-change', async () => {
          this.start()
+         this.msg = 'connecting cam...'
          const stream = await navigator.mediaDevices.getUserMedia(
             {video: {facingMode: {ideal: "environment"}}, audio: true}
          )
          this.video.srcObject = stream
 
-         //this.rtc = new RTCPeerConnection()
+         this.msg = 'connecting signaling server...'
          this.rtc = new RTCPeerConnection({"iceServers": [{"urls": STUN_SRVS}]})
+         //this.rtc = new RTCPeerConnection()
          stream.getTracks().forEach(track => this.rtc.addTrack(track, stream))
          const offer = await this.rtc.createOffer()
          await this.rtc.setLocalDescription(offer)
@@ -99,6 +104,7 @@ customElements.define('video-recorder', class extends HTMLElement {
          console.log(answer)
          await this.rtc.setRemoteDescription({type: 'answer', sdp: answer})
 
+         this.msgdiv.remove()
          this.exchange_ice()
       })
 
@@ -123,6 +129,7 @@ customElements.define('video-recorder', class extends HTMLElement {
       this.querySelector('#start').remove()
       this.insertAdjacentHTML('beforeend', this.recdiv.innerHTML)
       WC.bind(this)
+
       localStorage.setItem('signal_srv', this.signal_srv)
 
       this.gmail.on('w-change', async (_) => {
