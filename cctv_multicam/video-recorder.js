@@ -197,9 +197,8 @@ customElements.define('video-recorder', class extends HTMLElement {
             //console.log(ev.candidate)
          }
       }
-      const ip = this.side === 'cli' ? this.signal_ip : this.my_ip
       const candidate = {
-         candidate: `candidate:2539918381 1 tcp 1518280447 ${ip} 9 typ host tcptype active generation 0 ufrag Zjzo network-id 1 network-cost 50`,
+         candidate: `candidate:2539918381 1 tcp 1518280447 ${this.my_ip} 9 typ host tcptype active generation 0 ufrag Zjzo network-id 1 network-cost 50`,
          sdpMid: "0",
          sdpMLineIndex: 0
       }
