@@ -58,6 +58,7 @@ customElements.define('video-recorder', class extends HTMLElement {
       </div>
 */
       WC.bind(this)
+      this.my_ip = localStorage.getItem('my_ip')
       this.signal_ip = localStorage.getItem('signal_ip')
       if (!this.signal_ip) this.signal_ip = SIGNAL_IP
       this.email = localStorage.getItem('email')
@@ -70,9 +71,9 @@ customElements.define('video-recorder', class extends HTMLElement {
          const {sid, ip, data: offer} = await this.signal()
          console.log(offer)
          this.sid = sid
-         this.my_ip = ip
-         //this.rtc = new RTCPeerConnection()
-         this.rtc = new RTCPeerConnection({"iceServers": [{"urls": STUN_SRVS}]})
+         //this.my_ip = ip
+         this.rtc = new RTCPeerConnection()
+         //this.rtc = new RTCPeerConnection({"iceServers": [{"urls": STUN_SRVS}]})
          this.rtc.ontrack = (ev) => {
             console.log(ev)
             this.video.srcObject = ev.streams[0]
@@ -106,6 +107,7 @@ customElements.define('video-recorder', class extends HTMLElement {
          const {sid, ip, ok} = await this.signal(encodeURI(offer.sdp))
          this.sid = sid
          this.my_ip = ip
+         localStorage.setItem('my_ip', this.my_ip)
 
          const {data: answer} = await this.signal()
          console.log(answer)

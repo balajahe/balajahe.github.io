@@ -31,7 +31,7 @@ app.get('/', (request, response) => {
    const side = request.query.side
    const sid = request.query.sid
    const data = request.query.data
-   console.log(`side = ${side}, ip = ${request.ip}, sid = ${sid}, data = ${data ? data.slice(0,120).replace(/\r\n/g, ' ') : data}`)
+   console.log(`side = ${side}, ip = ${request.ip}, sid = ${sid}, data = ${data ? data.slice(0,120).replace(/\r\n/g, ' ') : ''}`)
 
    if (!sid) { // пришел серверный листнер или новый клиент, пробуем сопоставить
       new_session(side, sid, data, request, response)
@@ -51,7 +51,7 @@ app.get('/', (request, response) => {
       }
    } else { // пришел серверный или клиентский запрос в рамках существующей сессии
       const i = sessions.findIndex(v => v.side !== side && v.sid === sid && (!v.data && data || !data && v.data))
-      if (i === -1) { // другая сторона неготова принять, ждем
+      if (i === -1) { // другая сторона не готова принять, ожидаем
          new_session(side, sid, data, request, response)
       } else { // запросы клиента и сервера сопоставлены, определяем направление данных
          ses = sessions[i]
