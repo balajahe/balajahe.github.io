@@ -9,7 +9,7 @@ function new_session(side, sid, data, request, response) {
       const i = sessions.findIndex(v => v.request === request)
       if (i >= 0) {
          del_session(i)
-         console.log('closed: ' + request.url.slice(0,100).replace(/\r\n/g, ' '))
+         console.log('closed: ' + request.url.slice(0,120).replace(/\r\n/g, ' '))
       }
    })
    return ses
@@ -23,6 +23,7 @@ function send(res, body) {
    res.setHeader('Content-Type', 'application/json; charset=utf-8')
    res.setHeader("Cache-Control", "no-cache, must-revalidate")
    res.setHeader("Access-Control-Allow-Origin", "*")
+   body.ip = res.socket.remoteAddress
    res.send(body)
 }
 
@@ -30,7 +31,7 @@ app.get('/', (request, response) => {
    const side = request.query.side
    const sid = request.query.sid
    const data = request.query.data
-   console.log('side = ' + side + ', sid = ' + sid + ', data = ' + (data ? data.slice(0,100).replace(/\r\n/g, ' ') : data))
+   console.log(`side = ${side}, ip = ${request.ip}, sid = ${sid}, data = ${data ? data.slice(0,120).replace(/\r\n/g, ' ') : data}`)
 
    if (!sid) { // пришел серверный листнер или новый клиент, пробуем сопоставить
       new_session(side, sid, data, request, response)

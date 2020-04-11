@@ -1,6 +1,6 @@
 import WC from '/weird_components/WeirdComponentMixin.js'
 
-const SIGNAL_SRV = 'http://localhost:3000/'
+const SIGNAL_IP = '127.0.0.1'
 const STUN_SRVS = [
    'stun:stun.voipcheap.co.uk:3478',
    'stun:stun.voipcheap.com:3478',
@@ -29,7 +29,10 @@ customElements.define('video-recorder', class extends HTMLElement {
    async connectedCallback() {
       this.innerHTML = `
          <nav id='start'>
-            <label>Signaling server:&nbsp;<input w-name='/signal_srv'/></label>
+            <nav style="white-space:nowrap">
+               <label>Signaling IP:<input w-name='/signal_ip'/></label>
+               <label>My IP:<input w-name='/my_ip'/></label>
+            </nav>
             <button w-name='start_srv'>Start DVR (server)</button>
             <button w-name='start_cli'>Start Videcam (client)</button>
          </nav>
@@ -55,17 +58,19 @@ customElements.define('video-recorder', class extends HTMLElement {
       </div>
 */
       WC.bind(this)
-      this.signal_srv = localStorage.getItem('signal_srv')
-      if (!this.signal_srv) this.signal_srv = SIGNAL_SRV
+      this.signal_ip = localStorage.getItem('signal_ip')
+      if (!this.signal_ip) this.signal_ip = SIGNAL_IP
       this.email = localStorage.getItem('email')
+
 
       this.start_srv.on('w-change', async () => {
          this.start()
          this.msg = 'waiting clients...'
          this.side = 'srv'
-         const {sid, data: offer} = await this.signal()
+         const {sid, ip, data: offer} = await this.signal()
          console.log(offer)
          this.sid = sid
+         this.my_ip = ip
          //this.rtc = new RTCPeerConnection()
          this.rtc = new RTCPeerConnection({"iceServers": [{"urls": STUN_SRVS}]})
          this.rtc.ontrack = (ev) => {
@@ -82,6 +87,7 @@ customElements.define('video-recorder', class extends HTMLElement {
          this.exchange_ice()
       })
 
+
       this.start_cli.on('w-change', async () => {
          this.start()
          this.msg = 'connecting cam...'
@@ -97,8 +103,9 @@ customElements.define('video-recorder', class extends HTMLElement {
          const offer = await this.rtc.createOffer()
          await this.rtc.setLocalDescription(offer)
          this.side = 'cli'
-         const {sid, ok} = await this.signal(encodeURI(offer.sdp))
+         const {sid, ip, ok} = await this.signal(encodeURI(offer.sdp))
          this.sid = sid
+         this.my_ip = ip
 
          const {data: answer} = await this.signal()
          console.log(answer)
@@ -126,11 +133,10 @@ customElements.define('video-recorder', class extends HTMLElement {
    }
 
    start() {
-      this.querySelector('#start').remove()
+      //this.querySelector('#start').remove()
       this.insertAdjacentHTML('beforeend', this.recdiv.innerHTML)
       WC.bind(this)
-
-      localStorage.setItem('signal_srv', this.signal_srv)
+      localStorage.setItem('signal_ip', this.signal_ip)
 
       this.gmail.on('w-change', async (_) => {
          try {
@@ -177,7 +183,7 @@ customElements.define('video-recorder', class extends HTMLElement {
    }
 
    async signal(data) {
-      let url = this.signal_srv + '?side=' + this.side + '&sid=' + this.sid
+      let url = `http://${this.signal_ip}:3000/?side=${this.side}&sid=${this.sid}`
       if (data) url += '&data=' + data
       return (await fetch(url)).json()
    }
@@ -185,15 +191,17 @@ customElements.define('video-recorder', class extends HTMLElement {
    async exchange_ice() {
       this.rtc.onicecandidate = async (ev) => {
          if (ev.candidate) {
-            const {ok} = await this.signal(encodeURI(JSON.stringify(ev.candidate)))
-            console.log(ev.candidate)
+            //const {ok} = await this.signal(encodeURI(JSON.stringify(ev.candidate)))
+            //console.log(ev.candidate)
          }
       }
-      const ice = {
-         candidate: `candidate:2539918381 1 tcp 1518280447 192.168.42.51 9 typ host tcptype active generation 0 ufrag cvsF network-id 1 network-cost 50`,
+      const ip = this.side === 'cli' ? this.signal_ip : this.my_ip
+      const candidate = {
+         candidate: `candidate:2539918381 1 tcp 1518280447 ${ip} 9 typ host tcptype active generation 0 ufrag Zjzo network-id 1 network-cost 50`,
          sdpMid: "0",
          sdpMLineIndex: 0
       }
+      this.signal(encodeURI(JSON.stringify(candidate)))
       while (true) {
          const {data: ice} = await this.signal()
          await this.rtc.addIceCandidate(JSON.parse(ice))
