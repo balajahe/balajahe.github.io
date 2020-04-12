@@ -1,12 +1,16 @@
 import WC from '/weird_components/WeirdComponentMixin.js'
 
-const SIGNAL_IP = '127.0.0.1'
-const STUN_SRVS = [
-   'stun:stun.voipcheap.co.uk:3478',
-   'stun:stun.voipcheap.com:3478',
-   'stun:stun.voipbuster.com:3478',
-   'stun:stun.voipbusterpro.com:3478'
+const SIGNALING = 'http://127.0.0.1:3000'
+const STUNS = [
+   'stun:127.0.0.1:3478'
 ]
+/*
+   'stun:stun1.l.google.com:19302',
+   'stun:stun2.l.google.com:19302',
+   'stun:stun3.l.google.com:19302',
+   'stun:stun4.l.google.com:19302'
+]
+*/
 const CHUNK_DURATION = 10
 
 customElements.define('video-recorder', class extends HTMLElement {
@@ -29,10 +33,7 @@ customElements.define('video-recorder', class extends HTMLElement {
    async connectedCallback() {
       this.innerHTML = `
          <nav id='start'>
-            <nav style="white-space:nowrap">
-               <label>Signaling IP:<input w-name='/signal_ip'/></label>
-               <label>My IP:<input w-name='/my_ip'/></label>
-            </nav>
+            <label style="white-space:nowrap">Signaling:<input w-name='/signaling'/></label>
             <button w-name='start_srv'>Start DVR (server)</button>
             <button w-name='start_cli'>Start Videcam (client)</button>
          </nav>
@@ -58,9 +59,8 @@ customElements.define('video-recorder', class extends HTMLElement {
       </div>
 */
       WC.bind(this)
-      this.signal_ip = localStorage.getItem('signal_ip')
-      if (!this.signal_ip) this.signal_ip = SIGNAL_IP
-      this.my_ip = localStorage.getItem('my_ip')
+      this.signaling = localStorage.getItem('signaling')
+      if (!this.signaling) this.signaling = SIGNALING
       this.email = localStorage.getItem('email')
 
 
@@ -71,11 +71,10 @@ customElements.define('video-recorder', class extends HTMLElement {
          const {sid, ip, data: offer} = await this.signal()
          console.log(offer)
          this.sid = sid
-         this.rtc = new RTCPeerConnection()
-         //this.rtc = new RTCPeerConnection({"iceServers": [{"urls": STUN_SRVS}]})
+         this.rtc = new RTCPeerConnection({"iceServers": [{"urls": STUNS}]})
          this.rtc.ontrack = (ev) => {
-            console.log(ev)
             this.video.srcObject = ev.streams[0]
+            //console.log(ev)
          }
          await this.rtc.setRemoteDescription({type: 'offer', sdp: offer})
 
@@ -97,16 +96,13 @@ customElements.define('video-recorder', class extends HTMLElement {
          this.video.srcObject = stream
 
          this.msg = 'connecting signaling server...'
-         this.rtc = new RTCPeerConnection({"iceServers": [{"urls": STUN_SRVS}]})
-         //this.rtc = new RTCPeerConnection()
+         this.rtc = new RTCPeerConnection({"iceServers": [{"urls": STUNS}]})
          stream.getTracks().forEach(track => this.rtc.addTrack(track, stream))
          const offer = await this.rtc.createOffer()
          await this.rtc.setLocalDescription(offer)
          this.side = 'cli'
          const {sid, ip, ok} = await this.signal(encodeURI(offer.sdp))
          this.sid = sid
-         this.my_ip = ip
-         localStorage.setItem('my_ip', this.my_ip)
 
          const {data: answer} = await this.signal()
          console.log(answer)
@@ -137,8 +133,7 @@ customElements.define('video-recorder', class extends HTMLElement {
       //this.querySelector('#start').remove()
       this.insertAdjacentHTML('beforeend', this.recdiv.innerHTML)
       WC.bind(this)
-      localStorage.setItem('signal_ip', this.signal_ip)
-      localStorage.setItem('my_ip', this.my_ip)
+      localStorage.setItem('signaling', this.signaling)
 
       this.gmail.on('w-change', async (_) => {
          try {
@@ -185,7 +180,7 @@ customElements.define('video-recorder', class extends HTMLElement {
    }
 
    async signal(data) {
-      let url = `http://${this.signal_ip}:3000/?side=${this.side}&sid=${this.sid}`
+      let url = `${this.signaling}/?side=${this.side}&sid=${this.sid}`
       if (data) url += '&data=' + data
       return (await fetch(url)).json()
    }
@@ -193,16 +188,18 @@ customElements.define('video-recorder', class extends HTMLElement {
    async exchange_ice() {
       this.rtc.onicecandidate = async (ev) => {
          if (ev.candidate) {
-            //const {ok} = await this.signal(encodeURI(JSON.stringify(ev.candidate)))
-            //console.log(ev.candidate)
+            const {ok} = await this.signal(encodeURI(JSON.stringify(ev.candidate)))
+            console.log(ev.candidate)
          }
       }
+/*
       const candidate = {
          candidate: `candidate:2539918381 1 tcp 1518280447 ${this.my_ip} 9 typ host tcptype active generation 0 ufrag Zjzo network-id 1 network-cost 50`,
          sdpMid: "0",
          sdpMLineIndex: 0
       }
       this.signal(encodeURI(JSON.stringify(candidate)))
+*/
       while (true) {
          const {data: ice} = await this.signal()
          await this.rtc.addIceCandidate(JSON.parse(ice))
