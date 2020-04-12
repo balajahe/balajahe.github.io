@@ -1,16 +1,8 @@
 import WC from '/weird_components/WeirdComponentMixin.js'
 
-const SIGNALING = 'http://127.0.0.1:3000'
-const STUNS = [
-   'stun:127.0.0.1:3478'
-]
-/*
-   'stun:stun1.l.google.com:19302',
-   'stun:stun2.l.google.com:19302',
-   'stun:stun3.l.google.com:19302',
-   'stun:stun4.l.google.com:19302'
-]
-*/
+const SIGNAL_PORT = 3000
+const STUN_PORT = 3478
+const SERVER_IP = '127.0.0.1'
 const CHUNK_DURATION = 10
 
 customElements.define('video-recorder', class extends HTMLElement {
@@ -33,7 +25,7 @@ customElements.define('video-recorder', class extends HTMLElement {
    async connectedCallback() {
       this.innerHTML = `
          <nav id='start'>
-            <label style="white-space:nowrap">Signaling:<input w-name='/signaling'/></label>
+            <label style="white-space:nowrap">Server IP:<input w-name='/server_ip'/></label>
             <button w-name='start_srv'>Start DVR (server)</button>
             <button w-name='start_cli'>Start Videcam (client)</button>
          </nav>
@@ -59,8 +51,8 @@ customElements.define('video-recorder', class extends HTMLElement {
       </div>
 */
       WC.bind(this)
-      this.signaling = localStorage.getItem('signaling')
-      if (!this.signaling) this.signaling = SIGNALING
+      this.server_ip = localStorage.getItem('server_ip')
+      if (!this.server_ip) this.server_ip = SERVER_IP
       this.email = localStorage.getItem('email')
 
 
@@ -71,7 +63,6 @@ customElements.define('video-recorder', class extends HTMLElement {
          const {sid, ip, data: offer} = await this.signal()
          console.log(offer)
          this.sid = sid
-         this.rtc = new RTCPeerConnection({"iceServers": [{"urls": STUNS}]})
          this.rtc.ontrack = (ev) => {
             this.video.srcObject = ev.streams[0]
             //console.log(ev)
@@ -96,7 +87,6 @@ customElements.define('video-recorder', class extends HTMLElement {
          this.video.srcObject = stream
 
          this.msg = 'connecting signaling server...'
-         this.rtc = new RTCPeerConnection({"iceServers": [{"urls": STUNS}]})
          stream.getTracks().forEach(track => this.rtc.addTrack(track, stream))
          const offer = await this.rtc.createOffer()
          await this.rtc.setLocalDescription(offer)
@@ -133,7 +123,8 @@ customElements.define('video-recorder', class extends HTMLElement {
       //this.querySelector('#start').remove()
       this.insertAdjacentHTML('beforeend', this.recdiv.innerHTML)
       WC.bind(this)
-      localStorage.setItem('signaling', this.signaling)
+      localStorage.setItem('server_ip', this.server_ip)
+      this.rtc = new RTCPeerConnection({"iceServers": [{"urls": [`stun:${this.server_ip}:${STUN_PORT}`]}]})
 
       this.gmail.on('w-change', async (_) => {
          try {
@@ -180,7 +171,7 @@ customElements.define('video-recorder', class extends HTMLElement {
    }
 
    async signal(data) {
-      let url = `${this.signaling}/?side=${this.side}&sid=${this.sid}`
+      let url = `http://${this.server_ip}:${SIGNAL_PORT}/?side=${this.side}&sid=${this.sid}`
       if (data) url += '&data=' + data
       return (await fetch(url)).json()
    }
