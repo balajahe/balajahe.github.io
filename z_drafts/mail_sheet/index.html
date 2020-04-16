@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+   <title>Balajahe Mail Sheet</title>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <script type="module">//navigator.serviceWorker.register('./app-sw.js')</script>
+   <script type="module" src="./mail-sheet.js"></script>
+   <style>
+      body {margin: 0;}
+      nav#start {display:flex; flex-flow:column; margin-top:0.2em; margin-bottom:0.2em; margin-right:0.2em;}
+      nav {display:flex; flex-flow:row nowrap; margin-top:0.2em; margin-bottom:0.2em; margin-right:0.2em;}
+      nav > button {height: 3em; font-size: large; flex-grow: 1; margin-left: 0.2em; margin-bottom: 0.2em;}
+      nav > label1 {height: 3em; font-size: large; flex-grow: 1; margin-left: 0.2em; margin-bottom: 0.2em;}
+      nav > input {height: 3em; font-size: large; flex-grow: 1; margin-left: 0.2em; margin-bottom: 0.2em;}
+      .recdiv {flex-flow:column; width:100vw; max-width:640px;}
+      .recdiv > * {width:100vw; max-width:640px;}
+      .locdiv > button {font-size: medium; margin: 0;}
+      iframe {background-color: white;}
+      input {box-sizing: border-box; height: 2em; font-size: large; margin-top: 0.2em;}
+      button.true {background-color: red;}
+      button:active {background-color: red;}
+      footer {margin-top: 0.5em;}
+      a {text-decoration: none;}
+   </style>
+</head>
+<body>
+   <div id="app">
+      <mail-sheet/>
+   </div>
+   <footer>
+      <a href="https://github.com/balajahe/balajahe.github.io/tree/master/emergency_cam" target="_blank">Sources on GitHub</a>
+      <br><a href="/privacy-policy.html" target="_blank">Privacy policy</a>
+   </footer>
+</body>
+</html>
