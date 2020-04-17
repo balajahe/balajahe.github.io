@@ -7,24 +7,26 @@ customElements.define('mail-sheet', class extends HTMLElement {
 
    async connectedCallback() {
       this.innerHTML = `
+         <div w-name='msgdiv'>Connection to the server...</div>
          <table w-name='mtable'></table>
-         <template w-name='mtempl'>
-            <tr><td>
-               <hr>
-               <span id='msubj'></span>
-               <br>
-               <div id='mhtml'></div>
-            </td></tr>
+         <template w-name='/mtempl'>
+            <tr>
+               <td class='mtd'>
+                  <hr>
+                  <span w-name='/msubj'>asd</span>
+                  <br>
+                  <div w-name='/mbody'></div>
+               </td>
+            </tr>
          </template>
       `
       WC.bind(this)
       this.mails = await (await fetch(SRV_URL + '/all')).json()
-      console.log(this.mails)
+      this.msgdiv.remove()
       for (const mail of this.mails) {
-         const m = this.mtempl.content.cloneNode(true)
-         m.querySelector('#msubj').innerHTML = mail.subject
-         m.querySelector('#mhtml').innerHTML = mail.html
-         this.mtable.appendChild(m)
+         this.msubj = mail.subject
+         this.mbody = mail.text ? mail.text : mail.html
+         this.mtable.appendChild(this.mtempl)
       }
    }
 })

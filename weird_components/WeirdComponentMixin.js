@@ -1,5 +1,5 @@
 // WeirdComponentMixin.js
-// v0.0.2
+// v0.0.3
 export default class {
    static bind(obj) {
       const wc = new this()
@@ -35,8 +35,8 @@ export default class {
          el.dispatchEvent(ev1)
       }
 
-      for (const el of this.querySelectorAll('[w-name]')) {
-         if (el._getVal !== undefined) continue
+      const generate = (el) => {
+         if (el._getVal !== undefined) return
 
          if (el.tagName === 'INPUT') {
             if (el.type == 'number') {
@@ -93,6 +93,12 @@ export default class {
                wchange(ev)
             })
 
+         } else if (el.tagName === 'TEMPLATE') {
+            el._getVal = () => el.content.cloneNode(true)
+            el._setVal = (v) => el.content = v
+            el.addEventListener('input', (ev) => winput(ev))
+            el.addEventListener('blur', (ev) => wchange(ev))
+
          } else {
             el._getVal = () => el.innerHTML
             el._setVal = (v) => el.innerHTML = v
@@ -148,11 +154,20 @@ export default class {
                })
             } catch(e) { console.error(e) }
          }
-         
+
          if (wval1) {
             el.addEventListener('w-change', (ev) =>
                ev.target[wval1] = ev.target.val
             )
+         }
+      }
+
+      for (const el of this.querySelectorAll('[w-name]')) {
+         generate(el)
+         if (el.tagName === 'TEMPLATE') {
+            for (const el1 of el.content.querySelectorAll('[w-name]')) {
+               generate(el1)
+            }
          }
       }
    }

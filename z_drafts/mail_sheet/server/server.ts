@@ -29,13 +29,14 @@ express.get('/all', async (request, response) => {
    response.setHeader("Cache-Control", "no-cache, must-revalidate")
    response.setHeader("Access-Control-Allow-Origin", "*")
    const res = []
-   const mails = await imap.search(['ALL'], {bodies: [''], markSeen: false })
+   const mails = await imap.search(['ALL'], {bodies: [''], markSeen: false})
    for (const mail of mails) {
       const m = await mparse('Imap-Id: ' + mail.attributes.uid + '\r\n' + mail.parts[0].body)
       res.push({
          uid: mail.attributes.uid,
          subject: m.subject,
-         html: m.html
+         html: m.html,
+         text: m.text
       })
    }
    res.reverse()
