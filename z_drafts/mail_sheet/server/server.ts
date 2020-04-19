@@ -32,6 +32,8 @@ express.get('/all', async (request, response) => {
    const mails = await imap.search(['ALL'], {bodies: [''], markSeen: false})
    for (const mail of mails) {
       const m = await mparse('Imap-Id: ' + mail.attributes.uid + '\r\n' + mail.parts[0].body)
+      console.log('=====================================================')
+      console.log(m)
       res.push({
          uid: mail.attributes.uid,
          subject: m.subject,
