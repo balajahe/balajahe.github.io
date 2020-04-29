@@ -13,7 +13,6 @@ customElements.define(me, class extends HTMLElement {
          </style>
 
    		<button w-id="menuButton">&#9776;</button>
-         &nbsp;
          <app-url></app-url>
          <span></span>
    		<button w-id="backButton">Back<br>&lArr;</button>
@@ -23,6 +22,10 @@ customElements.define(me, class extends HTMLElement {
 
       this.menuButton.on('click', () => {
          alert(2)
+      })
+
+      this.backButton.on('click', () => {
+         history.go(-1)
       })
    }
 })

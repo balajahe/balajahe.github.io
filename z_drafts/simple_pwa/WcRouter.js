@@ -1,26 +1,31 @@
-window._components = []
+window._router = {
+   router: [],
+   reset: (root) => {
+      window._router.router = []
+      window._router.router.push(root)
+   }
+}
 
 window.onhashchange = (ev) => {
-   const oldh = hash(ev.oldURL)
+   let oldh = hash(ev.oldURL)
+   if (oldh === null) oldh = ''
    console.log(oldh)
-   if (oldh) {
-      const oldc = _components.find(v => v.h === oldh)
-      if (oldc) {
-         oldc.c.display(false)
-      }
+   const oldc = _router.router.find(v => v[0] === oldh)
+   if (oldc) {
+      oldc[1].display(false)
    }
-   const newh = hash(ev.newURL)
+
+   let newh = hash(ev.newURL)
+   if (newh === null) newh = ''
    console.log(newh)
-   if (newh) {
-      let newc = _components.find(v => v.h === newh)
-      if (newc) {
-         newc.disply()
-      } else {
-         newc = document.createElement(newh)
-         console.log(newc)
-         document.querySelector('main').appendChild(newc)
-         _components.push({h: newh, c: newc})
-      }
+   let newc = _router.router.find(v => v[0] === newh)
+   if (newc) {
+      newc[1].display()
+   } else if (newh) {
+      newc = document.createElement(newh)
+      console.log(newc)
+      document.querySelector('main').appendChild(newc)
+      _router.router.push([newh, newc])
    }
 
    function hash(url) {

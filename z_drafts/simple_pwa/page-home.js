@@ -9,14 +9,13 @@ customElements.define(me, class extends HTMLElement {
             ${me} > button { width: 30vw; }
          </style>
 
-         <button w-id="sign">sign in</button>
-         &nbsp;
-         <button>sign up</button>
+         <button w-id="start">Start</button>
       `
       mix(this)
-      location.hash = 'page-home'
+      location.hash = ''
+      window._router.reset(['', this])
 
-      this.sign.on('click', () => {
+      this.start.on('click', () => {
          window.location.hash = 'page-login'
       })
    }
