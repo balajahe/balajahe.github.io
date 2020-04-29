@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+   <title>Simple PWA</title>
+   <meta charset='utf-8'>
+   <meta name='viewport' content='width=device-width, initial-scale=1' />
+   <link rel='stylesheet' type='text/css' href='index.css'>
+   <script type='module'>//navigator.serviceWorker.register('./app-sw.js')</script>
+   <script type='module' src='./WcRouter.js'></script>
+   <script type='module' src='./app-app.js'></script>
+   <script type='module' src='./app-bar.js'></script>
+   <script type='module' src='./page-home.js'></script>
+   <script type='module' src='./page-login.js'></script>
+</head>
+<body>
+	<app-app>
+      <main>
+         <page-home>
+            <p contenteditable='true'>Simple PWA welcomes you !</p>
+         </page-home>
+      </main>
+      <app-bar/>
+	</app-app>
+</body>
+</html>
