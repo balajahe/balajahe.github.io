@@ -1,4 +1,4 @@
-import mix from './WcMixin.js'
+import wcmixin from '../lib/WcMixin.js'
 
 const me = 'page-home'
 customElements.define(me, class extends HTMLElement {
@@ -8,15 +8,15 @@ customElements.define(me, class extends HTMLElement {
          <style scoped>
             ${me} > button { width: 30vw; }
          </style>
-
+         
          <button w-id="start">Start</button>
       `
-      mix(this)
+      wcmixin(this)
       location.hash = ''
       window._router.reset(['', this])
 
-      this.start.on('click', () => {
-         window.location.hash = 'page-login'
-      })
+      this.start.onclick = () => {
+         location.hash = 'page-login'
+      }
    }
 })

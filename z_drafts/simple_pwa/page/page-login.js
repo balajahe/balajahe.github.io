@@ -1,10 +1,10 @@
-import mix from './WcMixin.js'
+import wcmixin from '../lib/WcMixin.js'
 
 const me = 'page-login'
 customElements.define(me, class extends HTMLElement {
 
    async connectedCallback() {
-      this.innerHTML += `
+      this.innerHTML = `
          <style scoped>
             ${me} > form { display: flex; flex-direction: column; }
             ${me} input { width: 70vw; }
@@ -18,11 +18,11 @@ customElements.define(me, class extends HTMLElement {
             <input type='submit' value='Log in'/>
          </form>
       `
-      mix(this)
+      wcmixin(this)
 
-      this.loginform.on('submit', (ev) => {
+      this.loginform.onsubmit = (ev) => {
          ev.preventDefault()
-         window.location.hash = 'page-login'
-      })
+         window.location.hash = 'page-mail-sheet'
+      }
    }
 })

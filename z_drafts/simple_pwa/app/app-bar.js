@@ -1,4 +1,4 @@
-import mix from './WcMixin.js'
+import wcmixin from '../lib/WcMixin.js'
 import './app-url.js'
 
 const me = 'app-bar'
@@ -12,20 +12,25 @@ customElements.define(me, class extends HTMLElement {
             ${me} > span { flex-grow: 3; }
          </style>
 
-   		<button w-id="menuButton">&#9776;</button>
-         <app-url></app-url>
+   		<button w-id='menu'>&#9776;</button>
+         <button w-id='home'>home</button>
+         <!--<app-url></app-url>-->
          <span></span>
-   		<button w-id="backButton">Back<br>&lArr;</button>
-   		<button w-id="okButton">OK<br>&rArr;</button>
+   		<button w-id='back'>Back<br>&lArr;</button>
+   		<button w-id='ok'>OK<br>&rArr;</button>
       `
-      mix(this)
+      wcmixin(this)
 
-      this.menuButton.on('click', () => {
+      this.menu.onclick = () => {
          alert(2)
-      })
+      }
 
-      this.backButton.on('click', () => {
+      this.home.onclick = () => {
+         location.hash = ''
+      }
+
+      this.back.onclick = () => {
          history.go(-1)
-      })
+      }
    }
 })

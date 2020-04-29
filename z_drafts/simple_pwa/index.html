@@ -1,22 +1,47 @@
 <!doctype html>
 <html>
 <head>
-   <title>Simple PWA</title>
+   <title>Simple Email Client</title>
    <meta charset='utf-8'>
    <meta name='viewport' content='width=device-width, initial-scale=1' />
-   <link rel='stylesheet' type='text/css' href='index.css'>
+   <!--<link rel='stylesheet' type='text/css' href='./index.css'>-->
    <script type='module'>//navigator.serviceWorker.register('./app-sw.js')</script>
-   <script type='module' src='./WcRouter.js'></script>
-   <script type='module' src='./app-app.js'></script>
-   <script type='module' src='./app-bar.js'></script>
-   <script type='module' src='./page-home.js'></script>
-   <script type='module' src='./page-login.js'></script>
+   <script type='module' src='./lib/WcRouter.js'></script>
+   <script type='module' src='./app/app-app.js'></script>
+   <script type='module' src='./app/app-bar.js'></script>
+   <script type='module' src='./page/all.js'></script>
+   <style>
+      :root { --app-bar-height: 8vh; }
+      body { margin: 0; }
+      main {
+         height: calc(100vh - var(--app-bar-height));
+         width: 100vw;
+         overflow: auto;
+      }
+      app-bar {
+         height: var(--app-bar-height);
+         width: 100vw;
+         overflow: hidden;
+      }
+      main > * {
+         height: 100%; width: 100%;
+         display: flex; flex-direction: column;
+         justify-content: center;
+         align-items: center;
+      }
+      button { height: var(--app-bar-height); }
+      input { height: var(--app-bar-height); }
+
+      button:active { background-color: red; }
+      a { text-decoration: none; }
+      a:hover { color: red; }
+   </style>
 </head>
 <body>
 	<app-app>
       <main>
          <page-home>
-            <p contenteditable='true'>Simple PWA welcomes you !</p>
+            <p contenteditable='true'>Simple Email Client welcomes you !</p>
          </page-home>
       </main>
       <app-bar/>

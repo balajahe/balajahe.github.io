@@ -1,6 +1,6 @@
 // WcMixin.js
 // v0.0.4
-export default function mix(target) {
+export default function wcmixin(target) {
    target.on = on.bind(target)
    target.onAny = onAny.bind(target)
    target.display = display.bind(target)
