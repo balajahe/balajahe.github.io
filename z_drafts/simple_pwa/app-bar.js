@@ -1,4 +1,4 @@
-import wcmixin from '../lib/WcMixin.js'
+import wcmixin from './WcMixin.js'
 import './app-url.js'
 
 const me = 'app-bar'
@@ -8,16 +8,17 @@ customElements.define(me, class extends HTMLElement {
       this.innerHTML = `
          <style scoped>
             ${me} { display: flex; flex-flow: row nowrap; }
-            ${me} > button { height: var(--app-bar-height); width: 15vw; }
-            ${me} > span { flex-grow: 3; }
+            ${me} > button { min-width: 15vw; line-height: 1em; }
+            ${me} > button#ok { min-width: 25vw; }
+            ${me} > span { flex-grow: 10; }
          </style>
 
    		<button w-id='menu'>&#9776;</button>
-         <button w-id='home'>home</button>
+         <button w-id='home'>Home</button>
          <!--<app-url></app-url>-->
          <span></span>
    		<button w-id='back'>Back<br>&lArr;</button>
-   		<button w-id='ok'>OK<br>&rArr;</button>
+   		<button w-id='ok'>Forward<br>&rArr;</button>
       `
       wcmixin(this)
 
@@ -32,5 +33,14 @@ customElements.define(me, class extends HTMLElement {
       this.back.onclick = () => {
          history.go(-1)
       }
+
+      this.ok.onclick = () => {
+         history.go(1)
+      }
+   }
+
+   setButs(buts) {
+      if (buts.ok) buts.ok(this.ok)
+      if (buts.back) buts.back(this.back)
    }
 })

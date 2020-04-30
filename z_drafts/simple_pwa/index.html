@@ -4,23 +4,23 @@
    <title>Simple Email Client</title>
    <meta charset='utf-8'>
    <meta name='viewport' content='width=device-width, initial-scale=1' />
-   <!--<link rel='stylesheet' type='text/css' href='./index.css'>-->
    <script type='module'>//navigator.serviceWorker.register('./app-sw.js')</script>
-   <script type='module' src='./lib/WcRouter.js'></script>
-   <script type='module' src='./app/app-app.js'></script>
-   <script type='module' src='./app/app-bar.js'></script>
-   <script type='module' src='./page/all.js'></script>
+   <script type='module' src='./WcRouter.js'></script>
+   <script type='module' src='./app-app.js'></script>
+   <script type='module' src='./app-bar.js'></script>
+   <script type='module' src='./page-all.js'></script>
    <style>
-      :root { --app-bar-height: 8vh; }
-      body { margin: 0; }
+      :root { --app-bar-height: 7vh; }
+      body {
+         margin: 0; margin-left: 0.1em; margin-right: 0.1em;
+         overflow: hidden;
+      }
       main {
-         height: calc(100vh - var(--app-bar-height));
-         width: 100vw;
+         height: calc(100vh - var(--app-bar-height)); width: 100%;
          overflow: auto;
       }
       app-bar {
-         height: var(--app-bar-height);
-         width: 100vw;
+         height: var(--app-bar-height); width: 100%;
          overflow: hidden;
       }
       main > * {
@@ -29,9 +29,15 @@
          justify-content: center;
          align-items: center;
       }
-      button { height: var(--app-bar-height); }
-      input { height: var(--app-bar-height); }
-
+      button {
+         height: var(--app-bar-height);
+         border-radius: calc(var(--app-bar-height)/2)/calc(var(--app-bar-height));
+      }
+      input {
+         height: var(--app-bar-height);
+         border-radius: calc(var(--app-bar-height)/3);
+         padding-left: 1em;
+      }
       button:active { background-color: red; }
       a { text-decoration: none; }
       a:hover { color: red; }
@@ -42,6 +48,7 @@
       <main>
          <page-home>
             <p contenteditable='true'>Simple Email Client welcomes you !</p>
+            <p>Click "Start" to continue !</p>
          </page-home>
       </main>
       <app-bar/>

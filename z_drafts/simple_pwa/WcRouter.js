@@ -30,3 +30,5 @@ window.onhashchange = (ev) => {
       return uu.length > 1 ? uu[uu.length-1] : null
    }
 }
+
+window.dom = (sel) => document.querySelector(sel)

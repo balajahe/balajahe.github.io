@@ -1,5 +1,4 @@
-import wcmixin from '../lib/WcMixin.js'
-const SRV_URL = 'http://127.0.0.1:3000'
+import wcmixin from './WcMixin.js'
 
 const me = 'page-mail-sheet'
 customElements.define(me, class extends HTMLElement {
@@ -21,8 +20,8 @@ customElements.define(me, class extends HTMLElement {
          </template>
       `
       wcmixin(this)
-      
-      this.mails = await (await fetch(SRV_URL + '/all')).json()
+
+      this.mails = await (await fetch(dom('app-app').SRV_URL + '/all')).json()
       this.msgdiv.remove()
       for (const mail of this.mails) {
          this.msubj = mail.subject

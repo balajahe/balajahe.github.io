@@ -1,4 +1,4 @@
-import wcmixin from '../lib/WcMixin.js'
+import wcmixin from './WcMixin.js'
 
 const me = 'app-url'
 customElements.define(me, class extends HTMLElement {
