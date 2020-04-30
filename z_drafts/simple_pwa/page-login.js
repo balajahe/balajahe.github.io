@@ -3,7 +3,7 @@ import wcmixin from './WcMixin.js'
 const me = 'page-login'
 customElements.define(me, class extends HTMLElement {
 
-   async connectedCallback() {
+   connectedCallback() {
       this.innerHTML = `
          <style scoped>
             ${me} > form { display: flex; flex-direction: column; }
@@ -17,8 +17,10 @@ customElements.define(me, class extends HTMLElement {
          </form>
       `
       wcmixin(this)
-      this.login.focus()
+   }
 
+   onDisplay() {
+      this.login.focus()
       dom('app-bar').setButs({
          ok: (el) => {
             el.innerHTML = 'Log In<br>&rArr;'
@@ -26,7 +28,8 @@ customElements.define(me, class extends HTMLElement {
                location.hash = 'page-mail-sheet'
             }
          },
-         back: (el) => el.disabled = false
+         back: (el) => el.disabled = false,
+         home: (el) => el.disabled = false
       })
    }
 })

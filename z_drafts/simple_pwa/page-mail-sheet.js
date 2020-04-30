@@ -29,4 +29,12 @@ customElements.define(me, class extends HTMLElement {
          this.mtable.appendChild(this.mtempl)
       }
    }
+
+   onDisplay() {
+      dom('app-bar').setButs({
+         ok: (el) => el.disabled = true,
+         back: (el) => el.disabled = false,
+         home: (el) => el.disabled = false
+      })
+   }
 })

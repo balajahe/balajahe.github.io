@@ -13,15 +13,19 @@ customElements.define(me, class extends HTMLElement {
       `
       wcmixin(this)
       location.hash = ''
-      window._router.reset(['', this])
+      window._router.reset({hash: '', elem: this})
 
       //this.start.onclick = () => location.hash = 'page-login'
+   }
+
+   onDisplay() {
       dom('app-bar').setButs({
          ok: (el) => {
             el.innerHTML = 'Start<br>&rArr;'
             el.onclick = () => location.hash = 'page-login'
          },
-         back: (el) => el.disabled = true
+         back: (el) => el.disabled = true,
+         home: (el) => el.disabled = true
       })
    }
 })

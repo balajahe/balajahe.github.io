@@ -3,26 +3,29 @@ window._router = {
    reset: (root) => {
       window._router.router = []
       window._router.router.push(root)
+      if (root.elem.onDisplay) root.elem.onDisplay()
    }
 }
 
 window.onhashchange = (ev) => {
    let oldh = hash(ev.oldURL)
    if (oldh === null) oldh = ''
-   const oldc = window._router.router.find(v => v[0] === oldh)
+   const oldc = window._router.router.find(v => v.hash === oldh)
    if (oldc) {
-      oldc[1].display(false)
+      oldc.elem.display(false)
    }
 
    let newh = hash(ev.newURL)
    if (newh === null) newh = ''
-   let newc = window._router.router.find(v => v[0] === newh)
+   let newc = window._router.router.find(v => v.hash === newh)
    if (newc) {
-      newc[1].display()
+      newc.elem.display()
+      if (newc.elem.onDisplay) newc.elem.onDisplay()
    } else if (newh) {
       newc = document.createElement(newh)
+      window._router.router.push({hash: newh, elem: newc})
       document.querySelector('main').appendChild(newc)
-      window._router.router.push([newh, newc])
+      if (newc.onDisplay) newc.onDisplay()
    }
 
    function hash(url) {

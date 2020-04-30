@@ -42,5 +42,6 @@ customElements.define(me, class extends HTMLElement {
    setButs(buts) {
       if (buts.ok) buts.ok(this.ok)
       if (buts.back) buts.back(this.back)
+      if (buts.home) buts.home(this.home)
    }
 })
