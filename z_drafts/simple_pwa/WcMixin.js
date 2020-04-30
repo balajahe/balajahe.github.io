@@ -1,8 +1,9 @@
 // WcMixin.js
-// v0.0.4
+// v0.0.5
 export default function wcmixin(target) {
    target.on = on.bind(target)
    target.onAny = onAny.bind(target)
+   target.ev = ev.bind(target)
    target.display = display.bind(target)
    target.generateProps = generateProps.bind(target)
    target.generateProps()
@@ -20,12 +21,17 @@ function onAny(elements, ev_type, listener, fire, options) {
    if (fire) listener()
 }
 
-function display(par = true) {
-   if (par) {
-      this.style.display = (par === true ? this._oldDisplay !== undefined ? this._oldDisplay : '' : par)
-   } else {
-      this._oldDisplay = this.style.display
+function ev(name, val) {
+   const ev = new Event(name, {"bubbles":true})
+   ev.val = val
+   this.dispatchEvent(ev)
+}
+
+function display(par = '') {
+   if (par === false) {
       this.style.display = 'none'
+   } else {
+      this.style.display = par
    }
 }
 

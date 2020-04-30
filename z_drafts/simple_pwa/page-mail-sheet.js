@@ -31,10 +31,9 @@ customElements.define(me, class extends HTMLElement {
    }
 
    onDisplay() {
-      dom('app-bar').setButs({
-         ok: (el) => el.disabled = true,
-         back: (el) => el.disabled = false,
-         home: (el) => el.disabled = false
-      })
+      this.ev('set-buttons', {ok: {
+         text: 'Compose',
+         onclick: () => location.hash = 'page-mail-compose'
+      }})
    }
 })

@@ -3,29 +3,24 @@ import wcmixin from './WcMixin.js'
 const me = 'page-home'
 customElements.define(me, class extends HTMLElement {
 
-   async connectedCallback() {
+   connectedCallback() {
       this.innerHTML += `
-         <style scoped>
-            ${me} > button { width: 25vw; }
-         </style>
-
-         <!--<button w-id="start">Start</button>-->
+         <p contenteditable='true'>Simple Email Client welcomes you !</p>
+         <p>Click "Start" to continue !</p>
       `
       wcmixin(this)
-      location.hash = ''
-      window._router.reset({hash: '', elem: this})
-
-      //this.start.onclick = () => location.hash = 'page-login'
+      //location.hash = 'page-home'
+      window._router.reset({hash: location.hash, elem: this})
    }
 
    onDisplay() {
-      dom('app-bar').setButs({
-         ok: (el) => {
-            el.innerHTML = 'Start<br>&rArr;'
-            el.onclick = () => location.hash = 'page-login'
-         },
-         back: (el) => el.disabled = true,
-         home: (el) => el.disabled = true
+      this.ev('set-buttons', {
+         home: false,
+         back: false,
+         ok: {
+            text: 'Start',
+            onclick: () => location.hash = 'page-login'
+         }
       })
    }
 })

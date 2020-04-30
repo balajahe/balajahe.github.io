@@ -7,27 +7,12 @@
    <script type='module'>//navigator.serviceWorker.register('./app-sw.js')</script>
    <script type='module' src='./WcRouter.js'></script>
    <script type='module' src='./app-app.js'></script>
-   <script type='module' src='./app-bar.js'></script>
    <script type='module' src='./page-all.js'></script>
    <style>
       :root { --app-bar-height: 7vh; }
       body {
          margin: 0; margin-left: 0.1em; margin-right: 0.1em;
          overflow: hidden;
-      }
-      main {
-         height: calc(100vh - var(--app-bar-height)); width: 100%;
-         overflow: auto;
-      }
-      app-bar {
-         height: var(--app-bar-height); width: 100%;
-         overflow: hidden;
-      }
-      main > * {
-         height: 100%; width: 100%;
-         display: flex; flex-direction: column;
-         justify-content: center;
-         align-items: center;
       }
       button {
          height: var(--app-bar-height);
@@ -44,14 +29,6 @@
    </style>
 </head>
 <body>
-	<app-app>
-      <main>
-         <page-home>
-            <p contenteditable='true'>Simple Email Client welcomes you !</p>
-            <p>Click "Start" to continue !</p>
-         </page-home>
-      </main>
-      <app-bar/>
-	</app-app>
+	<app-app/>
 </body>
 </html>

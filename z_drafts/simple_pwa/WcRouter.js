@@ -8,15 +8,18 @@ window._router = {
 }
 
 window.onhashchange = (ev) => {
+   console.log(_router.router)
    let oldh = hash(ev.oldURL)
-   if (oldh === null) oldh = ''
+   console.log(oldh)
+   //if (oldh === null) oldh = ''
    const oldc = window._router.router.find(v => v.hash === oldh)
    if (oldc) {
       oldc.elem.display(false)
    }
 
    let newh = hash(ev.newURL)
-   if (newh === null) newh = ''
+   console.log(newh)
+   //if (newh === null) newh = ''
    let newc = window._router.router.find(v => v.hash === newh)
    if (newc) {
       newc.elem.display()

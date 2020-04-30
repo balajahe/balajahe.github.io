@@ -11,6 +11,8 @@ customElements.define(me, class extends HTMLElement {
          </style>
 
          <form w-id='loginform'>
+            <input w-id='server' placeholder='IMAP server' value='imap.gmail.com'/>
+            &nbsp;
             <input w-id='login' placeholder='IMAP login'/>
             &nbsp;
             <input w-id='pass' type='password' placeholder='password'/>
@@ -21,15 +23,9 @@ customElements.define(me, class extends HTMLElement {
 
    onDisplay() {
       this.login.focus()
-      dom('app-bar').setButs({
-         ok: (el) => {
-            el.innerHTML = 'Log In<br>&rArr;'
-            el.onclick = () => {
-               location.hash = 'page-mail-sheet'
-            }
-         },
-         back: (el) => el.disabled = false,
-         home: (el) => el.disabled = false
-      })
+      this.ev('set-buttons', {ok: {
+         text: 'Log In',
+         onclick: () => location.hash = 'page-mail-sheet'
+      }})
    }
 })
