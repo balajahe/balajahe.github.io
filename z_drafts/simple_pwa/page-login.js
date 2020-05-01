@@ -11,21 +11,25 @@ customElements.define(me, class extends HTMLElement {
          </style>
 
          <form w-id='loginform'>
-            <input w-id='server' placeholder='IMAP server' value='imap.gmail.com'/>
+            <input w-id='/server' placeholder='IMAP server' value='imap.gmail.com'/>
             &nbsp;
-            <input w-id='login' placeholder='IMAP login'/>
+            <input w-id='userInp/user' placeholder='IMAP login'/>
             &nbsp;
-            <input w-id='pass' type='password' placeholder='password'/>
+            <input w-id='/password' type='password' placeholder='password'/>
          </form>
       `
       wcmixin(this)
    }
 
    onDisplay() {
-      this.login.focus()
+      this.userInp.focus()
       this.ev('set-buttons', {ok: {
          text: 'Log In',
-         onclick: () => location.hash = 'page-mail-sheet'
+         onclick: this.login
       }})
+   }
+
+   async login(but) {
+      location.hash = 'page-mail-sheet'
    }
 })

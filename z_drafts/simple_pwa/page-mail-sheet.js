@@ -12,7 +12,7 @@ customElements.define(me, class extends HTMLElement {
             <tr>
                <td class='mtd'>
                   <hr>
-                  <span w-id='/msubj'>asd</span>
+                  <strong w-id='/msubj'></strong>
                   <br>
                   <div w-id='/mbody'></div>
                </td>
@@ -21,7 +21,7 @@ customElements.define(me, class extends HTMLElement {
       `
       wcmixin(this)
 
-      this.mails = await (await fetch(dom('app-app').SRV_URL + '/all')).json()
+      this.mails = await (await fetch(dom('app-app').SRV_URL + '/get_all')).json()
       this.msgdiv.remove()
       for (const mail of this.mails) {
          this.msubj = mail.subject

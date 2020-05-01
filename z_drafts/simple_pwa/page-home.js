@@ -9,7 +9,7 @@ customElements.define(me, class extends HTMLElement {
          <p>Click "Start" to continue !</p>
       `
       wcmixin(this)
-      //location.hash = 'page-home'
+
       window._router.reset({hash: location.hash, elem: this})
    }
 
