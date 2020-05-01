@@ -27,12 +27,10 @@ function ev(name, val) {
    this.dispatchEvent(ev)
 }
 
-function display(par = '') {
-   if (par === false) {
-      this.style.display = 'none'
-   } else {
-      this.style.display = par
-   }
+function display(par) {
+   if (par === false) par = 'none'
+   else if (par === true || par === null || par === undefined) par = ''
+   this.style.display = par
 }
 
 function generateProps() {

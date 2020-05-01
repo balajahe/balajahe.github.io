@@ -23,6 +23,7 @@ express.get('/login', async (request, response) => {
          authTimeout: 3000
       }
    }
+   setHeaders(response)
    try {
       imap = await IMAP.connect(cfg)
       await imap.openBox('INBOX')
@@ -30,15 +31,13 @@ express.get('/login', async (request, response) => {
       console.log('LOGGED !')
    } catch(err) {
       imap = null
-      response.send({ok: false, err})
+      response.send({ok: false, err: err.toString()})
       console.log(err)
    }
 })
 
 express.get('/get_all', async (request, response) => {
-   response.setHeader('Content-Type', 'application/json; charset=utf-8')
-   response.setHeader("Cache-Control", "no-cache, must-revalidate")
-   response.setHeader("Access-Control-Allow-Origin", "*")
+   setHeaders(response)
    if (!imap) {
       const msg = 'NOT LOGGED !'
       response.send([{
@@ -70,3 +69,9 @@ express.get('/get_all', async (request, response) => {
       response.send(res)
    }
 })
+
+function setHeaders(response) {
+   response.setHeader('Content-Type', 'application/json; charset=utf-8')
+   response.setHeader("Cache-Control", "no-cache, must-revalidate")
+   response.setHeader("Access-Control-Allow-Origin", "*")
+}

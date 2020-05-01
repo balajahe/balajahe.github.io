@@ -9,18 +9,18 @@ customElements.define(me, class extends HTMLElement {
          <p>Click "Start" to continue !</p>
       `
       wcmixin(this)
-
+      location.hash = 'page-home'
       window._router.reset({hash: location.hash, elem: this})
    }
 
    onDisplay() {
-      this.ev('set-buttons', {
+      const ok = document.createElement('button')
+      ok.innerHTML = 'Start<br>&rArr;'
+      ok.onclick = () => location.hash = 'page-login'
+      this.ev('set-butts', {
          home: false,
          back: false,
-         ok: {
-            text: 'Start',
-            onclick: () => location.hash = 'page-login'
-         }
+         custom: [ok]
       })
    }
 })

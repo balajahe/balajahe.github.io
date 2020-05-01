@@ -4,9 +4,9 @@ const me = 'page-mail-sheet'
 customElements.define(me, class extends HTMLElement {
    mails = []
 
-   async connectedCallback() {
+   connectedCallback() {
       this.innerHTML = `
-         <div w-id='msgdiv'>Connection to the server...</div>
+         <div w-id='msgdiv'>Receiving emails...</div>
          <table w-id='mtable'></table>
          <template w-id='/mtempl'>
             <tr>
@@ -20,7 +20,10 @@ customElements.define(me, class extends HTMLElement {
          </template>
       `
       wcmixin(this)
+   }
 
+   async onDisplay() {
+      this.ev('set-butts', {})
       this.mails = await (await fetch(dom('app-app').SRV_URL + '/get_all')).json()
       this.msgdiv.remove()
       for (const mail of this.mails) {
@@ -28,12 +31,5 @@ customElements.define(me, class extends HTMLElement {
          this.mbody = mail.text ? mail.text : mail.html
          this.mtable.appendChild(this.mtempl)
       }
-   }
-
-   onDisplay() {
-      this.ev('set-buttons', {ok: {
-         text: 'Compose',
-         onclick: () => location.hash = 'page-mail-compose'
-      }})
    }
 })
