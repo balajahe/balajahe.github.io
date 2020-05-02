@@ -12,7 +12,6 @@ customElements.define(me, class extends HTMLElement {
                height: var(--app-bar-height); width: 100%;
                display: flex; flex-flow: row nowrap;
                overflow-x: auto; overflow-y: hidden;
-               margin-bottom: 0.2em;
             }
             ${me} > main {
                height: calc(100vh - var(--app-bar-height)); width: 100%;

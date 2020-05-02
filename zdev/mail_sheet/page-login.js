@@ -8,7 +8,7 @@ customElements.define(me, class extends HTMLElement {
          <style scoped>
             ${me} > form { display: flex; flex-direction: column; }
             ${me} input { width: 60vw; }
-            ${me} div { width: 60vw; height: 4em;}
+            ${me} div { width: 60vw; height: 6em;}
          </style>
          <form w-id='loginform'>
             <input w-id='/server' placeholder='IMAP server' value='imap.gmail.com'/>
