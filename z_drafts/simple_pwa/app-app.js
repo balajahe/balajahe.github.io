@@ -3,6 +3,7 @@ import wcmixin from './WcMixin.js'
 const me = 'app-app'
 customElements.define(me, class extends HTMLElement {
    SRV_URL = 'http://127.0.0.1:3000'
+   _router = []
 
    connectedCallback() {
       this.innerHTML = `
@@ -24,33 +25,58 @@ customElements.define(me, class extends HTMLElement {
             }
             ${me} > nav button { min-width: 20%; line-height: 1em; }
             ${me} > nav button.std { min-width: 15%; }
-            ${me} > nav span#status { flex-grow: 1; white-space: wrap; }
+            ${me} > nav span { flex-grow: 1; white-space: wrap; }
          </style>
-         <main>
-            <page-home/>
-         </main>
+         <main w-id='main'></main>
          <nav w-id='nav'>
-      		<button w-id='menu' class='std'>&#9776;</button>
-            <button w-id='home' class='std' style='display:none'>Home</button>
-            <span w-id='status'></span>
-      		<button w-id='back' style='display:none'>Back<br>&lArr;</button>
+      		<button w-id='menuBut' class='std'>&#9776;</button>
+            <button w-id='homeBut' class='std' style='display:none'>Home</button>
+            <span w-id='/msg'></span>
+      		<button w-id='backBut' style='display:none'>Back<br>&lArr;</button>
          </nav>
       `
       wcmixin(this)
+      window.APP = this
+      this.route('page-home')
 
-      this.menu.onclick = () => {
-         alert(2)
+      this.menuBut.onclick = () => this.showMenu()
+      this.homeBut.onclick = () => this.route('page-home')
+      this.backBut.onclick = () => history.go(-1)
+
+      window.onhashchange = async (ev) => {
+         const uu = ev.newURL.split('#')
+         if (uu.length > 1) this.route(uu[uu.length-1])
+         else location.href = '/'
       }
 
-      this.home.onclick = () => location.hash = 'page-home'
-
-      this.back.onclick = () => history.go(-1)
-
-      this.addEventListener('set-butts', (ev) => {
-         this.home.display(ev.val.home)
-         this.back.display(ev.val.back)
+      this.addEventListener('set-buts', (ev) => {
+         console.log(ev)
+         this.homeBut.display(ev.val.home)
+         this.backBut.display(ev.val.back)
          for (let b = this.back.nextSibling; b; b = b.nextSibling) b.remove()
          if (ev.val.custom) for (const b of ev.val.custom) this.nav.appendChild(b)
       })
+   }
+
+   async route(hash, elem) {
+      for (const el of this.main.childNodes) el.display(false)
+      if (elem) {
+         this.main.appendChild(elem)
+         if (elem.onDisplay) elem.onDisplay()
+         this._router.push({hash, elem})
+      } else {
+         let el = this._router.find(v => v.hash === hash)
+         if (el) {
+            el.display()
+            if (el.onDisplay) el.onDisplay()
+         } else {
+            el = document.createElement(hash)
+            this.main.appendChild(el)
+            console.log(el)
+            console.log(el.onDisplay)
+            if (el.onDisplay) el.onDisplay()
+            this._router.push({hash, elem: el})
+         }
+      }
    }
 })

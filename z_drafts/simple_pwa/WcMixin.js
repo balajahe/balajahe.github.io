@@ -3,7 +3,7 @@
 export default function wcmixin(target) {
    target.on = on.bind(target)
    target.onAny = onAny.bind(target)
-   target.ev = ev.bind(target)
+   target.bubbleEvent = bubbleEvent.bind(target)
    target.display = display.bind(target)
    target.generateProps = generateProps.bind(target)
    target.generateProps()
@@ -21,7 +21,7 @@ function onAny(elements, ev_type, listener, fire, options) {
    if (fire) listener()
 }
 
-function ev(name, val) {
+function bubbleEvent(name, val) {
    const ev = new Event(name, {"bubbles":true})
    ev.val = val
    this.dispatchEvent(ev)
