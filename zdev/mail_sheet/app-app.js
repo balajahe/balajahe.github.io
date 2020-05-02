@@ -9,7 +9,8 @@ customElements.define(me, class extends HTMLElement {
       this.innerHTML = `
          <style scoped>
             ${me} > main {
-               height: calc(100vh - var(--app-bar-height)); width: 100%;
+               height: 100vh;
+               height1: calc(100vh - var(--app-bar-height)); width: 100%;
                overflow: auto;
             }
             ${me} > nav {
