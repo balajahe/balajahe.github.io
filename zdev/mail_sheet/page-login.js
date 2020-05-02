@@ -29,7 +29,7 @@ customElements.define(me, class extends HTMLElement {
       this.userInp.focus()
 
       const but = document.createElement('button')
-      but.innerHTML = 'Log in<br>&rArr;'
+      but.innerHTML = 'Log in'
       but.onclick = async () => {
          but.disabled = true
          localStorage.setItem('user', this.user)

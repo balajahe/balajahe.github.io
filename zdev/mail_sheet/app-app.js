@@ -24,14 +24,14 @@ customElements.define(me, class extends HTMLElement {
                justify-content: center;
                align-items: center;
             }
-            ${me} > nav button { min-width: 15%; line-height: 1em; }
+            ${me} > nav button { min-width: 17%; line-height: 1em; }
             ${me} > nav span { flex-grow: 1; white-space: wrap; }
          </style>
          <nav w-id='nav'>
       		<button w-id='menuBut'>&#9776;</button>
             <button w-id='homeBut' style='display:none'>Home</button>
             <span w-id='/msg'></span>
-      		<button w-id='backBut' style='display:none'>Back<br>&lArr;</button>
+      		<button w-id='backBut' style='display:none'>Back</button>
          </nav>
          <main w-id='main'></main>
       `
