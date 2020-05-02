@@ -22,9 +22,9 @@ customElements.define(me, class extends HTMLElement {
       wcmixin(this)
    }
 
-   async onDisplay() {
-      this.ev('set-butts', {})
-      this.mails = await (await fetch(dom('app-app').SRV_URL + '/get_all')).json()
+   async onRoute() {
+      this.bubbleEvent('set-buts', {})
+      this.mails = await (await fetch(APP.SRV_URL + '/get_all')).json()
       this.msgdiv.remove()
       for (const mail of this.mails) {
          this.msubj = mail.subject

@@ -11,7 +11,7 @@ customElements.define(me, class extends HTMLElement {
       wcmixin(this)
    }
 
-   onDisplay() {
+   onRoute() {
       const but = document.createElement('button')
       but.innerHTML = 'Start<br>&rArr;'
       but.onclick = () => APP.route('page-login')

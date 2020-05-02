@@ -13,6 +13,8 @@ customElements.define(me, class extends HTMLElement {
                overflow: auto;
             }
             ${me} > nav {
+               position: fixed;
+               top: calc(100vh - var(--app-bar-height)); width: 100%; left: 0;
                height: var(--app-bar-height); width: 100%;
                display: flex; flex-flow: row nowrap;
                overflow-x: auto; overflow-y: hidden;
@@ -37,45 +39,47 @@ customElements.define(me, class extends HTMLElement {
       `
       wcmixin(this)
       window.APP = this
-      this.route('page-home')
 
       this.menuBut.onclick = () => this.showMenu()
       this.homeBut.onclick = () => this.route('page-home')
       this.backBut.onclick = () => history.go(-1)
 
-      window.onhashchange = async (ev) => {
-         const uu = ev.newURL.split('#')
-         if (uu.length > 1) this.route(uu[uu.length-1])
-         else location.href = '/'
-      }
-
       this.addEventListener('set-buts', (ev) => {
          console.log(ev)
          this.homeBut.display(ev.val.home)
          this.backBut.display(ev.val.back)
-         for (let b = this.back.nextSibling; b; b = b.nextSibling) b.remove()
+         for (let b = this.backBut.nextSibling; b; b = b.nextSibling) b.remove()
          if (ev.val.custom) for (const b of ev.val.custom) this.nav.appendChild(b)
       })
+/*
+      window.onhashchange = async (ev) => {
+         console.log(ev.newURL)
+         const uu = ev.newURL.split('#')
+         if (uu.length > 1) this.route(uu[uu.length-1])
+         else location.href = '/'
+      }
+*/
    }
 
    async route(hash, elem) {
-      for (const el of this.main.childNodes) el.display(false)
+      console.log(hash)
+      for (const el of this.main.childNodes) try { el.display(false) } catch(_) {}
       if (elem) {
          this.main.appendChild(elem)
-         if (elem.onDisplay) elem.onDisplay()
          this._router.push({hash, elem})
+         elem.display()
+         if (elem.onRoute) elem.onRoute()
       } else {
-         let el = this._router.find(v => v.hash === hash)
-         if (el) {
-            el.display()
-            if (el.onDisplay) el.onDisplay()
-         } else {
+         let el = this._router.find((v) => v.hash === hash)
+         if (!el) {
             el = document.createElement(hash)
             this.main.appendChild(el)
-            console.log(el)
-            console.log(el.onDisplay)
-            if (el.onDisplay) el.onDisplay()
             this._router.push({hash, elem: el})
+            el.display()
+            if (el.onRoute) el.onRoute()
+         } else {
+            el.elem.display()
+            if (el.elem.onRoute) el.elem.onRoute()
          }
       }
    }

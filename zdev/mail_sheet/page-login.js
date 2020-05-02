@@ -10,42 +10,43 @@ customElements.define(me, class extends HTMLElement {
             ${me} input { width: 60vw; }
             ${me} span { width: 60vw; }
          </style>
-
          <form w-id='loginform'>
             <input w-id='/server' placeholder='IMAP server' value='imap.gmail.com'/>
             <br>
-            <input w-id='elUser/user' placeholder='IMAP user'/>
+            <input w-id='userInp/user' placeholder='IMAP user'/>
             <br>
             <input w-id='/password' type='password' placeholder='password'/>
             <br>
-            <span w-id='/status'></span>
+            <span w-id='/msg'></span>
          </form>
       `
       wcmixin(this)
    }
 
-   onDisplay() {
-      this.status = ''
-      this.elUser.focus()
+   onRoute() {
+      this.userInp.focus()
 
       const but = document.createElement('button')
       but.innerHTML = 'Log In<br>&rArr;'
       but.onclick = async () => {
          but.disabled = true
-         this.status = 'IMAP authorization...'
+         this.msg = 'IMAP authorization...'
          try {
-            const res = await (await fetch(dom('app-app').SRV_URL
-               + `/login?server=${this.server}&user=${this.user}&password=${this.password}`)).json()
+            const res = await (await fetch(
+               APP.SRV_URL + `/login?server=${this.server}&user=${this.user}&password=${this.password}`
+            )).json()
             if (res.ok) {
-               location.hash = 'page-mail-sheet'
+               this.msg = ''
+               APP.route('page-mail-sheet')
             } else {
-               this.status = res.err
+               this.msg = res.err
             }
          } catch(_) {
-            this.status = `IMAP-REST server not found<br>Run: $ ts-node server.ts`
+            this.msg = `IMAP-REST server not found<br>Run: $ ts-node server.ts`
          }
          but.disabled = false
       }
-      this.ev('set-butts', { custom: [but] })
+
+      this.bubbleEvent('set-buts', { custom: [but] })
    }
 })
