@@ -8,16 +8,16 @@ customElements.define(me, class extends HTMLElement {
          <style scoped>
             ${me} > form { display: flex; flex-direction: column; }
             ${me} input { width: 60vw; }
-            ${me} span { width: 60vw; }
+            ${me} div { width: 60vw; height: 4em;}
          </style>
          <form w-id='loginform'>
             <input w-id='/server' placeholder='IMAP server' value='imap.gmail.com'/>
-            <br>
+            &nbsp;
             <input w-id='userInp/user' placeholder='IMAP user'/>
-            <br>
+            &nbsp;
             <input w-id='/password' type='password' placeholder='password'/>
-            <br>
-            <span w-id='/msg'></span>
+            &nbsp;
+            <div w-id='/msg'></div>
          </form>
       `
       wcmixin(this)
@@ -29,7 +29,7 @@ customElements.define(me, class extends HTMLElement {
       this.userInp.focus()
 
       const but = document.createElement('button')
-      but.innerHTML = 'Log In<br>&rArr;'
+      but.innerHTML = 'Log in<br>&rArr;'
       but.onclick = async () => {
          but.disabled = true
          localStorage.setItem('user', this.user)

@@ -8,14 +8,15 @@ customElements.define(me, class extends HTMLElement {
    connectedCallback() {
       this.innerHTML = `
          <style scoped>
-            ${me} > main {
-               height: calc(100vh - var(--app-bar-height) - 2em); width: 100%;
-               overflow: auto;
-            }
             ${me} > nav {
                height: var(--app-bar-height); width: 100%;
                display: flex; flex-flow: row nowrap;
                overflow-x: auto; overflow-y: hidden;
+               margin-bottom: 0.2em;
+            }
+            ${me} > main {
+               height: calc(100vh - var(--app-bar-height)); width: 100%;
+               overflow: auto;
             }
             ${me} > main > * {
                height: 100%; width: 100%;
@@ -26,13 +27,13 @@ customElements.define(me, class extends HTMLElement {
             ${me} > nav button { min-width: 15%; line-height: 1em; }
             ${me} > nav span { flex-grow: 1; white-space: wrap; }
          </style>
-         <main w-id='main'></main>
          <nav w-id='nav'>
       		<button w-id='menuBut'>&#9776;</button>
             <button w-id='homeBut' style='display:none'>Home</button>
             <span w-id='/msg'></span>
       		<button w-id='backBut' style='display:none'>Back<br>&lArr;</button>
          </nav>
+         <main w-id='main'></main>
       `
       wcmixin(this)
       window.APP = this
@@ -72,7 +73,6 @@ customElements.define(me, class extends HTMLElement {
          }
       }
       window.onhashchange = async (ev) => {
-         console.log(ev.newURL)
          const uu = ev.newURL.split('#')
          if (uu.length > 1) this.route(uu[uu.length-1])
          else location.href = '/'
