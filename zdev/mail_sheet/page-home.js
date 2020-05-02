@@ -6,7 +6,7 @@ customElements.define(me, class extends HTMLElement {
    connectedCallback() {
       this.innerHTML = `
          <p contenteditable='true'>Simple Email Client welcomes you !</p>
-         <p>Click "Start" to continue !</p>
+         <p>Click "Start" to continue !!!!!!!!</p>
       `
       wcmixin(this)
    }

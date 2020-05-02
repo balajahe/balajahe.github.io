@@ -50,7 +50,6 @@ customElements.define(me, class extends HTMLElement {
    }
 
    async route(hash, elem) {
-      console.log(hash)
       window.onhashchange = null
       location.hash = hash
       for (const el of this.main.childNodes) try { el.display(false) } catch(_) {}
