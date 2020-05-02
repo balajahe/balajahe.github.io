@@ -9,13 +9,10 @@ customElements.define(me, class extends HTMLElement {
       this.innerHTML = `
          <style scoped>
             ${me} > main {
-               height: 100vh;
-               height1: calc(100vh - var(--app-bar-height)); width: 100%;
+               height: calc(100vh - var(--app-bar-height)); width: 100%;
                overflow: auto;
             }
             ${me} > nav {
-               position: absolute;
-               top: calc(100vh - var(--app-bar-height)); width: 100%; left: 0;
                height: var(--app-bar-height); width: 100%;
                display: flex; flex-flow: row nowrap;
                overflow-x: auto; overflow-y: hidden;
@@ -26,14 +23,13 @@ customElements.define(me, class extends HTMLElement {
                justify-content: center;
                align-items: center;
             }
-            ${me} > nav button { min-width: 20%; line-height: 1em; }
-            ${me} > nav button.std { min-width: 15%; }
+            ${me} > nav button { min-width: 15%; line-height: 1em; }
             ${me} > nav span { flex-grow: 1; white-space: wrap; }
          </style>
          <main w-id='main'></main>
          <nav w-id='nav'>
-      		<button w-id='menuBut' class='std'>&#9776;</button>
-            <button w-id='homeBut' class='std' style='display:none'>Home</button>
+      		<button w-id='menuBut'>&#9776;</button>
+            <button w-id='homeBut' style='display:none'>Home</button>
             <span w-id='/msg'></span>
       		<button w-id='backBut' style='display:none'>Back<br>&lArr;</button>
          </nav>

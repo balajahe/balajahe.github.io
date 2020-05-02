@@ -21,6 +21,8 @@ customElements.define(me, class extends HTMLElement {
          </form>
       `
       wcmixin(this)
+      this.user = localStorage.getItem('user')
+      this.password = localStorage.getItem('password')
    }
 
    onRoute() {
@@ -30,6 +32,8 @@ customElements.define(me, class extends HTMLElement {
       but.innerHTML = 'Log In<br>&rArr;'
       but.onclick = async () => {
          but.disabled = true
+         localStorage.setItem('user', this.user)
+         localStorage.setItem('password', this.password)
          this.msg = 'IMAP authorization...'
          try {
             const res = await (await fetch(
