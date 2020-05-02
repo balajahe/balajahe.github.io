@@ -8,6 +8,9 @@ customElements.define(me, class extends HTMLElement {
    connectedCallback() {
       this.innerHTML = `
          <style scoped>
+            ${me} {
+               height: 100vh;
+            }
             ${me} > main {
                height: calc(100vh - var(--app-bar-height)); width: 100%;
                overflow: auto;
@@ -29,7 +32,7 @@ customElements.define(me, class extends HTMLElement {
          <main w-id='main'></main>
          <nav w-id='nav'>
       		<button w-id='menuBut'>&#9776;</button>
-            <button w-id='homeBut' style='display:none'>Home</button>
+            <button w-id='homeBut' style='display:none'>Home1</button>
             <span w-id='/msg'></span>
       		<button w-id='backBut' style='display:none'>Back<br>&lArr;</button>
          </nav>
