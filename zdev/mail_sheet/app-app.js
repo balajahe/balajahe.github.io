@@ -13,7 +13,7 @@ customElements.define(me, class extends HTMLElement {
                overflow: auto;
             }
             ${me} > nav {
-               position: fixed;
+               position: absolute;
                top: calc(100vh - var(--app-bar-height)); width: 100%; left: 0;
                height: var(--app-bar-height); width: 100%;
                display: flex; flex-flow: row nowrap;
@@ -45,24 +45,17 @@ customElements.define(me, class extends HTMLElement {
       this.backBut.onclick = () => history.go(-1)
 
       this.addEventListener('set-buts', (ev) => {
-         console.log(ev)
          this.homeBut.display(ev.val.home)
          this.backBut.display(ev.val.back)
          for (let b = this.backBut.nextSibling; b; b = b.nextSibling) b.remove()
          if (ev.val.custom) for (const b of ev.val.custom) this.nav.appendChild(b)
       })
-/*
-      window.onhashchange = async (ev) => {
-         console.log(ev.newURL)
-         const uu = ev.newURL.split('#')
-         if (uu.length > 1) this.route(uu[uu.length-1])
-         else location.href = '/'
-      }
-*/
    }
 
    async route(hash, elem) {
       console.log(hash)
+      window.onhashchange = null
+      location.hash = hash
       for (const el of this.main.childNodes) try { el.display(false) } catch(_) {}
       if (elem) {
          this.main.appendChild(elem)
@@ -81,6 +74,12 @@ customElements.define(me, class extends HTMLElement {
             el.elem.display()
             if (el.elem.onRoute) el.elem.onRoute()
          }
+      }
+      window.onhashchange = async (ev) => {
+         console.log(ev.newURL)
+         const uu = ev.newURL.split('#')
+         if (uu.length > 1) this.route(uu[uu.length-1])
+         else location.href = '/'
       }
    }
 })
