@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head>
+   <title>WC PWA Template</title>
+   <meta charset='utf-8'>
+   <meta name='viewport' content='width=device-width, initial-scale=1' />
+   <script type='module'>//navigator.serviceWorker.register('./app-sw.js')</script>
+   <script type='module' src='./app-app.js'></script>
+   <script type='module' src='./page-home.js'></script>
+   <script type='module' src='./page-login.js'></script>
+   <script type='module' src='./page-work.js'></script>
+   <style>
+      body { margin: 0.1em; overflow: hidden; }
+   </style>
+</head>
+<body onload='APP.route("page-home")'>
+	<app-app></app-app>
+</body>
+</html>
