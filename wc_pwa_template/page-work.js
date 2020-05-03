@@ -6,7 +6,7 @@ customElements.define(me, class extends HTMLElement {
    connectedCallback() {
       this.innerHTML = `
          <p w-id='/msg'>Enter text:</p>
-         <p w-id='text' contenteditable='true'>...</p>
+         <p w-id='text' contenteditable='true'>1)<br>2)<br>3)</p>
       `
       wcmixin(this)
 
@@ -18,7 +18,7 @@ customElements.define(me, class extends HTMLElement {
    async onRoute() {
       this.text.focus()
       const but = document.createElement('button')
-      but.innerHTML = 'Done'
+      but.innerHTML = 'Done<br>&rArr;'
       but.onclick = () => alert('Done !')
       this.bubbleEvent('set-buts', { custom: [but] })
    }

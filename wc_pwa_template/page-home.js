@@ -19,12 +19,8 @@ customElements.define(me, class extends HTMLElement {
 
    onRoute() {
       const but = document.createElement('button')
-      but.innerHTML = 'Start'
+      but.innerHTML = 'Start<br>&rArr;'
       but.onclick = () => APP.route('page-login')
-      this.bubbleEvent('set-buts', {
-         home: false,
-         back: false,
-         custom: [but]
-      })
+      this.bubbleEvent('set-buts', { back: false, custom: [but] })
    }
 })

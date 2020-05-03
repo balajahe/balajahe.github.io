@@ -40,8 +40,7 @@ customElements.define(me, class extends HTMLElement {
          </style>
          <nav w-id='nav'>
       		<button w-id='menuBut'>&#9776;</button>
-            <button w-id='homeBut' style='display:none'>Home</button>
-            <button w-id='backBut' style='display:none'>Back</button>
+            <button w-id='backBut' disabled>Back<br>&lArr;</button>
             <small w-id='msgEl/msg'>Not logged</small>
          </nav>
          <main w-id='main'></main>
@@ -58,12 +57,10 @@ customElements.define(me, class extends HTMLElement {
             this.onclick = null
          }
       }
-      this.homeBut.onclick = () => this.route('page-home')
       this.backBut.onclick = () => history.go(-1)
 
       this.addEventListener('set-buts', (ev) => {
-         this.homeBut.display(ev.val.home)
-         this.backBut.display(ev.val.back)
+         this.backBut.disabled = ev.val.back === false ? true : false
          for (let b = this.msgEl.nextSibling; b; b = b.nextSibling) b.remove()
          if (ev.val.custom) for (const b of ev.val.custom) this.nav.appendChild(b)
       })

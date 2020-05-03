@@ -2,6 +2,7 @@ import wcmixin from './WcMixin.js'
 
 const me = 'page-login'
 customElements.define(me, class extends HTMLElement {
+   _but = null
 
    connectedCallback() {
       this.innerHTML = `
@@ -11,41 +12,43 @@ customElements.define(me, class extends HTMLElement {
                display: flex; flex-direction: column;
                justify-content: center; align-items: center;
             }
-            ${me} > form { display: flex; flex-direction: column; }
             ${me} input { width: 60vw; }
-            ${me} div { width: 60vw; height: 3em;}
          </style>
-         <form>
-            <input w-id='userInp/user' placeholder='user'/>
-            &nbsp;
-            <input w-id='/password' type='password' placeholder='password'/>
-         </form>
+         <input w-id='userInp/user' placeholder='user'/>
+         &nbsp;
+         <input w-id='passInp/pass' type='password' placeholder='password'/>
       `
       wcmixin(this)
 
       this.userInp.oninput = (ev) => {
          this.bubbleEvent('set-msg', 'Not logged: ' + this.user)
       }
+
+      this.passInp.onkeypress = (ev) => {
+         if (ev.key === 'Enter') this.login()
+      }
    }
 
    onRoute() {
       this.userInp.focus()
-      const but = document.createElement('button')
-      but.innerHTML = 'Log in'
-      but.onclick = async () => {
-         APP.msg = 'Authorization...'
-         but.disabled = true
-         setTimeout(() => {
-            but.disabled = false
-            if (this.user) {
-               APP.msg = 'Logged: ' + this.user
-               APP.route('page-work')
-            } else {
-               APP.msg = 'Empty user !'
-               this.userInp.focus()
-            }
-         }, 1500)
-      }
-      this.bubbleEvent('set-buts', { custom: [but] })
+      this._but = document.createElement('button')
+      this._but.innerHTML = 'Log in<br>&rArr;'
+      this._but.onclick = this.login.bind(this)
+      this.bubbleEvent('set-buts', { custom: [this._but] })
+   }
+
+   async login() {
+      APP.msg = 'Authorization...'
+      this._but.disabled = true
+      setTimeout(() => {
+         this._but.disabled = false
+         if (this.user) {
+            APP.msg = 'Logged: ' + this.user
+            APP.route('page-work')
+         } else {
+            APP.msg = 'Empty user !'
+            this.userInp.focus()
+         }
+      }, 1500)
    }
 })
