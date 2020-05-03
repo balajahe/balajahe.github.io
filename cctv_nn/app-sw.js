@@ -1,5 +1,5 @@
 const APP = 'cctv_nn'
-const VERSION = '.v10'
+const VERSION = '.v11'
 
 self.oninstall = (ev) => ev.waitUntil(
   caches.open(APP + VERSION)

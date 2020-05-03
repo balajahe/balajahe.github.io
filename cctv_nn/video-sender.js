@@ -1,4 +1,4 @@
-import WC from '/weird_components/WeirdComponentMixin.js'
+import wcmixin from '/wc_pwa_template/WcMixin.js'
 
 const API_KEY = 'AIzaSyDWwZB5DbLaT_11i4C7L9Ch_0rslAncDro'
 const CLIENT_ID = '62101814784-23re0bkiiihnb99sid30pgt21spu9ubk.apps.googleusercontent.com'
@@ -6,11 +6,11 @@ const CLIENT_ID = '62101814784-23re0bkiiihnb99sid30pgt21spu9ubk.apps.googleuserc
 customElements.define('video-sender', class extends HTMLElement {
    async init() {
       this.innerHTML = `
-         <input w-name='el_email/email' type='email' style='display:none; width:99.5%' required placeholder='Email to send...'/>
-         <div w-name='/log'>Connecting to Gmail...<br></div>
-         <a w-name='a' style="display:none"></a>
+         <input w-id='el_email/email' type='email' style='display:none; width:99.5%' required placeholder='Email to send...'/>
+         <div w-id='/log'>Connecting to Gmail...<br></div>
+         <a w-id='a' style="display:none"></a>
       `
-      WC.bind(this)
+      wcmixin(this)
       this.email = localStorage.getItem('email')
 
       await import('https://apis.google.com/js/api.js')

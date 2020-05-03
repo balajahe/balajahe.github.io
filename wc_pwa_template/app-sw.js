@@ -1,5 +1,5 @@
-const APP = 'cctv_nn'
-const VERSION = '.v10'
+const APP = 'wc_pwa_template'
+const VERSION = '.v00'
 
 self.oninstall = (ev) => ev.waitUntil(
   caches.open(APP + VERSION)

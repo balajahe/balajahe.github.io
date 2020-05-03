@@ -1,4 +1,4 @@
-import WC from '/weird_components/WeirdComponentMixin.js'
+import wcmixin from '/wc_pwa_template/WcMixin.js'
 
 const CHUNK_DURATION = 7000
 
@@ -14,20 +14,20 @@ customElements.define('video-recorder', class extends HTMLElement {
 
    async init() {
       this.innerHTML = `
-         <div w-name='div' style='display:none; flex-flow:column'>
-            <video w-name='video' autoplay muted></video>
-            <canvas w-name='c_canvas' style='display:none'></canvas>
-            <canvas w-name='c_bbox' style='position:absolute; top:0; left:0'></canvas>
-            <div w-name='el_msg/msg'>Loading...</div>
-            <nav w-name='nav' style='display:none; flex-flow:row nowrap'>
-               <button w-name='b_detect/detecting/className' style='flex-grow:3'>Start / Stop detecting</button>
-               &nbsp;<button w-name='b_noplayer/noplayer/className' style='flex-grow:1'>No player</button>
-               &nbsp;<button w-name='b_noalarm/noalarm/className' style='flex-grow:1'>No alarm</button>
+         <div w-id='div' style='display:none; flex-flow:column'>
+            <video w-id='video' autoplay muted></video>
+            <canvas w-id='c_canvas' style='display:none'></canvas>
+            <canvas w-id='c_bbox' style='position:absolute; top:0; left:0'></canvas>
+            <div w-id='el_msg/msg'>Loading...</div>
+            <nav w-id='nav' style='display:none; flex-flow:row nowrap'>
+               <button w-id='b_detect/detecting/className' style='flex-grow:3'>Start / Stop detecting</button>
+               &nbsp;<button w-id='b_noplayer/noplayer/className' style='flex-grow:1'>No player</button>
+               &nbsp;<button w-id='b_noalarm/noalarm/className' style='flex-grow:1'>No alarm</button>
             </nav>
          </div>
-         <audio w-name='alarm' loop src='./alarm.mp3'></audio>
+         <audio w-id='alarm' loop src='./alarm.mp3'></audio>
       `
-      WC.bind(this)
+      wcmixin(this)
       this.canvas = this.c_canvas.getContext('2d')
       this.bbox = this.c_bbox.getContext('2d')
 

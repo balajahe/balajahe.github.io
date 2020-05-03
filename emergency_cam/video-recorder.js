@@ -1,6 +1,6 @@
-import WC from '/weird_components/WeirdComponentMixin.js'
+import wcmixin from '/wc_pwa_template/WcMixin.js'
 
-const CHUNK_DURATION = 5000
+const CHUNK_DURATION = 10000
 
 customElements.define('video-recorder', class extends HTMLElement {
    location = null
@@ -18,24 +18,24 @@ customElements.define('video-recorder', class extends HTMLElement {
 
    async connectedCallback() {
       this.innerHTML = `
-         <p w-name='msg'>Loading camera...</p>
-         <div w-name='recdiv' id='recdiv' style='display:none; flex-flow:column'>
-            <video w-name='video' autoplay muted></video>
+         <p w-id='msg'>Loading camera...</p>
+         <div w-id='recdiv' id='recdiv' style='display:none; flex-flow:column'>
+            <video w-id='video' autoplay muted></video>
             <nav style='display:flex; flex-flow:row nowrap'>
-               <button w-name='rec/recording/className' style='flex-grow:3'>Start / Stop recording</button>
-               &nbsp;<button w-name='/noemail/className' style='flex-grow:1'>No email</button>
-               &nbsp;<button w-name='no_chunk/nochunk/className' style='flex-grow:1'>No chunk</button>
-               &nbsp;<button w-name='lock' style='flex-grow:1'>Lock</button>
+               <button w-id='rec/recording/className' style='flex-grow:3'>Start / Stop recording</button>
+               &nbsp;<button w-id='/noemail/className' style='flex-grow:1'>No email</button>
+               &nbsp;<button w-id='no_chunk/nochunk/className' style='flex-grow:1'>No chunk</button>
+               &nbsp;<button w-id='lock' style='flex-grow:1'>Lock</button>
             </nav>
-            <button w-name='gmail' style='display:none'>Connect to Gmail</button>
-            <input w-name='/email' type='email' required placeholder='Email to send...'/>
+            <button w-id='gmail' style='display:none'>Connect to Gmail</button>
+            <input w-id='/email' type='email' required placeholder='Email to send...'/>
          </div>
-         <div w-name='locdiv' id='locdiv' style='display:none; flex-flow:column; position:fixed; top:0; left:0; width:100vw; height:100vh'>
-            <button w-name='unlock' style='width:100%; height:4%'>Unlock</button>
+         <div w-id='locdiv' id='locdiv' style='display:none; flex-flow:column; position:fixed; top:0; left:0; width:100vw; height:100vh'>
+            <button w-id='unlock' style='width:100%; height:4%'>Unlock</button>
             <iframe src='https://ru.wikipedia.org' style='width:100%; height:96%' sandbox='allow-forms allow-scripts'></iframe>
          </div>
       `
-      WC.bind(this)
+      wcmixin(this)
       this.email = localStorage.getItem('email')
 
       const stream = await navigator.mediaDevices.getUserMedia(
