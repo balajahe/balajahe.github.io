@@ -16,7 +16,7 @@ customElements.define(me, class extends HTMLElement {
             ${me} button {width: 100%; margin-bottom: 0.5em;}
          </style>
          <button w-id='home'>HOME</button>
-         <button w-id='source'>Sources on Github</button>
+         <button w-id='source'>Sources on GitHub</button>
       `
       wcmixin(this)
 
