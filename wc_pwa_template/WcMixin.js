@@ -1,9 +1,10 @@
 // WcMixin.js
-// v0.0.5
+// v0.1.0
 export default function wcmixin(target) {
    target.on = on.bind(target)
    target.onAny = onAny.bind(target)
    target.bubbleEvent = bubbleEvent.bind(target)
+   target.drownEvent = drownEvent.bind(target)
    target.display = display.bind(target)
    target.generateProps = generateProps.bind(target)
    target.generateProps()
@@ -22,9 +23,18 @@ function onAny(elements, ev_type, listener, fire, options) {
 }
 
 function bubbleEvent(name, val) {
-   const ev = new Event(name, {"bubbles":true})
+   const ev = new Event(name, {"bubbles": true})
    ev.val = val
    this.dispatchEvent(ev)
+}
+
+function drownEvent(name, val) {
+   const ev = new Event(name, {"bubbles": false})
+   ev.val = val
+   this.dispatchEvent(ev)
+   for (const el of this.querySelectorAll('*')) {
+      if (el.generateProps) el.dispatchEvent(ev)
+   }
 }
 
 function display(par) {

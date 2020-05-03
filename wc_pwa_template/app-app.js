@@ -3,17 +3,16 @@ import wcmixin from './WcMixin.js'
 const me = 'app-app'
 customElements.define(me, class extends HTMLElement {
    _router = []
+   _elapsed = 0
 
    connectedCallback() {
       this.innerHTML = `
-         <style>
-            :root { --app-bar-height: 3em; }
-         </style>
          <style scoped>
+            ${me} { --app-bar-height: 3em; }
             ${me} > nav {
                height: var(--app-bar-height); width: 100%;
                display: flex; flex-flow: row nowrap;
-               overflow-x: auto; overflow-y: hidden;
+               overflow: hidden;
             }
             ${me} > main {
                height: calc(100vh - var(--app-bar-height)); width: 100%;
@@ -28,14 +27,17 @@ customElements.define(me, class extends HTMLElement {
                border-radius: calc(var(--app-bar-height)/2)/calc(var(--app-bar-height));
                padding-left: 1em;
             }
-            ${me} > nav button { min-width: 17%; line-height: 1em; }
-            ${me} > nav small { margin: 0.5em; flex-grow: 1; display: flex; justify-content: center; align-items: center; }
+            ${me} > nav button { min-width: 15%; line-height: 1em; }
+            ${me} > nav small {
+               margin-left: 0.5em; margin-right: 0.5em; flex-grow: 1; overflow: auto;
+               display: flex; justify-content: center; align-items: center;
+            }
          </style>
          <nav w-id='nav'>
       		<button w-id='menuBut'>&#9776;</button>
             <button w-id='homeBut' style='display:none'>Home</button>
-            <small w-id='/msg'>Not logged</small>
-      		<button w-id='backBut' style='display:none'>Back</button>
+            <button w-id='backBut' style='display:none'>Back</button>
+            <small w-id='msgEl/msg'>Not logged</small>
          </nav>
          <main w-id='main'></main>
       `
@@ -49,13 +51,18 @@ customElements.define(me, class extends HTMLElement {
       this.addEventListener('set-buts', (ev) => {
          this.homeBut.display(ev.val.home)
          this.backBut.display(ev.val.back)
-         for (let b = this.backBut.nextSibling; b; b = b.nextSibling) b.remove()
+         for (let b = this.msgEl.nextSibling; b; b = b.nextSibling) b.remove()
          if (ev.val.custom) for (const b of ev.val.custom) this.nav.appendChild(b)
       })
 
       this.addEventListener('set-msg', (ev) => {
          this.msg = ev.val
       })
+
+      setInterval(() => {
+         this._elapsed += 1
+         this.drownEvent('notify-timer', this._elapsed)
+      }, 1000)
    }
 
    showMenu() {

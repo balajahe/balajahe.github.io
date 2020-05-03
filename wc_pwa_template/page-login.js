@@ -30,7 +30,6 @@ customElements.define(me, class extends HTMLElement {
 
    onRoute() {
       this.userInp.focus()
-
       const but = document.createElement('button')
       but.innerHTML = 'Log in'
       but.onclick = async () => {
@@ -39,10 +38,9 @@ customElements.define(me, class extends HTMLElement {
          setTimeout(() => {
             APP.msg = 'Logged: ' + this.user
             but.disabled = false
-            APP.route('page-mail-sheet')
-         }, 2000)
+            APP.route('page-work')
+         }, 1500)
       }
-
       this.bubbleEvent('set-buts', { custom: [but] })
    }
 })
