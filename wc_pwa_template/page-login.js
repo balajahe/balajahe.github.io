@@ -15,7 +15,7 @@ customElements.define(me, class extends HTMLElement {
             ${me} input { width: 60vw; }
             ${me} div { width: 60vw; height: 3em;}
          </style>
-         <form w-id='loginform'>
+         <form>
             <input w-id='userInp/user' placeholder='user'/>
             &nbsp;
             <input w-id='/password' type='password' placeholder='password'/>
@@ -36,9 +36,14 @@ customElements.define(me, class extends HTMLElement {
          APP.msg = 'Authorization...'
          but.disabled = true
          setTimeout(() => {
-            APP.msg = 'Logged: ' + this.user
             but.disabled = false
-            APP.route('page-work')
+            if (this.user) {
+               APP.msg = 'Logged: ' + this.user
+               APP.route('page-work')
+            } else {
+               APP.msg = 'Empty user !'
+               this.userInp.focus()
+            }
          }, 1500)
       }
       this.bubbleEvent('set-buts', { custom: [but] })

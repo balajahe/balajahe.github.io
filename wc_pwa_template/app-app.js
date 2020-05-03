@@ -8,15 +8,20 @@ customElements.define(me, class extends HTMLElement {
    connectedCallback() {
       this.innerHTML = `
          <style scoped>
-            ${me} { --app-bar-height: 3em; }
+            ${me} {
+               --app-bar-height: 2.5em;
+               --margin: 0.25em;
+            }
             ${me} > nav {
-               height: var(--app-bar-height); width: 100%;
+               height: var(--app-bar-height); width: calc(100% - var(--margin) * 2);
+               margin: var(--margin);
                display: flex; flex-flow: row nowrap;
                overflow: hidden;
             }
             ${me} > main {
-               height: calc(100vh - var(--app-bar-height)); width: 100%;
-               overflow: auto;
+               height: calc(100vh - var(--app-bar-height) - var(--margin) * 2);
+               width: calc(100% - var(--margin) * 2);
+               margin: 0; padding: 0; padding-left: var(--margin); padding-right: var(--margin); overflow: auto;
             }
             ${me} button {
                height: var(--app-bar-height);
@@ -27,9 +32,9 @@ customElements.define(me, class extends HTMLElement {
                border-radius: calc(var(--app-bar-height)/2)/calc(var(--app-bar-height));
                padding-left: 1em;
             }
-            ${me} > nav button { min-width: 15%; line-height: 1em; }
+            ${me} > nav button { height: 100%; min-width: 15%; line-height: 1em; }
             ${me} > nav small {
-               margin-left: 0.5em; margin-right: 0.5em; flex-grow: 1; overflow: auto;
+               margin-left: 0.5em; margin-right: 0.5em; flex-grow: 1; overflow: hidden;
                display: flex; justify-content: center; align-items: center;
             }
          </style>
@@ -40,11 +45,19 @@ customElements.define(me, class extends HTMLElement {
             <small w-id='msgEl/msg'>Not logged</small>
          </nav>
          <main w-id='main'></main>
+         <app-menu w-id='menu' style='display:none'></app-menu>
       `
       wcmixin(this)
       window.APP = this
 
-      this.menuBut.onclick = () => this.showMenu()
+      this.menuBut.onclick = (ev) => {
+         ev.stopPropagation()
+         this.menu.display()
+         this.onclick = () => {
+            this.menu.display(false)
+            this.onclick = null
+         }
+      }
       this.homeBut.onclick = () => this.route('page-home')
       this.backBut.onclick = () => history.go(-1)
 
@@ -65,10 +78,6 @@ customElements.define(me, class extends HTMLElement {
       }, 1000)
    }
 
-   showMenu() {
-      alert('showMenu() is not implemented !')
-   }
-
    async route(hash, elem) {
       window.onhashchange = null
       location.hash = hash
@@ -76,20 +85,17 @@ customElements.define(me, class extends HTMLElement {
       if (elem) {
          this.main.appendChild(elem)
          this._router.push({hash, elem})
-         elem.display()
-         if (elem.onRoute) elem.onRoute()
       } else {
          let el = this._router.find((v) => v.hash === hash)
          if (!el) {
-            el = document.createElement(hash)
-            this.main.appendChild(el)
-            this._router.push({hash, elem: el})
-            el.display()
-            if (el.onRoute) el.onRoute()
+            elem = document.createElement(hash)
+            this.main.appendChild(elem)
+            this._router.push({hash, elem})
          } else {
-            el.elem.display()
-            if (el.elem.onRoute) el.elem.onRoute()
+            elem = el.elem
          }
+         elem.display()
+         if (elem.onRoute) elem.onRoute()
       }
       window.onhashchange = async (ev) => {
          const uu = ev.newURL.split('#')
