@@ -7,8 +7,10 @@ customElements.define(me, class extends HTMLElement {
       this.innerHTML = `
          <style>
             ${me} {
-               position: fixed; top: var(--margin); left: var(--margin);
-               width: 60vw; height: 80vh; padding: 0.5em;
+               position: fixed; top: 0;
+               height: 80%;
+               width: 60%; max-width: calc(var(--max-width) * 0.6);
+               margin: var(--margin); padding: 0.5em;
                background-color: LightGrey; border-right: solid 2px grey; border-bottom: solid 2px grey;
             }
             ${me} button {width: 100%; margin-bottom: 0.5em;}

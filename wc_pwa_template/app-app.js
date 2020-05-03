@@ -9,32 +9,34 @@ customElements.define(me, class extends HTMLElement {
       this.innerHTML = `
          <style scoped>
             ${me} {
+               --max-width: 35em;
                --app-bar-height: 2.5em;
-               --margin: 0.25em;
+               --margin: 0.20em;
+               display: block; height: 100vh; width: 100vw;
+               max-width: var(--max-width)
             }
             ${me} > nav {
                height: var(--app-bar-height);
-               width: calc(100% - var(--margin) * 2);
                margin: var(--margin);
                display: flex; flex-flow: row nowrap;
                overflow: hidden;
             }
             ${me} > main {
                height: calc(100vh - var(--app-bar-height) - var(--margin) * 2);
-               width: calc(100% - var(--margin) * 2);
                padding: 0; padding-left: var(--margin); padding-right: var(--margin);
                overflow: auto;
             }
             ${me} button {
                height: var(--app-bar-height);
                border-radius: calc(var(--app-bar-height)/2)/calc(var(--app-bar-height));
+               line-height: 1em;
             }
             ${me} input {
                height: calc(var(--app-bar-height) * 0.7);
                border-radius: calc(var(--app-bar-height)/2)/calc(var(--app-bar-height));
                padding-left: 1em;
             }
-            ${me} > nav button { height: 100%; min-width: 15%; line-height: 1em; }
+            ${me} > nav button { height: 100%; min-width: 17%; }
             ${me} > nav small {
                flex-grow: 1;
                margin-left: 0.5em; margin-right: 0.5em;
@@ -45,10 +47,10 @@ customElements.define(me, class extends HTMLElement {
          <nav w-id='nav'>
       		<button w-id='menuBut'>&#9776;</button>
             <button w-id='backBut' disabled>Back<br>&lArr;</button>
-            <small w-id='msgEl/msg'>Not logged</small>
+            <small w-id='msgSpan/msg'>Not logged</small><button></button>
          </nav>
-         <main w-id='main'></main>
          <app-menu w-id='menu' style='display:none'></app-menu>
+         <main w-id='main'></main>
       `
       wcmixin(this)
       window.APP = this
@@ -65,7 +67,7 @@ customElements.define(me, class extends HTMLElement {
 
       this.addEventListener('set-buts', (ev) => {
          this.backBut.disabled = ev.val.back === false ? true : false
-         for (let b = this.msgEl.nextSibling; b; b = b.nextSibling) b.remove()
+         for (let b = this.msgSpan.nextSibling; b; b = this.msgSpan.nextSibling) b.remove()
          if (ev.val.custom) for (const b of ev.val.custom) this.nav.appendChild(b)
       })
 
@@ -80,24 +82,24 @@ customElements.define(me, class extends HTMLElement {
    }
 
    async route(hash, elem) {
-      window.onhashchange = null
-      location.hash = hash
       for (const el of this.main.childNodes) try { el.display(false) } catch(_) {}
       if (elem) {
          this.main.appendChild(elem)
          this._router.push({hash, elem})
       } else {
-         let el = this._router.find((v) => v.hash === hash)
+         const el = this._router.find((v) => v.hash === hash)
          if (!el) {
             elem = document.createElement(hash)
             this.main.appendChild(elem)
             this._router.push({hash, elem})
          } else {
             elem = el.elem
+            elem.display()
          }
-         elem.display()
-         if (elem.onRoute) elem.onRoute()
       }
+      if (elem.onRoute) elem.onRoute()
+      window.onhashchange = null
+      location.hash = hash
       window.onhashchange = async (ev) => {
          const uu = ev.newURL.split('#')
          if (uu.length > 1) this.route(uu[uu.length-1])

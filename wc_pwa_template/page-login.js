@@ -12,7 +12,7 @@ customElements.define(me, class extends HTMLElement {
                display: flex; flex-direction: column;
                justify-content: center; align-items: center;
             }
-            ${me} input { width: 60vw; }
+            ${me} input { width: 60%; }
          </style>
          <input w-id='userInp/user' placeholder='user'/>
          &nbsp;
