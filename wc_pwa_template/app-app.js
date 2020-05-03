@@ -13,7 +13,8 @@ customElements.define(me, class extends HTMLElement {
                --margin: 0.25em;
             }
             ${me} > nav {
-               height: var(--app-bar-height); width: calc(100% - var(--margin) * 2);
+               height: var(--app-bar-height);
+               width: calc(100% - var(--margin) * 2);
                margin: var(--margin);
                display: flex; flex-flow: row nowrap;
                overflow: hidden;
@@ -21,7 +22,8 @@ customElements.define(me, class extends HTMLElement {
             ${me} > main {
                height: calc(100vh - var(--app-bar-height) - var(--margin) * 2);
                width: calc(100% - var(--margin) * 2);
-               margin: 0; padding: 0; padding-left: var(--margin); padding-right: var(--margin); overflow: auto;
+               padding: 0; padding-left: var(--margin); padding-right: var(--margin);
+               overflow: auto;
             }
             ${me} button {
                height: var(--app-bar-height);
@@ -34,8 +36,10 @@ customElements.define(me, class extends HTMLElement {
             }
             ${me} > nav button { height: 100%; min-width: 15%; line-height: 1em; }
             ${me} > nav small {
-               margin-left: 0.5em; margin-right: 0.5em; flex-grow: 1; overflow: hidden;
+               flex-grow: 1;
+               margin-left: 0.5em; margin-right: 0.5em;
                display: flex; justify-content: center; align-items: center;
+               overflow: hidden;
             }
          </style>
          <nav w-id='nav'>
