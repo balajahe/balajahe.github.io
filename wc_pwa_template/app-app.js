@@ -3,6 +3,7 @@ import wcmixin from './WcMixin.js'
 const me = 'app-app'
 customElements.define(me, class extends HTMLElement {
    _router = []
+   _user = null
    _elapsed = 0
 
    connectedCallback() {
@@ -63,6 +64,7 @@ customElements.define(me, class extends HTMLElement {
             this.onclick = null
          }
       }
+
       this.backBut.onclick = () => history.go(-1)
 
       this.addEventListener('set-buts', (ev) => {
@@ -71,8 +73,9 @@ customElements.define(me, class extends HTMLElement {
          if (ev.val.custom) for (const b of ev.val.custom) this.nav.appendChild(b)
       })
 
-      this.addEventListener('set-msg', (ev) => {
-         this.msg = ev.val
+      this.addEventListener('login-change', (ev) => {
+         this.user = ev.val.logged ? ev.val.user : ''
+         this.msg = this.user ? `Logged as: ${this.user}` : `Not logged: ${ev.val.user}`
       })
 
       setInterval(() => {

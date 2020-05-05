@@ -14,14 +14,13 @@ customElements.define(me, class extends HTMLElement {
             }
             ${me} input { width: 60%; }
          </style>
-         <input w-id='userInp/user' placeholder='user'/>
-         &nbsp;
+         <input w-id='userInp/user' placeholder='user'/>&nbsp;
          <input w-id='passInp/pass' type='password' placeholder='password'/>
       `
       wcmixin(this)
 
       this.userInp.oninput = (ev) => {
-         this.bubbleEvent('set-msg', 'Not logged: ' + this.user)
+         this.bubbleEvent('login-change', {logged: false, user: this.user})
       }
 
       this.passInp.onkeypress = (ev) => {
@@ -33,7 +32,7 @@ customElements.define(me, class extends HTMLElement {
       this.userInp.focus()
       this._but = document.createElement('button')
       this._but.innerHTML = 'Log in<br>&rArr;'
-      this._but.onclick = this.login.bind(this)
+      this._but.onclick = () => this.login()
       this.bubbleEvent('set-buts', { custom: [this._but] })
    }
 
@@ -43,7 +42,7 @@ customElements.define(me, class extends HTMLElement {
       setTimeout(() => {
          this._but.disabled = false
          if (this.user) {
-            APP.msg = 'Logged: ' + this.user
+            this.bubbleEvent('login-change', {logged: true, user: this.user})
             APP.route('page-work')
          } else {
             APP.msg = 'Empty user !'
