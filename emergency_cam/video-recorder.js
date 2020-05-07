@@ -1,6 +1,6 @@
 import wcmixin from '/wc_pwa_template/WcMixin.js'
 
-const CHUNK_DURATION = 10000
+const CHUNK_DURATION = 5000
 
 customElements.define('video-recorder', class extends HTMLElement {
    location = null
