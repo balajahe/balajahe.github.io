@@ -46,7 +46,7 @@ customElements.define(me, class extends HTMLElement {
             }
          </style>
          <nav w-id='nav'>
-      		<button w-id='menuBut'>&#9776;</button>
+            <button w-id='menuBut'>&#9776;</button>
             <button w-id='backBut' disabled>Back<br>&lArr;</button>
             <small w-id='msgSpan/msg'>Not logged</small><button></button>
          </nav>
