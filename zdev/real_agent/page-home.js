@@ -23,7 +23,8 @@ customElements.define(me, class extends HTMLElement {
    onRoute() {
       const but = document.createElement('button')
       but.innerHTML = 'New<br>&rArr;'
-      but.onclick = () => APP.route('page-new')
+      but.onclick = () => APP.route('page-new1')
       this.bubbleEvent('set-buts', { back: false, custom: [but] })
+      but.focus()
    }
 })

@@ -7,12 +7,6 @@ customElements.define(me, class extends HTMLElement {
    connectedCallback() {
       this.innerHTML = `
          <style scoped>
-            ${me} {
-               height: var(--app-bar-height);
-               margin: var(--margin);
-               display: flex; flex-flow: row nowrap;
-               overflow: hidden;
-            }
             ${me} > button { height: 100%; min-width: 15%; }
             ${me} > #msgSpan {
                flex: 1 1 auto;

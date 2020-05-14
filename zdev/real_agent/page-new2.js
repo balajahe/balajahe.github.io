@@ -1,6 +1,6 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 
-const me = 'page-new'
+const me = 'page-new2'
 customElements.define(me, class extends HTMLElement {
    _location = null
    _imgCapturer = null
@@ -10,33 +10,21 @@ customElements.define(me, class extends HTMLElement {
    async connectedCallback() {
       this.innerHTML = `
          <style scoped>
-            ${me} {
-               display: flex; flex-direction: column;
-               --margin: 0.2em;
-            }
-            ${me} > * {
-               margin: var(--margin);
-            }
-            ${me} #textDiv {
-               min-height: 2.5em; width1: 100%;
-               border: solid 1px silver;
-            }
             ${me} nav { display: flex; flex-flow: row nowrap; }
             ${me} nav button { flex: 1 1 auto; }
-            ${me} #vidPreview { width: calc(100% - 2 * var(--margin)); }
+            ${me} #vidPreview { width: calc(100% - 2 * var(--margin)); height: auto; }
             ${me} #atts { display: flex; flex-flow: row wrap; }
-            ${me} img, video, audio{
-               width: calc(20% - 0.2em);
+            ${me} #atts > img, video, audio {
+               height: 3em; width: calc(20% - var(--margin));
                margin-right: var(--margin); margin-bottom: var(--margin);
             }
          </style>
-         <div w-id='textDiv' contenteditable='true'></div>
-         <nav>
-            <button w-id='imgBut'>Take photo</button>
-            <button w-id='vidBut/vidRecording/className'>Record video</button>
-            <button w-id='audBut/audRecording/className'>Record audio</button>
-         </nav>
          <video w-id='vidPreview' autoplay muted></video>
+         <nav>
+            <button w-id='audBut/audRecording/className'>Record audio</button>
+            <button w-id='vidBut/vidRecording/className'>Record video</button>
+            <button w-id='imgBut'>Take photo</button>
+         </nav>
          <div w-id='atts'></div>
       `
       wcMixin(this)
@@ -99,14 +87,12 @@ customElements.define(me, class extends HTMLElement {
    }
 
    async onRoute() {
-      this.textDiv.focus()
       const but = document.createElement('button')
-      but.innerHTML = 'Save<br>&rArr;'
+      but.innerHTML = 'Next<br>&rArr;'
       but.onclick = () => {
-         this.bubbleEvent('set-msg', 'Saved !')
-         APP.route('page-home')
+         APP.route('page-new3')
       }
       this.bubbleEvent('set-buts', { custom: [but] })
-      this.bubbleEvent('set-msg', 'Enter text description, take a photo, audio or video:')
+      this.bubbleEvent('set-msg', 'Take a photo, audio or video:')
    }
 })

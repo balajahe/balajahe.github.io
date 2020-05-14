@@ -7,17 +7,19 @@
    <script type='module'>//navigator.serviceWorker.register('./app-sw.js')</script>
    <script type='module' src='./app-app.js'></script>
    <script type='module' src='./page-home.js'></script>
-   <script type='module' src='./page-new.js'></script>
+   <script type='module' src='./page-new1.js'></script>
+   <script type='module' src='./page-new2.js'></script>
+   <script type='module' src='./page-new3.js'></script>
    <style>
       body {
          --app-max-width: 40em;
          --app-bar-height: 2.5em;
-         --margin: 0.20em;
+         --margin: 0.2em;
          margin: 0; padding: 0;
-         display: flex; justify-content: center;
+         display: flex; flex-direction: row; justify-content: center;
       }
       app-app {
-         display: block; 
+         display: block;
          height: 100vh; width: 100vw;
          max-width: var(--app-max-width)
       }

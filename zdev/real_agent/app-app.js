@@ -10,10 +10,22 @@ customElements.define(me, class extends HTMLElement {
 
       this.innerHTML = `
          <style scoped>
+            ${me} > app-bar {
+               height: var(--app-bar-height);
+               margin: var(--margin);
+               display: flex; flex-flow: row nowrap;
+               overflow: hidden;
+            }
             ${me} > main {
                height: calc(100vh - var(--app-bar-height) - var(--margin) * 2);
                padding: 0; padding-left: var(--margin); padding-right: var(--margin);
                overflow: auto;
+            }
+            ${me} > main > * {
+               display: flex; flex-direction: column;
+            }
+            ${me} > main > * > * {
+               margin: var(--margin);
             }
          </style>
          <app-bar w-id='appBar'></app-bar>
