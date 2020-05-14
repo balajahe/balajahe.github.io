@@ -3,7 +3,7 @@ import wcMixin from '/WcMixin/WcMixin.js'
 const me = 'page-new1'
 customElements.define(me, class extends HTMLElement {
 
-   async connectedCallback() {
+   connectedCallback() {
       this.innerHTML = `
          <style scoped>
             ${me} #textDiv {
@@ -33,13 +33,11 @@ customElements.define(me, class extends HTMLElement {
       }
    }
 
-   async onRoute() {
+   onRoute() {
       this.textDiv.focus()
       const but = document.createElement('button')
       but.innerHTML = 'Next<br>&rArr;'
-      but.onclick = () => {
-         APP.route('page-new2')
-      }
+      but.onclick = () => APP.route('page-new2')
       this.bubbleEvent('set-buts', { custom: [but] })
       this.bubbleEvent('set-msg', 'Enter text description and add labels:')
    }

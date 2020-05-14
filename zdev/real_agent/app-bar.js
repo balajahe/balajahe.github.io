@@ -18,7 +18,8 @@ customElements.define(me, class extends HTMLElement {
          <app-menu w-id='appMenu' style='display:none'></app-menu>
          <button w-id='menuBut'>&#9776;</button>
          <button w-id='backBut' disabled>Back<br>&lArr;</button>
-         <small w-id='msgSpan/msg'>Local storage</small><button></button>
+         <small w-id='msgSpan/msg'></small>
+         <button></button>
       `
       wcMixin(this)
 

@@ -4,6 +4,7 @@ import './app-bar.js'
 const me = 'app-app'
 customElements.define(me, class extends HTMLElement {
    _router = []
+   location = null
 
    connectedCallback() {
       window.APP = this
@@ -35,10 +36,18 @@ customElements.define(me, class extends HTMLElement {
 
       this.addEventListener('set-buts', (ev) => this.appBar.setButs(ev))
       this.addEventListener('set-msg', (ev) => this.appBar.setMsg(ev))
+
+      navigator.geolocation.getCurrentPosition(loc => this._location = loc.coords)
+      navigator.geolocation.watchPosition(loc => this._location = loc.coords)
    }
 
    async route(hash, elem) {
-      for (const el of this.appMain.childNodes) try { el.display(false) } catch(_) {}
+      for (const el of this.appMain.childNodes) {
+         try {
+            el.display(false)
+            if (el.onUnRoute) el.onUnRoute()
+         } catch(_) {}
+      }
       if (elem) {
          this.appMain.appendChild(elem)
          this._router.push({hash, elem})
@@ -54,7 +63,8 @@ customElements.define(me, class extends HTMLElement {
          }
       }
       if (elem.onRoute) elem.onRoute()
-      window.onhashchange = null
+      if (elem.onRoute) elem.onRoute()
+   window.onhashchange = null
       location.hash = hash
       window.onhashchange = async (ev) => {
          const uu = ev.newURL.split('#')
