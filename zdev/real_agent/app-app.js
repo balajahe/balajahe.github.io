@@ -14,48 +14,42 @@ customElements.define(me, class extends HTMLElement {
             ${me} > app-bar {
                height: var(--app-bar-height);
                margin-bottom: calc(2 * var(--margin));
-               display: flex; flex-flow: row nowrap;
-               overflow: hidden;
             }
             ${me} > main {
                height: calc(100vh - var(--app-bar-height) - var(--margin) * 2);
                padding: 0; padding-left: var(--margin); padding-right: var(--margin);
                overflow: auto;
             }
-            ${me} > main > * {
-               display: flex; flex-direction: column;
-            }
-            ${me} > main > * > * {
-               margin: calc(2 * var(--margin));
-            }
+            ${me} > main > * { display: flex; flex-direction: column; }
+            ${me} > main > * > * { margin: calc(2 * var(--margin)); }
          </style>
-         <app-bar w-id='appBar'></app-bar>
-         <main w-id='appMain'></main>
+         <app-bar w-id='_appBar'></app-bar>
+         <main w-id='_appMain'></main>
       `
       wcMixin(this)
 
-      this.addEventListener('set-buts', (ev) => this.appBar.setButs(ev))
-      this.addEventListener('set-msg', (ev) => this.appBar.setMsg(ev))
+      this.addEventListener('set-buts', (ev) => this._appBar.setButs(ev))
+      this.addEventListener('set-msg', (ev) => this._appBar.setMsg(ev))
 
       navigator.geolocation.getCurrentPosition(loc => this._location = loc.coords)
       navigator.geolocation.watchPosition(loc => this._location = loc.coords)
    }
 
    async route(hash, elem) {
-      for (const el of this.appMain.childNodes) {
+      for (const el of this._appMain.childNodes) {
          try {
             el.display(false)
             if (el.onUnRoute) el.onUnRoute()
          } catch(_) {}
       }
       if (elem) {
-         this.appMain.appendChild(elem)
+         this._appMain.appendChild(elem)
          this._router.push({hash, elem})
       } else {
          const el = this._router.find((v) => v.hash === hash)
          if (!el) {
             elem = document.createElement(hash)
-            this.appMain.appendChild(elem)
+            this._appMain.appendChild(elem)
             this._router.push({hash, elem})
          } else {
             elem = el.elem
@@ -63,8 +57,7 @@ customElements.define(me, class extends HTMLElement {
          }
       }
       if (elem.onRoute) elem.onRoute()
-      if (elem.onRoute) elem.onRoute()
-   window.onhashchange = null
+      window.onhashchange = null
       location.hash = hash
       window.onhashchange = async (ev) => {
          const uu = ev.newURL.split('#')

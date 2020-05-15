@@ -46,86 +46,95 @@ function display(par) {
 function generateProps() {
    const winput = (ev) => {
       const el = ev.target
-      const ev1 = new Event('w-input', {"bubbles":true})
+      const ev1 = new Event('w-input', { "bubbles":true })
       ev1.val = el._getVal()
       el.dispatchEvent(ev1)
    }
    const wchange = (ev) => {
       const el = ev.target
-      const ev1 = new Event('w-change', {"bubbles":true})
+      const ev1 = new Event('w-change', { "bubbles":true })
       ev1.val = el._getVal()
       el.dispatchEvent(ev1)
    }
 
    const generate = (el) => {
       if (el._getVal !== undefined) return
-
-      if (el.tagName === 'INPUT') {
-         if (el.type == 'number') {
-            el._getVal = () => Number(el.value)
-            el._setVal = (v) => el.value = v
-         } else if (el.type == 'date') {
-            el._getVal = () => Date.parse(el.value)
-            el._setVal = (v) => el.value = v
-         } else if (el.type == 'checkbox') {
-            el._getVal = () => el.checked
-            el._setVal = (v) => el.checked = v
-         } else if (el.type == 'radio') {
-            el._getVal = () => el.checked ? el.value : false
-            el._setVal = (v) => el.checked = v
-         } else {
-            el._getVal = () => el.value
-            el._setVal = (v) => el.value = v
-         }
+      const [wid, wval, wsource] = el.getAttribute('w-id').split('/')
+      
+      if (wsource) {
+         el._getVal = () => el[wsource]
+         el._setVal = (v) => el[wsource] = v
          el.addEventListener('input', (ev) => winput(ev))
          el.addEventListener('change', (ev) => wchange(ev))
-
-      } else if (el.tagName === 'SELECT') {
-         if (!el.multiple) {
-            el._getVal = () => el.value
-            el._setVal = (v) => el.value = v
-         } else {
-            el._getVal = () => {
-               let res = []
-               for (const op of el.selectedOptions) res.push(op.value)
-               return res
-            }
-            el._setVal = (vv) => {
-               for (const op of el.querySelectorAll('option')) {
-                  op.selected = vv.includes(op.value)
-               }
-            }
-         }
-         el.addEventListener('input', (ev) => winput(ev))
-         el.addEventListener('change', (ev) => wchange(ev))
-
-      } else if (el.tagName === 'TEXTAREA') {
-         el._getVal = () => el.value
-         el._setVal = (v) => el.value = v
-         el.addEventListener('input', (ev) => winput(ev))
-         el.addEventListener('blur', (ev) => wchange(ev))
-
-      } else if (el.tagName === 'BUTTON') {
-         el._val = false
-         el._getVal = () => el._val
-         el._setVal = (v) => el._val = v
-         el.addEventListener('click', (ev) => {
-            el._val = !el._val
-            winput(ev)
-            wchange(ev)
-         })
-
-      } else if (el.tagName === 'TEMPLATE') {
-         el._getVal = () => el.content.cloneNode(true)
-         el._setVal = (v) => el.content = v
-         el.addEventListener('input', (ev) => winput(ev))
-         el.addEventListener('blur', (ev) => wchange(ev))
 
       } else {
-         el._getVal = () => el.innerHTML
-         el._setVal = (v) => el.innerHTML = v
-         el.addEventListener('input', (ev) => winput(ev))
-         el.addEventListener('blur', (ev) => wchange(ev))
+         if (el.tagName === 'INPUT') {
+            if (el.type == 'number') {
+               el._getVal = () => Number(el.value)
+               el._setVal = (v) => el.value = v
+            } else if (el.type == 'date') {
+               el._getVal = () => Date.parse(el.value)
+               el._setVal = (v) => el.value = v
+            } else if (el.type == 'checkbox') {
+               el._getVal = () => el.checked
+               el._setVal = (v) => el.checked = v
+            } else if (el.type == 'radio') {
+               el._getVal = () => el.checked ? el.value : false
+               el._setVal = (v) => el.checked = v
+            } else {
+               el._getVal = () => el.value
+               el._setVal = (v) => el.value = v
+            }
+            el.addEventListener('input', (ev) => winput(ev))
+            el.addEventListener('change', (ev) => wchange(ev))
+
+         } else if (el.tagName === 'SELECT') {
+            if (!el.multiple) {
+               el._getVal = () => el.value
+               el._setVal = (v) => el.value = v
+            } else {
+               el._getVal = () => {
+                  let res = []
+                  for (const op of el.selectedOptions) res.push(op.value)
+                  return res
+               }
+               el._setVal = (vv) => {
+                  for (const op of el.querySelectorAll('option')) {
+                     op.selected = vv.includes(op.value)
+                  }
+               }
+            }
+            el.addEventListener('input', (ev) => winput(ev))
+            el.addEventListener('change', (ev) => wchange(ev))
+
+         } else if (el.tagName === 'TEXTAREA') {
+            el._getVal = () => el.value
+            el._setVal = (v) => el.value = v
+            el.addEventListener('input', (ev) => winput(ev))
+            el.addEventListener('blur', (ev) => wchange(ev))
+
+         } else if (el.tagName === 'BUTTON') {
+            el._val = false
+            el._getVal = () => el._val
+            el._setVal = (v) => el._val = v
+            el.addEventListener('click', (ev) => {
+               el._val = !el._val
+               winput(ev)
+               wchange(ev)
+            })
+
+         } else if (el.tagName === 'TEMPLATE') {
+            el._getVal = () => el.content.cloneNode(true)
+            el._setVal = (v) => el.content = v
+            el.addEventListener('input', (ev) => winput(ev))
+            el.addEventListener('blur', (ev) => wchange(ev))
+
+         } else {
+            el._getVal = () => el.innerHTML
+            el._setVal = (v) => el.innerHTML = v
+            el.addEventListener('input', (ev) => winput(ev))
+            el.addEventListener('blur', (ev) => wchange(ev))
+         }
       }
 
       try {
@@ -143,7 +152,6 @@ function generateProps() {
          })
       } catch(e) { console.error(e) }
 
-      const [wid, wval, wval1] = el.getAttribute('w-id').split('/')
       if (wid) {
          try {
             Object.defineProperty(this, wid, { get: () => el })
@@ -171,12 +179,6 @@ function generateProps() {
                set: (v) => el.val = v
             })
          } catch(e) { console.error(e) }
-      }
-
-      if (wval1) {
-         el.addEventListener('w-change', (ev) =>
-            ev.target[wval1] = ev.target.val
-         )
       }
    }
 
