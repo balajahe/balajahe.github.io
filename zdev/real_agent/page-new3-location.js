@@ -1,6 +1,6 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 
-const me = 'page-new3'
+const me = 'page-new3-location'
 customElements.define(me, class extends HTMLElement {
 
    connectedCallback() {

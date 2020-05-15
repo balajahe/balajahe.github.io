@@ -25,6 +25,6 @@ customElements.define(me, class extends HTMLElement {
       but.innerHTML = 'New<br>&rArr;'
       but.onclick = () => APP.route('page-new1')
       this.bubbleEvent('set-buts', { back: false, custom: [but] })
-      this.bubbleEvent('set-msg', '')
+      this.bubbleEvent('set-msg', 'Object list:')
    }
 })

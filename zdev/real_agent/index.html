@@ -8,13 +8,13 @@
    <script type='module' src='./app-app.js'></script>
    <script type='module' src='./page-home.js'></script>
    <script type='module' src='./page-new1.js'></script>
-   <script type='module' src='./page-new2.js'></script>
-   <script type='module' src='./page-new3.js'></script>
+   <script type='module' src='./page-new2-video.js'></script>
+   <script type='module' src='./page-new3-location.js'></script>
    <style>
       :root {
          --app-max-width: 40em;
-         --app-bar-height: 2.5em;
-         --margin: 0.2em;
+         --app-bar-height: 2.4em;
+         --margin: 0.1em;
       }
       body {
          margin: 0; padding: 0;
@@ -25,12 +25,14 @@
          max-width: var(--app-max-width)
       }
       button {
-         height: var(--app-bar-height);
+         height: calc(var(--app-bar-height) * 1.0);
+         margin: var(--margin);
          border-radius: calc(var(--app-bar-height)/2)/calc(var(--app-bar-height));
          line-height: 1em;
       }
       input {
-         height: calc(var(--app-bar-height) * 0.7);
+         height: calc(var(--app-bar-height) * 0.9);
+         margin: var(--margin);
          border-radius: calc(var(--app-bar-height)/2)/calc(var(--app-bar-height));
          padding-left: 1em;
       }

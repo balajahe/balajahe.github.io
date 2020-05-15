@@ -7,7 +7,7 @@ customElements.define(me, class extends HTMLElement {
    connectedCallback() {
       this.innerHTML = `
          <style scoped>
-            ${me} > button { height: 100%; min-width: 15%; }
+            ${me} > button { height: 100%; min-width: 17%; }
             ${me} > #msgSpan {
                flex: 1 1 auto;
                margin-left: 0.5em; margin-right: 0.5em;

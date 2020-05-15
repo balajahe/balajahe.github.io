@@ -1,6 +1,6 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 
-const me = 'page-new2'
+const me = 'page-new2-video'
 customElements.define(me, class extends HTMLElement {
    _stream = null
    _imgCapturer = null
@@ -48,6 +48,12 @@ customElements.define(me, class extends HTMLElement {
    }
 
    async onRoute() {
+      const but = document.createElement('button')
+      but.innerHTML = 'Next<br>&rArr;'
+      but.onclick = () => APP.route('page-new3-location')
+      this.bubbleEvent('set-buts', { custom: [but] })
+      this.bubbleEvent('set-msg', 'Take a photo, audio or video:')
+
       this._stream = await navigator.mediaDevices.getUserMedia(
          {video: {facingMode: {ideal: "environment"}}, audio: true}
       )
@@ -71,12 +77,6 @@ customElements.define(me, class extends HTMLElement {
          this.atts.appendChild(aud)
 
       }
-
-      const but = document.createElement('button')
-      but.innerHTML = 'Next<br>&rArr;'
-      but.onclick = () => APP.route('page-new3')
-      this.bubbleEvent('set-buts', { custom: [but] })
-      this.bubbleEvent('set-msg', 'Take a photo, audio or video:')
    }
 
    onUnRoute() {

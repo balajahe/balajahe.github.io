@@ -13,7 +13,7 @@ customElements.define(me, class extends HTMLElement {
          <style scoped>
             ${me} > app-bar {
                height: var(--app-bar-height);
-               margin: var(--margin);
+               margin-bottom: calc(2 * var(--margin));
                display: flex; flex-flow: row nowrap;
                overflow: hidden;
             }
@@ -26,7 +26,7 @@ customElements.define(me, class extends HTMLElement {
                display: flex; flex-direction: column;
             }
             ${me} > main > * > * {
-               margin: var(--margin);
+               margin: calc(2 * var(--margin));
             }
          </style>
          <app-bar w-id='appBar'></app-bar>

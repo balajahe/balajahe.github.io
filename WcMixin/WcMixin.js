@@ -1,5 +1,5 @@
 // WcMixin.js
-// v0.1.0
+// v0.2.0
 export default function wcMixin(target) {
    target.on = on.bind(target)
    target.onAny = onAny.bind(target)
