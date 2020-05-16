@@ -61,7 +61,7 @@ customElements.define(me, class extends HTMLElement {
    _showLocation() {
       if (APP.location) {
          this._loc = APP.location.latitude + '<br>' + APP.location.longitude
-         this._mapIframe.src = `https://www.openstreetmap.org/export/embed.html?bbox=${APP.location.longitude-0.002}%2C${APP.location.latitude-0.002}%2C${APP.location.longitude+0.002}%2C${APP.location.latitude+0.002}&amp;layer=mapnik&amp;marker=${APP.location.latitude}%2C${APP.location.longitude}`
+         this._mapIframe.src = `https://www.openstreetmap.org/export/embed.html?bbox=${APP.location.longitude-0.002}%2C${APP.location.latitude-0.002}%2C${APP.location.longitude+0.002}%2C${APP.location.latitude+0.002}&amp;layer=mapnik&amp;marker=${APP.location.longitude}%2C${APP.location.latitude}`
       } else {
          this._loc += '---' + APP.location
       }

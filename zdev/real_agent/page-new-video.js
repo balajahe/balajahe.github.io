@@ -15,13 +15,14 @@ customElements.define(me, class extends HTMLElement {
             ${me} nav button { flex: 1 1 auto; }
             ${me} > #_attsDiv { display: flex; flex-flow: row wrap; }
             ${me} > #_attsDiv > img, video, audio {
-               height: 3.5em; width: calc(20% - var(--margin1) * 1.5);
+               height: 4em; width: calc(20% - var(--margin1) * 1.5);
                margin-top: var(--margin1); margin-left: var(--margin1);
             }
             ${me} #_attsDiv > img:hover { cursor:pointer; }
             ${me} #_imgShowDiv {
                position: fixed; top: 0; left: 0;
                height: 100vh; width: 100vw;
+               max-height: calc(100% - var(--app-bar-height));
                background-color: black;
                display: flex; flex-flow: column; justify-content: center;
             }
@@ -60,7 +61,7 @@ customElements.define(me, class extends HTMLElement {
          if (this._vidRecording) this._vidRecorder.start()
          else this._vidRecorder.stop()
       }
-      
+
       this._audBut.onclick = () => {
          this._audBut.className = this._audRecording
          if (this._audRecording) this._audRecorder.start()
