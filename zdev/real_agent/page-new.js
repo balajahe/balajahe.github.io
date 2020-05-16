@@ -6,9 +6,10 @@ customElements.define(me, class extends HTMLElement {
    connectedCallback() {
       this.innerHTML = `
          <style scoped>
-            ${me} #_textInp {
+            ${me} #_textDiv {
                min-height: 3.5em;
                border: solid 1px silver;
+               margin: var(--margin1); padding-left: var(--margin2);
                font-size: smaller;
             }
             ${me} #_labelsDiv { min-height: var(--app-bar-height); }
@@ -17,10 +18,10 @@ customElements.define(me, class extends HTMLElement {
             ${me} #_newLabelInp { width: 30%; }
             ${me} iframe { width: 100%; }
          </style>
-         <div w-id='_textInp/text' contenteditable='true'></div>
+         <div w-id='_textDiv/text' contenteditable='true'></div>
          <div w-id='_labelsDiv'></div>
          <div>
-            <div class='separ'>&nbsp;<small>Add label:</small>&nbsp;<hr></div>
+            <div class='separ'>&nbsp;<small>Add label:</small>&nbsp;<hr/></div>
             <input w-id='_newLabelInp/_newLabel' placeholder='New label...'/>
          </div>
          <iframe w-id='_mapIframe' width="300px" height="300px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=41.97273110840353%2C45.02658622677895%2C41.97765564415487%2C45.03039272187266&amp;layer=mapnik&amp;marker=45.02848950596824%2C41.97519337627921"></iframe>
@@ -67,7 +68,7 @@ customElements.define(me, class extends HTMLElement {
    }
 
    onRoute() {
-      this._textInp.focus()
+      this._textDiv.focus()
       this._showLocation()
       this.bubbleEvent('set-bar', {
          msg: 'Enter description, add labels:',

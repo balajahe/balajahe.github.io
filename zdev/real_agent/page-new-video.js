@@ -10,13 +10,13 @@ customElements.define(me, class extends HTMLElement {
    async connectedCallback() {
       this.innerHTML = `
          <style scoped>
-            ${me} > video { width: 100%; height: auto; }
+            ${me} > #_vidPreview { margin-left: 0; width: 100%; height: auto; }
             ${me} nav { display: flex; flex-flow: row nowrap; }
             ${me} nav button { flex: 1 1 auto; }
-            ${me} #_attsDiv { display: flex; flex-flow: row wrap; }
-            ${me} #_attsDiv > img, video, audio {
-               height: 3.5em; width: calc(20% - var(--margin1));
-               margin-right: var(--margin1); margin-bottom: var(--margin1);
+            ${me} > #_attsDiv { display: flex; flex-flow: row wrap; }
+            ${me} > #_attsDiv > img, video, audio {
+               height: 3.5em; width: calc(20% - var(--margin1) * 1.5);
+               margin-left: var(--margin1); margin-bottom: var(--margin1);
             }
             ${me} #_attsDiv > img:hover { cursor:pointer; }
             ${me} #_imgShowDiv {
@@ -36,7 +36,7 @@ customElements.define(me, class extends HTMLElement {
          <div w-id='_attsDiv'></div>
          <div w-id='_imgShowDiv' style='display:none'>
             <img w-id='_imgShowImg'/>
-            <button w-id='_imgShowDel'/>Delete</button>
+            <button w-id='_imgShowDel'>Delete</button>
          </div>
       `
       wcMixin(this)
