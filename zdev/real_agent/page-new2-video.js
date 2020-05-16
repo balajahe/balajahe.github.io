@@ -10,13 +10,13 @@ customElements.define(me, class extends HTMLElement {
    async connectedCallback() {
       this.innerHTML = `
          <style scoped>
+            ${me} #_vidPreview { width: 100%; height: auto; }
             ${me} nav { display: flex; flex-flow: row nowrap; }
             ${me} nav button { flex: 1 1 auto; }
-            ${me} #_vidPreview { width: calc(100% - 2 * var(--margin)); height: auto; }
             ${me} #_attsDiv { display: flex; flex-flow: row wrap; }
             ${me} #_attsDiv > img, video, audio {
-               height: 3em; width: calc(20% - var(--margin));
-               margin-right: var(--margin); margin-bottom: var(--margin);
+               height: 3em; width: calc(20% - var(--margin1));
+               margin-right: var(--margin1); margin-bottom: var(--margin1);
             }
          </style>
          <video w-id='_vidPreview' autoplay muted></video>
@@ -50,17 +50,21 @@ customElements.define(me, class extends HTMLElement {
    }
 
    async onRoute() {
-      const but = document.createElement('button')
-      but.innerHTML = 'Next<br>&rArr;'
-      but.onclick = () => APP.route('page-new3-location')
-      this.bubbleEvent('set-buts', { custom: [but] })
-      this.bubbleEvent('set-msg', 'Take a photo, audio or video:')
+      this.bubbleEvent('set-bar', {
+         msg: 'Take photo, audio or video:',
+         buts: [{
+            html: 'Next<br>&rArr;',
+            click: () => {
+               APP.route('page-home')
+               this.bubbleEvent('set-msg', 'Saved !')
+            }
+         }]
+      })
 
       this._stream = await navigator.mediaDevices.getUserMedia(
          { video: { facingMode: { ideal: "environment" }}, audio: true }
       )
       this._vidPreview.srcObject = this._stream
-
       this._imgCapturer = new ImageCapture(this._stream.getVideoTracks()[0])
 
       this._vidRecorder = new MediaRecorder(this._stream, { mimeType : "video/webm" })
@@ -77,11 +81,12 @@ customElements.define(me, class extends HTMLElement {
          aud.controls = true
          aud.src = URL.createObjectURL(ev.data)
          this._attsDiv.appendChild(aud)
-
       }
+      console.log(+1)
    }
 
    onUnRoute() {
       this._stream.getTracks().forEach(track => track.stop())
+      console.log(-1)
    }
 })

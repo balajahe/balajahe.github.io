@@ -14,26 +14,27 @@
       :root {
          --app-max-width: 40em;
          --app-bar-height: 2.5em;
-         --margin: 0.1em;
+         --margin1: 0.1em;
+         --margin2: 0.4em;
       }
       body {
          margin: 0; padding: 0;
-         display: flex; flex-direction: row; justify-content: center;
+         display: flex; flex-flow: row; justify-content: center;
       }
       app-app {
          height: 100vh; width: 100vw;
-         max-width: var(--app-max-width)
+         max-width: var(--app-max-width);
       }
       button {
          height: calc(var(--app-bar-height) * 1.0);
-         margin: var(--margin);
-         border-radius: calc(var(--app-bar-height)/2)/calc(var(--app-bar-height));
+         margin: var(--margin1);
+         border-radius: calc(var(--app-bar-height)/1.5)/calc(var(--app-bar-height));
          line-height: 1em;
       }
       input {
          height: calc(var(--app-bar-height) * 0.85);
-         margin: var(--margin);
-         border-radius: calc(var(--app-bar-height)/2)/calc(var(--app-bar-height));
+         margin: var(--margin1);
+         border-radius: calc(var(--app-bar-height)/1.5)/calc(var(--app-bar-height));
          padding-left: 1em;
       }
       button:active { background-color: red; }

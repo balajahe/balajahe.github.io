@@ -12,13 +12,14 @@ customElements.define(me, class extends HTMLElement {
                overflow: hidden;
             }
             ${me} > button {
-               height: calc(100% - var(--margin));
+               height: calc(100% - var(--margin1) * 2);
                min-width: 17%;
             }
             ${me} > #_msgSpan {
                flex: 1 1 auto;
                margin-left: 0.5em; margin-right: 0.5em;
-               display: flex; justify-content: center; align-items: center; text-align: center;
+               display: flex; justify-content: center; align-items: center;
+               text-align: center;
                overflow: hidden;
             }
          </style>
@@ -42,13 +43,25 @@ customElements.define(me, class extends HTMLElement {
       this._backBut.onclick = () => history.go(-1)
    }
 
+   setMsg(ev) {
+      this._msgSpan.val = ev.val ? ev.val : ''
+   }
+
    setButs(ev) {
       this._backBut.disabled = ev.val.back === false ? true : false
       for (let b = this._msgSpan.nextSibling; b; b = this._msgSpan.nextSibling) b.remove()
-      if (ev.val.custom) for (const b of ev.val.custom) this.appendChild(b)
+      if (ev.val.buts) for (const b of ev.val.buts) this.appendChild(b)
    }
 
-   setMsg(ev) {
-      this._msgSpan.val = ev.val ? ev.val : ''
+   setBar(ev) {
+      this._msgSpan.val = ev.val.msg ? ev.val.msg : ''
+      this._backBut.disabled = ev.val.back === false ? true : false
+      for (let b = this._msgSpan.nextSibling; b; b = this._msgSpan.nextSibling) b.remove()
+      if (ev.val.buts) for (const b of ev.val.buts) {
+         const but = document.createElement('button')
+         but.innerHTML = b.html
+         but.onclick = b.click
+         this.appendChild(but)
+      }
    }
 })

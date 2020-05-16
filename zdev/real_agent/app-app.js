@@ -11,25 +11,32 @@ customElements.define(me, class extends HTMLElement {
 
       this.innerHTML = `
          <style scoped>
+            ${me} {
+               display: flex; flex-flow: column;
+            }
             ${me} > app-bar {
-               height: var(--app-bar-height);
-               margin-bottom: calc(2 * var(--margin));
+               height: calc(var(--app-bar-height));
             }
             ${me} > main {
-               height: calc(100vh - var(--app-bar-height) - var(--margin) * 2);
-               padding: 0; padding-left: var(--margin); padding-right: var(--margin);
+               height: calc(100vh - var(--app-bar-height) - var(--margin1) * 0);
+               padding: 0; padding-left: var(--margin2); padding-right: var(--margin2);
                overflow: auto;
             }
-            ${me} > main > * { display: flex; flex-direction: column; }
-            ${me} > main > * > * { margin: calc(2 * var(--margin)); }
+            ${me} > main > * {
+               display: flex; flex-flow: column;
+            }
+            ${me} > main > * > * {
+               margin-top: var(--margin2);
+            }
          </style>
          <app-bar w-id='_appBar'></app-bar>
          <main w-id='_appMain'></main>
       `
       wcMixin(this)
 
-      this.addEventListener('set-buts', (ev) => this._appBar.setButs(ev))
       this.addEventListener('set-msg', (ev) => this._appBar.setMsg(ev))
+      this.addEventListener('set-buts', (ev) => this._appBar.setButs(ev))
+      this.addEventListener('set-bar', (ev) => this._appBar.setBar(ev))
 
       navigator.geolocation.getCurrentPosition(loc => this._location = loc.coords)
       navigator.geolocation.watchPosition(loc => this._location = loc.coords)
