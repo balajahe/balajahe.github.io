@@ -10,7 +10,7 @@ customElements.define(me, class extends HTMLElement {
    async connectedCallback() {
       this.innerHTML = `
          <style scoped>
-            ${me} #_vidPreview { width: 100%; height: auto; }
+            ${me} > video { width: 100%; height: auto; }
             ${me} nav { display: flex; flex-flow: row nowrap; }
             ${me} nav button { flex: 1 1 auto; }
             ${me} #_attsDiv { display: flex; flex-flow: row wrap; }
@@ -18,6 +18,14 @@ customElements.define(me, class extends HTMLElement {
                height: 3.5em; width: calc(20% - var(--margin1));
                margin-right: var(--margin1); margin-bottom: var(--margin1);
             }
+            ${me} #_attsDiv > img:hover { cursor:pointer; }
+            ${me} #_imgShowDiv {
+               position: fixed; top: 0; left: 0;
+               height: 100vh; width: 100vw;
+               background-color: black;
+               display: flex; flex-flow: column; justify-content: center;
+            }
+            ${me} #_imgShowDiv > img { height: auto; width: 100%; }
          </style>
          <video w-id='_vidPreview' autoplay muted></video>
          <nav>
@@ -26,6 +34,10 @@ customElements.define(me, class extends HTMLElement {
             <button w-id='_imgBut'>Take photo</button>
          </nav>
          <div w-id='_attsDiv'></div>
+         <div w-id='_imgShowDiv' style='display:none'>
+            <img w-id='_imgShowImg'/>
+            <button w-id='_imgShowDel'/>Delete</button>
+         </div>
       `
       wcMixin(this)
 
@@ -34,6 +46,11 @@ customElements.define(me, class extends HTMLElement {
          const img = document.createElement("img")
          img.src = URL.createObjectURL(blob)
          this._attsDiv.appendChild(img)
+         img.onclick = () => {
+            this._imgShowImg.src = URL.createObjectURL(blob)
+            this._imgShowDiv._source = img
+            this._imgShowDiv.display()
+         }
       }
 
       this._vidBut.onclick = () => {
@@ -47,13 +64,16 @@ customElements.define(me, class extends HTMLElement {
          if (this._audRecording) this._audRecorder.start()
          else this._audRecorder.stop()
       }
+
+      this._imgShowDiv.onclick = () => this._imgShowDiv.display(false)
+      this._imgShowDel.onclick = () => this._imgShowDiv._source.remove()
    }
 
    async onRoute() {
       this.bubbleEvent('set-bar', {
          msg: 'Take photo, audio or video:',
          buts: [{
-            html: 'Next<br>&rArr;',
+            html: 'Save<br>&rArr;',
             click: () => {
                APP.route('page-home')
                this.bubbleEvent('set-msg', 'Saved !')
