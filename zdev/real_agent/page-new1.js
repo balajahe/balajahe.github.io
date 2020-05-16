@@ -14,7 +14,7 @@ customElements.define(me, class extends HTMLElement {
             ${me} .separ { display: flex; flex-flow: row nowrap; }
             ${me} .separ hr { display: inline-block; flex: 1 1 auto; }
             ${me} #_newLabelInp { width: 33%; }
-            ${me} iframe { width: 100%; }
+            ${me} iframe { width: 100%; height: auto; }
          </style>
          <div w-id='_textInp/text' contenteditable='true'></div>
          <div w-id='_labelsDiv'></div>
@@ -22,7 +22,7 @@ customElements.define(me, class extends HTMLElement {
             <div class='separ'><small>Add label:</small>&nbsp;<hr></div>
             <input w-id='_newLabelInp/_newLabel' placeholder='New label...'/>
          </div>
-         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4166.955461487204!2d39.867116297673405!3d43.9442505414373!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40f684d9d934eca5%3A0x85ac36acd4cd77a9!2z0KfQuNCz0YPRgNGB0LDQvdCwLCDQoNC10YHQv9GD0LHQu9C40LrQsCDQkNC00YvQs9C10Y8sIDM4NTc5Nw!5e1!3m2!1sru!2sru!4v1589529205815!5m2!1sru!2sru" width="400" height="300" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>
+         <iframe w-id='mapIframe' frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=41.97273110840353%2C45.02658622677895%2C41.97765564415487%2C45.03039272187266&amp;layer=mapnik&amp;marker=45.02848950596824%2C41.97519337627921" style="border: 1px solid black"></iframe>
       `
       wcMixin(this)
 
@@ -53,8 +53,15 @@ customElements.define(me, class extends HTMLElement {
       }
    }
 
+   _showLocation() {
+      if (APP.location) {
+         this.mapIframe.scr = `https://www.openstreetmap.org/export/embed.html?bbox=${APP.location.longitude-0.002}%2C${APP.location.latitude-0.002}%2C${APP.location.longitude+0.002}%2C${APP.location.latitude+0.002}&amp;layer=mapnik&amp;marker=${APP.location.latitude}%2C${APP.location.longitude}`
+      }
+   }
+
    onRoute() {
       this._textInp.focus()
+      this._showLocation()
       this.bubbleEvent('set-bar', {
          msg: 'Enter description, add labels:',
          buts: [{
