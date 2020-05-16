@@ -25,9 +25,6 @@ customElements.define(me, class extends HTMLElement {
             ${me} > main > * {
                display: flex; flex-flow: column;
             }
-            ${me} > main > * > * {
-               margin-bottom: var(--margin2);
-            }
          </style>
          <app-bar w-id='_appBar'></app-bar>
          <main w-id='_appMain'></main>

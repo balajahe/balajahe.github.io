@@ -16,7 +16,7 @@ customElements.define(me, class extends HTMLElement {
             ${me} > #_attsDiv { display: flex; flex-flow: row wrap; }
             ${me} > #_attsDiv > img, video, audio {
                height: 3.5em; width: calc(20% - var(--margin1) * 1.5);
-               margin-left: var(--margin1); margin-bottom: var(--margin1);
+               margin-top: var(--margin1); margin-left: var(--margin1);
             }
             ${me} #_attsDiv > img:hover { cursor:pointer; }
             ${me} #_imgShowDiv {
