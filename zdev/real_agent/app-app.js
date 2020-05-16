@@ -19,15 +19,14 @@ customElements.define(me, class extends HTMLElement {
                height: calc(var(--app-bar-height) + var(--margin1) * 2);
             }
             ${me} > main {
-               height: calc(100vh - var(--app-bar-height) - var(--margin1) * 0);
-               padding: 0; padding-left: var(--margin2); padding-right: var(--margin2);
+               height: calc(100vh - var(--app-bar-height) - var(--margin1) * 2);
                overflow: auto;
             }
             ${me} > main > * {
                display: flex; flex-flow: column;
             }
             ${me} > main > * > * {
-               margin-top: var(--margin2);
+               margin-bottom: var(--margin2);
             }
          </style>
          <app-bar w-id='_appBar'></app-bar>
