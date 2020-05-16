@@ -14,7 +14,7 @@ customElements.define(me, class extends HTMLElement {
             ${me} .separ { display: flex; flex-flow: row nowrap; }
             ${me} .separ hr { display: inline-block; flex: 1 1 auto; }
             ${me} #_newLabelInp { width: 30%; }
-            ${me} iframe { width: 100%; height: auto; }
+            ${me} iframe { width: 100%; }
          </style>
          <div w-id='_textInp/text' contenteditable='true'></div>
          <div w-id='_labelsDiv'></div>
@@ -22,7 +22,7 @@ customElements.define(me, class extends HTMLElement {
             <div class='separ'><small>Add label:</small>&nbsp;<hr></div>
             <input w-id='_newLabelInp/_newLabel' placeholder='New label...'/>
          </div>
-         <iframe w-id='_mapIframe' frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=41.97273110840353%2C45.02658622677895%2C41.97765564415487%2C45.03039272187266&amp;layer=mapnik&amp;marker=45.02848950596824%2C41.97519337627921" style="border: 1px solid black"></iframe>
+         <iframe w-id='_mapIframe' width="425px" height="350px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=41.97273110840353%2C45.02658622677895%2C41.97765564415487%2C45.03039272187266&amp;layer=mapnik&amp;marker=45.02848950596824%2C41.97519337627921" style="border: 1px solid black"></iframe>
          <div w-id='/_loc'></div>
       `
       wcMixin(this)
