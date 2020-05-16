@@ -5,6 +5,7 @@ const me = 'app-app'
 customElements.define(me, class extends HTMLElement {
    _router = []
    location = null
+   locationCallback = null
 
    connectedCallback() {
       window.APP = this
@@ -15,7 +16,7 @@ customElements.define(me, class extends HTMLElement {
                display: flex; flex-flow: column;
             }
             ${me} > app-bar {
-               height: calc(var(--app-bar-height));
+               height: calc(var(--app-bar-height) + var(--margin1) * 2);
             }
             ${me} > main {
                height: calc(100vh - var(--app-bar-height) - var(--margin1) * 0);
@@ -38,8 +39,14 @@ customElements.define(me, class extends HTMLElement {
       this.addEventListener('set-buts', (ev) => this._appBar.setButs(ev))
       this.addEventListener('set-bar', (ev) => this._appBar.setBar(ev))
 
-      navigator.geolocation.getCurrentPosition(loc => this.location = loc.coords)
-      navigator.geolocation.watchPosition(loc => this.location = loc.coords)
+      navigator.geolocation.getCurrentPosition(loc => {
+         this.location = loc.coords
+         if (locationCallback) locationCallback()
+      })
+      navigator.geolocation.watchPosition(loc => {
+         this.location = loc.coords
+         if (locationCallback) locationCallback()
+      })
    }
 
    async route(hash, elem) {

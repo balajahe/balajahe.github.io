@@ -15,7 +15,7 @@ customElements.define(me, class extends HTMLElement {
             ${me} nav button { flex: 1 1 auto; }
             ${me} #_attsDiv { display: flex; flex-flow: row wrap; }
             ${me} #_attsDiv > img, video, audio {
-               height: 3em; width: calc(20% - var(--margin1));
+               height: 4em; width: calc(20% - var(--margin1));
                margin-right: var(--margin1); margin-bottom: var(--margin1);
             }
          </style>

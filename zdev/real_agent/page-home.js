@@ -24,7 +24,7 @@ customElements.define(me, class extends HTMLElement {
          msg: '',
          back: false,
          buts: [{
-            html: 'New<br>&rArr;',
+            html: 'New Object<br>&rArr;',
             click: () => APP.route('page-new1')
          }]
       })
