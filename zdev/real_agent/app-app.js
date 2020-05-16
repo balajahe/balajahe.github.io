@@ -38,8 +38,8 @@ customElements.define(me, class extends HTMLElement {
       this.addEventListener('set-buts', (ev) => this._appBar.setButs(ev))
       this.addEventListener('set-bar', (ev) => this._appBar.setBar(ev))
 
-      navigator.geolocation.getCurrentPosition(loc => this._location = loc.coords)
-      navigator.geolocation.watchPosition(loc => this._location = loc.coords)
+      navigator.geolocation.getCurrentPosition(loc => this.location = loc.coords)
+      navigator.geolocation.watchPosition(loc => this.location = loc.coords)
    }
 
    async route(hash, elem) {

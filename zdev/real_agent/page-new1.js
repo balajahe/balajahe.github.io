@@ -22,7 +22,8 @@ customElements.define(me, class extends HTMLElement {
             <div class='separ'><small>Add label:</small>&nbsp;<hr></div>
             <input w-id='_newLabelInp/_newLabel' placeholder='New label...'/>
          </div>
-         <iframe w-id='mapIframe' frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=41.97273110840353%2C45.02658622677895%2C41.97765564415487%2C45.03039272187266&amp;layer=mapnik&amp;marker=45.02848950596824%2C41.97519337627921" style="border: 1px solid black"></iframe>
+         <iframe w-id='_mapIframe' frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=41.97273110840353%2C45.02658622677895%2C41.97765564415487%2C45.03039272187266&amp;layer=mapnik&amp;marker=45.02848950596824%2C41.97519337627921" style="border: 1px solid black"></iframe>
+         <div w-id='/_loc'></div>
       `
       wcMixin(this)
 
@@ -55,7 +56,8 @@ customElements.define(me, class extends HTMLElement {
 
    _showLocation() {
       if (APP.location) {
-         this.mapIframe.scr = `https://www.openstreetmap.org/export/embed.html?bbox=${APP.location.longitude-0.002}%2C${APP.location.latitude-0.002}%2C${APP.location.longitude+0.002}%2C${APP.location.latitude+0.002}&amp;layer=mapnik&amp;marker=${APP.location.latitude}%2C${APP.location.longitude}`
+         this._loc = APP.location.latitude + '<br>' + APP.location.longitude
+         this._mapIframe.scr = `https://www.openstreetmap.org/export/embed.html?bbox=${APP.location.longitude-0.002}%2C${APP.location.latitude-0.002}%2C${APP.location.longitude+0.002}%2C${APP.location.latitude+0.002}&amp;layer=mapnik&amp;marker=${APP.location.latitude}%2C${APP.location.longitude}`
       }
    }
 
