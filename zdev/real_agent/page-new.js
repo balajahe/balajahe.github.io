@@ -24,14 +24,15 @@ customElements.define(me, class extends HTMLElement {
             <div class='separ'>&nbsp;<small>Add label:</small>&nbsp;<hr/></div>
             <input w-id='_newLabelInp/_newLabel' placeholder='New label...'/>
          </div>
-         <iframe w-id='_mapIframe' width="300px" height="300px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=41.97273110840353%2C45.02658622677895%2C41.97765564415487%2C45.03039272187266&amp;layer=mapnik&amp;marker=45.02848950596824%2C41.97519337627921"></iframe>
+         <iframe w-id='_mapIframe' width="300px" height="300px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
          <div w-id='/_loc'></div>
       `
+      //"https://www.openstreetmap.org/export/embed.html?bbox=41.97273110840353%2C45.02658622677895%2C41.97765564415487%2C45.03039272187266&amp;layer=mapnik&amp;marker=45.02848950596824%2C41.97519337627921"
       wcMixin(this)
-      APP.locationCallback = this._showLocation.bind(this)
+      //APP.locationCallback = this._showLocation.bind(this)
 
       if (!localStorage.getItem('labels')) {
-         localStorage.setItem('labels', 'Дом,Дача,Участок,Заброшен,Ветхий,Разрушен')
+         localStorage.setItem('labels', 'Дом,Дача,Участок,Заброшен,Ветхий,Разрушен,Жилой,Продается')
       }
       for (const lab of localStorage.getItem('labels').split(',')) {
          this._addAvailLabel(lab)
