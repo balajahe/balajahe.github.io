@@ -22,11 +22,13 @@ customElements.define(me, class extends HTMLElement {
             ${me} #_imgShowDiv {
                position: fixed; top: 0; left: 0;
                height: 100vh; width: 100vw;
-               max-height: calc(100% - var(--app-bar-height));
                background-color: black;
                display: flex; flex-flow: column; justify-content: center;
             }
-            ${me} #_imgShowDiv > img { height: auto; width: 100%; }
+            ${me} #_imgShowDiv > img {
+               height: auto; width: 100%;
+               max-height: calc(100% - var(--app-bar-height)); 
+            }
          </style>
          <video w-id='_vidPreview' autoplay muted></video>
          <nav>
