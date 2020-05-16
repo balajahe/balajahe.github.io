@@ -27,7 +27,7 @@ customElements.define(me, class extends HTMLElement {
             }
             ${me} #_imgShowDiv > img {
                height: auto; width: 100%;
-               max-height: calc(100vh - var(--app-bar-height)); 
+               max-height: 90%; 
             }
          </style>
          <video w-id='_vidPreview' autoplay muted></video>
