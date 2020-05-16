@@ -10,7 +10,7 @@ customElements.define(me, class extends HTMLElement {
    async connectedCallback() {
       this.innerHTML = `
          <style scoped>
-            ${me} > #_vidPreview { margin-left: 0; width: 100%; height: auto; }
+            ${me} > #_vidPreview { margin: 0; width: 100%; height: auto; }
             ${me} nav { display: flex; flex-flow: row nowrap; }
             ${me} nav button { flex: 1 1 auto; }
             ${me} > #_attsDiv { display: flex; flex-flow: row wrap; }
@@ -52,21 +52,20 @@ customElements.define(me, class extends HTMLElement {
             this._imgShowDiv.display()
          }
       }
+      this._imgShowDiv.onclick = () => this._imgShowDiv.display(false)
+      this._imgShowDel.onclick = () => this._imgShowDiv._source.remove()
 
       this._vidBut.onclick = () => {
          this._vidBut.className = this._vidRecording
          if (this._vidRecording) this._vidRecorder.start()
          else this._vidRecorder.stop()
       }
-
+      
       this._audBut.onclick = () => {
          this._audBut.className = this._audRecording
          if (this._audRecording) this._audRecorder.start()
          else this._audRecorder.stop()
       }
-
-      this._imgShowDiv.onclick = () => this._imgShowDiv.display(false)
-      this._imgShowDel.onclick = () => this._imgShowDiv._source.remove()
    }
 
    async onRoute() {
