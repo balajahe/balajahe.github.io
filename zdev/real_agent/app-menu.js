@@ -9,7 +9,7 @@ customElements.define(me, class extends HTMLElement {
             ${me} {
                position: absolute;
                width: 60%; max-width: calc(var(--app-max-width) * 0.6);
-               margin: var(--margin); padding: 0.5em;
+               margin: var(--margin1); padding: 0.5em;
                display: flex; flex-direction: column;
                background-color: LightGrey;
                border-right: solid 2px grey; border-bottom: solid 2px grey;

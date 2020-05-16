@@ -1,6 +1,6 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 
-const me = 'page-new1'
+const me = 'page-new'
 customElements.define(me, class extends HTMLElement {
 
    connectedCallback() {
@@ -10,10 +10,10 @@ customElements.define(me, class extends HTMLElement {
                min-height: 3.5em;
                border: solid 1px silver;
             }
-            ${me} nav1 { display: flex; flex-flow: row wrap; }
+            ${me} #_labelsDiv { min-height: var(--app-bar-height); }
             ${me} .separ { display: flex; flex-flow: row nowrap; }
             ${me} .separ hr { display: inline-block; flex: 1 1 auto; }
-            ${me} #_newLabelInp { width: 33%; }
+            ${me} #_newLabelInp { width: 30%; }
             ${me} iframe { width: 100%; height: auto; }
          </style>
          <div w-id='_textInp/text' contenteditable='true'></div>
@@ -71,7 +71,7 @@ customElements.define(me, class extends HTMLElement {
          msg: 'Enter description, add labels:',
          buts: [{
             html: 'Next<br>&rArr;',
-            click: () => APP.route('page-new2-video')
+            click: () => APP.route('page-new-video')
          }]
       })
    }

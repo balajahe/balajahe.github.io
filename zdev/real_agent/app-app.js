@@ -41,11 +41,11 @@ customElements.define(me, class extends HTMLElement {
 
       navigator.geolocation.getCurrentPosition(loc => {
          this.location = loc.coords
-         if (locationCallback) locationCallback()
+         if (this.locationCallback) this.locationCallback()
       })
       navigator.geolocation.watchPosition(loc => {
          this.location = loc.coords
-         if (locationCallback) locationCallback()
+         if (this.locationCallback) this.locationCallback()
       })
    }
 

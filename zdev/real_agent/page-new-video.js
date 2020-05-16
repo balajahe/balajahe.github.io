@@ -1,6 +1,6 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 
-const me = 'page-new2-video'
+const me = 'page-new-video'
 customElements.define(me, class extends HTMLElement {
    _stream = null
    _imgCapturer = null
@@ -15,7 +15,7 @@ customElements.define(me, class extends HTMLElement {
             ${me} nav button { flex: 1 1 auto; }
             ${me} #_attsDiv { display: flex; flex-flow: row wrap; }
             ${me} #_attsDiv > img, video, audio {
-               height: 4em; width: calc(20% - var(--margin1));
+               height: 3.5em; width: calc(20% - var(--margin1));
                margin-right: var(--margin1); margin-bottom: var(--margin1);
             }
          </style>
