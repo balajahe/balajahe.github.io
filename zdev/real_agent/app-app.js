@@ -1,5 +1,6 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 import './app-bar.js'
+import './app-img-show.js'
 
 const me = 'app-app'
 customElements.define(me, class extends HTMLElement {
@@ -27,6 +28,7 @@ customElements.define(me, class extends HTMLElement {
          </style>
          <app-bar w-id='appBar'></app-bar>
          <main w-id='appMain'></main>
+         <app-img-show w-id='imgShowWc'></app-img-show>
       `
       wcMixin(this)
       window.APP = this
@@ -52,6 +54,10 @@ customElements.define(me, class extends HTMLElement {
 
    setMsg(v) { this.appBar.setMsg(v) }
    setBar(v) { this.appBar.setBar(v) }
+   imgShow(v) {
+      console.log(1)
+      this.imgShowWc.show(v)
+   }
 
    route(hash, elem) {
       for (const el of this.appMain.children) {
@@ -76,5 +82,10 @@ customElements.define(me, class extends HTMLElement {
       if (elem.onRoute) elem.onRoute()
       this.routeHashChanging = true
       location.hash = hash
+   }
+
+   remove(el) {
+      if (el.onUnRoute) el.onUnRoute()
+      el.remove()
    }
 })

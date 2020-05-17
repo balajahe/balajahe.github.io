@@ -11,8 +11,8 @@ export default function save() {
       medias: Array.from(new2.medias).map(el => ({tagName: el.tagName, blob: el._blob}))
    }
    APP.db.transaction("Objects", "readwrite").objectStore("Objects").add(obj).onsuccess = (ev) => {
-      new1.remove()
-      new2.remove()
+      APP.remove(new1)
+      APP.remove(new2)
       APP.route('page-home')
       APP.setMsg('Saved !')
    }

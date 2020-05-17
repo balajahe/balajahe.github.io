@@ -124,6 +124,7 @@ function generateProps() {
             })
 
          } else if (el.tagName === 'TEMPLATE') {
+            console.log(el.content)
             el._getVal = () => el.content.cloneNode(true)
             el._setVal = (v) => el.content = v
             el.addEventListener('input', (ev) => winput(ev))

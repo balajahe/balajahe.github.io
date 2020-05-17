@@ -39,11 +39,16 @@ customElements.define(me, class extends HTMLElement {
             for (const media of obj.medias) {
                const el = document.createElement(media.tagName)
                el.src = URL.createObjectURL(media.blob)
-               if (media.tagName === 'IMG') {
+               el._blob = media.blob
+               el.className = 'smallMedia'
+               if (el.tagName === 'IMG') {
+                  el.addEventListener('click', (ev) => {
+                     console.log(ev)
+                     APP.imgShow(el)
+                  })
                } else {
                   el.controls = true
                }
-               el.className = 'smallMedia'
                this.objMedias.append(el)
             }
             this.listDiv.append(this.objTempl)
