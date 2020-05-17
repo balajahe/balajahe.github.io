@@ -3,14 +3,12 @@ import './app-bar.js'
 
 const me = 'app-app'
 customElements.define(me, class extends HTMLElement {
-   _router = []
+   routeHashChanging = false
    db = null
    location = null
    locationCallback = null
 
    connectedCallback() {
-      window.APP = this
-
       this.innerHTML = `
          <style scoped>
             ${me} {
@@ -27,14 +25,11 @@ customElements.define(me, class extends HTMLElement {
                display: flex; flex-flow: column;
             }
          </style>
-         <app-bar w-id='_appBar'></app-bar>
-         <main w-id='_appMain'></main>
+         <app-bar w-id='appBar'></app-bar>
+         <main w-id='appMain'></main>
       `
       wcMixin(this)
-
-      this.addEventListener('set-msg', (ev) => this._appBar.setMsg(ev))
-      this.addEventListener('set-buts', (ev) => this._appBar.setButs(ev))
-      this.addEventListener('set-bar', (ev) => this._appBar.setBar(ev))
+      window.APP = this
 
       navigator.geolocation.getCurrentPosition(loc => {
          this.location = loc.coords
@@ -44,36 +39,42 @@ customElements.define(me, class extends HTMLElement {
          this.location = loc.coords
          if (this.locationCallback) this.locationCallback()
       })
+
+      window.onhashchange = async (ev) => {
+         if (!this.routeHashChanging) {
+            const uu = ev.newURL.split('#')
+            if (uu.length > 1) this.route(uu[uu.length-1])
+            else location.href = '/'
+         }
+         this.routeHashChanging = false
+      }
    }
 
-   async route(hash, elem) {
-      for (const el of this._appMain.childNodes) {
+   setMsg(v) { this.appBar.setMsg(v) }
+   setBar(v) { this.appBar.setBar(v) }
+
+   route(hash, elem) {
+      for (const el of this.appMain.children) {
          try {
             el.display(false)
             if (el.onUnRoute) el.onUnRoute()
          } catch(_) {}
       }
       if (elem) {
-         this._appMain.appendChild(elem)
-         this._router.push({hash, elem})
+         elem._hash = hash
+         this.appMain.append(elem)
       } else {
-         const el = this._router.find((v) => v.hash === hash)
-         if (!el) {
+         elem = Array.from(this.appMain.children).find(el => el._hash === hash)
+         if (!elem) {
             elem = document.createElement(hash)
-            this._appMain.appendChild(elem)
-            this._router.push({hash, elem})
+            elem._hash = hash
+            this.appMain.append(elem)
          } else {
-            elem = el.elem
             elem.display()
          }
       }
       if (elem.onRoute) elem.onRoute()
-      window.onhashchange = null
+      this.routeHashChanging = true
       location.hash = hash
-      window.onhashchange = async (ev) => {
-         const uu = ev.newURL.split('#')
-         if (uu.length > 1) this.route(uu[uu.length-1])
-         else location.href = '/'
-      }
    }
 })

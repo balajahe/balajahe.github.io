@@ -16,14 +16,16 @@ customElements.define(me, class extends HTMLElement {
             }
             ${me} button {flex: 1 1 auto; margin: 0.2em;}
          </style>
-         <button w-id='_home'>HOME</button>
-         <button w-id='_labels'>Organize labels</button>
-         <button w-id='_source'>Sources on GitHub</button>
+         <button w-id='home'>HOME</button>
+         <button w-id='labels'>Organize labels</button>
+         <button w-id='export'>Export database</button>
+         <button w-id='source'>Sources on GitHub</button>
       `
       wcMixin(this)
 
-      this._home.onclick = () => APP.route('page-home')
-      this._labels.onclick = () => APP.route('page-labels')
-      this._source.onclick = () => location.href = 'https://github.com/balajahe/balajahe.github.io/tree/master/real_agent'
+      this.home.onclick = () => APP.route('page-home')
+      this.labels.onclick = () => APP.route('page-labels')
+      //this.export.onclick = () => export()
+      this.source.onclick = () => location.href = 'https://github.com/balajahe/balajahe.github.io/tree/master/real_agent'
    }
 })

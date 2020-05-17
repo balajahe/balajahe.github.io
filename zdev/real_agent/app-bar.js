@@ -15,7 +15,7 @@ customElements.define(me, class extends HTMLElement {
                height: calc(100% - var(--margin1) * 2);
                min-width: 20%;
             }
-            ${me} > #_msgSpan {
+            ${me} > #msgSpan {
                flex: 1 1 auto;
                margin-left: 0.5em; margin-right: 0.5em;
                display: flex; justify-content: center; align-items: center;
@@ -23,45 +23,37 @@ customElements.define(me, class extends HTMLElement {
                overflow: hidden;
             }
          </style>
-         <app-menu w-id='_appMenu' style='display:none'></app-menu>
-         <button w-id='_menuBut'>&#9776;</button>
-         <small w-id='_msgSpan'></small>
-         <button w-id='_backBut' disabled>Back<br>&lArr;</button>
+         <app-menu w-id='appMenu' style='display:none'></app-menu>
+         <button w-id='menuBut'>&#9776;</button>
+         <small w-id='msgSpan'></small>
+         <button w-id='backBut' disabled>Back<br>&lArr;</button>
          <button></button>
       `
       wcMixin(this)
 
-      this._menuBut.onclick = (ev) => {
+      this.menuBut.onclick = (ev) => {
          ev.stopPropagation()
-         this._appMenu.display()
+         this.appMenu.display()
          APP.onclick = () => {
-            this._appMenu.display(false)
+            this.appMenu.display(false)
             APP.onclick = null
          }
       }
 
-      this._backBut.onclick = () => history.go(-1)
+      this.backBut.onclick = () => history.go(-1)
    }
 
-   setMsg(ev) {
-      this._msgSpan.val = ev.val ? ev.val : ''
-   }
+   setMsg(msg) { this.msgSpan.val = msg ? msg : '' }
 
-   setButs(ev) {
-      this._backBut.disabled = ev.val.back === false ? true : false
-      for (let b = this._backBut.nextSibling; b; b = this._backBut.nextSibling) b.remove()
-      if (ev.val.buts) for (const b of ev.val.buts) this.appendChild(b)
-   }
-
-   setBar(ev) {
-      this._msgSpan.val = ev.val.msg ? ev.val.msg : ''
-      this._backBut.disabled = ev.val.back === false ? true : false
-      for (let b = this._backBut.nextSibling; b; b = this._backBut.nextSibling) b.remove()
-      if (ev.val.buts) for (const b of ev.val.buts) {
+   setBar(bar) {
+      this.msgSpan.val = bar.msg ? bar.msg : ''
+      this.backBut.disabled = bar.back === false ? true : false
+      for (let b = this.backBut.nextSibling; b; b = this.backBut.nextSibling) b.remove()
+      if (bar.buts) for (const b of bar.buts) {
          const but = document.createElement('button')
          but.innerHTML = b.html
          but.onclick = b.click
-         this.appendChild(but)
+         this.append(but)
       }
    }
 })

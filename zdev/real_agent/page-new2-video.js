@@ -3,74 +3,74 @@ import save from './page-new3-save.js'
 
 const me = 'page-new2-video'
 customElements.define(me, class extends HTMLElement {
-   _stream = null
-   _imgCapturer = null
-   _vidRecorder = null
-   _audRecorder = null
+   stream = null
+   imgCapturer = null
+   vidRecorder = null
+   audRecorder = null
 
    async connectedCallback() {
       this.innerHTML = `
          <style scoped>
-            ${me} > #_vidPreview { margin: 0; width: 100%; height: auto; }
+            ${me} > #vidPreview { margin: 0; width: 100%; height: auto; }
             ${me} nav { display: flex; flex-flow: row nowrap; }
             ${me} nav button { flex: 1 1 auto; }
-            ${me} > #_mediasDiv { display: flex; flex-flow: row wrap; }
-            ${me} #_imgShowDiv {
+            ${me} > #mediasDiv { display: flex; flex-flow: row wrap; }
+            ${me} #imgShowDiv {
                position: fixed; top: 0; left: 0;
                height: 100vh; width: 100vw;
                background-color: black;
                display: flex; flex-flow: column; justify-content: center;
             }
-            ${me} #_imgShowDiv > img {
+            ${me} #imgShowDiv > img {
                height: auto; width: 100%;
                max-height: 90%;
             }
          </style>
-         <video w-id='_vidPreview' autoplay muted></video>
+         <video w-id='vidPreview' autoplay muted></video>
          <nav>
-            <button w-id='_audBut/_audRecording'>Record audio</button>
-            <button w-id='_vidBut/_vidRecording'>Record video</button>
-            <button w-id='_imgBut'>Take photo</button>
+            <button w-id='audBut/audRecording'>Record audio</button>
+            <button w-id='vidBut/vidRecording'>Record video</button>
+            <button w-id='imgBut'>Take photo</button>
          </nav>
-         <div w-id='_mediasDiv/medias/children'></div>
-         <div w-id='_imgShowDiv' style='display:none'>
-            <img w-id='_imgShowImg'/>
-            <button w-id='_imgShowDel'>Delete</button>
+         <div w-id='mediasDiv/medias/children'></div>
+         <div w-id='imgShowDiv' style='display:none'>
+            <img w-id='imgShowImg'/>
+            <button w-id='imgShowDel'>Delete</button>
          </div>
       `
       wcMixin(this)
 
-      this._imgBut.onclick = async () => {
-         const blob = await this._imgCapturer.takePhoto()
+      this.imgBut.onclick = async () => {
+         const blob = await this.imgCapturer.takePhoto()
          const img = document.createElement("img")
          img.src = URL.createObjectURL(blob)
          img._blob = blob
          img.className = 'smallMedia'
-         this._mediasDiv.appendChild(img)
+         this.mediasDiv.append(img)
          img.onclick = () => {
-            this._imgShowImg.src = URL.createObjectURL(blob)
-            this._imgShowDiv._source = img
-            this._imgShowDiv.display()
+            this.imgShowImg.src = URL.createObjectURL(blob)
+            this.imgShowDiv._source = img
+            this.imgShowDiv.display()
          }
       }
-      this._imgShowDiv.onclick = () => this._imgShowDiv.display(false)
-      this._imgShowDel.onclick = () => this._imgShowDiv._source.remove()
+      this.imgShowDiv.onclick = () => this.imgShowDiv.display(false)
+      this.imgShowDel.onclick = () => this.imgShowDiv._source.remove()
 
-      this._vidBut.onclick = () => {
-         this._vidBut.className = this._vidRecording
-         if (this._vidRecording) this._vidRecorder.start()
-         else this._vidRecorder.stop()
+      this.vidBut.onclick = () => {
+         this.vidBut.className = this.vidRecording
+         if (this.vidRecording) this.vidRecorder.start()
+         else this.vidRecorder.stop()
       }
 
-      this._audBut.onclick = () => {
-         this._audBut.className = this._audRecording
-         if (this._audRecording) this._audRecorder.start()
-         else this._audRecorder.stop()
+      this.audBut.onclick = () => {
+         this.audBut.className = this.audRecording
+         if (this.audRecording) this.audRecorder.start()
+         else this.audRecorder.stop()
       }
    }
 
    async onRoute() {
-      this.bubbleEvent('set-bar', {
+      APP.setBar({
          msg: 'Take photo, video or audio:',
          buts: [{
             html: 'Save<br>&rArr;',
@@ -78,36 +78,34 @@ customElements.define(me, class extends HTMLElement {
          }]
       })
 
-      this._stream = await navigator.mediaDevices.getUserMedia(
+      this.stream = await navigator.mediaDevices.getUserMedia(
          { video: { facingMode: { ideal: "environment" }}, audio: true }
       )
-      this._vidPreview.srcObject = this._stream
-      this._imgCapturer = new ImageCapture(this._stream.getVideoTracks()[0])
+      this.vidPreview.srcObject = this.stream
+      this.imgCapturer = new ImageCapture(this.stream.getVideoTracks()[0])
 
-      this._vidRecorder = new MediaRecorder(this._stream, { mimeType : "video/webm" })
-      this._vidRecorder.ondataavailable = async (ev) => {
+      this.vidRecorder = new MediaRecorder(this.stream, { mimeType : "video/webm" })
+      this.vidRecorder.ondataavailable = async (ev) => {
          const el = document.createElement("video")
          el.src = URL.createObjectURL(ev.data)
          el._blob = ev.data
          el.controls = true
          el.className = 'smallMedia'
-         this._mediasDiv.appendChild(el)
+         this.mediasDiv.append(el)
       }
 
-      this._audRecorder = new MediaRecorder(this._stream, { mimeType : "audio/webm" })
-      this._audRecorder.ondataavailable = async (ev) => {
+      this.audRecorder = new MediaRecorder(this.stream, { mimeType : "audio/webm" })
+      this.audRecorder.ondataavailable = async (ev) => {
          const el = document.createElement("audio")
          el.src = URL.createObjectURL(ev.data)
          el._blob = ev.data
          el.controls = true
          el.className = 'smallMedia'
-         this._mediasDiv.appendChild(el)
+         this.mediasDiv.append(el)
       }
-      console.log(+1)
    }
 
    onUnRoute() {
-      this._stream.getTracks().forEach(track => track.stop())
-      console.log(-1)
+      this.stream.getTracks().forEach(track => track.stop())
    }
 })

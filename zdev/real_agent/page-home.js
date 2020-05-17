@@ -6,18 +6,18 @@ customElements.define(me, class extends HTMLElement {
    connectedCallback() {
       this.innerHTML = `
          <style scoped>
-            ${me} #_listDiv > div {
+            ${me} #listDiv > div {
                border-bottom: 1px solid silver;
                overflow: auto;
             }
             center { margin-bottom: 1em; }
          </style>
-         <div w-id='_listDiv'></div>
-         <template w-id='/_objTempl'>
+         <div w-id='listDiv'></div>
+         <template w-id='/objTempl'>
             <div>
-               <div w-id='_labels'></div>
-               <div w-id='_desc'></div>
-               <div w-id='_medias'></div>
+               <div w-id='/objLabels'></div>
+               <div w-id='/objDesc'></div>
+               <div w-id='objMedias'></div>
             </div>
          </template>
          <center>
@@ -28,15 +28,14 @@ customElements.define(me, class extends HTMLElement {
    }
 
    _refreshList() {
-      this._listDiv.innerHTML = ''
-      APP.db.transaction("Objects").objectStore("Objects").openCursor().onsuccess = (ev) => {
+      this.listDiv.innerHTML = ''
+      APP.db.transaction("Objects").objectStore("Objects").openCursor(null,'prev').onsuccess = (ev) => {
          const cursor = ev.target.result
          if (cursor) {
             const obj = cursor.value
-            console.log(obj)
-            this._desc.innerHTML = obj.desc
-            this._labels.innerHTML = obj.labels
-            this._medias.innerHTML = ''
+            this.objDesc = obj.desc
+            this.objLabels = obj.labels
+            this.objMedias.innerHTML = ''
             for (const media of obj.medias) {
                const el = document.createElement(media.tagName)
                el.src = URL.createObjectURL(media.blob)
@@ -45,16 +44,16 @@ customElements.define(me, class extends HTMLElement {
                   el.controls = true
                }
                el.className = 'smallMedia'
-               this._medias.appendChild(el)
+               this.objMedias.append(el)
             }
-            this._listDiv.appendChild(this._objTempl)
+            this.listDiv.append(this.objTempl)
             cursor.continue()
          }
       }
    }
 
    onRoute() {
-      this.bubbleEvent('set-bar', {
+      APP.setBar({
          msg: '',
          back: false,
          buts: [{
@@ -66,8 +65,8 @@ customElements.define(me, class extends HTMLElement {
          const dbr = window.indexedDB.open("RealAgent", 1)
          dbr.onerror = (ev) => console.log(ev)
          dbr.onupgradeneeded = (ev) => {
-            const db = event.target.result
-            db.createObjectStore("Objects", { keyPath: "desc" })
+            const db = ev.target.result
+            db.createObjectStore("Objects", { keyPath: "created" })
          }
          dbr.onsuccess = (ev) => {
             APP.db = ev.target.result
