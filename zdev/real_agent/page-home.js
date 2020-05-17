@@ -9,7 +9,6 @@ customElements.define(me, class extends HTMLElement {
             ${me} #_listDiv > div {
                border-bottom: 1px solid silver;
                overflow: auto;
-               font-size: normal;
             }
             center { margin-bottom: 1em; }
          </style>

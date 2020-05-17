@@ -10,7 +10,6 @@ customElements.define(me, class extends HTMLElement {
                min-height: 5em;
                border: solid 1px silver;
                margin: var(--margin1); padding-left: var(--margin2);
-               font-size: smaller;
             }
             ${me} #_labelsDiv { min-height: var(--app-bar-height); }
             ${me} .separ { display: flex; flex-flow: row nowrap; }
