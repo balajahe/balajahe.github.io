@@ -8,17 +8,20 @@ customElements.define(me, class extends HTMLElement {
          <style scoped>
             ${me} #_listDiv > div {
                border-bottom: 1px solid silver;
+               overflow: auto;
+               font-size: normal;
             }
+            center { margin-bottom: 1em; }
          </style>
          <div w-id='_listDiv'></div>
          <template w-id='/_objTempl'>
             <div>
-               <div w-id='/_labels'></div>
-               <div w-id='/_desc'></div>
+               <div w-id='_labels'></div>
+               <div w-id='_desc'></div>
                <div w-id='_medias'></div>
             </div>
          </template>
-         <center w-id='_msg'>
+         <center>
             <br/>Real Agent is a database of arbitrary objects with geolocation, photos and videos !
          </center>
       `
@@ -32,8 +35,8 @@ customElements.define(me, class extends HTMLElement {
          if (cursor) {
             const obj = cursor.value
             console.log(obj)
-            this._desc = obj.desc
-            this._labels = obj.labels
+            this._desc.innerHTML = obj.desc
+            this._labels.innerHTML = obj.labels
             this._medias.innerHTML = ''
             for (const media of obj.medias) {
                const el = document.createElement(media.tagName)
