@@ -4,6 +4,7 @@ import './app-bar.js'
 const me = 'app-app'
 customElements.define(me, class extends HTMLElement {
    _router = []
+   db = null
    location = null
    locationCallback = null
 

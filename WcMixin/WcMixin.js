@@ -1,5 +1,5 @@
 // WcMixin.js
-// v0.2.0
+// v0.2.1
 export default function wcMixin(target) {
    target.on = on.bind(target)
    target.onAny = onAny.bind(target)
@@ -60,7 +60,7 @@ function generateProps() {
    const generate = (el) => {
       if (el._getVal !== undefined) return
       const [wid, wval, wsource] = el.getAttribute('w-id').split('/')
-      
+
       if (wsource) {
          el._getVal = () => el[wsource]
          el._setVal = (v) => el[wsource] = v

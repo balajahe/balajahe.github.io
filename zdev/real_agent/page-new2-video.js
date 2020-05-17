@@ -1,6 +1,7 @@
 import wcMixin from '/WcMixin/WcMixin.js'
+import save from './page-new3-save.js'
 
-const me = 'page-new-video'
+const me = 'page-new2-video'
 customElements.define(me, class extends HTMLElement {
    _stream = null
    _imgCapturer = null
@@ -13,12 +14,12 @@ customElements.define(me, class extends HTMLElement {
             ${me} > #_vidPreview { margin: 0; width: 100%; height: auto; }
             ${me} nav { display: flex; flex-flow: row nowrap; }
             ${me} nav button { flex: 1 1 auto; }
-            ${me} > #_attsDiv { display: flex; flex-flow: row wrap; }
-            ${me} > #_attsDiv > img, video, audio {
+            ${me} > #_mediasDiv { display: flex; flex-flow: row wrap; }
+            ${me} > #_mediasDiv > img, video, audio {
                height: 4em; width: calc(20% - var(--margin1) * 1.5);
                margin-top: var(--margin1); margin-left: var(--margin1);
             }
-            ${me} #_attsDiv > img:hover { cursor:pointer; }
+            ${me} #_mediasDiv > img:hover { cursor:pointer; }
             ${me} #_imgShowDiv {
                position: fixed; top: 0; left: 0;
                height: 100vh; width: 100vw;
@@ -27,7 +28,7 @@ customElements.define(me, class extends HTMLElement {
             }
             ${me} #_imgShowDiv > img {
                height: auto; width: 100%;
-               max-height: 90%; 
+               max-height: 90%;
             }
          </style>
          <video w-id='_vidPreview' autoplay muted></video>
@@ -36,7 +37,7 @@ customElements.define(me, class extends HTMLElement {
             <button w-id='_vidBut/_vidRecording'>Record video</button>
             <button w-id='_imgBut'>Take photo</button>
          </nav>
-         <div w-id='_attsDiv'></div>
+         <div w-id='_mediasDiv/medias/children'></div>
          <div w-id='_imgShowDiv' style='display:none'>
             <img w-id='_imgShowImg'/>
             <button w-id='_imgShowDel'>Delete</button>
@@ -48,7 +49,8 @@ customElements.define(me, class extends HTMLElement {
          const blob = await this._imgCapturer.takePhoto()
          const img = document.createElement("img")
          img.src = URL.createObjectURL(blob)
-         this._attsDiv.appendChild(img)
+         img._blob = blob
+         this._mediasDiv.appendChild(img)
          img.onclick = () => {
             this._imgShowImg.src = URL.createObjectURL(blob)
             this._imgShowDiv._source = img
@@ -73,13 +75,10 @@ customElements.define(me, class extends HTMLElement {
 
    async onRoute() {
       this.bubbleEvent('set-bar', {
-         msg: 'Take photo, audio or video:',
+         msg: 'Take photo, video or audio:',
          buts: [{
             html: 'Save<br>&rArr;',
-            click: () => {
-               APP.route('page-home')
-               this.bubbleEvent('set-msg', 'Saved !')
-            }
+            click: () => save()
          }]
       })
 
@@ -94,7 +93,8 @@ customElements.define(me, class extends HTMLElement {
          const vid = document.createElement("video")
          vid.controls = true
          vid.src = URL.createObjectURL(ev.data)
-         this._attsDiv.appendChild(vid)
+         vid._blob = ev.data
+         this._mediasDiv.appendChild(vid)
       }
 
       this._audRecorder = new MediaRecorder(this._stream, { mimeType : "audio/webm" })
@@ -102,7 +102,8 @@ customElements.define(me, class extends HTMLElement {
          const aud = document.createElement("audio")
          aud.controls = true
          aud.src = URL.createObjectURL(ev.data)
-         this._attsDiv.appendChild(aud)
+         aud._blob = ev.data
+         this._mediasDiv.appendChild(aud)
       }
       console.log(+1)
    }

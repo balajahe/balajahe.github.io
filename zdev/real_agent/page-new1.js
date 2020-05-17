@@ -1,12 +1,12 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 
-const me = 'page-new'
+const me = 'page-new1'
 customElements.define(me, class extends HTMLElement {
 
    connectedCallback() {
       this.innerHTML = `
          <style scoped>
-            ${me} #_textDiv {
+            ${me} #_descDiv {
                min-height: 5em;
                border: solid 1px silver;
                margin: var(--margin1); padding-left: var(--margin2);
@@ -18,10 +18,10 @@ customElements.define(me, class extends HTMLElement {
             ${me} #_newLabelInp { width: 30%; }
             ${me} iframe { width: 100%; }
          </style>
-         <div w-id='_textDiv/text' contenteditable='true'></div>
-         <div w-id='_labelsDiv'></div>
+         <div w-id='_descDiv/desc' contenteditable='true'></div>
+         <div w-id='_labelsDiv/labels/children'></div>
          <div>
-            <div class='separ'>&nbsp;<small>Add label:</small>&nbsp;<hr/></div>
+            <div class='separ'>&nbsp;<small>Click to add label:</small>&nbsp;<hr/></div>
             <input w-id='_newLabelInp/_newLabel' placeholder='New label...'/>
          </div>
          <iframe w-id='_mapIframe' width="300px" height="300px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
@@ -67,13 +67,13 @@ customElements.define(me, class extends HTMLElement {
    }
 
    onRoute() {
-      this._textDiv.focus()
+      this._descDiv.focus()
       this._showLocation()
       this.bubbleEvent('set-bar', {
-         msg: 'Enter description, add labels:',
+         msg: 'Enter description and add labels:',
          buts: [{
             html: 'Next<br>&rArr;',
-            click: () => APP.route('page-new-video')
+            click: () => APP.route('page-new2-video')
          }]
       })
    }
