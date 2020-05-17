@@ -6,14 +6,12 @@ customElements.define(me, class extends HTMLElement {
    connectedCallback() {
       this.innerHTML = `
          <style scoped>
-            ${me} img, video, audio {
-               width: calc(20% - var(--margin1) * 1.5);
-               margin-top: var(--margin2); margin-left: var(--margin1);
+            ${me} #_listDiv > div {
+               border-bottom: 1px solid silver;
             }
          </style>
          <div w-id='_listDiv'></div>
          <template w-id='/_objTempl'>
-            <hr/>
             <div>
                <div w-id='/_labels'></div>
                <div w-id='/_desc'></div>
@@ -21,7 +19,7 @@ customElements.define(me, class extends HTMLElement {
             </div>
          </template>
          <center w-id='_msg'>
-            <hr/>Real Agent is a database of arbitrary objects with geolocation, photos and videos !<hr/>
+            <br/>Real Agent is a database of arbitrary objects with geolocation, photos and videos !
          </center>
       `
       wcMixin(this)
@@ -44,6 +42,7 @@ customElements.define(me, class extends HTMLElement {
                } else {
                   el.controls = true
                }
+               el.className = 'smallMedia'
                this._medias.appendChild(el)
             }
             this._listDiv.appendChild(this._objTempl)

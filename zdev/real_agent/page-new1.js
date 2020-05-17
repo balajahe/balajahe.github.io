@@ -73,7 +73,14 @@ customElements.define(me, class extends HTMLElement {
          msg: 'Enter description and add labels:',
          buts: [{
             html: 'Next<br>&rArr;',
-            click: () => APP.route('page-new2-video')
+            click: () => {
+               if (this.desc) {
+                  APP.route('page-new2-video')
+               } else {
+                  APP.bubbleEvent('set-msg', 'Empty description !')
+                  this._descDiv.focus()
+               }
+            }
          }]
       })
    }

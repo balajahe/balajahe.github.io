@@ -15,11 +15,6 @@ customElements.define(me, class extends HTMLElement {
             ${me} nav { display: flex; flex-flow: row nowrap; }
             ${me} nav button { flex: 1 1 auto; }
             ${me} > #_mediasDiv { display: flex; flex-flow: row wrap; }
-            ${me} > #_mediasDiv > img, video, audio {
-               height: 4em; width: calc(20% - var(--margin1) * 1.5);
-               margin-top: var(--margin1); margin-left: var(--margin1);
-            }
-            ${me} #_mediasDiv > img:hover { cursor:pointer; }
             ${me} #_imgShowDiv {
                position: fixed; top: 0; left: 0;
                height: 100vh; width: 100vw;
@@ -50,6 +45,7 @@ customElements.define(me, class extends HTMLElement {
          const img = document.createElement("img")
          img.src = URL.createObjectURL(blob)
          img._blob = blob
+         img.className = 'smallMedia'
          this._mediasDiv.appendChild(img)
          img.onclick = () => {
             this._imgShowImg.src = URL.createObjectURL(blob)
@@ -90,20 +86,22 @@ customElements.define(me, class extends HTMLElement {
 
       this._vidRecorder = new MediaRecorder(this._stream, { mimeType : "video/webm" })
       this._vidRecorder.ondataavailable = async (ev) => {
-         const vid = document.createElement("video")
-         vid.controls = true
-         vid.src = URL.createObjectURL(ev.data)
-         vid._blob = ev.data
-         this._mediasDiv.appendChild(vid)
+         const el = document.createElement("video")
+         el.src = URL.createObjectURL(ev.data)
+         el._blob = ev.data
+         el.controls = true
+         el.className = 'smallMedia'
+         this._mediasDiv.appendChild(el)
       }
 
       this._audRecorder = new MediaRecorder(this._stream, { mimeType : "audio/webm" })
       this._audRecorder.ondataavailable = async (ev) => {
-         const aud = document.createElement("audio")
-         aud.controls = true
-         aud.src = URL.createObjectURL(ev.data)
-         aud._blob = ev.data
-         this._mediasDiv.appendChild(aud)
+         const el = document.createElement("audio")
+         el.src = URL.createObjectURL(ev.data)
+         el._blob = ev.data
+         el.controls = true
+         el.className = 'smallMedia'
+         this._mediasDiv.appendChild(el)
       }
       console.log(+1)
    }
