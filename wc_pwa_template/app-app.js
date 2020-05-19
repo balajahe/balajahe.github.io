@@ -2,7 +2,7 @@ import wcMixin from '/WcMixin/WcMixin.js'
 
 const me = 'app-app'
 customElements.define(me, class extends HTMLElement {
-   _router = []
+   _routeHashChanging = false
    _user = null
    _elapsed = 0
 
@@ -82,31 +82,44 @@ customElements.define(me, class extends HTMLElement {
          this._elapsed += 1
          this.drownEvent('notify-timer', this._elapsed)
       }, 1000)
+
+         window.onhashchange = async (ev) => {
+         if (!this._routeHashChanging) {
+            const uu = ev.newURL.split('#')
+            if (uu.length > 1) this.route(uu[uu.length-1])
+            else location.href = '/'
+         }
+         this._routeHashChanging = false
+      }
    }
 
-   async route(hash, elem) {
-      for (const el of this.main.childNodes) try { el.display(false) } catch(_) {}
+   route(hash, elem) {
+      for (const el of this.main.children) {
+         try {
+            el.display(false)
+            if (el.onUnRoute) el.onUnRoute()
+         } catch(_) {}
+      }
       if (elem) {
-         this.main.appendChild(elem)
-         this._router.push({hash, elem})
+         elem._hash = hash
+         this.main.append(elem)
       } else {
-         const el = this._router.find((v) => v.hash === hash)
-         if (!el) {
+         elem = Array.from(this.main.children).find(el => el._hash === hash)
+         if (!elem) {
             elem = document.createElement(hash)
-            this.main.appendChild(elem)
-            this._router.push({hash, elem})
+            elem._hash = hash
+            this.main.append(elem)
          } else {
-            elem = el.elem
             elem.display()
          }
       }
       if (elem.onRoute) elem.onRoute()
-      window.onhashchange = null
+      this._routeHashChanging = true
       location.hash = hash
-      window.onhashchange = async (ev) => {
-         const uu = ev.newURL.split('#')
-         if (uu.length > 1) this.route(uu[uu.length-1])
-         else location.href = '/'
-      }
+   }
+
+   remove(el) {
+      if (el.onUnRoute) el.onUnRoute()
+      el.remove()
    }
 })
