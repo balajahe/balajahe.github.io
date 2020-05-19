@@ -76,7 +76,7 @@ customElements.define(me, class extends HTMLElement {
                if (this.desc) {
                   APP.route('page-new2-video')
                } else {
-                  APP.setMsg('Empty description !')
+                  APP.setMsg('<span style="color:red">Empty description !</span>')
                   this.descDiv.focus()
                }
             }
