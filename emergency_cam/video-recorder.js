@@ -23,9 +23,9 @@ customElements.define('video-recorder', class extends HTMLElement {
             <video w-id='video' autoplay muted></video>
             <nav style='display:flex; flex-flow:row nowrap'>
                <button w-id='rec/recording' style='flex-grow:3'>Start / Stop recording</button>
-               &nbsp;<button w-id='no_email/noemail' style='flex-grow:1'>No email</button>
-               &nbsp;<button w-id='no_chunk/nochunk' style='flex-grow:1'>No chunk</button>
-               &nbsp;<button w-id='lock' style='flex-grow:1'>Lock</button>
+               &nbsp;<button w-id='no_email/noemail' style='flex-grow:1'>No<br>email</button>
+               &nbsp;<button w-id='no_chunk/nochunk' style='flex-grow:1'>No<br>chunk</button>
+               &nbsp;<button w-id='lock' style='flex-grow:1'>Lock<br>screen<br></button>
             </nav>
             <button w-id='gmail' style='display:none'>Connect to Gmail</button>
             <input w-id='/email' type='email' required placeholder='Email to send...'/>

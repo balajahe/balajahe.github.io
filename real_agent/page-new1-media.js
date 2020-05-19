@@ -1,7 +1,6 @@
 import wcMixin from '/WcMixin/WcMixin.js'
-import objSave from './page-new3-save.js'
 
-const me = 'page-new2-video'
+const me = 'page-new1-media'
 customElements.define(me, class extends HTMLElement {
    stream = null
    imgCapturer = null
@@ -12,8 +11,11 @@ customElements.define(me, class extends HTMLElement {
       this.innerHTML = `
          <style scoped>
             ${me} > #vidPreview { margin: 0; width: 100%; height: auto; }
-            ${me} nav { display: flex; flex-flow: row nowrap; }
-            ${me} nav button { flex: 1 1 auto; }
+            ${me} > nav { display: flex; flex-flow: row nowrap; }
+            ${me} > nav > button {
+              flex: 1 1 auto;
+              height: var(--app-bar-height)
+            }
             ${me} > #mediasDiv { display: flex; flex-flow: row wrap; }
          </style>
          <video w-id='vidPreview' autoplay muted></video>
@@ -53,8 +55,8 @@ customElements.define(me, class extends HTMLElement {
       APP.setBar({
          msg: 'Take photo, video or audio:',
          buts: [{
-            html: 'Save<br>&rArr;',
-            click: () => objSave()
+            html: 'Next<br>&rArr;',
+            click: () => APP.route('page-new2-form')
          }]
       })
 

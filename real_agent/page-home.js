@@ -6,13 +6,14 @@ customElements.define(me, class extends HTMLElement {
    connectedCallback() {
       this.innerHTML = `
          <style scoped>
-            ${me} #listDiv > div {
+            ${me} > #listDiv > div {
                border-bottom: 1px solid silver;
                overflow: auto;
             }
-            center { margin-bottom: 1em; }
+            ${me} > center { margin: 1em; }
          </style>
          <div w-id='listDiv'></div>
+         <center>Real Agent is a database of arbitrary objects with geolocation, photos and videos.</center>
          <template w-id='/objTempl'>
             <div>
                <div id='objLabels'></div>
@@ -20,14 +21,11 @@ customElements.define(me, class extends HTMLElement {
                <div id='objMedias'></div>
             </div>
          </template>
-         <center>
-            <br/>Real Agent is a database of arbitrary objects with geolocation, photos and videos.
-         </center>
       `
       wcMixin(this)
    }
 
-   _refreshList() {
+   refreshList() {
       this.listDiv.innerHTML = ''
       APP.db.transaction("Objects").objectStore("Objects").openCursor(null,'prev').onsuccess = (ev) => {
          const cursor = ev.target.result
@@ -65,7 +63,7 @@ customElements.define(me, class extends HTMLElement {
          back: false,
          buts: [{
             html: 'New<br>&rArr;',
-            click: () => APP.route('page-new1')
+            click: () => APP.route('page-new1-media')
          }]
       })
 
@@ -78,10 +76,10 @@ customElements.define(me, class extends HTMLElement {
          }
          dbr.onsuccess = (ev) => {
             APP.db = ev.target.result
-            this._refreshList()
+            this.refreshList()
          }
       } else {
-         this._refreshList()
+         this.refreshList()
       }
    }
 })

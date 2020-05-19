@@ -14,7 +14,7 @@ customElements.define(me, class extends HTMLElement {
                background-color: LightGrey;
                border-right: solid 2px grey; border-bottom: solid 2px grey;
             }
-            ${me} button {flex: 1 1 auto; margin: 0.2em;}
+            ${me} > button {flex: 1 1 auto; margin: 0.2em;}
          </style>
          <button w-id='home'>HOME</button>
          <button w-id='labels'>Organize labels</button>
