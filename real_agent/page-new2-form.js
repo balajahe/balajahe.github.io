@@ -45,7 +45,7 @@ customElements.define(me, class extends HTMLElement {
          }
       }
 
-      APP.locationCallback = this.showLocation.bind(this)
+      //APP.locationCallback = this.showLocation.bind(this)
    }
 
    addAvailLabel(lab) {
