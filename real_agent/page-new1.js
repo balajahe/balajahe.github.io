@@ -28,7 +28,7 @@ customElements.define(me, class extends HTMLElement {
       `
       //"https://www.openstreetmap.org/export/embed.html?bbox=41.97273110840353%2C45.02658622677895%2C41.97765564415487%2C45.03039272187266&amp;layer=mapnik&amp;marker=45.02848950596824%2C41.97519337627921"
       wcMixin(this)
-      APP.locationCallback = this.showLocation.bind(this)
+      //APP.locationCallback = this.showLocation.bind(this)
 
       if (!localStorage.getItem('labels')) {
          localStorage.setItem('labels', 'Дом,Дача,Участок,Заброшен,Ветхий,Разрушен,Жилой,Продается')
