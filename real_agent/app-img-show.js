@@ -15,7 +15,6 @@ customElements.define(me, class extends HTMLElement {
             }
             ${me} img {
                height: auto; width: 100%;
-               max-height: 80%;
             }
          </style>
          <button w-id='delBut'>Delete</button>
