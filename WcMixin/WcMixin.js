@@ -1,5 +1,5 @@
 // WcMixin.js
-// v0.2.1
+// v0.2.2
 export default function wcMixin(target) {
    target.on = on.bind(target)
    target.onAny = onAny.bind(target)
@@ -124,8 +124,7 @@ function generateProps() {
             })
 
          } else if (el.tagName === 'TEMPLATE') {
-            console.log(el.content)
-            el._getVal = () => el.content.cloneNode(true)
+            el._getVal = () => el.content
             el._setVal = (v) => el.content = v
             el.addEventListener('input', (ev) => winput(ev))
             el.addEventListener('blur', (ev) => wchange(ev))

@@ -15,13 +15,13 @@ customElements.define(me, class extends HTMLElement {
          <div w-id='listDiv'></div>
          <template w-id='/objTempl'>
             <div>
-               <div w-id='/objLabels'></div>
-               <div w-id='/objDesc'></div>
-               <div w-id='objMedias'></div>
+               <div id='objLabels'></div>
+               <div id='objDesc'></div>
+               <div id='objMedias'></div>
             </div>
          </template>
          <center>
-            <br/>Real Agent is a database of arbitrary objects with geolocation, photos and videos !
+            <br/>Real Agent is a database of arbitrary objects with geolocation, photos and videos.
          </center>
       `
       wcMixin(this)
@@ -33,25 +33,27 @@ customElements.define(me, class extends HTMLElement {
          const cursor = ev.target.result
          if (cursor) {
             const obj = cursor.value
-            this.objDesc = obj.desc
-            this.objLabels = obj.labels
-            this.objMedias.innerHTML = ''
+            const div = this.objTempl.cloneNode(true)
+            div.querySelector('#objDesc').innerHTML = obj.desc
+            div.querySelector('#objLabels').innerHTML = obj.labels
+            const medias = div.querySelector('#objMedias')
+            medias.innerHTML = ''
             for (const media of obj.medias) {
                const el = document.createElement(media.tagName)
                el.src = URL.createObjectURL(media.blob)
                el._blob = media.blob
                el.className = 'smallMedia'
                if (el.tagName === 'IMG') {
-                  el.addEventListener('click', (ev) => {
-                     console.log(ev)
-                     APP.imgShow(el)
-                  })
+                  el.onclick = () => APP.imgShow(el)
+               } else if (el.tagName === 'VIDEO') {
+                  el.controls = true
+                  el.onloadedmetadata = () => el.style.width = 'auto'
                } else {
                   el.controls = true
                }
-               this.objMedias.append(el)
+               medias.append(el)
             }
-            this.listDiv.append(this.objTempl)
+            this.listDiv.append(div)
             cursor.continue()
          }
       }
@@ -66,6 +68,7 @@ customElements.define(me, class extends HTMLElement {
             click: () => APP.route('page-new1')
          }]
       })
+
       if (!APP.db) {
          const dbr = window.indexedDB.open("RealAgent", 1)
          dbr.onerror = (ev) => console.log(ev)

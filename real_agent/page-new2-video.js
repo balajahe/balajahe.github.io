@@ -1,5 +1,5 @@
 import wcMixin from '/WcMixin/WcMixin.js'
-import save from './page-new3-save.js'
+import objSave from './page-new3-save.js'
 
 const me = 'page-new2-video'
 customElements.define(me, class extends HTMLElement {
@@ -15,16 +15,6 @@ customElements.define(me, class extends HTMLElement {
             ${me} nav { display: flex; flex-flow: row nowrap; }
             ${me} nav button { flex: 1 1 auto; }
             ${me} > #mediasDiv { display: flex; flex-flow: row wrap; }
-            ${me} #imgShowDiv {
-               position: fixed; top: 0; left: 0;
-               height: 100vh; width: 100vw;
-               background-color: black;
-               display: flex; flex-flow: column; justify-content: center;
-            }
-            ${me} #imgShowDiv > img {
-               height: auto; width: 100%;
-               max-height: 90%;
-            }
          </style>
          <video w-id='vidPreview' autoplay muted></video>
          <nav>
@@ -33,10 +23,6 @@ customElements.define(me, class extends HTMLElement {
             <button w-id='imgBut'>Take photo</button>
          </nav>
          <div w-id='mediasDiv/medias/children'></div>
-         <div w-id='imgShowDiv' style='display:none'>
-            <img w-id='imgShowImg'/>
-            <button w-id='imgShowDel'>Delete</button>
-         </div>
       `
       wcMixin(this)
 
@@ -47,14 +33,8 @@ customElements.define(me, class extends HTMLElement {
          img._blob = blob
          img.className = 'smallMedia'
          this.mediasDiv.append(img)
-         img.onclick = () => {
-            this.imgShowImg.src = URL.createObjectURL(blob)
-            this.imgShowDiv._source = img
-            this.imgShowDiv.display()
-         }
+         img.onclick = () => APP.imgShow(img, true)
       }
-      this.imgShowDiv.onclick = () => this.imgShowDiv.display(false)
-      this.imgShowDel.onclick = () => this.imgShowDiv._source.remove()
 
       this.vidBut.onclick = () => {
          this.vidBut.className = this.vidRecording
@@ -74,7 +54,7 @@ customElements.define(me, class extends HTMLElement {
          msg: 'Take photo, video or audio:',
          buts: [{
             html: 'Save<br>&rArr;',
-            click: () => save()
+            click: () => objSave()
          }]
       })
 
@@ -91,6 +71,7 @@ customElements.define(me, class extends HTMLElement {
          el._blob = ev.data
          el.controls = true
          el.className = 'smallMedia'
+         el.onloadedmetadata = () => el.style.width = 'auto'
          this.mediasDiv.append(el)
       }
 

@@ -1,4 +1,4 @@
-export default function save() {
+export default function objSave() {
    const new1 = document.querySelector('page-new1')
    const new2 = document.querySelector('page-new2-video')
    const created = (new Date()).toISOString().replace(/:/g, '.').replace(/T/g, ', ').slice(0, -5)

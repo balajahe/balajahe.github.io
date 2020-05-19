@@ -12,7 +12,7 @@
    <style>
       :root {
          --app-max-width: 40em;
-         --app-bar-height: 2.5em;
+         --app-bar-height: 2.7em;
          --margin1: 0.1em;
          --margin2: 0.2em;
       }
@@ -30,7 +30,7 @@
          max-width: var(--app-max-width);
       }
       button {
-         height: calc(var(--app-bar-height) * 1.0);
+         height: calc(var(--app-bar-height) * 0.9 - var(--margin1) * 2);
          margin: var(--margin1);
          border-radius: calc(var(--app-bar-height)/1.5)/calc(var(--app-bar-height));
          line-height: 1em;
@@ -44,9 +44,12 @@
       button:active { background-color: red; }
       button.true { background-color: red; }
       .smallMedia {
-         height: 9vh; width: auto; min-width: 15vw; /*calc(20% - var(--margin1) * 1.5);*/
+         height: 9vh;
          margin-top: var(--margin1); margin-left: var(--margin1);
       }
+      img.smallMedia { width: auto; }
+      video.smallMedia { width: 0; }
+      audio.smallMedia { width: 5em; }
       img.smallMedia:hover { cursor: pointer; }
    </style>
 </head>

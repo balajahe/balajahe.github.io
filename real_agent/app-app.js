@@ -16,10 +16,10 @@ customElements.define(me, class extends HTMLElement {
                display: flex; flex-flow: column;
             }
             ${me} > app-bar {
-               height: calc(var(--app-bar-height) + var(--margin1) * 2);
+               height: var(--app-bar-height);
             }
             ${me} > main {
-               height: calc(100vh - var(--app-bar-height) - var(--margin1) * 2);
+               height: calc(100vh - var(--app-bar-height));
                overflow: auto;
             }
             ${me} > main > * {
@@ -54,10 +54,7 @@ customElements.define(me, class extends HTMLElement {
 
    setMsg(v) { this.appBar.setMsg(v) }
    setBar(v) { this.appBar.setBar(v) }
-   imgShow(v) {
-      console.log(1)
-      this.imgShowWc.show(v)
-   }
+   imgShow(el, del) { this.imgShowWc.show(el, del) }
 
    route(hash, elem) {
       for (const el of this.appMain.children) {

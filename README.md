@@ -4,6 +4,8 @@ Power web application examples:
 <br><br>
 <a href="/wc_pwa_template/">wc_pwa_template</a> - The template demonstrates the use of vanilla web components in the development of a mobile PWA application. The WcMixin library provides syntactic sugar for extracting data from HTML elements and reactivity based on custom DOM events.
 <br><br>
+<a href="/real_agent/">real_agent</a> - Mobile PWA "Real Agent" is a sample of database of arbitrary objects with geolocation, photos and videos.
+<br><br>
 <a href="/emergency_cam/">emergency_cam</a> - Emergency camera - at startup, the application starts recording video, and sends video fragments with geotagging to the email specified last time. The application will request permission for the camera, microphone, location, and google authorization (for sending emails through the current account).
 <br><br>
 <a href="https://balajahe.github.io/">Live demo of all these apps</a>

@@ -20,12 +20,30 @@ customElements.define(me, class extends HTMLElement {
          <button w-id='labels'>Organize labels</button>
          <button w-id='export'>Export database</button>
          <button w-id='source'>Sources on GitHub</button>
+         <a w-id='a' style='display:none'></a>
       `
       wcMixin(this)
 
       this.home.onclick = () => APP.route('page-home')
-      this.labels.onclick = () => APP.route('page-labels')
-      //this.export.onclick = () => export()
+      //this.labels.onclick = () => APP.route('page-labels')
+      this.export.onclick = () => this.exportDb()
       this.source.onclick = () => location.href = 'https://github.com/balajahe/balajahe.github.io/tree/master/real_agent'
+   }
+
+   exportDb() {
+      const res = []
+      APP.db.transaction("Objects").objectStore("Objects").openCursor(null,'prev').onsuccess = (ev) => {
+         const cur = ev.target.result
+         if (cur) {
+            res.push(cur.value)
+            cur.continue()
+         } else {
+            const blob = new Blob([ JSON.stringify(res) ], { type : "text/plain;charset=utf-8" })
+            URL.revokeObjectURL(this.a.href)
+            this.a.href = URL.createObjectURL(blob)
+            this.a.download = 'RealAgent.json'
+            this.a.click()
+         }
+      }
    }
 })

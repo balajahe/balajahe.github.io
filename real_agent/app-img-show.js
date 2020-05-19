@@ -18,8 +18,8 @@ customElements.define(me, class extends HTMLElement {
                max-height: 80%;
             }
          </style>
-         <img w-id='img'/>
          <button w-id='delBut'>Delete</button>
+         <img w-id='img'/>
       `
       wcMixin(this)
 
@@ -27,10 +27,10 @@ customElements.define(me, class extends HTMLElement {
       this.delBut.onclick = () => this.source.remove()
    }
 
-   show(el) {
-      console.log(el)
+   show(el, del = false) {
       this.source = el
       this.img.src = URL.createObjectURL(el._blob)
+      this.delBut.display(del)
       this.display('flex')
    }
 })
