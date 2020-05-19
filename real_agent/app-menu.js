@@ -38,7 +38,7 @@ customElements.define(me, class extends HTMLElement {
             res.push(cur.value)
             cur.continue()
          } else {
-            const blob = new Blob([ JSON.stringify(res) ], { type : "text/plain;charset=utf-8" })
+            const blob = new Blob([ JSON.stringify(res) ], { type : 'application/json' })
             URL.revokeObjectURL(this.a.href)
             this.a.href = URL.createObjectURL(blob)
             this.a.download = 'RealAgent.json'
