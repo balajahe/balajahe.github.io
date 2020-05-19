@@ -6,7 +6,7 @@ export default function objSave() {
       created: created,
       modified: created,
       desc: new1.desc,
-      location: {latitude: APP.location.latitude, longitude: APP.location.longitude},
+      location: {latitude: APP.location?.latitude, longitude: APP.location?.longitude},
       labels: Array.from(new1.labels).map(el => el.innerHTML),
       medias: Array.from(new2.medias).map(el => ({tagName: el.tagName, blob: el._blob}))
    }

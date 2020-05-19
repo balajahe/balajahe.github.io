@@ -1,4 +1,4 @@
-import wcmixin from './WcMixin.js'
+import wcMixin from '/WcMixin/WcMixin.js'
 
 const me = 'page-login'
 customElements.define(me, class extends HTMLElement {
@@ -17,7 +17,7 @@ customElements.define(me, class extends HTMLElement {
          <input w-id='userInp/user' placeholder='user'/>&nbsp;
          <input w-id='passInp/pass' type='password' placeholder='password'/>
       `
-      wcmixin(this)
+      wcMixin(this)
 
       this.userInp.oninput = (ev) => {
          this.bubbleEvent('login-change', {logged: false, user: this.user})

@@ -13,7 +13,7 @@ customElements.define(me, class extends HTMLElement {
             }
             ${me} > button {
                height: calc(100% - var(--margin1) * 2);
-               min-width: 15%;
+               min-width: 17%;
             }
             ${me} > #msgSpan {
                flex: 1 1 auto;

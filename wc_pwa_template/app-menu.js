@@ -1,4 +1,4 @@
-import wcmixin from './WcMixin.js'
+import wcMixin from '/WcMixin/WcMixin.js'
 
 const me = 'app-menu'
 customElements.define(me, class extends HTMLElement {
@@ -18,7 +18,7 @@ customElements.define(me, class extends HTMLElement {
          <button w-id='home'>HOME</button>
          <button w-id='source'>Sources on GitHub</button>
       `
-      wcmixin(this)
+      wcMixin(this)
 
       this.home.onclick = () => APP.route('page-home')
       this.source.onclick = () => location.href = 'https://github.com/balajahe/balajahe.github.io/tree/master/wc_pwa_template'

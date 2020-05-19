@@ -1,4 +1,4 @@
-import wcmixin from './WcMixin.js'
+import wcMixin from '/WcMixin/WcMixin.js'
 
 const me = 'page-home'
 customElements.define(me, class extends HTMLElement {
@@ -14,7 +14,7 @@ customElements.define(me, class extends HTMLElement {
          </style>
          <p>WC PWA Template welcomes you !</p>
       `
-      wcmixin(this)
+      wcMixin(this)
    }
 
    onRoute() {

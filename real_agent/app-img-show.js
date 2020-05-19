@@ -10,11 +10,14 @@ customElements.define(me, class extends HTMLElement {
             ${me} {
                position: fixed; top: 0; left: 0;
                height: 100vh; width: 100vw;
-               display: none; flex-flow: column; justify-content: center;
+               display: none; flex-flow: column; justify-content: center; align-items: center;
                background-color: black;
             }
-            ${me} img {
-               height: auto; width: 100%;
+            ${me} > img {
+               height: auto; width: 100%; max-width: var(--app-max-width);
+            }
+            ${me} > button {
+               width: 100%; max-width: var(--app-max-width);
             }
          </style>
          <button w-id='delBut'>Delete</button>

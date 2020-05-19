@@ -1,4 +1,4 @@
-import wcmixin from './WcMixin.js'
+import wcMixin from '/WcMixin/WcMixin.js'
 
 const me = 'app-app'
 customElements.define(me, class extends HTMLElement {
@@ -53,7 +53,7 @@ customElements.define(me, class extends HTMLElement {
          <app-menu w-id='menu' style='display:none'></app-menu>
          <main w-id='main'></main>
       `
-      wcmixin(this)
+      wcMixin(this)
       window.APP = this
 
       this.menuBut.onclick = (ev) => {
