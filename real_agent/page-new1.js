@@ -61,7 +61,8 @@ customElements.define(me, class extends HTMLElement {
    showLocation() {
       if (APP.location) {
          this.loc = APP.location.latitude + ' - ' + APP.location.longitude
-         this.mapIframe.src = `https://www.openstreetmap.org/export/embed.html?bbox=${APP.location.longitude-0.002}%2C${APP.location.latitude-0.002}%2C${APP.location.longitude+0.002}%2C${APP.location.latitude+0.002}&amp;layer=mapnik&amp;marker=${APP.location.latitude}%2C${APP.location.longitude}`
+         this.mapIframe.src = `https://www.openstreetmap.org/export/embed.html?bbox=${APP.location.longitude-0.002}%2C${APP.location.latitude-0.002}%2C${APP.location.longitude+0.002}%2C${APP.location.latitude+0.002}&layer=mapnik&marker=${APP.location.latitude}%2C${APP.location.longitude}`
+         //this.mapIframe.src = `https://www.openstreetmap.org/?minlon=${APP.location.longitude-0.002}&minlat=${APP.location.latitude-0.002}&maxlon=${APP.location.longitude+0.002}&maxlat=${APP.location.latitude+0.002}&box=yes&mlat=${APP.location.latitude}&mlon=${APP.location.longitude}`
       }
    }
 

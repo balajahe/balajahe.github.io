@@ -1,4 +1,4 @@
-import wcmixin from '/wc_pwa_template/WcMixin.js'
+import wcMixin from '/WcMixin/WcMixin.js'
 
 const API_KEY = 'AIzaSyDWwZB5DbLaT_11i4C7L9Ch_0rslAncDro'
 const CLIENT_ID = '62101814784-23re0bkiiihnb99sid30pgt21spu9ubk.apps.googleusercontent.com'
@@ -12,7 +12,7 @@ customElements.define('video-sender', class extends HTMLElement {
          <div w-id='/log'></div>
          <a w-id='a' style='display:none'></a>
       `
-      wcmixin(this)
+      wcMixin(this)
    }
 
    async connect() {

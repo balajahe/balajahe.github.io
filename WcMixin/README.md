@@ -1,0 +1,1 @@
+The WcMixin library provides syntactic sugar for extracting data from HTML elements, and reactivity based on custom DOM events. The library implements the reverse approach to the React - one-way binding, but the State is a DOM.

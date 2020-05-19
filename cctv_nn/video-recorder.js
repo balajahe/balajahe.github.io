@@ -1,4 +1,4 @@
-import wcmixin from '/wc_pwa_template/WcMixin.js'
+import wcMixin from '/WcMixin/WcMixin.js'
 
 const CHUNK_DURATION = 7000
 
@@ -20,14 +20,14 @@ customElements.define('video-recorder', class extends HTMLElement {
             <canvas w-id='c_bbox' style='position:absolute; top:0; left:0'></canvas>
             <div w-id='el_msg/msg'>Loading...</div>
             <nav w-id='nav' style='display:none; flex-flow:row nowrap'>
-               <button w-id='b_detect/detecting/className' style='flex-grow:3'>Start / Stop detecting</button>
-               &nbsp;<button w-id='b_noplayer/noplayer/className' style='flex-grow:1'>No player</button>
-               &nbsp;<button w-id='b_noalarm/noalarm/className' style='flex-grow:1'>No alarm</button>
+               <button w-id='b_detect/detecting' style='flex-grow:3'>Start / Stop detecting</button>
+               &nbsp;<button w-id='b_noplayer/noplayer' style='flex-grow:1'>No player</button>
+               &nbsp;<button w-id='b_noalarm/noalarm' style='flex-grow:1'>No alarm</button>
             </nav>
          </div>
          <audio w-id='alarm' loop src='./alarm.mp3'></audio>
       `
-      wcmixin(this)
+      wcMixin(this)
       this.canvas = this.c_canvas.getContext('2d')
       this.bbox = this.c_bbox.getContext('2d')
 
@@ -58,6 +58,7 @@ customElements.define('video-recorder', class extends HTMLElement {
       }
 
       this.b_detect.on('w-change', (_) => {
+         this.b_detect.className = this.detecting
          if (this.detecting) {
             this.recorder.rec.start()
             this.recorder.num = 0
@@ -74,6 +75,7 @@ customElements.define('video-recorder', class extends HTMLElement {
       })
 
       this.b_noplayer.on('w-change', (_) => {
+         this.b_noplayer.className = this.noplayer
          if (this.noplayer)
             this.video.pause()
          else
@@ -81,6 +83,7 @@ customElements.define('video-recorder', class extends HTMLElement {
       })
 
       this.b_noalarm.on('w-change', (_) => {
+         this.b_noalarm.className = this.noalarm
          if (this.noalarm) this.alarm.pause()
       })
 

@@ -1,4 +1,4 @@
-import wcmixin from '/wc_pwa_template/WcMixin.js'
+import wcMixin from '/WcMixin/WcMixin.js'
 
 const CHUNK_DURATION = 5000
 
@@ -22,9 +22,9 @@ customElements.define('video-recorder', class extends HTMLElement {
          <div w-id='recdiv' id='recdiv' style='display:none; flex-flow:column'>
             <video w-id='video' autoplay muted></video>
             <nav style='display:flex; flex-flow:row nowrap'>
-               <button w-id='rec/recording/className' style='flex-grow:3'>Start / Stop recording</button>
-               &nbsp;<button w-id='/noemail/className' style='flex-grow:1'>No email</button>
-               &nbsp;<button w-id='no_chunk/nochunk/className' style='flex-grow:1'>No chunk</button>
+               <button w-id='rec/recording' style='flex-grow:3'>Start / Stop recording</button>
+               &nbsp;<button w-id='no_email/noemail' style='flex-grow:1'>No email</button>
+               &nbsp;<button w-id='no_chunk/nochunk' style='flex-grow:1'>No chunk</button>
                &nbsp;<button w-id='lock' style='flex-grow:1'>Lock</button>
             </nav>
             <button w-id='gmail' style='display:none'>Connect to Gmail</button>
@@ -35,7 +35,7 @@ customElements.define('video-recorder', class extends HTMLElement {
             <iframe src='https://ru.wikipedia.org' style='width:100%; height:96%' sandbox='allow-forms allow-scripts'></iframe>
          </div>
       `
-      wcmixin(this)
+      wcMixin(this)
       this.email = localStorage.getItem('email')
 
       const stream = await navigator.mediaDevices.getUserMedia(
@@ -69,6 +69,7 @@ customElements.define('video-recorder', class extends HTMLElement {
       this.gmail.click()
 
       this.rec.on('w-change', (_) => {
+         this.rec.className = this.recording
          if (this.recording) {
             this.recorder.rec.start()
             if (!this.nochunk) this.recorder.setInterval()
@@ -79,7 +80,10 @@ customElements.define('video-recorder', class extends HTMLElement {
       })
       this.rec.click()
 
+      this.no_email.on('w-change', (ev) => this.no_email.className = this.noemail)
+
       this.no_chunk.on('w-change', (ev) => {
+         this.no_chunk.className = this.nochunk
          if (this.nochunk) {
             this.recorder.clearInterval()
          } else {

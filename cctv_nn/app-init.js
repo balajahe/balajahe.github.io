@@ -1,4 +1,4 @@
-import wcmixin from '/wc_pwa_template/WcMixin.js'
+import wcMixin from '/WcMixin/WcMixin.js'
 
 customElements.define('app-init', class extends HTMLElement {
    connectedCallback() {
@@ -17,11 +17,11 @@ customElements.define('app-init', class extends HTMLElement {
             </footer>
          </div>
       `
-      wcmixin(this)
+      wcMixin(this)
 
       this.do.onclick = async (ev) => {
          this.welcome.remove()
-         await navigator.serviceWorker.register('./app-sw.js')
+         await navigator.serviceWorker.register('./app-sw1.js')
          document.querySelector('video-recorder').init()
          document.querySelector('video-sender').init()
       }
