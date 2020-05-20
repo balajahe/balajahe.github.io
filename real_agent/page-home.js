@@ -46,10 +46,7 @@ customElements.define(me, class extends HTMLElement {
             const medias = div.querySelector('#objMedias')
             medias.innerHTML = ''
             for (const media of obj.medias) {
-               const div = document.createElement('div')
-               div.className = 'smallMedia'
                const med = document.createElement(media.tagName)
-               div.append(med)
                med.src = URL.createObjectURL(media.blob)
                med._blob = media.blob
                if (med.tagName === 'IMG') {
@@ -57,9 +54,14 @@ customElements.define(me, class extends HTMLElement {
                } else {
                   med.controls = true
                }
+
+               const div = document.createElement('div')
+               div.className = 'smallMedia'
+               div.append(med)
                medias.append(div)
             }
             this.listDiv.append(div)
+            
             cursor.continue()
          }
       }
