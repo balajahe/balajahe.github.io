@@ -7,15 +7,16 @@ customElements.define(me, class extends HTMLElement {
       this.innerHTML = `
          <style scoped>
             ${me} > #listDiv > div {
+               margin-top: var(--margin2);
                border-bottom: 1px solid silver;
                overflow: auto;
             }
-            ${me} > center { margin: 1em; }
             ${me} #objDesc:hover, #objLabels:hover { cursor: pointer; }
             ${me} .mediasDiv { 
                display: flex; flex-flow: row wrap; 
                margin-bottom: var(--margin2);
             }
+            ${me} > center { margin: 1em; }
          </style>
          <div w-id='listDiv'></div>
          <center>Real Agent is a database of arbitrary objects with geolocation, photos and videos.</center>
@@ -40,7 +41,7 @@ customElements.define(me, class extends HTMLElement {
 
             div.querySelector('#objLabels').innerHTML = obj.labels
             div.querySelector('#objDesc').innerHTML = obj.desc
-            const edit = (obj) => APP.route('page-new2-form', document.createElement('page-new2-form').build(obj))
+            const edit = (obj) => APP.route('page-obj2-form', document.createElement('page-obj2-form').build(obj))
             div.querySelector('#objLabels').onclick = () => edit(obj)
             div.querySelector('#objDesc').onclick = () => edit(obj)
 
@@ -74,7 +75,7 @@ customElements.define(me, class extends HTMLElement {
          back: false,
          buts: [{
             html: 'New<br>&rArr;',
-            click: () => APP.route('page-new1-media')
+            click: () => APP.route('page-obj1-media')
          }]
       })
 

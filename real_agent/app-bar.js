@@ -11,8 +11,10 @@ customElements.define(me, class extends HTMLElement {
                display: flex; flex-flow: row nowrap;
                overflow: hidden;
             }
+            ${me} > * {
+               height1: 100%;
+            }
             ${me} > button {
-               height: calc(100% - var(--margin1) * 2);
                min-width: 17%;
             }
             ${me} > #msgSpan {

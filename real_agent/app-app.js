@@ -17,10 +17,10 @@ customElements.define(me, class extends HTMLElement {
                display: flex; flex-flow: column;
             }
             ${me} > app-bar {
-               height: var(--button-height);
+               height: calc(var(--button-height) + var(--margin1) * 2);
             }
             ${me} > main {
-               height: calc(100vh - var(--button-height));
+               height: calc(100vh - var(--button-height) - var(--margin1) * 2);
                overflow: auto;
             }
             ${me} > main > * {

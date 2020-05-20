@@ -1,7 +1,7 @@
 import wcMixin from '/WcMixin/WcMixin.js'
-import objSave from './page-new3-save.js'
+import {saveObj} from './obj-utils.js'
 
-const me = 'page-new2-form'
+const me = 'page-obj2-form'
 customElements.define(me, class extends HTMLElement {
    obj = null
 
@@ -90,7 +90,7 @@ customElements.define(me, class extends HTMLElement {
             html: 'Save<br>&rArr;',
             click: () => {
                if (this.desc) {
-                  objSave()
+                  saveObj()
                } else {
                   APP.setMsg('<span style="color:red">Empty description !</span>')
                   this.descDiv.focus()
