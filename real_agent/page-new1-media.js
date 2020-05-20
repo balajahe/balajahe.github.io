@@ -32,7 +32,7 @@ customElements.define(me, class extends HTMLElement {
          const med = document.createElement('img')
          med.src = URL.createObjectURL(blob)
          med._blob = blob
-         med.onclick = () => APP.imgShow(med, div)
+         med.onclick = () => APP.routeModal(document.createElement('modal-img-show').build(med.src, () => med.parentNode.remove()))
 
          const div = document.createElement('div')
          div.className = 'smallMedia'

@@ -40,8 +40,9 @@ customElements.define(me, class extends HTMLElement {
 
             div.querySelector('#objLabels').innerHTML = obj.labels
             div.querySelector('#objDesc').innerHTML = obj.desc
-            div.querySelector('#objLabels').onclick = () => this.edit(obj)
-            div.querySelector('#objDesc').onclick = () => this.edit(obj)
+            const edit = (obj) => APP.route('page-new2-form', document.createElement('page-new2-form').build(obj))
+            div.querySelector('#objLabels').onclick = () => edit(obj)
+            div.querySelector('#objDesc').onclick = () => edit(obj)
 
             const medias = div.querySelector('#objMedias')
             medias.innerHTML = ''
@@ -50,7 +51,7 @@ customElements.define(me, class extends HTMLElement {
                med.src = URL.createObjectURL(media.blob)
                med._blob = media.blob
                if (med.tagName === 'IMG') {
-                  med.onclick = () => APP.imgShow(med)
+                  med.onclick = () => APP.routeModal(document.createElement('modal-img-show').build(med.src))
                } else {
                   med.controls = true
                }
@@ -65,10 +66,6 @@ customElements.define(me, class extends HTMLElement {
             cursor.continue()
          }
       }
-   }
-
-   edit(obj) {
-      console.log(obj)
    }
 
    onRoute() {

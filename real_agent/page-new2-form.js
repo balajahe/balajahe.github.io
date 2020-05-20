@@ -3,6 +3,12 @@ import objSave from './page-new3-save.js'
 
 const me = 'page-new2-form'
 customElements.define(me, class extends HTMLElement {
+   obj = null
+
+   build(obj) {
+      this.obj = obj
+      return this
+   }
 
    connectedCallback() {
       this.innerHTML = `
@@ -38,6 +44,11 @@ customElements.define(me, class extends HTMLElement {
       }
       for (const lab of localStorage.getItem('labels').split(',')) this.addAvailLabel(lab)
 
+      if (this.obj) {
+         this.desc = this.obj.desc
+         for (const lab of this.obj.labels) this.addLabel(lab)
+      }
+
       this.newLabelInp.onkeypress = (ev) => {
          if (ev.key === 'Enter') {
             this.addAvailLabel(this.newLabel)
@@ -48,16 +59,18 @@ customElements.define(me, class extends HTMLElement {
       //APP.locationCallback = this.showLocation.bind(this)
    }
 
+   addLabel(lab) {
+      const but = document.createElement("button")
+      but.innerHTML = lab
+      but.onclick = () => but.remove()
+      this.labelsDiv.append(but)
+   }
+
    addAvailLabel(lab) {
       const but = document.createElement("button")
       but.innerHTML = lab
+      but.onclick = (ev) => this.addLabel(ev.target.innerHTML)
       this.newLabelInp.before(but)
-      but.onclick = (ev) => {
-         const but = document.createElement("button")
-         but.onclick = (ev) => ev.target.remove()
-         but.innerHTML = ev.target.innerHTML
-         this.labelsDiv.append(but)
-      }
    }
 
    showLocation() {

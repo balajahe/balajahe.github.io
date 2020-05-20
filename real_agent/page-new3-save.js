@@ -5,8 +5,8 @@ export default function objSave() {
    const obj = {
       created: created,
       modified: created,
-      desc: form.desc,
       location: {latitude: APP.location?.latitude, longitude: APP.location?.longitude},
+      desc: form.desc,
       labels: Array.from(form.labels).map(el => el.innerHTML),
       medias: Array.from(med.medias).map(el => ({ tagName: el.firstChild.tagName, blob: el.firstChild._blob }))
    } 
