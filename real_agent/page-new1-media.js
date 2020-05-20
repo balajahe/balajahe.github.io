@@ -66,6 +66,7 @@ customElements.define(me, class extends HTMLElement {
       this.vidPreview.onloadedmetadata = () => this.vidPreview.style.height = 'auto'
 
       this.imgCapturer = new ImageCapture(this.stream.getVideoTracks()[0])
+      console.log(await this.imgCapturer.getPhotoSettings())
 
       this.vidRecorder = new MediaRecorder(this.stream, { mimeType : "video/webm" })
       this.vidRecorder.ondataavailable = async (ev) => {
