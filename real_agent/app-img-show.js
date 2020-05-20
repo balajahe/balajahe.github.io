@@ -8,8 +8,9 @@ customElements.define(me, class extends HTMLElement {
       this.innerHTML = `
          <style scoped>
             ${me} {
-               position: fixed; top: 0; left: 0;
+               position: absolute;
                height: 100vh; width: 100vw;
+               max-width: var(--app-max-width);
                display: none; flex-flow: column; justify-content: center; align-items: center;
                background-color: black;
             }
@@ -17,7 +18,7 @@ customElements.define(me, class extends HTMLElement {
                height: auto; width: 100%; max-width: var(--app-max-width);
             }
             ${me} > button {
-               width: 100%; max-width: var(--app-max-width);
+               width: 100%; max-width1: var(--app-max-width);
             }
          </style>
          <button w-id='delBut'>Delete</button>

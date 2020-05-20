@@ -10,12 +10,9 @@ customElements.define(me, class extends HTMLElement {
    async connectedCallback() {
       this.innerHTML = `
          <style scoped>
-            ${me} > #vidPreview { margin: 0; width: 100%; height: auto; }
+            ${me} > #vidPreview { margin: 0; width: 100%; height: 0; }
             ${me} > nav { display: flex; flex-flow: row nowrap; }
-            ${me} > nav > button {
-              flex: 1 1 auto;
-              height: var(--app-bar-height)
-            }
+            ${me} > nav > button { flex: 1 1 auto; }
             ${me} > #mediasDiv { display: flex; flex-flow: row wrap; }
          </style>
          <video w-id='vidPreview' autoplay muted></video>
@@ -64,6 +61,8 @@ customElements.define(me, class extends HTMLElement {
          { video: { facingMode: { ideal: "environment" }}, audio: true }
       )
       this.vidPreview.srcObject = this.stream
+      this.vidPreview.onloadedmetadata = () => this.vidPreview.style.height = 'auto'
+
       this.imgCapturer = new ImageCapture(this.stream.getVideoTracks()[0])
 
       this.vidRecorder = new MediaRecorder(this.stream, { mimeType : "video/webm" })
@@ -90,5 +89,6 @@ customElements.define(me, class extends HTMLElement {
 
    onUnRoute() {
       this.stream.getTracks().forEach(track => track.stop())
+      this.vidPreview.style.height = '0'
    }
 })

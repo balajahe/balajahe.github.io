@@ -12,12 +12,13 @@ customElements.define(me, class extends HTMLElement {
                border: solid 1px silver;
                margin: var(--margin1); padding-left: var(--margin2);
             }
-            ${me} > #labelsDiv { min-height: var(--app-bar-height); }
+            ${me} > #labelsDiv { min-height: calc(var(--button-height) * 0.9); }
             ${me} > #allLabelsDiv { margin-top: var(--margin2); margin-bottom: var(--margin2); }
+            ${me} button { height: calc(var(--button-height) * 0.8); }
             ${me} > .separ { display: flex; flex-flow: row nowrap; }
             ${me} > .separ hr { display: inline-block; flex: 1 1 auto; }
             ${me} > #newLabelInp { width: 30%; }
-            ${me} > iframe { width: 100%; }
+            ${me} > iframe { height: 250px; width: 100%; }
          </style>
          <div w-id='descDiv/desc' contenteditable='true'></div>
          <div w-id='labelsDiv/labels/children'></div>
@@ -25,7 +26,7 @@ customElements.define(me, class extends HTMLElement {
             <div class='separ'>&nbsp;<small>Click to add label:</small>&nbsp;<hr/></div>
             <input w-id='newLabelInp/newLabel' placeholder='New label...'/>
          </div>
-         <iframe w-id='mapIframe' width="300px" height="300px" frameborder="0" scrolling="no" marginheight="0" marginwidth="0">
+         <iframe w-id='mapIframe' frameborder="0" scrolling="no" marginheight="0" marginwidth="0">
              Check GPS and click me !
          </iframe>
          <div w-id='/loc'></div>
@@ -44,7 +45,6 @@ customElements.define(me, class extends HTMLElement {
             this.newLabel = ''
          }
       }
-
       //APP.locationCallback = this.showLocation.bind(this)
    }
 

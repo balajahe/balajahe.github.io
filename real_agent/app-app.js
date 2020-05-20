@@ -13,13 +13,15 @@ customElements.define(me, class extends HTMLElement {
       this.innerHTML = `
          <style scoped>
             ${me} {
+               height: 100vh; width: 100vw;
+               max-width: var(--app-max-width);
                display: flex; flex-flow: column;
             }
             ${me} > app-bar {
-               height: var(--app-bar-height);
+               height: var(--button-height);
             }
             ${me} > main {
-               height: calc(100vh - var(--app-bar-height));
+               height: calc(100vh - var(--button-height));
                overflow: auto;
             }
             ${me} > main > * {
