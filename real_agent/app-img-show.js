@@ -20,8 +20,8 @@ customElements.define(me, class extends HTMLElement {
                width: 100%;
             }
          </style>
-         <button w-id='delBut'>Delete</button>
          <img w-id='img'/>
+         <button w-id='delBut'>Delete</button>
       `
       wcMixin(this)
 

@@ -54,9 +54,6 @@ customElements.define(me, class extends HTMLElement {
                med._blob = media.blob
                if (med.tagName === 'IMG') {
                   med.onclick = () => APP.imgShow(med)
-               } else if (med.tagName === 'VIDEO') {
-                  med.controls = true
-                  med.onloadedmetadata = () => med.style.width = 'auto'
                } else {
                   med.controls = true
                }
