@@ -4,6 +4,7 @@ const me = 'page-new1-media'
 customElements.define(me, class extends HTMLElement {
    stream = null
    imgCapturer = null
+   imgParams = null
    vidRecorder = null
    audRecorder = null
 
@@ -26,7 +27,7 @@ customElements.define(me, class extends HTMLElement {
       wcMixin(this)
 
       this.imgBut.onclick = async () => {
-         const blob = await this.imgCapturer.takePhoto()
+         const blob = await this.imgCapturer.takePhoto(this.imgParams)
          const div = document.createElement('div')
          div.className = 'smallMedia'
          const med = document.createElement('img')
@@ -66,7 +67,10 @@ customElements.define(me, class extends HTMLElement {
       this.vidPreview.onloadedmetadata = () => this.vidPreview.style.height = 'auto'
 
       this.imgCapturer = new ImageCapture(this.stream.getVideoTracks()[0])
-      console.log(await this.imgCapturer.getPhotoSettings())
+      const caps = await this.imgCapturer.getPhotoCapabilities()
+      this.imgParams = { imageHeight: caps.imageHeight.max, imageWidth: caps.imageWidth.max }
+      console.log(this.imgParams)
+      console.log(this.imgCapturer.getPhotoSettings())
 
       this.vidRecorder = new MediaRecorder(this.stream, { mimeType : "video/webm" })
       this.vidRecorder.ondataavailable = async (ev) => {
