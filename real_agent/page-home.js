@@ -11,6 +11,8 @@ customElements.define(me, class extends HTMLElement {
                overflow: auto;
             }
             ${me} > center { margin: 1em; }
+            ${me} #objDesc:hover, #objLabels:hover { cursor: pointer; }
+
          </style>
          <div w-id='listDiv'></div>
          <center>Real Agent is a database of arbitrary objects with geolocation, photos and videos.</center>
@@ -32,8 +34,12 @@ customElements.define(me, class extends HTMLElement {
          if (cursor) {
             const obj = cursor.value
             const div = this.objTempl.cloneNode(true)
-            div.querySelector('#objDesc').innerHTML = obj.desc
+
             div.querySelector('#objLabels').innerHTML = obj.labels
+            div.querySelector('#objDesc').innerHTML = obj.desc
+            div.querySelector('#objLabels').onclick = () => this.edit(obj)
+            div.querySelector('#objDesc').onclick = () => this.edit(obj)
+
             const medias = div.querySelector('#objMedias')
             medias.innerHTML = ''
             for (const media of obj.medias) {
@@ -55,6 +61,10 @@ customElements.define(me, class extends HTMLElement {
             cursor.continue()
          }
       }
+   }
+
+   edit(obj) {
+      console.log(obj)
    }
 
    onRoute() {
