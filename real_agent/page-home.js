@@ -12,7 +12,10 @@ customElements.define(me, class extends HTMLElement {
             }
             ${me} > center { margin: 1em; }
             ${me} #objDesc:hover, #objLabels:hover { cursor: pointer; }
-
+            ${me} .mediasDiv { 
+               display: flex; flex-flow: row wrap; 
+               margin-bottom: var(--margin2);
+            }
          </style>
          <div w-id='listDiv'></div>
          <center>Real Agent is a database of arbitrary objects with geolocation, photos and videos.</center>
@@ -20,7 +23,7 @@ customElements.define(me, class extends HTMLElement {
             <div>
                <div id='objLabels'></div>
                <div id='objDesc'></div>
-               <div id='objMedias'></div>
+               <div id='objMedias' class='mediasDiv'></div>
             </div>
          </template>
       `
@@ -43,19 +46,21 @@ customElements.define(me, class extends HTMLElement {
             const medias = div.querySelector('#objMedias')
             medias.innerHTML = ''
             for (const media of obj.medias) {
-               const el = document.createElement(media.tagName)
-               el.src = URL.createObjectURL(media.blob)
-               el._blob = media.blob
-               el.className = 'smallMedia'
-               if (el.tagName === 'IMG') {
-                  el.onclick = () => APP.imgShow(el)
-               } else if (el.tagName === 'VIDEO') {
-                  el.controls = true
-                  el.onloadedmetadata = () => el.style.width = 'auto'
+               const div = document.createElement('div')
+               div.className = 'smallMedia'
+               const med = document.createElement(media.tagName)
+               div.append(med)
+               med.src = URL.createObjectURL(media.blob)
+               med._blob = media.blob
+               if (med.tagName === 'IMG') {
+                  med.onclick = () => APP.imgShow(med)
+               } else if (med.tagName === 'VIDEO') {
+                  med.controls = true
+                  med.onloadedmetadata = () => med.style.width = 'auto'
                } else {
-                  el.controls = true
+                  med.controls = true
                }
-               medias.append(el)
+               medias.append(div)
             }
             this.listDiv.append(div)
             cursor.continue()

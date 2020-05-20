@@ -2,7 +2,6 @@ import wcMixin from '/WcMixin/WcMixin.js'
 
 const me = 'app-img-show'
 customElements.define(me, class extends HTMLElement {
-   source = null
 
    async connectedCallback() {
       this.innerHTML = `
@@ -15,10 +14,10 @@ customElements.define(me, class extends HTMLElement {
                background-color: black;
             }
             ${me} > img {
-               height: auto; width: 100%; max-width: var(--app-max-width);
+               height: auto; width: 100%;
             }
             ${me} > button {
-               width: 100%; max-width1: var(--app-max-width);
+               width: 100%;
             }
          </style>
          <button w-id='delBut'>Delete</button>
@@ -27,13 +26,16 @@ customElements.define(me, class extends HTMLElement {
       wcMixin(this)
 
       this.onclick = () => this.display(false)
-      this.delBut.onclick = () => this.source.remove()
    }
 
-   show(el, del = false) {
-      this.source = el
+   show(el, del) {
       this.img.src = URL.createObjectURL(el._blob)
-      this.delBut.display(del)
+      if (del) {
+         this.delBut.onclick = () => del.remove()
+         this.delBut.display()
+      } else{
+         this.delBut.display(false)
+      }
       this.display('flex')
    }
 })

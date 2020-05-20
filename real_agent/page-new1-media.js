@@ -27,12 +27,14 @@ customElements.define(me, class extends HTMLElement {
 
       this.imgBut.onclick = async () => {
          const blob = await this.imgCapturer.takePhoto()
-         const img = document.createElement("img")
-         img.src = URL.createObjectURL(blob)
-         img._blob = blob
-         img.className = 'smallMedia'
-         this.mediasDiv.append(img)
-         img.onclick = () => APP.imgShow(img, true)
+         const div = document.createElement('div')
+         div.className = 'smallMedia'
+         const med = document.createElement('img')
+         div.append(med)
+         med.src = URL.createObjectURL(blob)
+         med._blob = blob
+         med.onclick = () => APP.imgShow(med, div)
+         this.mediasDiv.append(div)
       }
 
       this.vidBut.onclick = () => {
@@ -67,23 +69,27 @@ customElements.define(me, class extends HTMLElement {
 
       this.vidRecorder = new MediaRecorder(this.stream, { mimeType : "video/webm" })
       this.vidRecorder.ondataavailable = async (ev) => {
-         const el = document.createElement("video")
-         el.src = URL.createObjectURL(ev.data)
-         el._blob = ev.data
-         el.controls = true
-         el.className = 'smallMedia'
-         el.onloadedmetadata = () => el.style.width = 'auto'
-         this.mediasDiv.append(el)
+         const div = document.createElement('div')
+         div.className = 'smallMedia'
+         const med = document.createElement('video')
+         div.append(med)
+         med.src = URL.createObjectURL(ev.data)
+         med._blob = ev.data
+         med.controls = true
+         med.onloadedmetadata = () => med.style.width = 'auto'
+         this.mediasDiv.append(div)
       }
 
       this.audRecorder = new MediaRecorder(this.stream, { mimeType : "audio/webm" })
       this.audRecorder.ondataavailable = async (ev) => {
-         const el = document.createElement("audio")
-         el.src = URL.createObjectURL(ev.data)
-         el._blob = ev.data
-         el.controls = true
-         el.className = 'smallMedia'
-         this.mediasDiv.append(el)
+         const div = document.createElement('div')
+         div.className = 'smallMedia'
+         const med = document.createElement('audio')
+         div.append(med)
+         med.src = URL.createObjectURL(ev.data)
+         med._blob = ev.data
+         med.controls = true
+         this.mediasDiv.append(div)
       }
    }
 

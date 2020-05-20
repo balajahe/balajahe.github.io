@@ -8,8 +8,8 @@ export default function objSave() {
       desc: form.desc,
       location: {latitude: APP.location?.latitude, longitude: APP.location?.longitude},
       labels: Array.from(form.labels).map(el => el.innerHTML),
-      medias: Array.from(med.medias).map(el => ({tagName: el.tagName, blob: el._blob}))
-   }
+      medias: Array.from(med.medias).map(el => ({ tagName: el.firstChild.tagName, blob: el.firstChild._blob }))
+   } 
    APP.db.transaction("Objects", "readwrite").objectStore("Objects").add(obj).onsuccess = (ev) => {
       APP.remove(med)
       APP.remove(form)

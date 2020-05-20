@@ -13,6 +13,7 @@
       :root {
          --app-max-width: 40em;
          --button-height: 2.7em;
+         --button-min-width: 5em;
          --margin1: 0.1em;
          --margin2: 0.2em;
       }
@@ -40,13 +41,12 @@
       button:active { background-color: red; }
       button.true { background-color: red; }
       .smallMedia {
-         height: 8vh;
-         margin-top: var(--margin1); margin-left: var(--margin1);
+     		display: inline-block; 	
+         height: 8vh; width: 5em; overflow: hidden;
+         margin: var(--margin1);
       }
-      img.smallMedia { width: auto; min-width1: 15vw; }
-      video.smallMedia { width: 0; }
-      audio.smallMedia { width: 5em; }
-      img.smallMedia:hover { cursor: pointer; }
+      .smallMedia > * { width: 100%; height: 100%; }
+      .smallMedia > img:hover { cursor: pointer; }
    </style>
 </head>
 <body onload='APP.route("page-home")'>
