@@ -9,8 +9,14 @@ customElements.define(me, class extends HTMLElement {
             ${me} > #listDiv > div {
                border-bottom: 1px solid silver;
                margin-bottom: var(--margin2);
+               overflow: auto;
             }
-            ${me} #objDesc:hover, #objLabels:hover { cursor: pointer; }
+            ${me} #objLabels {
+               display: flex; flex-flow: row wrap;
+            } 
+            ${me} #objDesc:hover, #objLabels:hover { 
+               cursor: pointer; 
+            }
             ${me} .mediasDiv { 
                display: flex; flex-flow: row wrap; 
                margin-bottom: var(--margin2);
@@ -40,7 +46,7 @@ customElements.define(me, class extends HTMLElement {
 
             div.querySelector('#objLabels').innerHTML = obj.labels
             div.querySelector('#objDesc').innerHTML = obj.desc
-            //const edit = (obj) => APP.routeModal(document.createElement('modal-obj-edit').build(obj))
+            const edit = (obj) => APP.routeModal(document.createElement('page-obj-edit').build(obj))
             div.querySelector('#objLabels').onclick = () => edit(obj)
             div.querySelector('#objDesc').onclick = () => edit(obj)
 

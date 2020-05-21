@@ -17,7 +17,7 @@ customElements.define(me, class extends HTMLElement {
 					display: flex; flex-flow: column;
 				}
 				${me} > main {
-					overflow: auto;
+					overflow1: auto;
 				}
 				${me} > main > * {
 					display: flex; flex-flow: column;
@@ -55,10 +55,10 @@ customElements.define(me, class extends HTMLElement {
 
 	route(hash, elem) {
 		for (const el of this.appMain.children) {
-			try {
+//			try {
 				el.display(false)
 				if (el.onUnRoute) el.onUnRoute()
-			} catch(_) {}
+//			} catch(_) {}
 		}
 		if (elem) {
 			elem._hash = hash
@@ -79,7 +79,15 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	routeModal(elem) {
-		this.append(elem)
+		//for (const el of this.appMain.children) el.display(false)
+		this.appMain.prepend(elem)
+		if (elem.onRoute) elem.onRoute()
+		const backSave = this.appBar.backBut.onclick
+		this.appBar.backBut.onclick = () => {
+			elem.remove()
+			this.appBar.backBut.onclick = backSave
+		}
+		if (elem.onRoute) elem.onRoute()
 	}
 
 	remove(el) {

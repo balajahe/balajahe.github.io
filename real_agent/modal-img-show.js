@@ -15,7 +15,7 @@ customElements.define(me, class extends HTMLElement {
       this.innerHTML = `
          <style scoped>
             ${me} {
-               position: fixed;
+               position: fixed; z-index:10; top1: 0; left1; 0;
                height: 100vh; width: 100vw;
                max-width: var(--app-max-width);
                display: flex; flex-flow: column; justify-content: center; align-items: center;

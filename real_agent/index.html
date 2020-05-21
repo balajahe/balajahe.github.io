@@ -7,10 +7,10 @@
 	<script type='module'>//navigator.serviceWorker.register('./app-sw.js')</script>
 	<script type='module' src='./app-app.js'></script>
 	<script type='module' src='./modal-img-show.js'></script>
-	<script type='module' src='./modal-obj-edit.js'></script>
 	<script type='module' src='./page-home.js'></script>
 	<script type='module' src='./page-obj-new1.js'></script>
 	<script type='module' src='./page-obj-new2.js'></script>
+	<script type='module' src='./page-obj-edit.js'></script>
 	<style>
 		:root {
 			--app-max-width: 40em;
@@ -19,26 +19,29 @@
 			--margin1: 0.1em;
 			--margin2: 0.3em;
 		}
-		body, video, img, iframe {
-			margin: 0; padding: 0; border: 0;
+		* { 
+			box-sizing: border-box; 
+		}
+		body, video, img, iframe { 
+			margin: 0; padding: 0; border: 0; 
 		}
 		body {
-			box-sizing: border-box;
 			display: flex; flex-flow: row; justify-content: center;
-			height: 100vh; overflow: hidden;
 		}
 		main {
+			padding-top: calc(var(--button-height) + 2*var(--margin1));
+			padding-left: var(--margin1);
 			font-size: smaller;
 		}
 		button {
 			height: var(--button-height);
-			margin: var(--margin1);
+			margin-top: var(--margin1); margin-bottom: var(--margin1);
 			border-radius: calc(var(--button-height)/1.5)/calc(var(--button-height));
 			line-height: 1em;
 		}
 		input {
 			height: calc(var(--button-height) * 0.75);
-			margin: var(--margin1);
+			margin-top: var(--margin1); margin-bottom: var(--margin1);
 			border-radius: calc(var(--button-height)/1.5)/calc(var(--button-height));
 			padding-left: 1em;
 		}

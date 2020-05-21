@@ -16,6 +16,7 @@ customElements.define(me, class extends HTMLElement {
             ${me} > #allLabelsDiv { margin-top: var(--margin2); margin-bottom: var(--margin2); }
             ${me} button { height: calc(var(--button-height) * 0.8); }
             ${me} > .separ { display: flex; flex-flow: row nowrap; }
+            ${me} > .separ span { font-size: smaller; }
             ${me} > .separ hr { display: inline-block; flex: 1 1 auto; }
             ${me} > #newLabelInp { width: 30%; }
             ${me} > iframe { height: 250px; width: 100%; }
@@ -23,7 +24,7 @@ customElements.define(me, class extends HTMLElement {
          <div w-id='descDiv/desc' contenteditable='true'></div>
          <div w-id='labelsDiv/labels/children'></div>
          <div w-id='allLabelsDiv'>
-            <div class='separ'>&nbsp;<small>Click to add label:</small>&nbsp;<hr/></div>
+            <div class='separ'>&nbsp;<span>Click to add label:</span>&nbsp;<hr/></div>
             <input w-id='newLabelInp/newLabel' placeholder='New label...'/>
          </div>
          <iframe w-id='mapIframe' src='#' frameborder="0" scrolling="no" marginheight="0" marginwidth="0">
