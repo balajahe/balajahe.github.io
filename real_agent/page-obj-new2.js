@@ -26,7 +26,7 @@ customElements.define(me, class extends HTMLElement {
             <div class='separ'>&nbsp;<small>Click to add label:</small>&nbsp;<hr/></div>
             <input w-id='newLabelInp/newLabel' placeholder='New label...'/>
          </div>
-         <iframe w-id='mapIframe' frameborder="0" scrolling="no" marginheight="0" marginwidth="0">
+         <iframe w-id='mapIframe' src='#' frameborder="0" scrolling="no" marginheight="0" marginwidth="0">
              Check GPS and click me !
          </iframe>
          <div w-id='/loc'></div>
@@ -65,7 +65,7 @@ customElements.define(me, class extends HTMLElement {
    showLocation() {
       if (APP.location) {
          this.loc = APP.location.latitude + ' - ' + APP.location.longitude
-         this.mapIframe.src = `https://www.openstreetmap.org/export/embed.html?bbox=${APP.location.longitude-0.002}%2C${APP.location.latitude-0.002}%2C${APP.location.longitude+0.002}%2C${APP.location.latitude+0.002}&layer=mapnik&marker=${APP.location.latitude}%2C${APP.location.longitude}`
+         this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${APP.location.longitude-0.002}%2C${APP.location.latitude-0.002}%2C${APP.location.longitude+0.002}%2C${APP.location.latitude+0.002}&layer=mapnik&marker=${APP.location.latitude}%2C${APP.location.longitude}`)
          //this.mapIframe.src = `https://www.openstreetmap.org/?minlon=${APP.location.longitude-0.002}&minlat=${APP.location.latitude-0.002}&maxlon=${APP.location.longitude+0.002}&maxlat=${APP.location.latitude+0.002}&box=yes&mlat=${APP.location.latitude}&mlon=${APP.location.longitude}`
       }
    }
