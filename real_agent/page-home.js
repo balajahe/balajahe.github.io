@@ -7,7 +7,7 @@ customElements.define(me, class extends HTMLElement {
       this.innerHTML = `
          <style scoped>
             ${me} > #listDiv > div {
-               margin-top: var(--margin2);
+               margin-bottom: var(--margin2);
                border-bottom: 1px solid silver;
                overflow: auto;
             }
@@ -41,7 +41,7 @@ customElements.define(me, class extends HTMLElement {
 
             div.querySelector('#objLabels').innerHTML = obj.labels
             div.querySelector('#objDesc').innerHTML = obj.desc
-            const edit = (obj) => APP.route('page-obj2-form', document.createElement('page-obj2-form').build(obj))
+            //const edit = (obj) => APP.routeModal(document.createElement('modal-obj-edit').build(obj))
             div.querySelector('#objLabels').onclick = () => edit(obj)
             div.querySelector('#objDesc').onclick = () => edit(obj)
 
@@ -75,7 +75,7 @@ customElements.define(me, class extends HTMLElement {
          back: false,
          buts: [{
             html: 'New<br>&rArr;',
-            click: () => APP.route('page-obj1-media')
+            click: () => APP.route('page-obj-new1')
          }]
       })
 

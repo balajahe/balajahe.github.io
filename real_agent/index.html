@@ -1,56 +1,59 @@
 <!doctype html>
 <html>
 <head>
-   <title>Real Agent</title>
-   <meta charset='utf-8'>
-   <meta name='viewport' content='width=device-width, initial-scale=1' />
-   <script type='module'>//navigator.serviceWorker.register('./app-sw.js')</script>
-   <script type='module' src='./app-app.js'></script>
-   <script type='module' src='./modal-img-show.js'></script>
-   <script type='module' src='./page-home.js'></script>
-   <script type='module' src='./page-obj1-media.js'></script>
-   <script type='module' src='./page-obj2-form.js'></script>
-   <style>
-      :root {
-         --app-max-width: 40em;
-         --button-height: 2.7em;
-         --button-min-width: 5em;
-         --margin1: 0.1em;
-         --margin2: 0.3em;
-      }
-      body, video, img, iframe {
-         margin: 0; padding: 0; border: 0;
-      }
-      body {
-         display: flex; flex-flow: row; justify-content: center;
-      }
-      main {
-         font-size: smaller;
-      }
-      button {
-         height: var(--button-height);
-         margin: var(--margin1);
-         border-radius: calc(var(--button-height)/1.5)/calc(var(--button-height));
-         line-height: 1em;
-      }
-      input {
-         height: calc(var(--button-height) * 0.85);
-         margin: var(--margin1);
-         border-radius: calc(var(--button-height)/1.5)/calc(var(--button-height));
-         padding-left: 1em;
-      }
-      button:active { background-color: red; }
-      button.true { background-color: red; }
-      .smallMedia {
-     		display: inline-flex; flex-flow: column; justify-content: center; 	
-         height: 5em; width: 5em; overflow: hidden;
-         margin: var(--margin1);
-      }
-      .smallMedia > * { max-width: 100%; max-height: 100%; }
-      .smallMedia > img:hover { cursor: pointer; }
-   </style>
+	<title>Real Agent</title>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width, initial-scale=1' />
+	<script type='module'>//navigator.serviceWorker.register('./app-sw.js')</script>
+	<script type='module' src='./app-app.js'></script>
+	<script type='module' src='./modal-img-show.js'></script>
+	<script type='module' src='./modal-obj-edit.js'></script>
+	<script type='module' src='./page-home.js'></script>
+	<script type='module' src='./page-obj-new1.js'></script>
+	<script type='module' src='./page-obj-new2.js'></script>
+	<style>
+		:root {
+			--app-max-width: 40em;
+			--button-height: 2.7em;
+			--button-min-width: 5em;
+			--margin1: 0.1em;
+			--margin2: 0.3em;
+		}
+		body, video, img, iframe {
+			margin: 0; padding: 0; border: 0;
+		}
+		body {
+			box-sizing: border-box;
+			display: flex; flex-flow: row; justify-content: center;
+			height: 90vh; overflow: hidden;
+		}
+		main {
+			font-size: smaller;
+		}
+		button {
+			height: var(--button-height);
+			margin: var(--margin1);
+			border-radius: calc(var(--button-height)/1.5)/calc(var(--button-height));
+			line-height: 1em;
+		}
+		input {
+			height: calc(var(--button-height) * 0.75);
+			margin: var(--margin1);
+			border-radius: calc(var(--button-height)/1.5)/calc(var(--button-height));
+			padding-left: 1em;
+		}
+		button:active { background-color: red; }
+		button.true { background-color: red; }
+		.smallMedia {
+	  		display: inline-flex; flex-flow: column; justify-content: center; 	
+			height: 5em; width: 5em; overflow: hidden;
+			margin: var(--margin1);
+		}
+		.smallMedia > * { max-width: 100%; max-height: 100%; }
+		.smallMedia > img:hover { cursor: pointer; }
+	</style>
 </head>
 <body onload='APP.route("page-home")'>
-   <app-app></app-app>
+	<app-app></app-app>
 </body>
 </html>

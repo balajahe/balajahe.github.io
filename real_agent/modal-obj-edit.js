@@ -1,7 +1,7 @@
 import wcMixin from '/WcMixin/WcMixin.js'
-import {saveObj} from './obj-utils.js'
+//import {saveObj} from './obj-utils.js'
 
-const me = 'page-obj2-form'
+const me = 'modal-obj-edit'
 customElements.define(me, class extends HTMLElement {
    obj = null
 

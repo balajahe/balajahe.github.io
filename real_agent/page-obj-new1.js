@@ -1,8 +1,7 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 
-const me = 'page-obj1-media'
+const me = 'page-obj-new1'
 customElements.define(me, class extends HTMLElement {
-   obj = null
    stream = null
    imgCapturer = null
    imgParams = null
@@ -59,7 +58,7 @@ customElements.define(me, class extends HTMLElement {
          msg: 'Take photo, video or audio:',
          buts: [{
             html: 'Next<br>&rArr;',
-            click: () => APP.route('page-obj2-form')
+            click: () => APP.route('page-obj-new2')
          }]
       })
 
