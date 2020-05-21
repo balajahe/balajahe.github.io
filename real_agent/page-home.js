@@ -7,9 +7,8 @@ customElements.define(me, class extends HTMLElement {
       this.innerHTML = `
          <style scoped>
             ${me} > #listDiv > div {
-               margin-bottom: var(--margin2);
                border-bottom: 1px solid silver;
-               overflow: auto;
+               margin-bottom: var(--margin2);
             }
             ${me} #objDesc:hover, #objLabels:hover { cursor: pointer; }
             ${me} .mediasDiv { 

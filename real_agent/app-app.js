@@ -3,7 +3,8 @@ import './app-bar.js'
 
 const me = 'app-app'
 customElements.define(me, class extends HTMLElement {
-	routeHashChanging = false
+	_hashChanging = false
+	baseUrl = ''
 	db = null
 	location = null
 	locationCallback = null
@@ -26,7 +27,9 @@ customElements.define(me, class extends HTMLElement {
 			<main w-id='appMain'></main>
 		`
 		wcMixin(this)
+
 		window.APP = this
+		this.baseUrl = location.href
 
 		navigator.geolocation.getCurrentPosition(loc => {
 			this.location = loc.coords
@@ -36,14 +39,14 @@ customElements.define(me, class extends HTMLElement {
 			this.location = loc.coords
 			if (this.locationCallback) this.locationCallback()
 		})
-
+		
 		window.onhashchange = async (ev) => {
-			if (!this.routeHashChanging) {
+			if (!this._hashChanging) {
 				const uu = ev.newURL.split('#')
 				if (uu.length > 1) this.route(uu[uu.length-1])
-				else location.href = '/'
+				else location.href = APP.baseUrl
 			}
-			this.routeHashChanging = false
+			this._hashChanging = false
 		}
 	}
 
@@ -71,7 +74,7 @@ customElements.define(me, class extends HTMLElement {
 			}
 		}
 		if (elem.onRoute) elem.onRoute()
-		this.routeHashChanging = true
+		this._hashChanging = true
 		location.hash = hash
 	}
 

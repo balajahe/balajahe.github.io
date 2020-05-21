@@ -20,6 +20,7 @@ customElements.define(me, class extends HTMLElement {
                max-width: var(--app-max-width);
                display: flex; flex-flow: column; justify-content: center; align-items: center;
                background-color: black;
+               overflow: scroll;
             }
             ${me} > img { height: auto; width: 100%; }
             ${me} > img:hover { cursor: pointer; }
