@@ -8,7 +8,7 @@ customElements.define(me, class extends HTMLElement {
 		this.innerHTML = `
 			<style scoped>
 				${me} {
-					position: fixed;
+					position: fixed; z-index: 10;
 					width: 100%; max-width: var(--app-max-width);
    					display: flex; flex-flow: row nowrap;
 				}

@@ -13,11 +13,14 @@ customElements.define(me, class extends HTMLElement {
 		this.innerHTML = `
 			<style scoped>
 				${me} {
-					width: 100vw; max-width: var(--app-max-width);
+					height: 100vh; width: 100vw; max-width: var(--app-max-width);
 					display: flex; flex-flow: column;
+					overflow: auto;
 				}
 				${me} > main {
-					overflow1: auto;
+					margin-top: calc(var(--button-height) + 2*var(--margin1));
+					padding-left: var(--margin1);
+					font-size: smaller;
 				}
 				${me} > main > * {
 					display: flex; flex-flow: column;
@@ -43,8 +46,11 @@ customElements.define(me, class extends HTMLElement {
 		window.onhashchange = async (ev) => {
 			if (!this._hashChanging) {
 				const uu = ev.newURL.split('#')
-				if (uu.length > 1) this.route(uu[uu.length-1])
-				else location.href = APP.baseUrl
+				if (uu.length > 1) {
+					this.route(uu[uu.length-1])
+				} else {
+					location.href = APP.baseUrl
+				}
 			}
 			this._hashChanging = false
 		}
@@ -55,10 +61,8 @@ customElements.define(me, class extends HTMLElement {
 
 	route(hash, elem) {
 		for (const el of this.appMain.children) {
-//			try {
-				el.display(false)
-				if (el.onUnRoute) el.onUnRoute()
-//			} catch(_) {}
+			el.display(false)
+			if (el.onUnRoute) el.onUnRoute()
 		}
 		if (elem) {
 			elem._hash = hash
@@ -79,6 +83,10 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	routeModal(elem) {
+		this.appMain.append(elem)
+	}
+
+	routeModal1(elem) {
 		//for (const el of this.appMain.children) el.display(false)
 		this.appMain.prepend(elem)
 		if (elem.onRoute) elem.onRoute()

@@ -13,6 +13,7 @@ export function saveNewObj() {
    APP.db.transaction("Objects", "readwrite").objectStore("Objects").add(obj).onsuccess = (ev) => {
       APP.remove(med)
       APP.remove(form)
+      document.querySelector('page-home').addObj(obj)
       APP.route('page-home')
       APP.setMsg('Saved !')
    }

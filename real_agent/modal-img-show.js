@@ -15,7 +15,7 @@ customElements.define(me, class extends HTMLElement {
       this.innerHTML = `
          <style scoped>
             ${me} {
-               position: fixed; z-index:10; top1: 0; left1; 0;
+               position: fixed; z-index:100; top: 0; left; 0;
                height: 100vh; width: 100vw;
                max-width: var(--app-max-width);
                display: flex; flex-flow: column; justify-content: center; align-items: center;
@@ -30,9 +30,8 @@ customElements.define(me, class extends HTMLElement {
          <button w-id='delBut'>Delete</button>
       `
       wcMixin(this)
-      this.onclick = () => this.remove()
-
       this.img.src = this.src
+      this.onclick = () => this.remove()
       if (this.delAction) {
          this.delBut.display('inline-block')
          this.delBut.onclick = () => this.delAction()
