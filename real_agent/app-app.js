@@ -13,12 +13,18 @@ customElements.define(me, class extends HTMLElement {
 		this.innerHTML = `
 			<style scoped>
 				${me} {
-					height: 100vh; width: 100vw; max-width: var(--app-max-width);
+					height: 100vh; 
+					width: 100vw; max-width: var(--app-max-width);
 					display: flex; flex-flow: column;
 					overflow: auto;
 				}
+				${me} > app-bar {
+					position: fixed; z-index: 10;
+					height: calc(var(--app-bar-height)); 
+					width: 100%; max-width: var(--app-max-width);
+				}
 				${me} > main {
-					margin-top: calc(var(--button-height) + 2*var(--margin1));
+					margin-top: calc(var(--app-bar-height) + 2*var(--margin1));
 					padding-left: var(--margin1);
 					font-size: smaller;
 				}

@@ -8,20 +8,19 @@ customElements.define(me, class extends HTMLElement {
 		this.innerHTML = `
 			<style scoped>
 				${me} {
-					position: fixed; z-index: 10;
-					width: 100%; max-width: var(--app-max-width);
-   					display: flex; flex-flow: row nowrap;
+					display: flex; flex-flow: row nowrap;
 				}
 				${me} > button {
+					height: 100%;
 					min-width: 17%;
 				}
 				${me} > #msgDiv {
-               display: inline-block;
-               height: var(--button-height);
+					display: inline-block;
+					height: 100%;
 					flex: 1 1 auto;
-					margin-left: 0.5em; margin-right: 0.5em;
+					margin-left: 0.5em; margin-right: 0.5em; margin-top: var(--margin1);
 					display: flex; justify-content: center; align-items: center; text-align: center;
-               font-size: small;
+					font-size: small;
 					overflow: hidden;
 				}
 			</style>

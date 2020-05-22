@@ -13,11 +13,11 @@
 	<script type='module' src='./page-obj-edit.js'></script>
 	<style>
 		:root {
-			--app-max-width: 40em;
-			--button-height: 2.7em;
-			--button-min-width: 5em;
-			--margin1: 0.1em;
-			--margin2: 0.3em;
+			--app-max-width: 40rem;
+			--app-bar-height: 2.7rem;
+			--button-height: 2.3rem;
+			--margin1: 0.1rem;
+			--margin2: 0.3rem;
 		}
 		* { 
 			box-sizing: border-box; 
@@ -35,7 +35,7 @@
 			line-height: 1em;
 		}
 		input {
-			height: calc(var(--button-height) * 0.75);
+			height: calc(var(--button-height) * 0.8);
 			margin-top: var(--margin1); margin-bottom: var(--margin1);
 			border-radius: calc(var(--button-height)/1.5)/calc(var(--button-height));
 			padding-left: 1em;
@@ -44,7 +44,7 @@
 		button.true { background-color: red; }
 		.smallMedia {
 	  		display: inline-flex; flex-flow: column; justify-content: center; 	
-			height: 5em; width: 5em; overflow: hidden;
+			height: 5rem; width: 5rem; overflow: hidden;
 			margin: var(--margin1);
 		}
 		.smallMedia > * { max-width: 100%; max-height: 100%; }
