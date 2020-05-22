@@ -1,5 +1,5 @@
 import wcMixin from '/WcMixin/WcMixin.js'
-//import {saveObj} from './obj-utils.js'
+import {saveExistObj} from './obj-utils.js'
 
 const me = 'page-obj-edit'
 customElements.define(me, class extends HTMLElement {
@@ -28,14 +28,13 @@ customElements.define(me, class extends HTMLElement {
          </style>
          <div w-id='descDiv/desc' contenteditable='true'></div>
          <div w-id='labelsDiv/labels/children'></div>
+         <div w-id='/loc'></div>
+         <iframe w-id='mapIframe'></iframe>
+         <div w-id='mediasDiv'></div>
          <div w-id='allLabelsDiv'>
             <div class='separ'>&nbsp;<small>Click to add label:</small>&nbsp;<hr/></div>
             <input w-id='newLabelInp/newLabel' placeholder='New label...'/>
          </div>
-         <iframe w-id='mapIframe' frameborder="0" scrolling="no" marginheight="0" marginwidth="0">
-             Check GPS and click me !
-         </iframe>
-         <div w-id='/loc'></div>
       `
       wcMixin(this)
 
@@ -49,6 +48,27 @@ customElements.define(me, class extends HTMLElement {
          for (const lab of this.obj.labels) this.addLabel(lab)
       }
 
+      if (this.obj.location) {
+         this.loc = this.obj.location.latitude + ' - ' + this.obj.location.longitude
+         this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${APP.location.longitude-0.002}%2C${APP.location.latitude-0.002}%2C${APP.location.longitude+0.002}%2C${APP.location.latitude+0.002}&layer=mapnik&marker=${APP.location.latitude}%2C${APP.location.longitude}`)
+      }
+
+      for (const media of this.obj.medias) {
+         const med = document.createElement(media.tagName)
+         med.src = URL.createObjectURL(media.blob)
+         med._blob = media.blob
+         if (med.tagName === 'IMG') {
+            med.onclick = () => APP.routeModal(document.createElement('modal-img-show').build(med.src))
+         } else {
+            med.controls = true
+         }
+
+         const div = document.createElement('div')
+         div.className = 'smallMedia'
+         div.append(med)
+         this.mediasDiv.append(div)
+      }
+
       this.newLabelInp.onkeypress = (ev) => {
          if (ev.key === 'Enter') {
             this.addAvailLabel(this.newLabel)
@@ -56,7 +76,6 @@ customElements.define(me, class extends HTMLElement {
             this.newLabel = ''
          }
       }
-      //APP.locationCallback = this.showLocation.bind(this)
    }
 
    addLabel(lab) {
@@ -73,24 +92,14 @@ customElements.define(me, class extends HTMLElement {
       this.newLabelInp.before(but)
    }
 
-   showLocation() {
-      if (APP.location) {
-         this.loc = APP.location.latitude + ' - ' + APP.location.longitude
-         this.mapIframe.src = `https://www.openstreetmap.org/export/embed.html?bbox=${APP.location.longitude-0.002}%2C${APP.location.latitude-0.002}%2C${APP.location.longitude+0.002}%2C${APP.location.latitude+0.002}&layer=mapnik&marker=${APP.location.latitude}%2C${APP.location.longitude}`
-         //this.mapIframe.src = `https://www.openstreetmap.org/?minlon=${APP.location.longitude-0.002}&minlat=${APP.location.latitude-0.002}&maxlon=${APP.location.longitude+0.002}&maxlat=${APP.location.latitude+0.002}&box=yes&mlat=${APP.location.latitude}&mlon=${APP.location.longitude}`
-      }
-   }
-
    onRoute() {
-      this.descDiv.focus()
-      this.showLocation()
       APP.setBar({
          msg: 'Enter description and add labels:',
          buts: [{
             html: 'Save<br>&rArr;',
             click: () => {
                if (this.desc) {
-                  saveObj()
+                  saveExistObj()
                } else {
                   APP.setMsg('<span style="color:red">Empty description !</span>')
                   this.descDiv.focus()

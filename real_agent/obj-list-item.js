@@ -42,6 +42,6 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	edit() {
-		APP.routeModal(document.createElement('page-obj-edit').build(this.obj))
+		APP.route('page-obj-edit', document.createElement('page-obj-edit').build(this.obj))
 	}
 })

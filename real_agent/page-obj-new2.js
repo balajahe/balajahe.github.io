@@ -15,6 +15,7 @@ customElements.define(me, class extends HTMLElement {
 				${me} > #labelsDiv { min-height: calc(var(--button-height) * 0.9); }
 				${me} > #allLabelsDiv { margin-top: var(--margin2); margin-bottom: var(--margin2); }
 				${me} button { height: calc(var(--button-height) * 0.8); }
+				${me} input { height: calc(var(--button-height) * 0.8); }
 				${me} > .separ { display: flex; flex-flow: row nowrap; }
 				${me} > .separ span { font-size: smaller; }
 				${me} > .separ hr { display: inline-block; flex: 1 1 auto; }
@@ -27,7 +28,7 @@ customElements.define(me, class extends HTMLElement {
 				<div class='separ'>&nbsp;<span>Click to add label:</span>&nbsp;<hr/></div>
 				<input w-id='newLabelInp/newLabel' placeholder='New label...'/>
 			</div>
-			<iframe w-id='mapIframe' src='...' frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+			<iframe w-id='mapIframe'></iframe>
 			<div w-id='/loc'></div>
 		`
 		wcMixin(this)
