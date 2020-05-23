@@ -29,7 +29,7 @@ customElements.define(me, class extends HTMLElement {
 			med.src = URL.createObjectURL(media.blob)
 			med._blob = media.blob
 			if (med.tagName === 'IMG') {
-				med.onclick = () => APP.routeModal(document.createElement('modal-img-show').build(med.src))
+				med.onclick = () => APP.showModal(document.createElement('modal-img-show').build(med.src))
 			} else {
 				med.controls = true
 			}
@@ -42,6 +42,6 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	edit() {
-		APP.route('page-obj-edit', document.createElement('page-obj-edit').build(this.obj))
+		APP.routeModal(document.createElement('page-obj-edit').build(this.obj))
 	}
 })

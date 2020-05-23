@@ -94,7 +94,6 @@ customElements.define(me, class extends HTMLElement {
 
    onRoute() {
       APP.setBar({
-         msg: 'Enter description and add labels:',
          buts: [{
             html: 'Save<br>&rArr;',
             click: () => {

@@ -13,24 +13,39 @@ customElements.define(me, class extends HTMLElement {
 		this.innerHTML = `
 			<style scoped>
 				${me} {
-					height: 100vh; 
+					height: calc(100vh - var(--app-bar-height) - 2*var(--margin1)); 
+					margin-top: calc(var(--app-bar-height) + 2*var(--margin1));
 					width: 100vw; max-width: var(--app-max-width);
 					display: flex; flex-flow: column;
 					overflow: auto;
 				}
 				${me} > app-bar {
-					position: fixed; z-index: 10;
+					position: fixed; z-index: 10; top: 0;
 					height: calc(var(--app-bar-height)); 
 					width: 100%; max-width: var(--app-max-width);
 				}
 				${me} > main {
-					margin-top: calc(var(--app-bar-height) + 2*var(--margin1));
-					padding-left: var(--margin1);
 					font-size: smaller;
 				}
 				${me} > main > * {
+					padding-left: var(--margin1);
 					display: flex; flex-flow: column;
 				}
+            ${me} .appModalFixed {
+               position: fixed; z-index:100; top: 0; left; 0;
+               height: 100vh; width: 100vw; max-width: var(--app-max-width);
+               display: flex; flex-flow: column; justify-content: center; align-items: center; 
+               background-color: black; 
+               overflow: scroll;
+            }
+            ${me} .appModal {
+               position: absolute; z-index1:10; 
+					min-height: calc(100vh - var(--app-bar-height) - 2*var(--margin1)); 
+					margin-top1: calc(var(--app-bar-height) + 2*var(--margin1)); 
+               width: 100vw; max-width: var(--app-max-width);
+               display: flex; flex-flow: column;
+               background-color: white; 
+            }
 			</style>
 			<app-bar w-id='appBar'></app-bar>
 			<main w-id='appMain'></main>
@@ -89,19 +104,26 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	routeModal(elem) {
-		this.appMain.append(elem)
-	}
-
-	routeModal1(elem) {
-		//for (const el of this.appMain.children) el.display(false)
-		this.appMain.prepend(elem)
+		const modal = document.createElement('div')
+		modal.className = 'appModal'
+		modal.append(elem)
+		this.append(modal)
 		if (elem.onRoute) elem.onRoute()
 		const backSave = this.appBar.backBut.onclick
 		this.appBar.backBut.onclick = () => {
-			elem.remove()
+			modal.remove()
 			this.appBar.backBut.onclick = backSave
 		}
 		if (elem.onRoute) elem.onRoute()
+	}
+
+	showModal(elem) {
+		const modal = document.createElement('div')
+		modal.className = 'appModalFixed'
+		modal.append(elem)
+		this.append(modal)
+		if (elem.onRoute) elem.onRoute()
+		modal.onclick = () => modal.remove()
 	}
 
 	remove(el) {

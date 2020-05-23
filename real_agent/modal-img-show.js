@@ -14,14 +14,6 @@ customElements.define(me, class extends HTMLElement {
    connectedCallback() {
       this.innerHTML = `
          <style scoped>
-            ${me} {
-               position: fixed; z-index:100; top: 0; left; 0;
-               height: 100vh; width: 100vw;
-               max-width: var(--app-max-width);
-               display: flex; flex-flow: column; justify-content: center; align-items: center;
-               background-color: black;
-               overflow: scroll;
-            }
             ${me} > img { height: auto; width: 100%; }
             ${me} > img:hover { cursor: pointer; }
             ${me} > button { display: none; width: 100%; }
