@@ -99,6 +99,7 @@ customElements.define(me, class extends HTMLElement {
             click: () => {
                if (this.desc) {
                   saveExistObj()
+                  APP.popModal()
                } else {
                   APP.setMsg('<span style="color:red">Empty description !</span>')
                   this.descDiv.focus()

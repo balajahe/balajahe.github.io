@@ -79,6 +79,7 @@ customElements.define(me, class extends HTMLElement {
 				click: () => {
 					if (this.desc) {
 						saveNewObj()
+				      APP.route('page-home')
 					} else {
 						APP.setMsg('<span style="color:red">Empty description !</span>')
 						this.descDiv.focus()

@@ -14,13 +14,11 @@ export function saveNewObj() {
       APP.remove(med)
       APP.remove(form)
       document.querySelector('page-home').addObj(obj)
-      APP.route('page-home')
       APP.setMsg('Saved !')
    }
 }
 
 export function saveExistObj() {
-   APP.route('page-home')
    APP.setMsg('Saved !')
 }
 

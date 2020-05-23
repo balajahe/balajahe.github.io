@@ -64,7 +64,7 @@ customElements.define(me, class extends HTMLElement {
 	onRoute() {
 		APP.setBar({
 			msg: '',
-			back: false,
+			back: { disabled: true },
 			buts: [{
 				html: 'New<br>&rArr;',
 				click: () => APP.route('page-obj-new1')

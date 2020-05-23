@@ -39,7 +39,7 @@ customElements.define(me, class extends HTMLElement {
                overflow: scroll;
             }
             ${me} .appModal {
-               position: absolute; z-index1:10; 
+               position: absolute; z-index:10; 
 					min-height: calc(100vh - var(--app-bar-height) - 2*var(--margin1)); 
 					margin-top1: calc(var(--app-bar-height) + 2*var(--margin1)); 
                width: 100vw; max-width: var(--app-max-width);
@@ -107,23 +107,25 @@ customElements.define(me, class extends HTMLElement {
 		const modal = document.createElement('div')
 		modal.className = 'appModal'
 		modal.append(elem)
-		this.append(modal)
+		this.appMain.prepend(modal)
+		this.appBar.pushBar({
+			back: {onclick: () => this.popModal() }
+		})
 		if (elem.onRoute) elem.onRoute()
-		const backSave = this.appBar.backBut.onclick
-		this.appBar.backBut.onclick = () => {
-			modal.remove()
-			this.appBar.backBut.onclick = backSave
-		}
-		if (elem.onRoute) elem.onRoute()
+	}
+
+	popModal() {
+		this.appMain.firstElementChild.remove()
+		this.appBar.popBar()
 	}
 
 	showModal(elem) {
 		const modal = document.createElement('div')
 		modal.className = 'appModalFixed'
 		modal.append(elem)
-		this.append(modal)
-		if (elem.onRoute) elem.onRoute()
 		modal.onclick = () => modal.remove()
+		this.prepend(modal)
+		if (elem.onRoute) elem.onRoute()
 	}
 
 	remove(el) {

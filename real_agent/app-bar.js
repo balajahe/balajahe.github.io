@@ -3,6 +3,7 @@ import './app-menu.js'
 
 const me = 'app-bar'
 customElements.define(me, class extends HTMLElement {
+	_stack = []
 
 	connectedCallback() {
 		this.innerHTML = `
@@ -10,11 +11,11 @@ customElements.define(me, class extends HTMLElement {
 				${me} {
 					display: flex; flex-flow: row nowrap;
 				}
-				${me} > button {
+				${me} button {
 					height: 100%;
 					min-width: 17%;
 				}
-				${me} > #msgDiv {
+				${me} #msgDiv {
 					display: inline-block;
 					height: 100%;
 					flex: 1 1 auto;
@@ -48,8 +49,12 @@ customElements.define(me, class extends HTMLElement {
 
 	setBar(bar) {
 		this.msgDiv.val = bar.msg ? bar.msg : ''
-		this.backBut.disabled = bar.back === false ? true : false
-		for (let b = this.backBut.nextSibling; b; b = this.backBut.nextSibling) b.remove()
+
+		const back = this.msgDiv.nextElementSibling
+		back.disabled = bar.back?.disabled ? true : false
+		if (bar.back?.onclick) back.onclick = bar.back.onclick
+
+		for (let b = back.nextElementSibling; b; b = back.nextElementSibling) b.remove()
 		if (bar.buts) for (const b of bar.buts) {
 			const but = document.createElement('button')
 			but.innerHTML = b.html
@@ -57,4 +62,17 @@ customElements.define(me, class extends HTMLElement {
 			this.append(but)
 		}
 	}
+
+	pushBar(bar) {
+		const old = []
+		for (let b = this.msgDiv.nextElementSibling; b; b = b.nextElementSibling) old.push(b.cloneNode(true))
+		this._stack.push(old)
+		this.setBar(bar)
+	}
+
+	popBar() {
+		for (let b = this.msgDiv.nextElementSibling; b; b = this.msgDiv.nextElementSibling) b.remove()
+		for (const b of this._stack.pop()) this.append(b)
+	}
+
 })
