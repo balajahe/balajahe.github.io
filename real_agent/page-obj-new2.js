@@ -1,5 +1,4 @@
 import wcMixin from '/WcMixin/WcMixin.js'
-import {saveNewObj} from './obj-utils.js'
 
 const me = 'page-obj-new2'
 customElements.define(me, class extends HTMLElement {
@@ -82,11 +81,30 @@ customElements.define(me, class extends HTMLElement {
 					} else if (this.labels.length === 0) {
 						APP.setMsg('<span style="color:red">Empty label list !</span>')
 					} else {
-						saveNewObj()
+						this.saveNewObj()
 				      APP.route('page-home')
 					}
 				}
 			}]
 		})
+	}
+
+	saveNewObj() {
+	   const med = document.querySelector('page-obj-new1')
+	   const created = 'D--' + (new Date()).toISOString().replace(/:/g, '-').replace(/T/g, '--').slice(0, -5)
+	   const obj = {
+	      created: created,
+	      modified: created,
+	      location: {latitude: APP.location?.latitude, longitude: APP.location?.longitude},
+	      desc: this.desc,
+	      labels: Array.from(this.labels).map(el => el.innerHTML),
+	      medias: Array.from(med.medias).map(el => ({ tagName: el.firstChild.tagName, blob: el.firstChild._blob }))
+	   } 
+	   APP.db.transaction("Objects", "readwrite").objectStore("Objects").add(obj).onsuccess = (ev) => {
+	      APP.remove(med)
+	      APP.remove(this)
+	      document.querySelector('page-home').addItem(obj)
+	      APP.setMsg('Saved !')
+	   }
 	}
 })

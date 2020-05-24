@@ -1,34 +1,3 @@
-export function saveNewObj() {
-   const med = document.querySelector('page-obj-new1')
-   const form = document.querySelector('page-obj-new2')
-   const created = 'D--' + (new Date()).toISOString().replace(/:/g, '-').replace(/T/g, '--').slice(0, -5)
-   const obj = {
-      created: created,
-      modified: created,
-      location: {latitude: APP.location?.latitude, longitude: APP.location?.longitude},
-      desc: form.desc,
-      labels: Array.from(form.labels).map(el => el.innerHTML),
-      medias: Array.from(med.medias).map(el => ({ tagName: el.firstChild.tagName, blob: el.firstChild._blob }))
-   } 
-   APP.db.transaction("Objects", "readwrite").objectStore("Objects").add(obj).onsuccess = (ev) => {
-      APP.remove(med)
-      APP.remove(form)
-      document.querySelector('page-home').addItem(obj)
-      APP.setMsg('Saved !')
-   }
-}
-
-export function saveExistObj() {
-   APP.setMsg('Saved !')
-}
-
-export function deleteObj(id) {
-   APP.db.transaction("Objects", "readwrite").objectStore("Objects").delete(id).onsuccess = (ev) => {
-      document.querySelector('page-home').getItem(id).remove()
-      APP.setMsg('Deleted !')
-   }
-}  
-
 export function exportDB() {
    const res = []
    APP.db.transaction("Objects").objectStore("Objects").openCursor(null,'prev').onsuccess = (ev) => {

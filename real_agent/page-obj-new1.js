@@ -3,6 +3,8 @@ import wcMixin from '/WcMixin/WcMixin.js'
 const me = 'page-obj-new1'
 customElements.define(me, class extends HTMLElement {
    stream = null
+   W = 0
+   H = 0
    imgCapturer = null
    imgParams = null
    vidRecorder = null
@@ -55,7 +57,7 @@ customElements.define(me, class extends HTMLElement {
 
    async onRoute() {
       APP.setBar({
-         msg: 'Take photo, video or audio:',
+         msg: 'Take photo, video, or audio:',
          buts: [{
             html: 'Next<br>&rArr;',
             click: () => APP.route('page-obj-new2')
@@ -66,7 +68,11 @@ customElements.define(me, class extends HTMLElement {
          { video: { facingMode: { ideal: "environment" }}, audio: true }
       )
       this.vidPreview.srcObject = this.stream
-      this.vidPreview.onloadedmetadata = () => this.vidPreview.style.height = 'auto'
+      await new Promise(res => this.vidPreview.onloadedmetadata = (_) => res())
+      this.W = this.vidPreview.videoWidth
+      this.H = this.vidPreview.videoHeight
+      this.vidPreview.style.height = 'auto'
+      //document.querySelector('#app').style.width = this.W + 'px'
 
       this.imgCapturer = new ImageCapture(this.stream.getVideoTracks()[0])
       const caps = await this.imgCapturer.getPhotoCapabilities()

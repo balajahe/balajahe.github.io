@@ -58,8 +58,11 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	getItem(id) {
-		console.log(id)
 		return this.querySelector('#' + id)
+	}
+
+	setItem(obj) {
+		this.querySelector('#' + obj.created).replaceWith(document.createElement('obj-list-item').build(obj))
 	}
 
 	addItem(obj) {

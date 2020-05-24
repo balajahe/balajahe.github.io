@@ -1,5 +1,4 @@
 import wcMixin from '/WcMixin/WcMixin.js'
-import {saveExistObj, deleteObj} from './obj-utils.js'
 
 const me = 'page-obj-edit'
 customElements.define(me, class extends HTMLElement {
@@ -52,7 +51,7 @@ customElements.define(me, class extends HTMLElement {
 
       if (this.obj.location) {
          this.loc = this.obj.location.latitude + ' - ' + this.obj.location.longitude
-         this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${APP.location.longitude-0.002}%2C${APP.location.latitude-0.002}%2C${APP.location.longitude+0.002}%2C${APP.location.latitude+0.002}&layer=mapnik&marker=${APP.location.latitude}%2C${APP.location.longitude}`)
+         this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${this.obj.location.longitude-0.002}%2C${this.obj.location.latitude-0.002}%2C${this.obj.location.longitude+0.002}%2C${this.obj.location.latitude+0.002}&layer=mapnik&marker=${this.obj.location.latitude}%2C${this.obj.location.longitude}`)
       }
 
       this.newLabelInp.onkeypress = (ev) => {
@@ -82,25 +81,39 @@ customElements.define(me, class extends HTMLElement {
       APP.setBar({
          buts: [{
             html: 'Delete<br>&#8224;',
-            click: () => {
-               if (confirm('Delete current object forever ?')) {
-                  deleteObj(this.obj.created)
-                  APP.popModal()
-               }
+            click: () => { 
+               if (confirm('Delete current object forever ?')) this.deleteObj() 
             }
          },
          {
             html: 'Save<br>&rArr;',
             click: () => {
-               if (this.desc) {
-                  saveExistObj()
-                  APP.popModal()
-               } else {
+               if (!this.desc) {
                   APP.setMsg('<span style="color:red">Empty description !</span>')
                   this.descDiv.focus()
+               } else if (this.labels.length === 0) {
+                  APP.setMsg('<span style="color:red">Empty label list !</span>')
+               } else {
+                  this.saveExistObj()
                }
             }
          }]
       })
    }
+
+   saveExistObj() {
+      APP.db.transaction("Objects", "readwrite").objectStore("Objects").put(this.obj).onsuccess = (ev) => {
+         document.querySelector('page-home').setItem(this.obj)
+         APP.setMsg('Saved !')
+         APP.popModal()
+      }
+   }
+
+   deleteObj(id) {
+      APP.db.transaction("Objects", "readwrite").objectStore("Objects").delete(this.obj.created).onsuccess = (ev) => {
+         document.querySelector('page-home').getItem(this.obj.created).remove()
+         APP.setMsg('Deleted !')
+         APP.popModal()
+      }
+   }  
 })
