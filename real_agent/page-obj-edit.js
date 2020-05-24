@@ -1,5 +1,5 @@
 import wcMixin from '/WcMixin/WcMixin.js'
-import {saveExistObj} from './obj-utils.js'
+import {saveExistObj, deleteObj} from './obj-utils.js'
 
 const me = 'page-obj-edit'
 customElements.define(me, class extends HTMLElement {
@@ -81,6 +81,13 @@ customElements.define(me, class extends HTMLElement {
    onRoute() {
       APP.setBar({
          buts: [{
+            html: 'Delete<br>&#8224;',
+            click: () => {
+               deleteObj()
+               APP.popModal()
+            }
+         },
+         {
             html: 'Save<br>&rArr;',
             click: () => {
                if (this.desc) {

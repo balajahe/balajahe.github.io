@@ -22,6 +22,10 @@ export function saveExistObj() {
    APP.setMsg('Saved !')
 }
 
+export function deleteObj() {
+   APP.setMsg('Deleted !')
+}
+
 export function exportDB() {
    const res = []
    APP.db.transaction("Objects").objectStore("Objects").openCursor(null,'prev').onsuccess = (ev) => {

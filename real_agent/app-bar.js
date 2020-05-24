@@ -28,8 +28,6 @@ customElements.define(me, class extends HTMLElement {
 			<app-menu w-id='appMenu' style='display:none'></app-menu>
 			<button w-id='menuBut'>&#9776;</button>
 			<div w-id='msgDiv'></div>
-			<button w-id='backBut' disabled>Back<br>&lArr;</button>
-			<button></button>
 		`
 		wcMixin(this)
 
@@ -42,7 +40,14 @@ customElements.define(me, class extends HTMLElement {
 			}
 		}
 
-		this.backBut.onclick = () => history.go(-1)
+		this.addBackBut()
+	}
+
+	addBackBut(click) {
+		const b = document.createElement('button')
+		b.innerHTML = 'Back<br>&lArr;'
+		b.onclick = click ? click : () => history.go(-1)
+		this.append(b)
 	}
 
 	setMsg(msg) { this.msgDiv.val = msg ? msg : '' }
@@ -52,7 +57,7 @@ customElements.define(me, class extends HTMLElement {
 
 		const back = this.msgDiv.nextElementSibling
 		back.disabled = bar.back?.disabled ? true : false
-		if (bar.back?.onclick) back.onclick = bar.back.onclick
+		if (bar.back?.onclick) back.onclick = bar.back.click
 
 		for (let b = back.nextElementSibling; b; b = back.nextElementSibling) b.remove()
 		if (bar.buts) for (const b of bar.buts) {
@@ -63,16 +68,17 @@ customElements.define(me, class extends HTMLElement {
 		}
 	}
 
-	pushBar(bar) {
+	pushBar() {
 		const old = []
-		for (let b = this.msgDiv.nextElementSibling; b; b = b.nextElementSibling) old.push(b.cloneNode(true))
+		for (let b = this.msgDiv.nextElementSibling; b; b = this.msgDiv.nextElementSibling) {
+			old.push(b)
+			b.remove()
+		}
 		this._stack.push(old)
-		this.setBar(bar)
 	}
 
 	popBar() {
 		for (let b = this.msgDiv.nextElementSibling; b; b = this.msgDiv.nextElementSibling) b.remove()
 		for (const b of this._stack.pop()) this.append(b)
 	}
-
 })

@@ -31,21 +31,21 @@ customElements.define(me, class extends HTMLElement {
 					padding-left: var(--margin1);
 					display: flex; flex-flow: column;
 				}
-            ${me} .appModal {
-               position: fixed; z-index:10; 
-					min-height: calc(100vh - var(--app-bar-height) - 2*var(--margin1)); 
-					margin-top1: calc(var(--app-bar-height) + 2*var(--margin1)); 
-               width: 100vw; max-width: var(--app-max-width);
-               display: flex; flex-flow: column;
-               background-color: white; 
-            }
-            ${me} .appModalFixed {
-               position: fixed; z-index:1000; top: 0; left; 0;
-               height: 100vh; width: 100vw; max-width: var(--app-max-width);
-               display: flex; flex-flow: column; justify-content: center; align-items: center; 
-               background-color: black; 
-               overflow: scroll;
-            }
+				${me} .appModal {
+					position: fixed; z-index:10; 
+					height: calc(100vh - var(--app-bar-height) - 2*var(--margin1)); 
+					width: 100vw; max-width: var(--app-max-width);
+					display: flex; flex-flow: column;
+					background-color: white; 
+					overflow: scroll;
+				}
+				${me} .appModalFixed {
+					position: fixed; z-index:1000; top: 0; left; 0;
+					height: 100vh; width: 100vw; max-width: var(--app-max-width);
+					display: flex; flex-flow: column; justify-content: center; align-items: center;  
+					background-color: white; 
+					overflow: scroll;
+				}
 			</style>
 			<app-bar w-id='appBar'></app-bar>
 			<main w-id='appMain'></main>
@@ -107,10 +107,9 @@ customElements.define(me, class extends HTMLElement {
 		const modal = document.createElement('div')
 		modal.className = 'appModal'
 		modal.append(elem)
-		this.appMain.prepend(modal)
-		this.appBar.pushBar({
-			back: {onclick: () => this.popModal() }
-		})
+		this.appMain.prepend(modal)		
+		this.appBar.pushBar()
+		this.appBar.addBackBut(() => this.popModal())
 		if (elem.onRoute) elem.onRoute()
 	}
 
