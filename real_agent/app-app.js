@@ -28,7 +28,7 @@ customElements.define(me, class extends HTMLElement {
 					font-size: smaller;
 				}
 				${me} > main > * {
-					padding-left: var(--margin1);
+					padding-left: var(--margin1); padding-right: var(--margin1);
 					display: flex; flex-flow: column;
 				}
 				${me} .appModal {
@@ -37,14 +37,14 @@ customElements.define(me, class extends HTMLElement {
 					width: 100vw; max-width: var(--app-max-width);
 					display: flex; flex-flow: column;
 					background-color: white; 
-					overflow: scroll;
+					overflow: auto;
 				}
 				${me} .appModalFixed {
 					position: fixed; z-index:1000; top: 0; left; 0;
 					height: 100vh; width: 100vw; max-width: var(--app-max-width);
 					display: flex; flex-flow: column; justify-content: center; align-items: center;  
 					background-color: white; 
-					overflow: scroll;
+					overflow: auto;
 				}
 			</style>
 			<app-bar w-id='appBar'></app-bar>
