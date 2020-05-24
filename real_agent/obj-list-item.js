@@ -32,6 +32,8 @@ customElements.define(me, class extends HTMLElement {
 		`
 		wcMixin(this)
 
+		this.id = this.obj.created
+
 		this.objLabels.innerHTML = this.obj.labels
 		this.objLabels.onclick = () => this.edit()
 

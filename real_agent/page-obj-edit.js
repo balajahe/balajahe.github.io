@@ -83,8 +83,10 @@ customElements.define(me, class extends HTMLElement {
          buts: [{
             html: 'Delete<br>&#8224;',
             click: () => {
-               deleteObj()
-               APP.popModal()
+               if (confirm('Delete current object forever ?')) {
+                  deleteObj(this.obj.created)
+                  APP.popModal()
+               }
             }
          },
          {

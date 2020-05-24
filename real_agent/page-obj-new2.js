@@ -14,8 +14,7 @@ customElements.define(me, class extends HTMLElement {
 				}
 				${me} > #labelsDiv { min-height: calc(var(--button-height) * 0.9); }
 				${me} > #allLabelsDiv { margin-top: var(--margin2); margin-bottom: var(--margin2); }
-				${me} button { height: calc(var(--button-height) * 0.8); }
-				${me} input { height: calc(var(--button-height) * 0.8); }
+				${me} button, ${me} input { height: calc(var(--button-height) * 0.8); }
 				${me} > .separ { display: flex; flex-flow: row nowrap; }
 				${me} > .separ span { font-size: smaller; }
 				${me} > .separ hr { display: inline-block; flex: 1 1 auto; }
@@ -77,12 +76,14 @@ customElements.define(me, class extends HTMLElement {
 			buts: [{
 				html: 'Save<br>&rArr;',
 				click: () => {
-					if (this.desc) {
-						saveNewObj()
-				      APP.route('page-home')
-					} else {
+					if (!this.desc) {
 						APP.setMsg('<span style="color:red">Empty description !</span>')
 						this.descDiv.focus()
+					} else if (this.labels.length === 0) {
+						APP.setMsg('<span style="color:red">Empty label list !</span>')
+					} else {
+						saveNewObj()
+				      APP.route('page-home')
 					}
 				}
 			}]

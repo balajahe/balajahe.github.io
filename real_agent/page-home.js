@@ -31,7 +31,7 @@ customElements.define(me, class extends HTMLElement {
 
 		if (!APP.db) {
 			const dbr = window.indexedDB.open("RealAgent", 1)
-			dbr.onerror = (ev) => console.log(ev)
+			dbr.onerror = (ev) => { console.log(ev); alert(ev.target.error) }
 			dbr.onupgradeneeded = (ev) => {
 				const db = ev.target.result
 				db.createObjectStore("Objects", { keyPath: "created" })
@@ -57,7 +57,12 @@ customElements.define(me, class extends HTMLElement {
 		}
 	}
 
-	addObj(obj) {
+	getItem(id) {
+		console.log(id)
+		return this.querySelector('#' + id)
+	}
+
+	addItem(obj) {
 		this.listDiv.prepend(document.createElement('obj-list-item').build(obj))
 	}
 
