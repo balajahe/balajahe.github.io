@@ -1,4 +1,5 @@
 import wcMixin from '/WcMixin/WcMixin.js'
+import './obj-media-div.js'
 
 const me = 'obj-list-item'
 customElements.define(me, class extends HTMLElement {
@@ -11,34 +12,33 @@ customElements.define(me, class extends HTMLElement {
 
 	connectedCallback() {
 		this.innerHTML = `
-			<div>
+			<style scoped>
+				${me} > div {
+					margin-bottom: var(--margin2);
+					border-bottom: 1px solid silver;
+					overflow: auto;
+				}
+				${me} #objLabels {
+					display: flex; flex-flow: row wrap;
+				} 
+				${me} #objDesc:hover, #objLabels:hover { 
+					cursor: pointer; 
+				}
+			</style>
+			<div w-id='body'>
 				<div w-id='objLabels'></div>
 				<div w-id='objDesc'></div>
-				<div w-id='objMedias'></div>
 			</div>
 		`
 		wcMixin(this)
 
 		this.objLabels.innerHTML = this.obj.labels
-		this.objDesc.innerHTML = this.obj.desc
 		this.objLabels.onclick = () => this.edit()
+
+		this.objDesc.innerHTML = this.obj.desc
 		this.objDesc.onclick = () => this.edit()
 
-		for (const media of this.obj.medias) {
-			const med = document.createElement(media.tagName)
-			med.src = URL.createObjectURL(media.blob)
-			med._blob = media.blob
-			if (med.tagName === 'IMG') {
-				med.onclick = () => APP.showModal(document.createElement('modal-img-show').build(med.src))
-			} else {
-				med.controls = true
-			}
-
-			const div = document.createElement('div')
-			div.className = 'smallMedia'
-			div.append(med)
-			this.objMedias.append(div)
-		}
+		this.body.append(document.createElement('obj-media-div').build(this.obj))
 	}
 
 	edit() {

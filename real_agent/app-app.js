@@ -20,7 +20,7 @@ customElements.define(me, class extends HTMLElement {
 					overflow: auto;
 				}
 				${me} > app-bar {
-					position: fixed; z-index: 10; top: 0;
+					position: fixed; z-index: 100; top: 0;
 					height: calc(var(--app-bar-height)); 
 					width: 100%; max-width: var(--app-max-width);
 				}
@@ -31,20 +31,20 @@ customElements.define(me, class extends HTMLElement {
 					padding-left: var(--margin1);
 					display: flex; flex-flow: column;
 				}
-            ${me} .appModalFixed {
-               position: fixed; z-index:100; top: 0; left; 0;
-               height: 100vh; width: 100vw; max-width: var(--app-max-width);
-               display: flex; flex-flow: column; justify-content: center; align-items: center; 
-               background-color: black; 
-               overflow: scroll;
-            }
             ${me} .appModal {
-               position: absolute; z-index:10; 
+               position: fixed; z-index:10; 
 					min-height: calc(100vh - var(--app-bar-height) - 2*var(--margin1)); 
 					margin-top1: calc(var(--app-bar-height) + 2*var(--margin1)); 
                width: 100vw; max-width: var(--app-max-width);
                display: flex; flex-flow: column;
                background-color: white; 
+            }
+            ${me} .appModalFixed {
+               position: fixed; z-index:1000; top: 0; left; 0;
+               height: 100vh; width: 100vw; max-width: var(--app-max-width);
+               display: flex; flex-flow: column; justify-content: center; align-items: center; 
+               background-color: black; 
+               overflow: scroll;
             }
 			</style>
 			<app-bar w-id='appBar'></app-bar>

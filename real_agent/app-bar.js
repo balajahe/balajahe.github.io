@@ -11,7 +11,7 @@ customElements.define(me, class extends HTMLElement {
 				${me} {
 					display: flex; flex-flow: row nowrap;
 				}
-				${me} button {
+				${me} > button {
 					height: 100%;
 					min-width: 17%;
 				}

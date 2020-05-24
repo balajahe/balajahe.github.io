@@ -8,7 +8,7 @@ customElements.define(me, class extends HTMLElement {
       this.innerHTML = `
          <style>
             ${me} {
-               position: fixed; z-index: 10;
+               position: absolute;
                width: 60%; max-width: calc(var(--app-max-width) * 0.6);
                margin: var(--margin1); padding: 0.5em;
                display: flex; flex-direction: column;

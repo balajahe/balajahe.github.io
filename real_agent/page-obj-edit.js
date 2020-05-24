@@ -28,9 +28,9 @@ customElements.define(me, class extends HTMLElement {
          </style>
          <div w-id='descDiv/desc' contenteditable='true'></div>
          <div w-id='labelsDiv/labels/children'></div>
-         <div w-id='/loc'></div>
+         <div w-id='mediaDiv'></div>
          <iframe w-id='mapIframe'></iframe>
-         <div w-id='mediasDiv'></div>
+         <div w-id='/loc'></div>
          <div w-id='allLabelsDiv'>
             <div class='separ'>&nbsp;<small>Click to add label:</small>&nbsp;<hr/></div>
             <input w-id='newLabelInp/newLabel' placeholder='New label...'/>
@@ -48,25 +48,11 @@ customElements.define(me, class extends HTMLElement {
          for (const lab of this.obj.labels) this.addLabel(lab)
       }
 
+      this.mediaDiv.replaceWith(document.createElement('obj-media-div').build(this.obj, true))
+
       if (this.obj.location) {
          this.loc = this.obj.location.latitude + ' - ' + this.obj.location.longitude
          this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${APP.location.longitude-0.002}%2C${APP.location.latitude-0.002}%2C${APP.location.longitude+0.002}%2C${APP.location.latitude+0.002}&layer=mapnik&marker=${APP.location.latitude}%2C${APP.location.longitude}`)
-      }
-
-      for (const media of this.obj.medias) {
-         const med = document.createElement(media.tagName)
-         med.src = URL.createObjectURL(media.blob)
-         med._blob = media.blob
-         if (med.tagName === 'IMG') {
-            med.onclick = () => APP.routeModal(document.createElement('modal-img-show').build(med.src))
-         } else {
-            med.controls = true
-         }
-
-         const div = document.createElement('div')
-         div.className = 'smallMedia'
-         div.append(med)
-         this.mediasDiv.append(div)
       }
 
       this.newLabelInp.onkeypress = (ev) => {
