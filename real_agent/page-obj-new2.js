@@ -24,11 +24,11 @@ customElements.define(me, class extends HTMLElement {
 					height: 250px; width: 100%; 
 				}
 				${me} > #locDiv > iframe { 
-					height: 100%; width: 90%; 
+					width: 85%; 
 				}
 				${me} > #locDiv > div { 
 					display: flex; justify-content: center; align-items: center;
-					height: 100%; width: 10%; 
+					width: 15%; 
 					writing-mode: tb-rl;
 				}
 			</style>

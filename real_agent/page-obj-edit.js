@@ -24,13 +24,26 @@ customElements.define(me, class extends HTMLElement {
             ${me} > .separ { display: flex; flex-flow: row nowrap; }
             ${me} > .separ hr { display: inline-block; flex: 1 1 auto; }
             ${me} > #newLabelInp { width: 30%; }
-            ${me} > iframe { height: 250px; width: 100%; }
+            ${me} > #locDiv { 
+               display: flex;
+               height: 250px; width: 100%; 
+            }
+            ${me} > #locDiv > iframe { 
+               width: 85%; 
+            }
+            ${me} > #locDiv > div { 
+               display: flex; justify-content: center; align-items: center;
+               width: 15%; 
+               writing-mode: tb-rl;
+            }
          </style>
          <div w-id='descDiv/desc' contenteditable='true'></div>
          <div w-id='labelsDiv/labels/children'></div>
          <div w-id='mediaDiv'></div>
-         <iframe w-id='mapIframe'></iframe>
-         <div w-id='/loc'></div>
+         <div id='locDiv'>
+            <iframe w-id='mapIframe'></iframe>
+            <div w-id='/loc'></div>
+         </div>
          <div w-id='allLabelsDiv'>
             <div class='separ'>&nbsp;<small>Click to add label:</small>&nbsp;<hr/></div>
             <input w-id='newLabelInp/newLabel' placeholder='New label...'/>
