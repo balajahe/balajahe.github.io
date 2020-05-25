@@ -24,7 +24,7 @@ customElements.define(me, class extends HTMLElement {
 		`
 		wcMixin(this)
 		this.img.src = this.src
-		this.onclick = () => APP.popModal()
+		this.onclick = () => history.go(-1)
 		if (this.delAction) {
 			this.delBut.display('inline-block')
 			this.delBut.onclick = () => this.delAction()

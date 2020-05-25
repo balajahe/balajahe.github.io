@@ -29,6 +29,7 @@ customElements.define(me, class extends HTMLElement {
 			<center>Real Agent is a database of arbitrary objects with geolocation, photos and videos.</center>
 		`
 		wcMixin(this)
+		APP.setHash(me)
 
 		if (!APP.db) {
 			const dbr = window.indexedDB.open("RealAgent", 1)

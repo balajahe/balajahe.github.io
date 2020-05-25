@@ -55,13 +55,10 @@ customElements.define(me, class extends HTMLElement {
 		window.onhashchange = async (ev) => {
 			if (!hashReplacing) {
 				if (hashLevel(ev.oldURL) - hashLevel(ev.newURL) === 1) { //history.go(-1)
-					console.log(1)
 					this.popModal()
 				} else if (lastHash(ev.newURL)) {
-					console.log(2)
 					this.route(lastHash(ev.newURL))
 				} else {
-					console.log(3)
 					location.reload()
 				}
 			}
@@ -78,8 +75,8 @@ customElements.define(me, class extends HTMLElement {
 		})		
 	}
 
-	setMsg(v) { this.appBar.setMsg(v) }
 	setBar(v) { this.appBar.setBar(v) }
+	setMsg(v) { this.appBar.setMsg(v) }
 
 	route(hash, elem) {
 		if (currentPage) {
@@ -132,12 +129,16 @@ customElements.define(me, class extends HTMLElement {
 	popModal() {
 		this.lastElementChild.remove()
 		this.appBar.popBar()
-		popHash()
 	}
 
 	remove(el) {
 		if (el.onUnRoute) el.onUnRoute()
 		el.remove()
+	}
+
+	setHash(hash) {
+		hashReplacing = true
+		location.hash = hash
 	}
 })
 
