@@ -8,27 +8,28 @@ customElements.define(me, class extends HTMLElement {
 	connectedCallback() {
 		this.innerHTML = `
 			<style scoped>
-				${me} #listDiv > * > div {
-					border-bottom: 1px solid silver;
+				${me} > #listDiv {
+					flex-flow: column;
 					margin-bottom: var(--margin2);
-					overflow: auto;
 				}
-				${me} #objLabels {
-					display: flex; flex-flow: row wrap;
-				} 
-				${me} #objDesc:hover, #objLabels:hover { 
+				${me} > #listDiv > * {
+					margin-bottom: var(--margin2);
+					border-bottom: 1px solid silver;
+					flex-flow: column;
+					overflow: auto;
 					cursor: pointer; 
 				}
-				${me} #objMedias { 
-					display: flex; flex-flow: row wrap; 
-					margin-bottom: var(--margin2);
+				${me} > #listDiv > * > #objDesc {
+					display: block;
+				${me} > center { 
+					margin: 1em; 
 				}
-				${me} > center { margin: 1em; }
 			</style>
 			<div w-id='listDiv'></div>
 			<center>Real Agent is a database of arbitrary objects with geolocation, photos and videos.</center>
 		`
 		wcMixin(this)
+
 		APP.setHash(me)
 
 		if (!APP.db) {

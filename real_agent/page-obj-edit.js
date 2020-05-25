@@ -13,39 +13,37 @@ customElements.define(me, class extends HTMLElement {
    connectedCallback() {
       this.innerHTML = `
          <style scoped>
+            ${me} button { height: calc(var(--button-height) * 0.8); }
+            ${me} input { height: calc(var(--button-height) * 0.8); width: 30%; }
             ${me} > #descDiv {
                min-height: 5em;
-               border: solid 1px silver;
                margin: var(--margin1); padding-left: var(--margin2);
+               border: solid 1px silver;
+               display: block;
             }
-            ${me} > #labelsDiv { min-height: calc(var(--button-height) * 0.9); }
-            ${me} > #allLabelsDiv { margin-top: var(--margin2); margin-bottom: var(--margin2); }
-            ${me} button { height: calc(var(--button-height) * 0.8); }
-            ${me} > .separ { display: flex; flex-flow: row nowrap; }
-            ${me} > .separ hr { display: inline-block; flex: 1 1 auto; }
-            ${me} > #newLabelInp { width: 30%; }
-            ${me} > #locDiv { 
-               display: flex;
+            ${me} #labelsDiv { min-height: calc(var(--button-height) * 0.9); }
+            ${me} .separ { margin-top: var(--margin2); flex-flow: row nowrap; }
+            ${me} .separ hr { display: inline-block; flex: 1 1 auto; }
+            ${me} #locDiv { 
                height: 250px; width: 100%; 
+               margin-top: var(--margin2); margin-bottom: var(--margin2);
             }
-            ${me} > #locDiv > iframe { 
-               width: 85%; 
-            }
-            ${me} > #locDiv > div { 
-               display: flex; justify-content: center; align-items: center;
+            ${me} #locDiv > iframe { width: 85%; }
+            ${me} #locDiv > div { 
                width: 15%; 
+               justify-content: center; align-items: center;
                writing-mode: tb-rl;
             }
          </style>
          <div w-id='descDiv/desc' contenteditable='true'></div>
-         <div w-id='labelsDiv/labels/children'></div>
+         <nav w-id='labelsDiv/labels/children'></nav>
          <div w-id='mediaDiv'></div>
          <div id='locDiv'>
             <iframe w-id='mapIframe'></iframe>
             <div w-id='/loc'></div>
          </div>
+         <div class='separ'>&nbsp;<small>Click to add label:</small>&nbsp;<hr/></div>
          <div w-id='allLabelsDiv'>
-            <div class='separ'>&nbsp;<small>Click to add label:</small>&nbsp;<hr/></div>
             <input w-id='newLabelInp/newLabel' placeholder='New label...'/>
          </div>
       `

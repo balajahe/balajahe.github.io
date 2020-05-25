@@ -14,17 +14,18 @@ customElements.define(me, class extends HTMLElement {
    async connectedCallback() {
       this.innerHTML = `
          <style scoped>
-            ${me} > #vidPreview { margin: 0; width: 100%; height: 0; }
-            ${me} > nav { display: flex; flex-flow: row nowrap; }
-            ${me} > nav > button { flex: 1 1 auto; }
-            ${me} > #mediasDiv { display: flex; flex-flow: row wrap; }
+            ${me} #vidPreview { width: 100%; }
+            ${me} nav { width: 100%; flex-flow: row nowrap; }
+            ${me} nav > button { flex: 1 1 auto; }
          </style>
-         <video w-id='vidPreview' autoplay muted></video>
-         <nav>
-            <button w-id='audBut'>Record audio</button>
-            <button w-id='vidBut'>Record video</button>
-            <button w-id='imgBut'>Take photo</button>
-         </nav>
+         <div w-id='vidDiv' style='display:none'>
+            <video w-id='vidPreview' autoplay muted></video>
+            <nav>
+               <button w-id='audBut'>Record audio</button>
+               <button w-id='vidBut'>Record video</button>
+               <button w-id='imgBut'>Take photo</button>
+            </nav>
+         </div>
          <div w-id='mediasDiv/medias/children'></div>
       `
       wcMixin(this)
@@ -70,7 +71,7 @@ customElements.define(me, class extends HTMLElement {
       await new Promise(res => this.vidPreview.onloadedmetadata = (_) => res())
       W = this.vidPreview.videoWidth
       H = this.vidPreview.videoHeight
-      this.vidPreview.style.height = 'auto'
+      this.vidDiv.display('flex')
 
       imgCapturer = new ImageCapture(stream.getVideoTracks()[0])
       const caps = await imgCapturer.getPhotoCapabilities()
@@ -106,6 +107,6 @@ customElements.define(me, class extends HTMLElement {
 
    onUnRoute() {
       stream.getTracks().forEach(track => track.stop())
-      this.vidPreview.style.height = '0'
+      this.vidDiv.display(false)
    }
 })

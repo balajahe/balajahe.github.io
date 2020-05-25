@@ -13,17 +13,17 @@ customElements.define(me, class extends HTMLElement {
 					display: flex; flex-flow: row nowrap;
 				}
 				${me} > button {
-					height: 100%;
+					height: calc(100% - 2*var(--margin1));
 					min-width: 17%;
 				}
 				${me} > div {
 					display: inline-block;
 					height: 100%;
 					flex: 1 1 auto;
-					margin-left: 0.5em; margin-right: 0.5em; margin-top: var(--margin1);
-					display: flex; justify-content: center; align-items: center; text-align: center;
-					font-size: small;
+					margin-top: var(--margin1); margin-left: 0.5em; margin-right: 0.5em;
+					display: flex; flex-flow: row wrap; justify-content: center; align-items: center; text-align: center;
 					overflow: hidden;
+					font-size: small;
 				}
 			</style>
 			<app-menu w-id='appMenu' style='display:none'></app-menu>
@@ -60,14 +60,6 @@ customElements.define(me, class extends HTMLElement {
 			}
 			this.append(el)
 		}
-	}
-
-
-	addBackBut(click) {
-		const b = document.createElement('button')
-		b.innerHTML = 'Back<br>&lArr;'
-		b.onclick = click ? click : () => history.go(-1)
-		this.append(b)
 	}
 
 	setMsg(msg) { 

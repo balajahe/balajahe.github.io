@@ -17,17 +17,23 @@ customElements.define(me, class extends HTMLElement {
 			<style scoped>
 				${me} > img { height: auto; width: 100%; }
 				${me} > img:hover { cursor: pointer; }
-				${me} > button { display: none; width: 100%; }
 			</style>
 			<img w-id='img'/>
-			<button w-id='delBut'>Delete</button>
 		`
 		wcMixin(this)
 		this.img.src = this.src
 		this.onclick = () => history.go(-1)
-		if (this.delAction) {
-			this.delBut.display('inline-block')
-			this.delBut.onclick = () => this.delAction()
-		}
 	}
+
+   onRoute() {
+   	const bar = []
+   	if (this.delAction) bar.push(['but', 'Delete<br>&#8224;', () => { 
+   		this.delAction()
+   		history.go(-1)
+   	}])
+      APP.setBar(bar.concat([
+         ['msg', ''],
+         ['but', 'Close<br>&#65794;', () => history.go(-1)],
+      ]))
+   }
 })

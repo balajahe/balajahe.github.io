@@ -14,8 +14,8 @@ customElements.define(me, class extends HTMLElement {
 		this.innerHTML = `
 			<style scoped>
 				${me} {
-					margin-top: calc(var(--app-bar-height) + 2*var(--margin1));
-					height: calc(100vh - var(--app-bar-height) - 2*var(--margin1)); 
+					margin-top: var(--app-bar-height);
+					height: calc(100vh - var(--app-bar-height)); 
 					width: 100vw; max-width: var(--app-max-width);
 					display: flex; flex-flow: column;
 					overflow: auto;
@@ -23,27 +23,28 @@ customElements.define(me, class extends HTMLElement {
 				}
 				${me} > app-bar {
 					position: fixed; z-index: 100; top: 0;
-					height: calc(var(--app-bar-height)); 
+					height: var(--app-bar-height); 
 					width: 100%; max-width: var(--app-max-width);
 				}
 				${me} > div {
 					padding-left: var(--margin1); padding-right: var(--margin1);
-					display: flex; flex-flow: column;
+					flex-flow: column;
 				}
 				${me} .appModal {
 					position: fixed; z-index:10; 
-					height: calc(100vh - var(--app-bar-height) - 2*var(--margin1)); 
+					height: calc(100vh - var(--app-bar-height)); 
 					width: 100vw; max-width: var(--app-max-width);
-					display: flex; flex-flow: column;
-					background-color: white; 
+					flex-flow: column;
 					overflow: auto;
+					background-color: white; 
 				}
-				${me} .appModalFixed {
-					position: fixed; z-index:1000; top: 0; left; 0;
-					height: 100vh; width: 100vw; max-width: var(--app-max-width);
-					display: flex; flex-flow: column; justify-content: center; align-items: center;  
-					background-color: white; 
+				${me} .appModalCenter {
+					position: fixed; z-index:1000;
+					height: calc(100vh - var(--app-bar-height)); 
+					width: 100vw; max-width: var(--app-max-width);
+					flex-flow: column; justify-content: center; align-items: center;  
 					overflow: auto;
+					background-color: white; 
 				}
 			</style>
 			<app-bar w-id='appBar'></app-bar>
@@ -106,7 +107,6 @@ customElements.define(me, class extends HTMLElement {
 		modal.className = 'appModal'
 		this.append(modal)		
 		this.appBar.pushBar()
-		this.appBar.addBackBut(() => this.popModal())
 
 		modal.append(elem)
 		if (elem.onRoute) elem.onRoute()
@@ -116,7 +116,7 @@ customElements.define(me, class extends HTMLElement {
 
 	showModal(hash, elem) {
 		const modal = document.createElement('div')
-		modal.className = 'appModalFixed'
+		modal.className = 'appModalCenter'
 		this.append(modal)
 		this.appBar.pushBar()
 

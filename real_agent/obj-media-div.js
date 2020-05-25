@@ -3,7 +3,7 @@ import wcMixin from '/WcMixin/WcMixin.js'
 const me = 'obj-media-div'
 customElements.define(me, class extends HTMLElement {
 	obj = null
-	del = false
+	del = null
 
 	build(obj, del) {
 		this.obj = obj
@@ -13,13 +13,6 @@ customElements.define(me, class extends HTMLElement {
 
 	connectedCallback() {
 		this.innerHTML = `
-			<style scoped>
-				${me} > div {
-					display: flex; flex-flow: row wrap; 
-					margin-bottom: var(--margin2);
-				}
-			</style>
-			<div w-id='body'></div>	
 		`
 		wcMixin(this)
 
@@ -28,10 +21,10 @@ customElements.define(me, class extends HTMLElement {
 			med.src = URL.createObjectURL(media.blob)
 			med._blob = media.blob
 			if (med.tagName === 'IMG') {
-				if (this.del) {
-					med.onclick = () => APP.showModal('modal-img-show', document.createElement('modal-img-show').build(med.src, () => med.parentNode.remove()))
-				} else {
-					med.onclick = () => APP.showModal('modal-img-show', document.createElement('modal-img-show').build(med.src))
+				if (this.del) this.del = () => med.parentNode.remove()
+				med.onclick = (ev) => {
+					ev.stopPropagation()
+					APP.showModal('modal-img-show', document.createElement('modal-img-show').build(med.src, this.del))
 				}
 			} else {
 				med.controls = true
@@ -40,7 +33,7 @@ customElements.define(me, class extends HTMLElement {
 			const div = document.createElement('div')
 			div.className = 'smallMedia'
 			div.append(med)
-			this.body.append(div)
+			this.append(div)
 		}
 	}
 })
