@@ -2,9 +2,10 @@ import wcMixin from '/WcMixin/WcMixin.js'
 import './app-bar.js'
 
 const me = 'app-app'
+let hashReplacing = false
+let currentPage = null
+
 customElements.define(me, class extends HTMLElement {
-	_hashChanging = false
-	baseUrl = ''
 	db = null
 	location = null
 	locationCallback = null
@@ -13,21 +14,19 @@ customElements.define(me, class extends HTMLElement {
 		this.innerHTML = `
 			<style scoped>
 				${me} {
-					height: calc(100vh - var(--app-bar-height) - 2*var(--margin1)); 
 					margin-top: calc(var(--app-bar-height) + 2*var(--margin1));
+					height: calc(100vh - var(--app-bar-height) - 2*var(--margin1)); 
 					width: 100vw; max-width: var(--app-max-width);
 					display: flex; flex-flow: column;
 					overflow: auto;
+					font-size: smaller;
 				}
 				${me} > app-bar {
 					position: fixed; z-index: 100; top: 0;
 					height: calc(var(--app-bar-height)); 
 					width: 100%; max-width: var(--app-max-width);
 				}
-				${me} > main {
-					font-size: smaller;
-				}
-				${me} > main > * {
+				${me} > div {
 					padding-left: var(--margin1); padding-right: var(--margin1);
 					display: flex; flex-flow: column;
 				}
@@ -48,12 +47,26 @@ customElements.define(me, class extends HTMLElement {
 				}
 			</style>
 			<app-bar w-id='appBar'></app-bar>
-			<main w-id='appMain'></main>
+			<div></div> <!-- this.lastElementChild -->
 		`
 		wcMixin(this)
-
 		window.APP = this
-		this.baseUrl = location.href
+
+		window.onhashchange = async (ev) => {
+			if (!hashReplacing) {
+				if (hashLevel(ev.oldURL) - hashLevel(ev.newURL) === 1) { //history.go(-1)
+					console.log(1)
+					this.popModal()
+				} else if (lastHash(ev.newURL)) {
+					console.log(2)
+					this.route(lastHash(ev.newURL))
+				} else {
+					console.log(3)
+					location.reload()
+				}
+			}
+			hashReplacing = false
+		}
 
 		navigator.geolocation.getCurrentPosition(loc => {
 			this.location = loc.coords
@@ -62,69 +75,64 @@ customElements.define(me, class extends HTMLElement {
 		navigator.geolocation.watchPosition(loc => {
 			this.location = loc.coords
 			if (this.locationCallback) this.locationCallback()
-		})
-		
-		window.onhashchange = async (ev) => {
-			if (!this._hashChanging) {
-				const uu = ev.newURL.split('#')
-				if (uu.length > 1) {
-					this.route(uu[uu.length-1])
-				} else {
-					location.href = APP.baseUrl
-				}
-			}
-			this._hashChanging = false
-		}
+		})		
 	}
 
 	setMsg(v) { this.appBar.setMsg(v) }
 	setBar(v) { this.appBar.setBar(v) }
 
 	route(hash, elem) {
-		for (const el of this.appMain.children) {
-			el.display(false)
-			if (el.onUnRoute) el.onUnRoute()
+		if (currentPage) {
+			currentPage.display(false)
+			if (currentPage.onUnRoute) currentPage.onUnRoute()
 		}
 		if (elem) {
 			elem._hash = hash
-			this.appMain.append(elem)
+			this.lastElementChild.append(elem)
 		} else {
-			elem = Array.from(this.appMain.children).find(el => el._hash === hash)
+			elem = Array.from(this.lastElementChild.children).find(el => el._hash === hash)
 			if (!elem) {
 				elem = document.createElement(hash)
 				elem._hash = hash
-				this.appMain.append(elem)
+				this.lastElementChild.append(elem)
 			} else {
 				elem.display()
 			}
 		}
 		if (elem.onRoute) elem.onRoute()
-		this._hashChanging = true
-		location.hash = hash
+		currentPage = elem
+		replaceLastHash(hash)
 	}
 
-	routeModal(elem) {
+	routeModal(hash, elem) {
 		const modal = document.createElement('div')
 		modal.className = 'appModal'
-		modal.append(elem)
-		this.appMain.prepend(modal)		
+		this.append(modal)		
 		this.appBar.pushBar()
 		this.appBar.addBackBut(() => this.popModal())
+
+		modal.append(elem)
 		if (elem.onRoute) elem.onRoute()
+		//currentPage = elem
+		pushHash(hash)
+	}
+
+	showModal(hash, elem) {
+		const modal = document.createElement('div')
+		modal.className = 'appModalFixed'
+		this.append(modal)
+		this.appBar.pushBar()
+
+		modal.append(elem)
+		if (elem.onRoute) elem.onRoute()
+		//currentPage = elem
+		pushHash(hash)
 	}
 
 	popModal() {
-		this.appMain.firstElementChild.remove()
+		this.lastElementChild.remove()
 		this.appBar.popBar()
-	}
-
-	showModal(elem) {
-		const modal = document.createElement('div')
-		modal.className = 'appModalFixed'
-		modal.append(elem)
-		modal.onclick = () => modal.remove()
-		this.prepend(modal)
-		if (elem.onRoute) elem.onRoute()
+		popHash()
 	}
 
 	remove(el) {
@@ -132,3 +140,32 @@ customElements.define(me, class extends HTMLElement {
 		el.remove()
 	}
 })
+
+function hashLevel(url) {
+	return url.split('#').length
+}
+
+function lastHash(url) {
+	const uu = url.split('#')
+	return uu.length > 0 ? uu[uu.length-1] : ''
+}
+
+function replaceLastHash(hash) {
+	hashReplacing = true
+	const i = location.hash.lastIndexOf('#')
+	if (i > 0)
+		location.hash = location.hash.slice(0, i+1) + hash
+	else
+		location.hash = hash
+}
+
+function pushHash(hash) {
+	hashReplacing = true
+	location.hash += '#' + hash
+}
+
+function popHash() {
+	hashReplacing = true
+	const i = location.hash.lastIndexOf('#')
+	if (i > 0) location.hash = location.hash.slice(0, i)
+}

@@ -2,8 +2,9 @@ import wcMixin from '/WcMixin/WcMixin.js'
 import './app-menu.js'
 
 const me = 'app-bar'
+const stack = []
+
 customElements.define(me, class extends HTMLElement {
-	_stack = []
 
 	connectedCallback() {
 		this.innerHTML = `
@@ -15,7 +16,7 @@ customElements.define(me, class extends HTMLElement {
 					height: 100%;
 					min-width: 17%;
 				}
-				${me} #msgDiv {
+				${me} > div {
 					display: inline-block;
 					height: 100%;
 					flex: 1 1 auto;
@@ -27,7 +28,6 @@ customElements.define(me, class extends HTMLElement {
 			</style>
 			<app-menu w-id='appMenu' style='display:none'></app-menu>
 			<button w-id='menuBut'>&#9776;</button>
-			<div w-id='msgDiv'></div>
 		`
 		wcMixin(this)
 
@@ -39,9 +39,29 @@ customElements.define(me, class extends HTMLElement {
 				APP.onclick = null
 			}
 		}
-
-		this.addBackBut()
 	}
+
+	setBar(bar) {
+		for (let el = this.menuBut.nextElementSibling; el; el = this.menuBut.nextElementSibling) el.remove()
+		for (const b of bar) {
+			let el
+			if (b[0] === 'msg') {
+				el = document.createElement('div')
+				el.className = 'msgDiv'
+				el.innerHTML = b[1]
+			} else if (b[0] === 'back') {
+				el = document.createElement('button')
+				el.innerHTML = 'Back<br>&lArr;'
+				el.onclick = () => history.go(-1)
+			} else if (b[0] === 'but') {
+				el = document.createElement('button')
+				el.innerHTML = b[1]
+				el.onclick = b[2]
+			}
+			this.append(el)
+		}
+	}
+
 
 	addBackBut(click) {
 		const b = document.createElement('button')
@@ -50,35 +70,21 @@ customElements.define(me, class extends HTMLElement {
 		this.append(b)
 	}
 
-	setMsg(msg) { this.msgDiv.val = msg ? msg : '' }
-
-	setBar(bar) {
-		this.msgDiv.val = bar.msg ? bar.msg : ''
-
-		const back = this.msgDiv.nextElementSibling
-		back.disabled = bar.back?.disabled ? true : false
-		if (bar.back?.onclick) back.onclick = bar.back.click
-
-		for (let b = back.nextElementSibling; b; b = back.nextElementSibling) b.remove()
-		if (bar.buts) for (const b of bar.buts) {
-			const but = document.createElement('button')
-			but.innerHTML = b.html
-			but.onclick = b.click
-			this.append(but)
-		}
+	setMsg(msg) { 
+		this.querySelectorAll('div')[0].innerHTML = msg ? msg : '' 
 	}
 
 	pushBar() {
 		const old = []
-		for (let b = this.msgDiv.nextElementSibling; b; b = this.msgDiv.nextElementSibling) {
+		for (let b = this.menuBut.nextElementSibling; b; b = this.menuBut.nextElementSibling) {
 			old.push(b)
 			b.remove()
 		}
-		this._stack.push(old)
+		stack.push(old)
 	}
 
 	popBar() {
-		for (let b = this.msgDiv.nextElementSibling; b; b = this.msgDiv.nextElementSibling) b.remove()
-		for (const b of this._stack.pop()) this.append(b)
+		for (let b = this.menuBut.nextElementSibling; b; b = this.menuBut.nextElementSibling) b.remove()
+		for (const b of stack.pop()) this.append(b)
 	}
 })

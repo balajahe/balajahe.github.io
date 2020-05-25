@@ -29,9 +29,9 @@ customElements.define(me, class extends HTMLElement {
 			med._blob = media.blob
 			if (med.tagName === 'IMG') {
 				if (this.del) {
-					med.onclick = () => APP.showModal(document.createElement('modal-img-show').build(med.src, () => med.parentNode.remove()))
+					med.onclick = () => APP.showModal('modal-img-show', document.createElement('modal-img-show').build(med.src, () => med.parentNode.remove()))
 				} else {
-					med.onclick = () => APP.showModal(document.createElement('modal-img-show').build(med.src))
+					med.onclick = () => APP.showModal('modal-img-show', document.createElement('modal-img-show').build(med.src))
 				}
 			} else {
 				med.controls = true

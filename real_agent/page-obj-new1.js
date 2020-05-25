@@ -1,14 +1,15 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 
 const me = 'page-obj-new1'
+let stream
+let W = 0
+let H = 0
+let imgCapturer
+let imgParams
+let vidRecorder
+let audRecorder
+
 customElements.define(me, class extends HTMLElement {
-   stream = null
-   W = 0
-   H = 0
-   imgCapturer = null
-   imgParams = null
-   vidRecorder = null
-   audRecorder = null
 
    async connectedCallback() {
       this.innerHTML = `
@@ -20,8 +21,8 @@ customElements.define(me, class extends HTMLElement {
          </style>
          <video w-id='vidPreview' autoplay muted></video>
          <nav>
-            <button w-id='audBut/audRecording'>Record audio</button>
-            <button w-id='vidBut/vidRecording'>Record video</button>
+            <button w-id='audBut'>Record audio</button>
+            <button w-id='vidBut'>Record video</button>
             <button w-id='imgBut'>Take photo</button>
          </nav>
          <div w-id='mediasDiv/medias/children'></div>
@@ -29,12 +30,12 @@ customElements.define(me, class extends HTMLElement {
       wcMixin(this)
 
       this.imgBut.onclick = async () => {
-         const blob = await this.imgCapturer.takePhoto(this.imgParams)
+         const blob = await imgCapturer.takePhoto(imgParams)
 
          const med = document.createElement('img')
          med.src = URL.createObjectURL(blob)
          med._blob = blob
-         med.onclick = () => APP.showModal(document.createElement('modal-img-show').build(med.src, () => med.parentNode.remove()))
+         med.onclick = () => APP.showModal('modal-img-show', document.createElement('modal-img-show').build(med.src, () => med.parentNode.remove()))
 
          const div = document.createElement('div')
          div.className = 'smallMedia'
@@ -43,43 +44,40 @@ customElements.define(me, class extends HTMLElement {
       }
 
       this.vidBut.onclick = () => {
-         this.vidBut.className = this.vidRecording
-         if (this.vidRecording) this.vidRecorder.start()
-         else this.vidRecorder.stop()
+         this.vidBut.className = this.vidBut.val
+         if (this.vidBut.val) vidRecorder.start()
+         else vidRecorder.stop()
       }
 
       this.audBut.onclick = () => {
-         this.audBut.className = this.audRecording
-         if (this.audRecording) this.audRecorder.start()
-         else this.audRecorder.stop()
+         this.audBut.className = this.audBut.val
+         if (this.audBut.val) audRecorder.start()
+         else audRecorder.stop()
       }
    }
 
    async onRoute() {
-      APP.setBar({
-         msg: 'Take photo, video, or audio:',
-         buts: [{
-            html: 'Next<br>&rArr;',
-            click: () => APP.route('page-obj-new2')
-         }]
-      })
+      APP.setBar([
+         ['msg', 'Take photo, video, or audio:'],
+         ['back'],
+         ['but', 'Next<br>&rArr;', () => APP.route('page-obj-new2')]
+      ])
 
-      this.stream = await navigator.mediaDevices.getUserMedia(
+      stream = await navigator.mediaDevices.getUserMedia(
          { video: { facingMode: { ideal: "environment" }}, audio: true }
       )
-      this.vidPreview.srcObject = this.stream
+      this.vidPreview.srcObject = stream
       await new Promise(res => this.vidPreview.onloadedmetadata = (_) => res())
-      this.W = this.vidPreview.videoWidth
-      this.H = this.vidPreview.videoHeight
+      W = this.vidPreview.videoWidth
+      H = this.vidPreview.videoHeight
       this.vidPreview.style.height = 'auto'
-      //document.querySelector('#app').style.width = this.W + 'px'
 
-      this.imgCapturer = new ImageCapture(this.stream.getVideoTracks()[0])
-      const caps = await this.imgCapturer.getPhotoCapabilities()
-      this.imgParams = { imageHeight: caps.imageHeight.max, imageWidth: caps.imageWidth.max }
+      imgCapturer = new ImageCapture(stream.getVideoTracks()[0])
+      const caps = await imgCapturer.getPhotoCapabilities()
+      imgParams = { imageHeight: caps.imageHeight.max, imageWidth: caps.imageWidth.max }
 
-      this.vidRecorder = new MediaRecorder(this.stream, { mimeType : "video/webm" })
-      this.vidRecorder.ondataavailable = async (ev) => {
+      vidRecorder = new MediaRecorder(stream, { mimeType : "video/webm" })
+      vidRecorder.ondataavailable = async (ev) => {
          const med = document.createElement('video')
          med.src = URL.createObjectURL(ev.data)
          med._blob = ev.data
@@ -92,8 +90,8 @@ customElements.define(me, class extends HTMLElement {
          this.mediasDiv.append(div)
       }
 
-      this.audRecorder = new MediaRecorder(this.stream, { mimeType : "audio/webm" })
-      this.audRecorder.ondataavailable = async (ev) => {
+      audRecorder = new MediaRecorder(stream, { mimeType : "audio/webm" })
+      audRecorder.ondataavailable = async (ev) => {
          const med = document.createElement('audio')
          med.src = URL.createObjectURL(ev.data)
          med._blob = ev.data
@@ -107,7 +105,7 @@ customElements.define(me, class extends HTMLElement {
    }
 
    onUnRoute() {
-      this.stream.getTracks().forEach(track => track.stop())
+      stream.getTracks().forEach(track => track.stop())
       this.vidPreview.style.height = '0'
    }
 })

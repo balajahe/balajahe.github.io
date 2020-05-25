@@ -1,6 +1,7 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 
 const me = 'modal-img-show'
+
 customElements.define(me, class extends HTMLElement {
 	src = null
 	delAction = null
@@ -23,7 +24,7 @@ customElements.define(me, class extends HTMLElement {
 		`
 		wcMixin(this)
 		this.img.src = this.src
-		this.onclick = () => this.remove()
+		this.onclick = () => APP.popModal()
 		if (this.delAction) {
 			this.delBut.display('inline-block')
 			this.delBut.onclick = () => this.delAction()

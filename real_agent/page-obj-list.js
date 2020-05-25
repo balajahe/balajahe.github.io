@@ -1,7 +1,8 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 import './obj-list-item.js'
 
-const me = 'page-home'
+const me = 'page-obj-list'
+
 customElements.define(me, class extends HTMLElement {
 
 	connectedCallback() {
@@ -70,13 +71,9 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	onRoute() {
-		APP.setBar({
-			msg: '',
-			back: { disabled: true },
-			buts: [{
-				html: 'New<br>&rArr;',
-				click: () => APP.route('page-obj-new1')
-			}]
-		})
+		APP.setBar([
+			['msg', ''],
+			['but', 'New<br>&rArr;', () => APP.route('page-obj-new1')]
+		])
 	}
 })

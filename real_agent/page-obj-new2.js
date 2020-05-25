@@ -1,6 +1,7 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 
 const me = 'page-obj-new2'
+
 customElements.define(me, class extends HTMLElement {
 
 	connectedCallback() {
@@ -68,25 +69,22 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	onRoute() {
-		this.descDiv.focus()
 		this.showLocation()
-		APP.setBar({
-			msg: 'Enter description and add labels:',
-			buts: [{
-				html: 'Save<br>&rArr;',
-				click: () => {
-					if (!this.desc) {
-						APP.setMsg('<span style="color:red">Empty description !</span>')
-						this.descDiv.focus()
-					} else if (this.labels.length === 0) {
-						APP.setMsg('<span style="color:red">Empty label list !</span>')
-					} else {
-						this.saveNewObj()
-				      APP.route('page-home')
-					}
+		this.descDiv.focus()
+      APP.setBar([
+         ['msg', 'Enter description and add labels:'],
+         ['back'],
+         ['but', 'Save<br>&rArr;', () => {
+				if (!this.desc) {
+					APP.setMsg('<span style="color:red">Empty description !</span>')
+					this.descDiv.focus()
+				} else if (this.labels.length === 0) {
+					APP.setMsg('<span style="color:red">No labels !</span>')
+				} else {
+					this.saveNewObj()
 				}
-			}]
-		})
+         }]
+      ])
 	}
 
 	saveNewObj() {
@@ -103,7 +101,8 @@ customElements.define(me, class extends HTMLElement {
 	   APP.db.transaction("Objects", "readwrite").objectStore("Objects").add(obj).onsuccess = (ev) => {
 	      APP.remove(med)
 	      APP.remove(this)
-	      document.querySelector('page-home').addItem(obj)
+	      document.querySelector('page-obj-list').addItem(obj)
+	      APP.route('page-obj-list')
 	      APP.setMsg('Saved !')
 	   }
 	}

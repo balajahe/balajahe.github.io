@@ -1,6 +1,7 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 
 const me = 'page-obj-edit'
+
 customElements.define(me, class extends HTMLElement {
    obj = null
 
@@ -78,42 +79,38 @@ customElements.define(me, class extends HTMLElement {
    }
 
    onRoute() {
-      APP.setBar({
-         buts: [{
-            html: 'Delete<br>&#8224;',
-            click: () => { 
-               if (confirm('Delete current object forever ?')) this.deleteObj() 
-            }
-         },
-         {
-            html: 'Save<br>&rArr;',
-            click: () => {
-               if (!this.desc) {
-                  APP.setMsg('<span style="color:red">Empty description !</span>')
-                  this.descDiv.focus()
-               } else if (this.labels.length === 0) {
-                  APP.setMsg('<span style="color:red">Empty label list !</span>')
-               } else {
-                  this.saveExistObj()
-               }
+      APP.setBar([
+         ['but', 'Delete<br>&#8224;', () => { 
+            if (confirm('Delete current object forever ?')) this.deleteObj() 
+         }],
+         ['msg', ''],
+         ['back'],
+         ['but', 'Save<br>&rArr;', () => {
+            if (!this.desc) {
+               APP.setMsg('<span style="color:red">Empty description !</span>')
+               this.descDiv.focus()
+            } else if (this.labels.length === 0) {
+               APP.setMsg('<span style="color:red">No labels !</span>')
+            } else {
+               this.saveExistObj()
             }
          }]
-      })
+      ])
    }
 
    saveExistObj() {
       APP.db.transaction("Objects", "readwrite").objectStore("Objects").put(this.obj).onsuccess = (ev) => {
-         document.querySelector('page-home').setItem(this.obj)
-         APP.setMsg('Saved !')
+         document.querySelector('page-obj-list').setItem(this.obj)
          APP.popModal()
+         APP.setMsg('Saved !')
       }
    }
 
    deleteObj(id) {
       APP.db.transaction("Objects", "readwrite").objectStore("Objects").delete(this.obj.created).onsuccess = (ev) => {
-         document.querySelector('page-home').getItem(this.obj.created).remove()
-         APP.setMsg('Deleted !')
+         document.querySelector('page-obj-list').getItem(this.obj.created).remove()
          APP.popModal()
+         APP.setMsg('Deleted !')
       }
    }  
 })
