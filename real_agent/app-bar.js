@@ -44,21 +44,28 @@ customElements.define(me, class extends HTMLElement {
 	setBar(bar) {
 		for (let el = this.menuBut.nextElementSibling; el; el = this.menuBut.nextElementSibling) el.remove()
 		for (const b of bar) {
-			let el
-			if (b[0] === 'msg') {
-				el = document.createElement('div')
-				el.className = 'msgDiv'
-				el.innerHTML = b[1]
-			} else if (b[0] === 'back') {
-				el = document.createElement('button')
-				el.innerHTML = 'Back<br>&lArr;'
-				el.onclick = () => history.go(-1)
-			} else if (b[0] === 'but') {
-				el = document.createElement('button')
-				el.innerHTML = b[1]
-				el.onclick = b[2]
+			if (b) {
+				if (b[0] === 'msg') {
+					const el = document.createElement('div')
+					el.className = 'msgDiv'
+					el.innerHTML = b[1]
+					this.append(el)
+				} else if (b[0] === 'sep') {
+					const el = document.createElement('div')
+					el.className = 'msgDiv'
+					this.append(el)
+				} else if (b[0] === 'back') {
+					const el = document.createElement('button')
+					el.innerHTML = 'Back<br>&lArr;'
+					el.onclick = () => history.go(-1)
+					this.append(el)
+				} else if (b[0] === 'but') {
+					const el = document.createElement('button')
+					el.innerHTML = b[1]
+					el.onclick = b[2]
+					this.append(el)
+				}
 			}
-			this.append(el)
 		}
 	}
 

@@ -2,8 +2,7 @@ import wcMixin from '/WcMixin/WcMixin.js'
 import './app-bar.js'
 
 const me = 'app-app'
-let hashReplacing = false
-let currentPage = null
+let _hashReplacing = false
 
 customElements.define(me, class extends HTMLElement {
 	db = null
@@ -22,7 +21,7 @@ customElements.define(me, class extends HTMLElement {
 					font-size: smaller;
 				}
 				${me} > app-bar {
-					position: fixed; z-index: 100; top: 0;
+					position: fixed; z-index: 1000; top: 0;
 					height: var(--app-bar-height); 
 					width: 100%; max-width: var(--app-max-width);
 				}
@@ -39,7 +38,7 @@ customElements.define(me, class extends HTMLElement {
 					background-color: white; 
 				}
 				${me} .appModalCenter {
-					position: fixed; z-index:1000;
+					position: fixed; z-index:100;
 					height: calc(100vh - var(--app-bar-height)); 
 					width: 100vw; max-width: var(--app-max-width);
 					flex-flow: column; justify-content: center; align-items: center;  
@@ -54,7 +53,7 @@ customElements.define(me, class extends HTMLElement {
 		window.APP = this
 
 		window.onhashchange = async (ev) => {
-			if (!hashReplacing) {
+			if (!_hashReplacing) {
 				if (hashLevel(ev.oldURL) - hashLevel(ev.newURL) === 1) { //history.go(-1)
 					this.popModal()
 				} else if (lastHash(ev.newURL)) {
@@ -63,7 +62,7 @@ customElements.define(me, class extends HTMLElement {
 					location.reload()
 				}
 			}
-			hashReplacing = false
+			_hashReplacing = false
 		}
 
 		navigator.geolocation.getCurrentPosition(loc => {
@@ -80,9 +79,10 @@ customElements.define(me, class extends HTMLElement {
 	setMsg(v) { this.appBar.setMsg(v) }
 
 	route(hash, elem) {
-		if (currentPage) {
-			currentPage.display(false)
-			if (currentPage.onUnRoute) currentPage.onUnRoute()
+		const curr = this.lastElementChild._currentPage
+		if (curr) {
+			curr.display(false)
+			if (curr.onUnRoute) curr.onUnRoute()
 		}
 		if (elem) {
 			elem._hash = hash
@@ -98,31 +98,21 @@ customElements.define(me, class extends HTMLElement {
 			}
 		}
 		if (elem.onRoute) elem.onRoute()
-		currentPage = elem
+		this.lastElementChild._currentPage = elem
 		replaceLastHash(hash)
 	}
 
-	routeModal(hash, elem) {
+	routeModal(hash, elem, className = 'appModal') {
+		this.appBar.pushBar()
 		const modal = document.createElement('div')
-		modal.className = 'appModal'
+		modal.className = className
 		this.append(modal)		
-		this.appBar.pushBar()
 
+		elem._hash = hash
 		modal.append(elem)
 		if (elem.onRoute) elem.onRoute()
-		//currentPage = elem
-		pushHash(hash)
-	}
 
-	showModal(hash, elem) {
-		const modal = document.createElement('div')
-		modal.className = 'appModalCenter'
-		this.append(modal)
-		this.appBar.pushBar()
-
-		modal.append(elem)
-		if (elem.onRoute) elem.onRoute()
-		//currentPage = elem
+		this.lastElementChild._currentPage = elem
 		pushHash(hash)
 	}
 
@@ -137,7 +127,7 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	setHash(hash) {
-		hashReplacing = true
+		_hashReplacing = true
 		location.hash = hash
 	}
 })
@@ -152,7 +142,7 @@ function lastHash(url) {
 }
 
 function replaceLastHash(hash) {
-	hashReplacing = true
+	_hashReplacing = true
 	const i = location.hash.lastIndexOf('#')
 	if (i > 0)
 		location.hash = location.hash.slice(0, i+1) + hash
@@ -161,12 +151,12 @@ function replaceLastHash(hash) {
 }
 
 function pushHash(hash) {
-	hashReplacing = true
+	_hashReplacing = true
 	location.hash += '#' + hash
 }
 
 function popHash() {
-	hashReplacing = true
+	_hashReplacing = true
 	const i = location.hash.lastIndexOf('#')
 	if (i > 0) location.hash = location.hash.slice(0, i)
 }

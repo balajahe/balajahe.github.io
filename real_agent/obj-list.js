@@ -1,8 +1,7 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 import './obj-list-item.js'
 
-const me = 'page-obj-list'
-
+const me = 'obj-list'
 customElements.define(me, class extends HTMLElement {
 
 	connectedCallback() {
@@ -73,9 +72,17 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	onRoute() {
+		const mman = document.createElement('media-manager').build(
+			[
+				['msg', 'Take photo, video, or audio:'],
+				['back'],
+				['but', 'Next<br>&rArr;', () => APP.route('obj-new')]
+			],
+			null
+		)
 		APP.setBar([
-			['msg', ''],
-			['but', 'New<br>&rArr;', () => APP.route('page-obj-new1')]
+			['sep'],
+			['but', 'New<br>&rArr;', () => APP.route('media-manager', mman)]
 		])
 	}
 })

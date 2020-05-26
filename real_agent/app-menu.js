@@ -1,5 +1,4 @@
 import wcMixin from '/WcMixin/WcMixin.js'
-import {exportDB} from './obj-utils.js'
 
 const me = 'app-menu'
 customElements.define(me, class extends HTMLElement {
@@ -31,3 +30,20 @@ customElements.define(me, class extends HTMLElement {
       this.source.onclick = () => location.href = 'https://github.com/balajahe/balajahe.github.io/tree/master/real_agent'
    }
 })
+
+function exportDB() {
+   const res = []
+   APP.db.transaction("Objects").objectStore("Objects").openCursor(null,'prev').onsuccess = (ev) => {
+      const cur = ev.target.result
+      if (cur) {
+         res.push(cur.value)
+         cur.continue()
+      } else {
+         const blob = new Blob([ JSON.stringify(res) ], { type : 'application/json' })
+         URL.revokeObjectURL(this.a.href)
+         this.a.href = URL.createObjectURL(blob)
+         this.a.download = 'RealAgent.json'
+         this.a.click()
+      }
+   }
+}

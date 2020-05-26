@@ -1,29 +1,24 @@
 import wcMixin from '/WcMixin/WcMixin.js'
-import './obj-media-div.js'
+import './media-container.js'
 
 const me = 'obj-list-item'
-
 customElements.define(me, class extends HTMLElement {
-	obj = null
 
 	build(obj) {
-		this.obj = obj
-		return this
-	}
-
-	connectedCallback() {
 		this.innerHTML = `
 			<div w-id='objLabels'></div>
 			<div w-id='objDesc'></div>
+			<media-container w-id='objMedias'></media-container>
 		`
 		wcMixin(this)
 		
-		this.id = this.obj.created
+		this.id = obj.created
 
-		this.objLabels.innerHTML = this.obj.labels
-		this.objDesc.innerHTML = this.obj.desc
-		this.append(document.createElement('obj-media-div').build(this.obj))
+		this.objLabels.innerHTML = obj.labels
+		this.objDesc.innerHTML = obj.desc
+		this.objMedias.build(obj.medias)
 
-		this.onclick = () => APP.routeModal('page-obj-edit', document.createElement('page-obj-edit').build(this.obj))
+		this.onclick = () => APP.routeModal('obj-edit', document.createElement('obj-edit').build(obj))
+		return this
 	}
 })

@@ -1,33 +1,32 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 
-const me = 'page-obj-new2'
-
+const me = 'obj-new'
 customElements.define(me, class extends HTMLElement {
 
 	connectedCallback() {
 		this.innerHTML = `
 			<style scoped>
-            ${me} button { height: calc(var(--button-height) * 0.8); }
-            ${me} input { height: calc(var(--button-height) * 0.8); width: 30%; }
-            ${me} > #descDiv {
-               min-height: 5em;
-               margin: var(--margin1); padding-left: var(--margin2);
-               border: solid 1px silver;
-               display: block;
-            }
-            ${me} #labelsDiv { min-height: calc(var(--button-height) * 0.9); }
-            ${me} .separ { margin-top: var(--margin2); flex-flow: row nowrap; }
-            ${me} .separ hr { display: inline-block; flex: 1 1 auto; }
-            ${me} #locDiv { 
-            	height: 250px; width: 100%; 
-            	margin-top: var(--margin2); margin-bottom: var(--margin2);
-            }
-            ${me} #locDiv > iframe { width: 85%; }
-            ${me} #locDiv > div { 
-               width: 15%; 
-               justify-content: center; align-items: center;
-               writing-mode: tb-rl;
-            }
+				${me} button { height: calc(var(--button-height) * 0.8); }
+				${me} input { height: calc(var(--button-height) * 0.8); width: 30%; }
+				${me} > #descDiv {
+					min-height: 5em;
+					margin: var(--margin1); padding-left: var(--margin2);
+					border: solid 1px silver;
+					display: block;
+				}
+				${me} #labelsDiv { min-height: calc(var(--button-height) * 0.9); }
+				${me} .separ { margin-top: var(--margin2); flex-flow: row nowrap; }
+				${me} .separ hr { display: inline-block; flex: 1 1 auto; }
+				${me} #locDiv { 
+					height: 250px; width: 100%; 
+					margin-top: var(--margin2); margin-bottom: var(--margin2);
+				}
+				${me} #locDiv > iframe { width: 85%; }
+				${me} #locDiv > div { 
+					width: 15%; 
+					justify-content: center; align-items: center;
+					writing-mode: tb-rl;
+				}
 			</style>
 			<div w-id='descDiv/desc' contenteditable='true'></div>
 			<div w-id='labelsDiv/labels/children'></div>
@@ -42,9 +41,8 @@ customElements.define(me, class extends HTMLElement {
 		`
 		wcMixin(this)
 
-		if (!localStorage.getItem('labels')) {
+		if (!localStorage.getItem('labels'))
 			localStorage.setItem('labels', 'Дом,Дача,Участок,Заброшен,Ветхий,Разрушен,Жилой,Продается')
-		}
 		for (const lab of localStorage.getItem('labels').split(',')) this.addAvailLabel(lab)
 
 		this.newLabelInp.onkeypress = (ev) => {
@@ -81,10 +79,10 @@ customElements.define(me, class extends HTMLElement {
 	onRoute() {
 		this.showLocation()
 		this.descDiv.focus()
-      APP.setBar([
-         ['msg', 'Enter description and add labels:'],
-         ['back'],
-         ['but', 'Save<br>&rArr;', () => {
+		APP.setBar([
+			['msg', 'Enter description and add labels:'],
+			['back'],
+			['but', 'Save<br>&rArr;', () => {
 				if (!this.desc) {
 					APP.setMsg('<span style="color:red">Empty description !</span>')
 					this.descDiv.focus()
@@ -93,27 +91,28 @@ customElements.define(me, class extends HTMLElement {
 				} else {
 					this.saveNewObj()
 				}
-         }]
-      ])
+			}]
+		])
 	}
 
 	saveNewObj() {
-	   const med = document.querySelector('page-obj-new1')
-	   const created = 'D--' + (new Date()).toISOString().replace(/:/g, '-').replace(/T/g, '--').slice(0, -5)
-	   const obj = {
-	      created: created,
-	      modified: created,
-	      location: {latitude: APP.location?.latitude, longitude: APP.location?.longitude},
-	      desc: this.desc,
-	      labels: Array.from(this.labels).map(el => el.innerHTML),
-	      medias: Array.from(med.medias).map(el => ({ tagName: el.firstChild.tagName, blob: el.firstChild._blob }))
-	   } 
-	   APP.db.transaction("Objects", "readwrite").objectStore("Objects").add(obj).onsuccess = (ev) => {
-	      APP.remove(med)
-	      APP.remove(this)
-	      document.querySelector('page-obj-list').addItem(obj)
-	      APP.route('page-obj-list')
-	      APP.setMsg('Saved !')
-	   }
+		const pageMedias = document.querySelector('media-manager')
+		const pageForm = this
+		const now = 'D--' + (new Date()).toISOString().replace(/:/g, '-').replace(/T/g, '--').slice(0, -5)
+		const obj = {
+			created: now,
+			modified: now,
+			location: {latitude: APP.location?.latitude, longitude: APP.location?.longitude},
+			desc: pageForm.desc,
+			labels: Array.from(pageForm.labels).map(el => el.innerHTML),
+			medias: pageMedias.medias
+		} 
+		APP.db.transaction("Objects", "readwrite").objectStore("Objects").add(obj).onsuccess = (ev) => {
+			APP.remove(pageMedias)
+			APP.remove(this)
+			document.querySelector('obj-list').addItem(obj)
+			APP.route('obj-list')
+			APP.setMsg('Saved !')
+		}
 	}
 })

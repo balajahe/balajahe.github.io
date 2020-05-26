@@ -1,7 +1,6 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 
-const me = 'modal-img-show'
-
+const me = 'media-img-show'
 customElements.define(me, class extends HTMLElement {
 	src = null
 	delAction = null
@@ -33,7 +32,7 @@ customElements.define(me, class extends HTMLElement {
    	}])
       APP.setBar(bar.concat([
          ['msg', ''],
-         ['but', 'Close<br>&#65794;', () => history.go(-1)],
+         ['back'],
       ]))
    }
 })

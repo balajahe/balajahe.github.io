@@ -6,11 +6,12 @@
 	<meta name='viewport' content='width=device-width, initial-scale=1' />
 	<script type='module'>//navigator.serviceWorker.register('./app-sw.js')</script>
 	<script type='module' src='./app-app.js'></script>
-	<script type='module' src='./modal-img-show.js'></script>
-	<script type='module' src='./page-obj-list.js'></script>
-	<script type='module' src='./page-obj-new1.js'></script>
-	<script type='module' src='./page-obj-new2.js'></script>
-	<script type='module' src='./page-obj-edit.js'></script>
+	<script type='module' src='./obj-list.js'></script>
+	<script type='module' src='./obj-new.js'></script>
+	<script type='module' src='./obj-edit.js'></script>
+	<script type='module' src='./media-container.js'></script>
+	<script type='module' src='./media-manager.js'></script>
+	<script type='module' src='./media-img-show.js'></script>
 	<style>
 		:root {
 			--app-max-width: 40rem;
@@ -35,7 +36,6 @@
 			height: var(--button-height);
 			margin-top: var(--margin1); margin-bottom: var(--margin1);
 			border-radius: calc(var(--button-height)/1.5)/calc(var(--button-height));
-			line-height: 1em;
 		}
 		input {
 			height: var(--button-height);
@@ -45,16 +45,18 @@
 		}
 		button:active { background-color: red; }
 		button.true { background-color: red; }
-		.smallMedia {
-	  		display: inline-flex; flex-flow: column; justify-content: center; 	
-			height: 4rem; width: 4rem; overflow: hidden;
+		
+		media-container > div {
+			height: 4rem; width: 4rem;
 			margin: var(--margin1);
+	  		display: inline-flex; flex-flow: column; justify-content: center;
+	  		overflow: hidden;
 		}
-		.smallMedia > * { max-width: 100%; max-height: 100%; }
-		.smallMedia > img:hover { cursor: pointer; }
+		media-container > div > * { max-height: 100%; max-width: 100%; }
+		media-container > div > img:hover { cursor: pointer; }
 	</style>
 </head>
-<body onload='APP.route("page-obj-list")'>
+<body onload='APP.route("obj-list")'>
 	<app-app></app-app>
 </body>
 </html>

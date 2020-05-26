@@ -1,7 +1,7 @@
 import wcMixin from '/WcMixin/WcMixin.js'
+import './media-container.js'
 
-const me = 'page-obj-edit'
-
+const me = 'obj-edit'
 customElements.define(me, class extends HTMLElement {
    obj = null
 
@@ -37,7 +37,7 @@ customElements.define(me, class extends HTMLElement {
          </style>
          <div w-id='descDiv/desc' contenteditable='true'></div>
          <nav w-id='labelsDiv/labels/children'></nav>
-         <div w-id='mediaDiv'></div>
+         <media-container w-id='objMedias/medias/value'></media-container>
          <div id='locDiv'>
             <iframe w-id='mapIframe'></iframe>
             <div w-id='/loc'></div>
@@ -59,7 +59,7 @@ customElements.define(me, class extends HTMLElement {
          for (const lab of this.obj.labels) this.addLabel(lab)
       }
 
-      this.mediaDiv.replaceWith(document.createElement('obj-media-div').build(this.obj, true))
+      this.objMedias.build(this.obj.medias, true)
 
       if (this.obj.location) {
          this.loc = this.obj.location.latitude + ' - ' + this.obj.location.longitude
@@ -90,11 +90,22 @@ customElements.define(me, class extends HTMLElement {
    }
 
    onRoute() {
+      const mman = document.createElement('media-manager').build(
+         [
+            ['msg', 'Take photo, video, or audio:'],
+            ['but', 'Back<br>&lArr;', () => {
+               this.objMedias.build(mman.medias, true)
+               history.go(-1)
+            }]
+         ],
+         this.medias
+      )
       APP.setBar([
          ['but', 'Delete<br>&#8224;', () => { 
             if (confirm('Delete current object forever ?')) this.deleteObj() 
          }],
-         ['msg', ''],
+         ['but', 'Medias<br>&plusmn;', () => APP.route('media-manager', mman)],
+         ['sep'],
          ['back'],
          ['but', 'Save<br>&rArr;', () => {
             if (!this.desc) {
@@ -111,15 +122,26 @@ customElements.define(me, class extends HTMLElement {
 
    saveExistObj() {
       APP.db.transaction("Objects", "readwrite").objectStore("Objects").put(this.obj).onsuccess = (ev) => {
-         document.querySelector('page-obj-list').setItem(this.obj)
-         APP.popModal()
-         APP.setMsg('Saved !')
+         const now = 'D--' + (new Date()).toISOString().replace(/:/g, '-').replace(/T/g, '--').slice(0, -5)
+         const obj = {
+            created: this.obj.created,
+            modified: now,
+            location: this.obj.location,
+            desc: this.desc,
+            labels: Array.from(this.labels).map(el => el.innerHTML),
+            medias: this.medias
+         } 
+         APP.db.transaction("Objects", "readwrite").objectStore("Objects").put(obj).onsuccess = (ev) => {
+            document.querySelector('obj-list').setItem(obj)
+            APP.popModal()
+            APP.setMsg('Saved !')
+         }
       }
    }
 
    deleteObj(id) {
       APP.db.transaction("Objects", "readwrite").objectStore("Objects").delete(this.obj.created).onsuccess = (ev) => {
-         document.querySelector('page-obj-list').getItem(this.obj.created).remove()
+         document.querySelector('obj-list').getItem(this.obj.created).remove()
          APP.popModal()
          APP.setMsg('Deleted !')
       }
