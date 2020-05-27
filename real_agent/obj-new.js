@@ -27,6 +27,7 @@ customElements.define(me, class extends HTMLElement {
 				}
 				${me} #locDiv > button { 
 					height: 100%; width: var(--app-bar-height);
+					border-radius: 0;
 				}
 			</style>
 			<div w-id='descDiv/desc' contenteditable='true'></div>

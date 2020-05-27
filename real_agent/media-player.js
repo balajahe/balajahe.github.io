@@ -11,19 +11,24 @@ customElements.define(me, class extends HTMLElement {
 		return this
 	}
 
-	connectedCallback() {
+	async connectedCallback() {
 		this.innerHTML = `
 			<style scoped>
-				${me} > * { height: auto; min-height: 3em; width: 100%; }
+				${me} > * { height: auto; width: 100%; }
 				${me} > img:hover { cursor: pointer; }
 			</style>
 		`
 		wcMixin(this)
+
+		console.log(this.source)
+
 		const el = document.createElement(this.source.tagName)
-		el.src = this.source.origin
 		if (this.source.tagName === 'img') {
+			el.src = this.source.origin ? this.source.origin : URL.createObjectURL(this.source.blob)
 			this.onclick = () => history.go(-1)
 		} else {
+			//el.src = URL.createObjectURL(await (await fetch(this.source.origin)).blob())
+			el.src = URL.createObjectURL(this.source.origin)
 			el.controls = true
 			el.autoplay = true
 		}

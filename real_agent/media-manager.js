@@ -46,7 +46,10 @@ customElements.define(me, class extends HTMLElement {
 
 		this.imgBut.onclick = async () => {
 			const blob = await this.imgCapturer.takePhoto(this.imgParams)
-			this.mediaContainer.add({tagName: 'img', preview: this._takePrev(), origin: URL.createObjectURL(blob)}, true)
+			this.mediaContainer.add(
+				{ tagName: 'img', preview: this._takePrev('img'), origin: await this._takeOrigin(blob) }, 
+				true
+			)
 		}
 
 		this.vidBut.onclick = () => {
@@ -79,10 +82,12 @@ customElements.define(me, class extends HTMLElement {
 		this.imgParams = { imageHeight: caps.imageHeight.max, imageWidth: caps.imageWidth.max }
 
 		this.vidRecorder = new MediaRecorder(this.stream, { mimeType : "video/webm" })
-		this.vidRecorder.ondataavailable = (ev) => this.mediaContainer.add({tagName: 'video', preview: this._takePrev(true), origin: URL.createObjectURL(ev.data)}, true)
+		this.vidRecorder.ondataavailable = async (ev) => 
+			this.mediaContainer.add({tagName: 'video', preview: this._takePrev('video'), origin: ev.data}, true)
 
 		this.audRecorder = new MediaRecorder(this.stream, { mimeType : "audio/webm" })
-		this.audRecorder.ondataavailable = (ev) => this.mediaContainer.add({tagName: 'audio', origin: URL.createObjectURL(ev.data)}, true)
+		this.audRecorder.ondataavailable = async (ev) => 
+			this.mediaContainer.add({tagName: 'audio', preview: this._takePrev('audio'), origin: ev.data}, true)
 	}
 
 	onUnRoute() {
@@ -90,13 +95,31 @@ customElements.define(me, class extends HTMLElement {
 		this.stream.getTracks().forEach(track => track.stop())
 	}
 
-	_takePrev(vid) {
+	_takePrev(tagName) {
 		const can = this.canvas.getContext('2d')
-		can.drawImage(this.vidPreview, 0, 0, APP.imgPrevSize, APP.imgPrevSize)
-		if (vid) {
+		if (tagName === 'img') {
+			can.drawImage(this.vidPreview, 0, 0, APP.imgPrevSize, APP.imgPrevSize)
+		} else if (tagName === 'video') {
+			can.drawImage(this.vidPreview, 0, 0, APP.imgPrevSize, APP.imgPrevSize)
+			can.fillStyle = 'black';
 			can.font = 'bold 20px serif';
 			can.fillText('VIDEO', 2, 20)
+		} else if (tagName === 'audio') {
+			can.rect(0, 0, APP.imgPrevSize, APP.imgPrevSize);
+			can.fillStyle = 'silver';
+			can.fill()
+			can.fillStyle = 'black';
+			can.font = 'bold 20px serif';
+			can.fillText('AUDIO', 2, 20)
 		}
 		return this.canvas.toDataURL()
+	}
+
+	async _takeOrigin(blob) {
+	 	const reader = new FileReader()
+		reader.readAsDataURL(blob)
+		return await new Promise(resolve => {
+			reader.onloadend = () => resolve(reader.result)
+		})
 	}
 })
