@@ -55,7 +55,7 @@ customElements.define(me, class extends HTMLElement {
 		window.onhashchange = async (ev) => {
 			if (!this._hashReplacing) {
 				if (this._hashLevel(ev.oldURL) - this._hashLevel(ev.newURL) === 1) { //history.go(-1)
-					this.popModal()
+					this.popModal(true)
 				} else if (this._lastHash(ev.newURL)) {
 					this.route(this._lastHash(ev.newURL))
 				} else {
@@ -116,9 +116,10 @@ customElements.define(me, class extends HTMLElement {
 		this._pushHash(hash)
 	}
 
-	popModal() {
+	popModal(sys) {
 		this.lastElementChild.remove()
 		this.appBar.popBar()
+		if (!sys) this._popHash()
 	}
 
 	remove(el) {

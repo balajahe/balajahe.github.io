@@ -19,13 +19,14 @@ customElements.define(me, class extends HTMLElement {
 				${me} .separ hr { display: inline-block; flex: 1 1 auto; }
 				${me} #locDiv { 
 					height: 250px; width: 100%; 
-					margin-top: var(--margin2); margin-bottom: var(--margin2);
+					margin-top: var(--margin2)1 margin-bottom: var(--margin1);
 				}
-				${me} #locDiv > iframe { width: 85%; }
-				${me} #locDiv > div { 
-					width: 15%; 
-					justify-content: center; align-items: center;
-					writing-mode: tb-rl;
+				${me} #locDiv > iframe { 
+					display: inline-block; 
+					width: calc(100% - var(--app-bar-height));
+				}
+				${me} #locDiv > button { 
+					height: 100%; width: var(--app-bar-height);
 				}
 			</style>
 			<div w-id='descDiv/desc' contenteditable='true'></div>
@@ -36,7 +37,7 @@ customElements.define(me, class extends HTMLElement {
 			</div>
 			<div id='locDiv'>
 				<iframe w-id='mapIframe'></iframe>
-				<div w-id='/loc'></div>
+				<button w-id='locBut'>L</button>
 			</div>
 		`
 		wcMixin(this)
@@ -44,6 +45,8 @@ customElements.define(me, class extends HTMLElement {
 		if (!localStorage.getItem('labels'))
 			localStorage.setItem('labels', 'Дом,Дача,Участок,Заброшен,Ветхий,Разрушен,Жилой,Продается')
 		for (const lab of localStorage.getItem('labels').split(',')) this.addAvailLabel(lab)
+
+		this.locBut.onclick = () => this.updateLocation()
 
 		this.newLabelInp.onkeypress = (ev) => {
 			if (ev.key === 'Enter') {
@@ -69,15 +72,15 @@ customElements.define(me, class extends HTMLElement {
 		this.newLabelInp.before(but)
 	}
 
-	showLocation() {
+	updateLocation() {
 		if (APP.location) {
-			this.loc = APP.location.latitude + ' - ' + APP.location.longitude
+			//this.locBut.innerHTML = APP.location.latitude + ' - ' + APP.location.longitude
 			this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${APP.location.longitude-0.002}%2C${APP.location.latitude-0.002}%2C${APP.location.longitude+0.002}%2C${APP.location.latitude+0.002}&layer=mapnik&marker=${APP.location.latitude}%2C${APP.location.longitude}`)
 		}
 	}
 
 	onRoute() {
-		this.showLocation()
+		this.updateLocation()
 		this.descDiv.focus()
 		APP.setBar([
 			['msg', 'Enter description and add labels:'],

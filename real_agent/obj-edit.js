@@ -133,7 +133,7 @@ customElements.define(me, class extends HTMLElement {
          }
          APP.db.transaction("Objects", "readwrite").objectStore("Objects").put(obj).onsuccess = (ev) => {
             document.querySelector('obj-list').setItem(obj)
-            history.go(-1)
+	         APP.popModal()
             APP.setMsg('Saved !')
          }
       }
