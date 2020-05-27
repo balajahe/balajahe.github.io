@@ -2,19 +2,18 @@ import wcMixin from '/WcMixin/WcMixin.js'
 import './app-bar.js'
 
 const me = 'app-app'
-let _hashReplacing = false
-
 customElements.define(me, class extends HTMLElement {
+	imgPrevSize = 70
 	db = null
 	location = null
 	locationCallback = null
+	 _hashReplacing = false
 
 	connectedCallback() {
 		this.innerHTML = `
 			<style scoped>
 				${me} {
-					margin-top: var(--app-bar-height);
-					height: calc(100vh - var(--app-bar-height)); 
+					height: 100vh; 
 					width: 100vw; max-width: var(--app-max-width);
 					display: flex; flex-flow: column;
 					overflow: auto;
@@ -26,6 +25,7 @@ customElements.define(me, class extends HTMLElement {
 					width: 100%; max-width: var(--app-max-width);
 				}
 				${me} > div {
+					margin-top: var(--app-bar-height);
 					padding-left: var(--margin1); padding-right: var(--margin1);
 					flex-flow: column;
 				}
@@ -53,16 +53,16 @@ customElements.define(me, class extends HTMLElement {
 		window.APP = this
 
 		window.onhashchange = async (ev) => {
-			if (!_hashReplacing) {
-				if (hashLevel(ev.oldURL) - hashLevel(ev.newURL) === 1) { //history.go(-1)
+			if (!this._hashReplacing) {
+				if (this._hashLevel(ev.oldURL) - this._hashLevel(ev.newURL) === 1) { //history.go(-1)
 					this.popModal()
-				} else if (lastHash(ev.newURL)) {
-					this.route(lastHash(ev.newURL))
+				} else if (this._lastHash(ev.newURL)) {
+					this.route(this._lastHash(ev.newURL))
 				} else {
 					location.reload()
 				}
 			}
-			_hashReplacing = false
+			this._hashReplacing = false
 		}
 
 		navigator.geolocation.getCurrentPosition(loc => {
@@ -99,7 +99,7 @@ customElements.define(me, class extends HTMLElement {
 		}
 		if (elem.onRoute) elem.onRoute()
 		this.lastElementChild._currentPage = elem
-		replaceLastHash(hash)
+		this._replaceLastHash(hash)
 	}
 
 	routeModal(hash, elem, className = 'appModal') {
@@ -113,7 +113,7 @@ customElements.define(me, class extends HTMLElement {
 		if (elem.onRoute) elem.onRoute()
 
 		this.lastElementChild._currentPage = elem
-		pushHash(hash)
+		this._pushHash(hash)
 	}
 
 	popModal() {
@@ -127,36 +127,36 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	setHash(hash) {
-		_hashReplacing = true
+		this._hashReplacing = true
 		location.hash = hash
 	}
+
+	_hashLevel(url) {
+		return url.split('#').length
+	}
+
+	_lastHash(url) {
+		const uu = url.split('#')
+		return uu.length > 0 ? uu[uu.length-1] : ''
+	}
+
+	_replaceLastHash(hash) {
+		this._hashReplacing = true
+		const i = location.hash.lastIndexOf('#')
+		if (i > 0)
+			location.hash = location.hash.slice(0, i+1) + hash
+		else
+			location.hash = hash
+	}
+
+	_pushHash(hash) {
+		this._hashReplacing = true
+		location.hash += '#' + hash
+	}
+
+	_popHash() {
+		this._hashReplacing = true
+		const i = location.hash.lastIndexOf('#')
+		if (i > 0) location.hash = location.hash.slice(0, i)
+	}
 })
-
-function hashLevel(url) {
-	return url.split('#').length
-}
-
-function lastHash(url) {
-	const uu = url.split('#')
-	return uu.length > 0 ? uu[uu.length-1] : ''
-}
-
-function replaceLastHash(hash) {
-	_hashReplacing = true
-	const i = location.hash.lastIndexOf('#')
-	if (i > 0)
-		location.hash = location.hash.slice(0, i+1) + hash
-	else
-		location.hash = hash
-}
-
-function pushHash(hash) {
-	_hashReplacing = true
-	location.hash += '#' + hash
-}
-
-function popHash() {
-	_hashReplacing = true
-	const i = location.hash.lastIndexOf('#')
-	if (i > 0) location.hash = location.hash.slice(0, i)
-}

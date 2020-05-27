@@ -2,9 +2,8 @@ import wcMixin from '/WcMixin/WcMixin.js'
 import './app-menu.js'
 
 const me = 'app-bar'
-const stack = []
-
 customElements.define(me, class extends HTMLElement {
+	_stack = []
 
 	connectedCallback() {
 		this.innerHTML = `
@@ -13,8 +12,9 @@ customElements.define(me, class extends HTMLElement {
 					display: flex; flex-flow: row nowrap;
 				}
 				${me} > button {
-					height: calc(100% - 2*var(--margin1));
-					min-width: 17%;
+					height: calc(100% - 1*var(--margin1));
+					margin-top: 0;
+					width: 4rem;
 				}
 				${me} > div {
 					display: inline-block;
@@ -79,11 +79,11 @@ customElements.define(me, class extends HTMLElement {
 			old.push(b)
 			b.remove()
 		}
-		stack.push(old)
+		this._stack.push(old)
 	}
 
 	popBar() {
 		for (let b = this.menuBut.nextElementSibling; b; b = this.menuBut.nextElementSibling) b.remove()
-		for (const b of stack.pop()) this.append(b)
+		for (const b of this._stack.pop()) this.append(b)
 	}
 })

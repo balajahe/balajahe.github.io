@@ -5,31 +5,41 @@ customElements.define(me, class extends HTMLElement {
 
 	build(medias, del) {
 		this.innerHTML = ''
-		medias.forEach(media => this.addMedia(media, del))
+		medias.forEach(media => this.add(media, del))
 		return this
 	}
 
-	addMedia(media, del) {
+	add(media, del) {
 		const div = document.createElement('div')
 		const med = document.createElement(media.tagName)
-		div.append(med)
-		med.src = URL.createObjectURL(media.blob)
+		med._prev = media.prev
 		med._blob = media.blob
-		if (med.tagName === 'IMG') {
-			if (del) del = () => div.remove()
-			div.onclick = (ev) => {
-				ev.stopPropagation()
-				APP.routeModal('media-img-show', document.createElement('media-img-show').build(med.src, del), 'appModalCenter')
-			}
+
+		if (med.tagName === 'CANVAS') {
+			med.width = APP.imgPrevSize
+			med.height = APP.imgPrevSize
+			med.getContext('2d').putImageData(media.prev, 0, 0)
 		} else {
+			med.src = URL.createObjectURL(media.blob)
 			med.controls = true
 		}
+
+		if (del) del = () => div.remove()
+		div.onclick = (ev) => {
+			ev.stopPropagation()
+			APP.routeModal('media-img-show', document.createElement('media-img-show').build(media.blob, del), 'appModalCenter')
+		}
+
+		div.append(med)
 		this.append(div)
 	}
 
 	get value() {
 		return Array.from(this.children).map(
-			el => ({ tagName: el.firstElementChild.tagName, blob: el.firstElementChild._blob })
+			el => { 
+				const med = el.firstElementChild
+				return { tagName: med.tagName, prev: med._prev, blob: med._blob }
+			}
 		)
 	}
 })

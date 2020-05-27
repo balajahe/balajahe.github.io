@@ -24,13 +24,13 @@ customElements.define(me, class extends HTMLElement {
             ${me} #labelsDiv { min-height: calc(var(--button-height) * 0.9); }
             ${me} .separ { margin-top: var(--margin2); flex-flow: row nowrap; }
             ${me} .separ hr { display: inline-block; flex: 1 1 auto; }
-            ${me} #locDiv { 
-               height: 250px; width: 100%; 
+            ${me} #locDiv {
+               height: 250px; width: 100%;
                margin-top: var(--margin2); margin-bottom: var(--margin2);
             }
             ${me} #locDiv > iframe { width: 85%; }
-            ${me} #locDiv > div { 
-               width: 15%; 
+            ${me} #locDiv > div {
+               width: 15%;
                justify-content: center; align-items: center;
                writing-mode: tb-rl;
             }
@@ -101,12 +101,12 @@ customElements.define(me, class extends HTMLElement {
          this.medias
       )
       APP.setBar([
-         ['but', 'Delete<br>&#8224;', () => { 
-            if (confirm('Delete current object forever ?')) this.deleteObj() 
+         ['but', 'Delete<br>&#8224;', () => {
+            if (confirm('Delete current object forever ?')) this.deleteObj()
          }],
          ['but', 'Medias<br>&plusmn;', () => APP.route('media-manager', mman)],
          ['sep'],
-         ['back'],
+         ['but', 'Cancel<br>&lArr;', () => history.go(-1)],
          ['but', 'Save<br>&rArr;', () => {
             if (!this.desc) {
                APP.setMsg('<span style="color:red">Empty description !</span>')
@@ -130,10 +130,10 @@ customElements.define(me, class extends HTMLElement {
             desc: this.desc,
             labels: Array.from(this.labels).map(el => el.innerHTML),
             medias: this.medias
-         } 
+         }
          APP.db.transaction("Objects", "readwrite").objectStore("Objects").put(obj).onsuccess = (ev) => {
             document.querySelector('obj-list').setItem(obj)
-            APP.popModal()
+            history.go(-1)
             APP.setMsg('Saved !')
          }
       }
@@ -145,5 +145,5 @@ customElements.define(me, class extends HTMLElement {
          APP.popModal()
          APP.setMsg('Deleted !')
       }
-   }  
+   }
 })

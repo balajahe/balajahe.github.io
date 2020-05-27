@@ -8,10 +8,11 @@ customElements.define(me, class extends HTMLElement {
 	stream
 	W = 0
 	H = 0
-	imgCapturer
-	imgParams
-	vidRecorder
-	audRecorder
+	imgCapturer = null
+	imgParams = null
+	vidRecorder = null
+	audRecorder = null
+	canvas = null
 
 	build(bar, medias) {
 		if (bar) this.bar = bar
@@ -34,15 +35,18 @@ customElements.define(me, class extends HTMLElement {
 					<button w-id='imgBut'>Take photo</button>
 				</nav>
 			</div>
-			<media-container w-id='objMedias/medias/value'></media-container>
+			<media-container w-id='mediaContainer/medias/value'></media-container>
+			<canvas w-id='canvas' style='display:none'></canvas>
 		`
 		wcMixin(this)
+		canvas.width = APP.imgPrevSize
+		canvas.height = APP.imgPrevSize
 
-		if (this.initMedias) this.initMedias.forEach(media => this.objMedias.addMedia(media, true))
+		if (this.initMedias) this.initMedias.forEach(media => this.mediaContainer.add(media, true))
 
 		this.imgBut.onclick = async () => {
 			const blob = await this.imgCapturer.takePhoto(this.imgParams)
-			this.objMedias.addMedia({tagName: 'img', blob: blob}, true)
+			this.mediaContainer.add({tagName: 'CANVAS', prev: this._takePrev(), blob: blob}, true)
 		}
 
 		this.vidBut.onclick = () => {
@@ -75,14 +79,20 @@ customElements.define(me, class extends HTMLElement {
 		this.imgParams = { imageHeight: caps.imageHeight.max, imageWidth: caps.imageWidth.max }
 
 		this.vidRecorder = new MediaRecorder(this.stream, { mimeType : "video/webm" })
-		this.vidRecorder.ondataavailable = (ev) => this.objMedias.addMedia({tagName: 'video', blob: ev.data}, true)
+		this.vidRecorder.ondataavailable = (ev) => this.mediaContainer.add({tagName: 'video', prev: this._takePrev(), blob: ev.data}, true)
 
 		this.audRecorder = new MediaRecorder(this.stream, { mimeType : "audio/webm" })
-		this.audRecorder.ondataavailable = (ev) => this.objMedias.addMedia({tagName: 'audio', blob: ev.data}, true)
+		this.audRecorder.ondataavailable = (ev) => this.mediaContainer.add({tagName: 'audio', blob: ev.data}, true)
 	}
 
 	onUnRoute() {
 		this.vidDiv.display(false)
 		this.stream.getTracks().forEach(track => track.stop())
+	}
+
+	_takePrev() {
+		const can = this.canvas.getContext('2d')
+		can.drawImage(this.vidPreview, 0, 0, APP.imgPrevSize, APP.imgPrevSize)
+		return can.getImageData(0, 0, APP.imgPrevSize, APP.imgPrevSize)
 	}
 })
