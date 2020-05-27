@@ -46,7 +46,7 @@ customElements.define(me, class extends HTMLElement {
 
 		this.imgBut.onclick = async () => {
 			const blob = await this.imgCapturer.takePhoto(this.imgParams)
-			this.mediaContainer.add({tagName: 'CANVAS', prev: this._takePrev(), blob: blob}, true)
+			this.mediaContainer.add({tagName: 'img', preview: this._takePrev(), origin: URL.createObjectURL(blob)}, true)
 		}
 
 		this.vidBut.onclick = () => {
@@ -69,7 +69,7 @@ customElements.define(me, class extends HTMLElement {
 			{ video: { facingMode: { ideal: "environment" }}, audio: true }
 		)
 		this.vidPreview.srcObject = this.stream
-		await new Promise(res => this.vidPreview.onloadedmetadata = (_) => res())
+		await new Promise(resolve => this.vidPreview.onloadedmetadata = () => resolve())
 		this.W = this.vidPreview.videoWidth
 		this.H = this.vidPreview.videoHeight
 		this.vidDiv.display('flex')
@@ -79,10 +79,10 @@ customElements.define(me, class extends HTMLElement {
 		this.imgParams = { imageHeight: caps.imageHeight.max, imageWidth: caps.imageWidth.max }
 
 		this.vidRecorder = new MediaRecorder(this.stream, { mimeType : "video/webm" })
-		this.vidRecorder.ondataavailable = (ev) => this.mediaContainer.add({tagName: 'video', prev: this._takePrev(), blob: ev.data}, true)
+		this.vidRecorder.ondataavailable = (ev) => this.mediaContainer.add({tagName: 'video', preview: this._takePrev(true), origin: URL.createObjectURL(ev.data)}, true)
 
 		this.audRecorder = new MediaRecorder(this.stream, { mimeType : "audio/webm" })
-		this.audRecorder.ondataavailable = (ev) => this.mediaContainer.add({tagName: 'audio', blob: ev.data}, true)
+		this.audRecorder.ondataavailable = (ev) => this.mediaContainer.add({tagName: 'audio', origin: URL.createObjectURL(ev.data)}, true)
 	}
 
 	onUnRoute() {
@@ -90,9 +90,13 @@ customElements.define(me, class extends HTMLElement {
 		this.stream.getTracks().forEach(track => track.stop())
 	}
 
-	_takePrev() {
+	_takePrev(vid) {
 		const can = this.canvas.getContext('2d')
 		can.drawImage(this.vidPreview, 0, 0, APP.imgPrevSize, APP.imgPrevSize)
-		return can.getImageData(0, 0, APP.imgPrevSize, APP.imgPrevSize)
+		if (vid) {
+			can.font = 'bold 20px serif';
+			can.fillText('VIDEO', 2, 20)
+		}
+		return this.canvas.toDataURL()
 	}
 })

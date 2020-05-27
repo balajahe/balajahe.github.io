@@ -1,6 +1,6 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 
-const me = 'media-img-show'
+const me = 'media-player'
 customElements.define(me, class extends HTMLElement {
 	source = null
 	delAction = null
@@ -14,14 +14,20 @@ customElements.define(me, class extends HTMLElement {
 	connectedCallback() {
 		this.innerHTML = `
 			<style scoped>
-				${me} > img { height: auto; width: 100%; }
+				${me} > * { height: auto; min-height: 3em; width: 100%; }
 				${me} > img:hover { cursor: pointer; }
 			</style>
-			<img w-id='img'/>
 		`
 		wcMixin(this)
-		this.img.src = URL.createObjectURL(this.source)
-		this.onclick = () => history.go(-1)
+		const el = document.createElement(this.source.tagName)
+		el.src = this.source.origin
+		if (this.source.tagName === 'img') {
+			this.onclick = () => history.go(-1)
+		} else {
+			el.controls = true
+			el.autoplay = true
+		}
+		this.append(el)
 	}
 
    onRoute() {

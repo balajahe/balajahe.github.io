@@ -1,4 +1,5 @@
 import wcMixin from '/WcMixin/WcMixin.js'
+import './media-player.js'
 
 const me = 'media-container'
 customElements.define(me, class extends HTMLElement {
@@ -11,23 +12,14 @@ customElements.define(me, class extends HTMLElement {
 
 	add(media, del) {
 		const div = document.createElement('div')
-		const med = document.createElement(media.tagName)
-		med._prev = media.prev
-		med._blob = media.blob
-
-		if (med.tagName === 'CANVAS') {
-			med.width = APP.imgPrevSize
-			med.height = APP.imgPrevSize
-			med.getContext('2d').putImageData(media.prev, 0, 0)
-		} else {
-			med.src = URL.createObjectURL(media.blob)
-			med.controls = true
-		}
+		const med = document.createElement('img')
+		med._source = media
+		med.src = media.preview ? media.preview : 'aaa'
 
 		if (del) del = () => div.remove()
 		div.onclick = (ev) => {
 			ev.stopPropagation()
-			APP.routeModal('media-img-show', document.createElement('media-img-show').build(media.blob, del), 'appModalCenter')
+			APP.routeModal('media-player', document.createElement('media-player').build(media, del), 'appModalCenter')
 		}
 
 		div.append(med)
@@ -35,11 +27,6 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	get value() {
-		return Array.from(this.children).map(
-			el => { 
-				const med = el.firstElementChild
-				return { tagName: med.tagName, prev: med._prev, blob: med._blob }
-			}
-		)
+		return Array.from(this.children).map(el => el.firstElementChild._source)
 	}
 })
