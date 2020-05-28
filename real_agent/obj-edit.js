@@ -114,21 +114,24 @@ customElements.define(me, class extends HTMLElement {
    }
 
    saveExistObj() {
-      APP.db.transaction("Objects", "readwrite").objectStore("Objects").put(this.obj).onsuccess = (ev) => {
-         const now = 'D--' + (new Date()).toISOString().replace(/:/g, '-').replace(/T/g, '--').slice(0, -5)
-         const obj = {
-            created: this.obj.created,
-            modified: now,
-            location: this.obj.location,
-            desc: this.desc,
-            labels: Array.from(this.labels).map(el => el.innerHTML),
-            medias: this.medias
-         }
-         APP.db.transaction("Objects", "readwrite").objectStore("Objects").put(obj).onsuccess = (ev) => {
-            document.querySelector('obj-list').setItem(obj)
-	         APP.popModal()
-            APP.setMsg('Saved !')
-         }
+      const origins = []
+      this.medias.forEach(media => {
+         origins.push({ created: media.created, origin: media.origin })
+      })
+      const now = APP.now()
+      const obj = {
+         created: this.obj.created,
+         modified: now,
+         location: this.obj.location,
+         desc: this.desc,
+         labels: Array.from(this.labels).map(el => el.innerHTML),
+         medias: Array.from(this.medias).map(media => media)
+      }
+      console.log(obj)
+      APP.db.transaction("Objects", "readwrite").objectStore("Objects").put(obj).onsuccess = (ev) => {
+         document.querySelector('obj-list').setItem(obj)
+         APP.popModal()
+         APP.setMsg('Saved !')
       }
    }
 

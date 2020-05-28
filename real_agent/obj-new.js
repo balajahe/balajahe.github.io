@@ -113,7 +113,7 @@ customElements.define(me, class extends HTMLElement {
 	saveNewObj() {
 		const pageMedias = document.querySelector('media-manager')
 		const pageForm = this
-		const now = 'D--' + (new Date()).toISOString().replace(/:/g, '-').replace(/T/g, '--').slice(0, -5)
+		const now = APP.now()
 		const obj = {
 			created: now,
 			modified: now,

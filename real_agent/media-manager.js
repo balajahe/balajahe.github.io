@@ -46,8 +46,9 @@ customElements.define(me, class extends HTMLElement {
 
 		this.imgBut.onclick = async () => {
 			const blob = await this.imgCapturer.takePhoto(this.imgParams)
+
 			this.mediaContainer.add(
-				{ tagName: 'img', preview: this._takePrev('IMG'), origin: await this._takeOrigin(blob) }, 
+				{ created: APP.now(), tagName: 'img', preview: this._takePrev('IMG'), origin: await this._takeOrigin(blob) }, 
 				true
 			)
 		}
@@ -83,11 +84,11 @@ customElements.define(me, class extends HTMLElement {
 
 		this.vidRecorder = new MediaRecorder(this.stream, { mimeType : "video/webm" })
 		this.vidRecorder.ondataavailable = async (ev) => 
-			this.mediaContainer.add({tagName: 'video', preview: this._takePrev('VIDEO'), origin: ev.data}, true)
+			this.mediaContainer.add({ created: APP.now(), tagName: 'video', preview: this._takePrev('VIDEO'), origin: ev.data }, true)
 
 		this.audRecorder = new MediaRecorder(this.stream, { mimeType : "audio/webm" })
 		this.audRecorder.ondataavailable = async (ev) => 
-			this.mediaContainer.add({tagName: 'audio', preview: this._takePrev('AUDIO'), origin: ev.data}, true)
+			this.mediaContainer.add({ created: APP.now(), tagName: 'audio', preview: this._takePrev('AUDIO'), origin: ev.data }, true)
 	}
 
 	onUnRoute() {
@@ -110,7 +111,7 @@ customElements.define(me, class extends HTMLElement {
 			can.fill()
 			can.fillStyle = 'black';
 			can.font = 'bold 20px serif';
-			can.fillText('AUDIO', 1.2, 42)
+			can.fillText('AUDIO', 1.1, 42)
 		}
 		return this.canvas.toDataURL()
 	}

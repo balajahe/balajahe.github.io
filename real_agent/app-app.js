@@ -113,6 +113,10 @@ customElements.define(me, class extends HTMLElement {
 		el.remove()
 	}
 
+	now() {
+		return 'D--' + (new Date()).toISOString().replace(/:/g, '-').replace(/T/g, '--').replace(/\./g, '--').slice(0, -1)
+	}
+
 	setHash(hash) {
 		this._hashReplacing = true
 		location.hash = hash
