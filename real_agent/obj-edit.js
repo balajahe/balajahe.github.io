@@ -127,7 +127,6 @@ customElements.define(me, class extends HTMLElement {
          labels: Array.from(this.labels).map(el => el.innerHTML),
          medias: Array.from(this.medias).map(media => media)
       }
-      console.log(obj)
       APP.db.transaction("Objects", "readwrite").objectStore("Objects").put(obj).onsuccess = (ev) => {
          document.querySelector('obj-list').setItem(obj)
          APP.popModal()

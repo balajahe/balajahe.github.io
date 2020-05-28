@@ -3,6 +3,14 @@ import './obj-list-item.js'
 
 const me = 'obj-list'
 customElements.define(me, class extends HTMLElement {
+	mman = document.createElement('media-manager').build(
+		[
+			['msg', 'Take photo, video, or audio:'],
+			['back'],
+			['but', 'Next<br>&rArr;', () => APP.route('obj-new')]
+		],
+		null
+	)
 
 	connectedCallback() {
 		this.innerHTML = `
@@ -79,17 +87,9 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	onRoute() {
-		const mman = document.createElement('media-manager').build(
-			[
-				['msg', 'Take photo, video, or audio:'],
-				['back'],
-				['but', 'Next<br>&rArr;', () => APP.route('obj-new')]
-			],
-			null
-		)
 		APP.setBar([
 			['sep'],
-			['but', 'New<br>&rArr;', () => APP.route('media-manager', mman)]
+			['but', 'New<br>&rArr;', () => APP.route('media-manager', this.mman)]
 		])
 	}
 })

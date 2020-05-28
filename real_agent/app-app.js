@@ -71,8 +71,13 @@ customElements.define(me, class extends HTMLElement {
 			if (curr.onUnRoute) curr.onUnRoute()
 		}
 		if (elem) {
-			elem._hash = hash
-			this.lastElementChild.append(elem)
+			if (Array.from(this.lastElementChild.children).find(el => el === elem)) {
+				elem._hash = hash
+				elem.display()
+			} else {
+				elem._hash = hash
+				this.lastElementChild.append(elem)
+			}
 		} else {
 			elem = Array.from(this.lastElementChild.children).find(el => el._hash === hash)
 			if (!elem) {

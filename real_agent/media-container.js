@@ -30,7 +30,8 @@ customElements.define(me, class extends HTMLElement {
 	      const mman = document.createElement('media-manager').build(
 	         [
 	            ['msg', 'Take photo, video, or audio:'],
-	            ['but', 'Back<br>&lArr;', () => {
+	            ['but', 'Cancel<br>&lArr;', () => history.go(-1)],
+	            ['but', 'Next<br>&rArr;', () => {
 	            	mman.medias.forEach(media => this.add(media))
 	               history.go(-1)
 	            }]
