@@ -23,12 +23,12 @@ customElements.define(me, class extends HTMLElement {
 					font-size: smaller;
 				}
 				${me} > div {
-					margin-top: var(--app-bar-height);
+					margin-top1: var(--app-bar-height);
 					padding-left: var(--margin1); padding-right: var(--margin1);
 					flex-flow: column;
 				}
 				${me} .appModal {
-					position: fixed; z-index:10; 
+					position: fixed; top: 0; z-index:10; 
 					height: 100vh; 
 					width: 100vw; max-width: var(--app-max-width);
 					flex-flow: column;
@@ -36,7 +36,7 @@ customElements.define(me, class extends HTMLElement {
 					background-color: white; 
 				}
 				${me} .appModal > div {
-					margin-top: var(--app-bar-height);
+					margin-top1: var(--app-bar-height);
 					padding-left: var(--margin1); padding-right: var(--margin1);
 					flex-flow: column;
 				}

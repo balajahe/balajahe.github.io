@@ -3,30 +3,74 @@ import './media-player.js'
 
 const me = 'media-container'
 customElements.define(me, class extends HTMLElement {
+	_initMedias = null
+	_add = null
+	_del = null
 
-	build(medias, del) {
-		this.innerHTML = ''
-		medias.forEach(media => this.add(media, del))
-		return this
+	constructor() {
+		super()
+		this.innerHTML = `
+			<style scoped>
+				${me} { display: flex; flex-flow: row wrap;}
+				${me} > div, ${me} > button {
+					height: 70px; width: 70px;
+					margin: var(--margin1);
+			  		display: inline-flex; flex-flow: row; justify-content: center; align-items: center;
+			  		overflow: hidden;
+				}
+				${me} > div:hover { cursor: pointer; }
+				${me} > * { max-height: 100%; max-width: 100%; }
+				${me} button { border-radius: 0; }
+			</style>
+			<button w-id='addBut' style='display:none'>Add media</button>	
+		`
+		wcMixin(this)
+
+		this.addBut.onclick = () => {
+	      const mman = document.createElement('media-manager').build(
+	         [
+	            ['msg', 'Take photo, video, or audio:'],
+	            ['but', 'Back<br>&lArr;', () => {
+	            	mman.medias.forEach(media => this.add(media))
+	               history.go(-1)
+	            }]
+	         ],
+	         this.medias
+	      )
+			APP.routeModal('media-manager', mman)
+		}
 	}
 
-	add(media, del) {
+	build(medias, add, del) {
+		this._initMedias = medias
+		this._add = add ? add : this.getAttribute('add')
+		this._del = del ? del : this.getAttribute('del')
+
+		if (this._initMedias) {
+			for (let el=this.addBut.nexElementSibling; el; el=this.addBut.nexElementSibling) el.remove()
+			this._initMedias.forEach(media => this.add(media))
+		}
+
+		if (this._add) this.addBut.display('inline-flex')
+	}
+
+	add(media) {
 		const div = document.createElement('div')
 		const med = document.createElement('img')
 		med._source = media
 		med.src = media.preview ? media.preview : 'aaa'
 
-		if (del) del = () => div.remove()
+		const delActiion = this._del ? () => div.remove() : null
 		div.onclick = (ev) => {
 			ev.stopPropagation()
-			APP.routeModal('media-player', document.createElement('media-player').build(media, del))
+			APP.routeModal('media-player', document.createElement('media-player').build(media, delActiion))
 		}
 
 		div.append(med)
-		this.append(div)
+		this.addBut.before(div)
 	}
 
 	get value() {
-		return Array.from(this.children).map(el => el.firstElementChild._source)
+		return Array.from(this.querySelectorAll('div')).map(el => el.firstElementChild._source)
 	}
 })

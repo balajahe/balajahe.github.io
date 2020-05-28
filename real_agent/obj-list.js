@@ -7,6 +7,7 @@ customElements.define(me, class extends HTMLElement {
 	connectedCallback() {
 		this.innerHTML = `
 			<style scoped>
+				${me} { margin-top: var(--app-bar-height); }
 				${me} > #listDiv {
 					flex-flow: column;
 					margin-bottom: var(--margin2);
@@ -20,12 +21,14 @@ customElements.define(me, class extends HTMLElement {
 				}
 				${me} > #listDiv > * > #objDesc {
 					display: block;
-				${me} > center { 
-					margin: 1em; 
+				}
+				${me} > footer { 
+					text-align: center;
+					margin: 1rem; 
 				}
 			</style>
 			<div w-id='listDiv'></div>
-			<center>Real Agent is a database of arbitrary objects with geolocation, photos and videos.</center>
+			<footer>Real Agent is a database of arbitrary objects with geolocation, photos and videos.</footer>
 		`
 		wcMixin(this)
 

@@ -31,15 +31,15 @@ customElements.define(me, class extends HTMLElement {
 					border-radius: 0;
 				}
 			</style>
+			<div id='locDiv'>
+				<iframe w-id='mapIframe'></iframe>
+				<button w-id='locBut'>&#664;</button>
+			</div>
 			<div w-id='descDiv/desc' contenteditable='true'></div>
 			<div w-id='labelsDiv/labels/children'></div>
 			<div class='separ'>&nbsp;<span>Click to add label:</span>&nbsp;<hr/></div>
 			<div w-id='allLabelsDiv'>
 				<input w-id='newLabelInp/newLabel' placeholder='New label...'/>
-			</div>
-			<div id='locDiv'>
-				<iframe w-id='mapIframe'></iframe>
-				<button w-id='locBut'>&#664;</button>
 			</div>
 		`
 		wcMixin(this)

@@ -34,16 +34,16 @@ customElements.define(me, class extends HTMLElement {
             }
             ${me} #locDiv > div { 
                height: 100%; width: var(--button-height);
-               justify-content: center; align-items: center;
-               writing-mode: tb-rl;
+               flex-direction: column; justify-content: center; align-items: margin-bottom;
+               writing-mode: tb-rl; text-align: right; padding-bottom: 0.3rem;
             }
          </style>
-         <div w-id='descDiv/desc' contenteditable='true'></div>
-         <nav w-id='labelsDiv/labels/children'></nav>
          <div id='locDiv'>
             <iframe w-id='mapIframe'></iframe>
             <div w-id='/loc'></div>
          </div>
+         <div w-id='descDiv/desc' contenteditable='true'></div>
+         <nav w-id='labelsDiv/labels/children'></nav>
          <media-container w-id='objMedias/medias/value'></media-container>
          <div class='separ'>&nbsp;<small>Click to add label:</small>&nbsp;<hr/></div>
          <div w-id='allLabelsDiv'>
@@ -62,7 +62,7 @@ customElements.define(me, class extends HTMLElement {
          for (const lab of this.obj.labels) this.addLabel(lab)
       }
 
-      this.objMedias.build(this.obj.medias, true)
+      this.objMedias.build(this.obj.medias, true, true)
 
       if (this.obj.location) {
          this.loc = this.obj.location.latitude + ' - ' + this.obj.location.longitude
@@ -93,21 +93,10 @@ customElements.define(me, class extends HTMLElement {
    }
 
    onRoute() {
-      const mman = document.createElement('media-manager').build(
-         [
-            ['msg', 'Take photo, video, or audio:'],
-            ['but', 'Back<br>&lArr;', () => {
-               this.objMedias.build(mman.medias, true)
-               history.go(-1)
-            }]
-         ],
-         this.medias
-      )
       APP.setBar([
          ['but', 'Delete<br>&#8224;', () => {
             if (confirm('Delete current object forever ?')) this.deleteObj()
          }],
-         /*['but', 'Medias<br>&plusmn;', () => APP.route('media-manager', mman)],*/
          ['sep'],
          ['but', 'Cancel<br>&lArr;', () => history.go(-1)],
          ['but', 'Save<br>&rArr;', () => {
