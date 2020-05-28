@@ -30,9 +30,10 @@ customElements.define(me, class extends HTMLElement {
             }
             ${me} #locDiv > iframe { 
                display: inline-block; 
-               width: calc(100% - var(--button-height));
+               width: 100%; /*calc(100% - var(--button-height)); */
             }
             ${me} #locDiv > div { 
+               display: none;
                height: 100%; width: var(--button-height);
                flex-direction: column; justify-content: center; align-items: margin-bottom;
                writing-mode: tb-rl; text-align: right; padding-bottom: 0.3rem;
