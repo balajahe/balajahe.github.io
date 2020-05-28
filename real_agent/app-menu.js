@@ -1,4 +1,5 @@
 import wcMixin from '/WcMixin/WcMixin.js'
+import './organize-labels.js'
 
 const me = 'app-menu'
 customElements.define(me, class extends HTMLElement {
@@ -25,7 +26,7 @@ customElements.define(me, class extends HTMLElement {
 		wcMixin(this)
 
 		this.home.onclick = () => location.reload() //location.href = APP.baseUrl
-		this.labels.onclick = () => APP.route('labels-organize')
+		this.labels.onclick = () => APP.route('organize-labels')
 		this.export.onclick = async () => await this.exportDb()
 		this.source.onclick = () => location.href = 'https://github.com/balajahe/balajahe.github.io/tree/master/real_agent'
 	}

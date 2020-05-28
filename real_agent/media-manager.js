@@ -110,7 +110,7 @@ customElements.define(me, class extends HTMLElement {
 			can.fill()
 			can.fillStyle = 'black';
 			can.font = 'bold 20px serif';
-			can.fillText('AUDIO', 1.3, 42)
+			can.fillText('AUDIO', 1.2, 42)
 		}
 		return this.canvas.toDataURL()
 	}

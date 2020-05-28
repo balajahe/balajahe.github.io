@@ -33,7 +33,7 @@ customElements.define(me, class extends HTMLElement {
 			</style>
 			<div id='locDiv'>
 				<iframe w-id='mapIframe'></iframe>
-				<button w-id='locBut'>&#664;</button>
+				<button w-id='locBut'>...</button>
 			</div>
 			<div w-id='descDiv/desc' contenteditable='true'></div>
 			<div w-id='labelsDiv/labels/children'></div>
