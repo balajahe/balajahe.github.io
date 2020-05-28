@@ -2,6 +2,7 @@ import wcMixin from '/WcMixin/WcMixin.js'
 
 const me = 'obj-new'
 customElements.define(me, class extends HTMLElement {
+	location = null
 
 	connectedCallback() {
 		this.innerHTML = `
@@ -19,14 +20,14 @@ customElements.define(me, class extends HTMLElement {
 				${me} .separ hr { display: inline-block; flex: 1 1 auto; }
 				${me} #locDiv { 
 					height: 250px; width: 100%; 
-					margin-top: var(--margin2)1 margin-bottom: var(--margin1);
+					margin-top: var(--margin2); margin-bottom: var(--margin2);
 				}
 				${me} #locDiv > iframe { 
 					display: inline-block; 
-					width: calc(100% - var(--app-bar-height));
+					width: calc(100% - var(--button-height));
 				}
 				${me} #locDiv > button { 
-					height: 100%; width: var(--app-bar-height);
+					height: 100%; width: var(--button-height);
 					border-radius: 0;
 				}
 			</style>
@@ -38,7 +39,7 @@ customElements.define(me, class extends HTMLElement {
 			</div>
 			<div id='locDiv'>
 				<iframe w-id='mapIframe'></iframe>
-				<button w-id='locBut'>L</button>
+				<button w-id='locBut'>&#664;</button>
 			</div>
 		`
 		wcMixin(this)
@@ -74,10 +75,20 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	updateLocation() {
-		if (APP.location) {
+		const set = () => {
 			//this.locBut.innerHTML = APP.location.latitude + ' - ' + APP.location.longitude
-			this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${APP.location.longitude-0.002}%2C${APP.location.latitude-0.002}%2C${APP.location.longitude+0.002}%2C${APP.location.latitude+0.002}&layer=mapnik&marker=${APP.location.latitude}%2C${APP.location.longitude}`)
+			this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${this.location.longitude-0.002}%2C${this.location.latitude-0.002}%2C${this.location.longitude+0.002}%2C${this.location.latitude+0.002}&layer=mapnik&marker=${this.location.latitude}%2C${this.location.longitude}`)
 		}
+		navigator.geolocation.getCurrentPosition(loc => {
+			this.location = loc.coords
+			set()
+		})
+		/*
+		navigator.geolocation.watchPosition(loc => {
+			this.location = loc.coords
+			set()
+		})
+		*/
 	}
 
 	onRoute() {
@@ -106,7 +117,7 @@ customElements.define(me, class extends HTMLElement {
 		const obj = {
 			created: now,
 			modified: now,
-			location: {latitude: APP.location?.latitude, longitude: APP.location?.longitude},
+			location: {latitude: this.location?.latitude, longitude: this.location?.longitude},
 			desc: pageForm.desc,
 			labels: Array.from(pageForm.labels).map(el => el.innerHTML),
 			medias: pageMedias.medias

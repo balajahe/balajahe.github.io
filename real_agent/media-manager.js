@@ -47,7 +47,7 @@ customElements.define(me, class extends HTMLElement {
 		this.imgBut.onclick = async () => {
 			const blob = await this.imgCapturer.takePhoto(this.imgParams)
 			this.mediaContainer.add(
-				{ tagName: 'img', preview: this._takePrev('img'), origin: await this._takeOrigin(blob) }, 
+				{ tagName: 'img', preview: this._takePrev('IMG'), origin: await this._takeOrigin(blob) }, 
 				true
 			)
 		}
@@ -83,11 +83,11 @@ customElements.define(me, class extends HTMLElement {
 
 		this.vidRecorder = new MediaRecorder(this.stream, { mimeType : "video/webm" })
 		this.vidRecorder.ondataavailable = async (ev) => 
-			this.mediaContainer.add({tagName: 'video', preview: this._takePrev('video'), origin: ev.data}, true)
+			this.mediaContainer.add({tagName: 'video', preview: this._takePrev('VIDEO'), origin: ev.data}, true)
 
 		this.audRecorder = new MediaRecorder(this.stream, { mimeType : "audio/webm" })
 		this.audRecorder.ondataavailable = async (ev) => 
-			this.mediaContainer.add({tagName: 'audio', preview: this._takePrev('audio'), origin: ev.data}, true)
+			this.mediaContainer.add({tagName: 'audio', preview: this._takePrev('AUDIO'), origin: ev.data}, true)
 	}
 
 	onUnRoute() {
@@ -97,20 +97,20 @@ customElements.define(me, class extends HTMLElement {
 
 	_takePrev(tagName) {
 		const can = this.canvas.getContext('2d')
-		if (tagName === 'img') {
+		if (tagName === 'IMG') {
 			can.drawImage(this.vidPreview, 0, 0, APP.imgPrevSize, APP.imgPrevSize)
-		} else if (tagName === 'video') {
+		} else if (tagName === 'VIDEO') {
 			can.drawImage(this.vidPreview, 0, 0, APP.imgPrevSize, APP.imgPrevSize)
 			can.fillStyle = 'black';
 			can.font = 'bold 20px serif';
-			can.fillText('VIDEO', 2, 20)
-		} else if (tagName === 'audio') {
+			can.fillText('VIDEO', 2, 42)
+		} else if (tagName === 'AUDIO') {
 			can.rect(0, 0, APP.imgPrevSize, APP.imgPrevSize);
 			can.fillStyle = 'silver';
 			can.fill()
 			can.fillStyle = 'black';
 			can.font = 'bold 20px serif';
-			can.fillText('AUDIO', 2, 20)
+			can.fillText('AUDIO', 1.3, 42)
 		}
 		return this.canvas.toDataURL()
 	}

@@ -24,24 +24,27 @@ customElements.define(me, class extends HTMLElement {
             ${me} #labelsDiv { min-height: calc(var(--button-height) * 0.9); }
             ${me} .separ { margin-top: var(--margin2); flex-flow: row nowrap; }
             ${me} .separ hr { display: inline-block; flex: 1 1 auto; }
-            ${me} #locDiv {
-               height: 250px; width: 100%;
+            ${me} #locDiv { 
+               height: 250px; width: 100%; 
                margin-top: var(--margin2); margin-bottom: var(--margin2);
             }
-            ${me} #locDiv > iframe { width: 85%; }
-            ${me} #locDiv > div {
-               width: 15%;
+            ${me} #locDiv > iframe { 
+               display: inline-block; 
+               width: calc(100% - var(--button-height));
+            }
+            ${me} #locDiv > div { 
+               height: 100%; width: var(--button-height);
                justify-content: center; align-items: center;
                writing-mode: tb-rl;
             }
          </style>
          <div w-id='descDiv/desc' contenteditable='true'></div>
          <nav w-id='labelsDiv/labels/children'></nav>
-         <media-container w-id='objMedias/medias/value'></media-container>
          <div id='locDiv'>
             <iframe w-id='mapIframe'></iframe>
             <div w-id='/loc'></div>
          </div>
+         <media-container w-id='objMedias/medias/value'></media-container>
          <div class='separ'>&nbsp;<small>Click to add label:</small>&nbsp;<hr/></div>
          <div w-id='allLabelsDiv'>
             <input w-id='newLabelInp/newLabel' placeholder='New label...'/>
@@ -104,7 +107,7 @@ customElements.define(me, class extends HTMLElement {
          ['but', 'Delete<br>&#8224;', () => {
             if (confirm('Delete current object forever ?')) this.deleteObj()
          }],
-         ['but', 'Medias<br>&plusmn;', () => APP.route('media-manager', mman)],
+         /*['but', 'Medias<br>&plusmn;', () => APP.route('media-manager', mman)],*/
          ['sep'],
          ['but', 'Cancel<br>&lArr;', () => history.go(-1)],
          ['but', 'Save<br>&rArr;', () => {

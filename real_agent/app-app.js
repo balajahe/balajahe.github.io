@@ -3,26 +3,24 @@ import './app-bar.js'
 
 const me = 'app-app'
 customElements.define(me, class extends HTMLElement {
+	 _hashReplacing = false
 	imgPrevSize = 70
 	db = null
-	location = null
-	locationCallback = null
-	 _hashReplacing = false
 
 	connectedCallback() {
 		this.innerHTML = `
 			<style scoped>
+				${me} > app-bar {
+					position: fixed; z-index: 1000; top: 0;
+					height: var(--app-bar-height); 
+					width: 100%; max-width: var(--app-max-width);
+				}
 				${me} {
 					height: 100vh; 
 					width: 100vw; max-width: var(--app-max-width);
 					display: flex; flex-flow: column;
 					overflow: auto;
 					font-size: smaller;
-				}
-				${me} > app-bar {
-					position: fixed; z-index: 1000; top: 0;
-					height: var(--app-bar-height); 
-					width: 100%; max-width: var(--app-max-width);
 				}
 				${me} > div {
 					margin-top: var(--app-bar-height);
@@ -31,19 +29,16 @@ customElements.define(me, class extends HTMLElement {
 				}
 				${me} .appModal {
 					position: fixed; z-index:10; 
-					height: calc(100vh - var(--app-bar-height)); 
+					height: 100vh; 
 					width: 100vw; max-width: var(--app-max-width);
 					flex-flow: column;
 					overflow: auto;
 					background-color: white; 
 				}
-				${me} .appModalCenter {
-					position: fixed; z-index:100;
-					height: calc(100vh - var(--app-bar-height)); 
-					width: 100vw; max-width: var(--app-max-width);
-					flex-flow: column; justify-content: center; align-items: center;  
-					overflow: auto;
-					background-color: white; 
+				${me} .appModal > div {
+					margin-top: var(--app-bar-height);
+					padding-left: var(--margin1); padding-right: var(--margin1);
+					flex-flow: column;
 				}
 			</style>
 			<app-bar w-id='appBar'></app-bar>
@@ -64,15 +59,6 @@ customElements.define(me, class extends HTMLElement {
 			}
 			this._hashReplacing = false
 		}
-
-		navigator.geolocation.getCurrentPosition(loc => {
-			this.location = loc.coords
-			if (this.locationCallback) this.locationCallback()
-		})
-		navigator.geolocation.watchPosition(loc => {
-			this.location = loc.coords
-			if (this.locationCallback) this.locationCallback()
-		})		
 	}
 
 	setBar(v) { this.appBar.setBar(v) }
@@ -102,10 +88,10 @@ customElements.define(me, class extends HTMLElement {
 		this._replaceLastHash(hash)
 	}
 
-	routeModal(hash, elem, className = 'appModal') {
+	routeModal(hash, elem) {
 		this.appBar.pushBar()
 		const modal = document.createElement('div')
-		modal.className = className
+		modal.className = 'appModal'
 		this.append(modal)		
 
 		elem._hash = hash

@@ -14,24 +14,29 @@ customElements.define(me, class extends HTMLElement {
 	async connectedCallback() {
 		this.innerHTML = `
 			<style scoped>
-				${me} > * { height: auto; width: 100%; }
-				${me} > img:hover { cursor: pointer; }
+				${me} { 
+					height: calc(100vh - var(--app-bar-height)); width: 100%;
+					display: flex; flex-flow: column; justify-content: center;
+				}
+				${me}:hover { cursor: pointer; }
+				${me} > * { height1: auto; width: 100%; }
 			</style>
 		`
 		wcMixin(this)
-
-		console.log(this.source)
-
 		const el = document.createElement(this.source.tagName)
-		if (this.source.tagName === 'img') {
+		if (el.tagName === 'IMG') {
 			el.src = this.source.origin ? this.source.origin : URL.createObjectURL(this.source.blob)
-			this.onclick = () => history.go(-1)
-		} else {
-			//el.src = URL.createObjectURL(await (await fetch(this.source.origin)).blob())
+		} else if (el.tagName === 'VIDEO') {
+			el.src = URL.createObjectURL(this.source.origin)
+			el.controls = true
+			el.autoplay = true
+			el.onclick = (ev) => ev.stopPropagation()
+		} else if (el.tagName === 'AUDIO') {
 			el.src = URL.createObjectURL(this.source.origin)
 			el.controls = true
 			el.autoplay = true
 		}
+		this.onclick = () => history.go(-1)
 		this.append(el)
 	}
 

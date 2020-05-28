@@ -19,7 +19,7 @@ customElements.define(me, class extends HTMLElement {
 		if (del) del = () => div.remove()
 		div.onclick = (ev) => {
 			ev.stopPropagation()
-			APP.routeModal('media-player', document.createElement('media-player').build(media, del), 'appModalCenter')
+			APP.routeModal('media-player', document.createElement('media-player').build(media, del))
 		}
 
 		div.append(med)
