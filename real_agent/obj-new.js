@@ -24,16 +24,11 @@ customElements.define(me, class extends HTMLElement {
 				}
 				${me} #locDiv > iframe { 
 					display: inline-block; 
-					width: calc(100% - var(--button-height));
-				}
-				${me} #locDiv > button { 
-					height: 100%; width: var(--button-height);
-					border-radius: 0;
+					width: 100%;
 				}
 			</style>
 			<div id='locDiv'>
 				<iframe w-id='mapIframe'></iframe>
-				<button w-id='locBut'>...</button>
 			</div>
 			<div w-id='descDiv/desc' contenteditable='true'></div>
 			<div w-id='labelsDiv/labels/children'></div>
@@ -48,8 +43,6 @@ customElements.define(me, class extends HTMLElement {
 			localStorage.setItem('labels', 'Дом,Дача,Участок,Заброшен,Ветхий,Разрушен,Жилой,Продается')
 		for (const lab of localStorage.getItem('labels').split(',')) this.addAvailLabel(lab)
 
-		this.locBut.onclick = () => this.updateLocation()
-
 		this.newLabelInp.onkeypress = (ev) => {
 			if (ev.key === 'Enter') {
 				this.addAvailLabel(this.newLabel)
@@ -57,7 +50,6 @@ customElements.define(me, class extends HTMLElement {
 				this.newLabel = ''
 			}
 		}
-		//APP.locationCallback = this.showLocation.bind(this)
 	}
 
 	addLabel(lab) {
@@ -95,9 +87,10 @@ customElements.define(me, class extends HTMLElement {
 		this.updateLocation()
 		this.descDiv.focus()
 		APP.setBar([
+			['but', 'Geo<br>&#8853;', () => this.updateLocation()],
 			['msg', 'Enter description and add labels:'],
 			['back'],
-			['but', 'Save<br>&rArr;', () => {
+			['but', 'Save<br>&rArr;', async () => {
 				if (!this.desc) {
 					APP.setMsg('<span style="color:red">Empty description !</span>')
 					this.descDiv.focus()
@@ -110,7 +103,7 @@ customElements.define(me, class extends HTMLElement {
 		])
 	}
 
-	saveNewObj() {
+	async saveNewObj() {
 		const pageMedias = document.querySelector('media-manager')
 		const pageForm = this
 		const now = APP.now()
@@ -122,12 +115,26 @@ customElements.define(me, class extends HTMLElement {
 			labels: Array.from(pageForm.labels).map(el => el.innerHTML),
 			medias: pageMedias.medias
 		} 
-		APP.db.transaction("Objects", "readwrite").objectStore("Objects").add(obj).onsuccess = (ev) => {
-			APP.remove(pageMedias)
-			APP.remove(this)
-			document.querySelector('obj-list').addItem(obj)
-			APP.route('obj-list')
-			APP.setMsg('Saved !')
+
+      const origins = []
+      for (const media of obj.medias) {
+         origins.push({ created: media.created, origin: media.origin })
+         media.origin = null
+      }
+
+      const tran = APP.db.transaction(['Objects', 'Origins'], 'readwrite')
+      const proms = []
+
+		proms.push(new Promise(resolve => tran.objectStore("Objects").add(obj).onsuccess = resolve))
+		for (const origin of origins) {
+			proms.push(new Promise(resolve => tran.objectStore("Origins").add(origin).onsuccess = resolve))
 		}
+
+		await Promise.all(proms)
+		document.querySelector('obj-list').addItem(obj)
+		APP.remove(pageMedias)
+		APP.remove(this)
+		APP.route('obj-list')
+		APP.setMsg('Saved !')
 	}
 })

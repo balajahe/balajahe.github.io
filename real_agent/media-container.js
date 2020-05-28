@@ -3,9 +3,6 @@ import './media-player.js'
 
 const me = 'media-container'
 customElements.define(me, class extends HTMLElement {
-	_initMedias = null
-	_add = null
-	_del = null
 
 	constructor() {
 		super()
@@ -32,7 +29,7 @@ customElements.define(me, class extends HTMLElement {
 	            ['msg', 'Take photo, video, or audio:'],
 	            ['but', 'Cancel<br>&lArr;', () => history.go(-1)],
 	            ['but', 'Next<br>&rArr;', () => {
-	            	mman.medias.forEach(media => this.add(media))
+	            	mman.medias.forEach(media => this.add(media, true))
 	               history.go(-1)
 	            }]
 	         ],
@@ -43,25 +40,20 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	build(medias, add, del) {
-		this._initMedias = medias
-		this._add = add ? add : this.getAttribute('add')
-		this._del = del ? del : this.getAttribute('del')
-
-		if (this._initMedias) {
+		if (medias) {
 			for (let el=this.addBut.nexElementSibling; el; el=this.addBut.nexElementSibling) el.remove()
-			this._initMedias.forEach(media => this.add(media))
+			medias.forEach(media => this.add(media, del))
 		}
-
-		if (this._add) this.addBut.display('inline-flex')
+		if (add) this.addBut.display('inline-flex')
 	}
 
-	add(media) {
+	add(media, del) {
 		const div = document.createElement('div')
 		const med = document.createElement('img')
 		med._source = media
-		med.src = media.preview ? media.preview : 'aaa'
+		med.src = media.preview
 
-		const delActiion = this._del ? () => div.remove() : null
+		const delActiion = del ? () => div.remove() : null
 		div.onclick = (ev) => {
 			ev.stopPropagation()
 			APP.routeModal('media-player', document.createElement('media-player').build(media, delActiion))

@@ -23,21 +23,25 @@ customElements.define(me, class extends HTMLElement {
 			</style>
 		`
 		wcMixin(this)
-		const el = document.createElement(this.source.tagName)
-		if (el.tagName === 'IMG') {
-			el.src = this.source.origin ? this.source.origin : URL.createObjectURL(this.source.blob)
-		} else if (el.tagName === 'VIDEO') {
-			el.src = URL.createObjectURL(this.source.origin)
-			el.controls = true
-			el.autoplay = true
-			el.onclick = (ev) => ev.stopPropagation()
-		} else if (el.tagName === 'AUDIO') {
-			el.src = URL.createObjectURL(this.source.origin)
-			el.controls = true
-			el.autoplay = true
-		}
+
 		this.onclick = () => history.go(-1)
-		this.append(el)
+
+		APP.db.transaction("Origins").objectStore("Origins").openCursor(IDBKeyRange.only(this.source.created)).onsuccess = (ev) => {
+			const origin = ev.target.result?.value
+
+			const el = document.createElement(this.source.tagName)
+
+			if (el.tagName === 'IMG') {
+				el.src = origin?.origin ? origin.origin : this.source.origin
+			} else {
+				el.src = origin?.origin ? URL.createObjectURL(origin.origin) : URL.createObjectURL(this.source.origin)
+				el.controls = true
+				el.autoplay = true
+			}
+			if (el.tagName === 'VIDEO') el.onclick = (ev) => ev.stopPropagation()
+			
+			this.append(el)
+		}
 	}
 
    onRoute() {

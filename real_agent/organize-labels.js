@@ -28,7 +28,9 @@ customElements.define(me, class extends HTMLElement {
          ['but', 'Cancel<br>&lArr;', () => history.go(-1)],
          ['but', 'Save<br>&rArr;', () => {
          	localStorage.setItem('labels', this.labels)
-         	history.go(-1)
+         	APP.remove(this)
+         	APP.route('obj-list')
+         	APP.setMsg('Saved !')
          }]
 		])
 	}

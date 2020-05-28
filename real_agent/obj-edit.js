@@ -100,7 +100,7 @@ customElements.define(me, class extends HTMLElement {
          }],
          ['sep'],
          ['but', 'Cancel<br>&lArr;', () => history.go(-1)],
-         ['but', 'Save<br>&rArr;', () => {
+         ['but', 'Save<br>&rArr;', async () => {
             if (!this.desc) {
                APP.setMsg('<span style="color:red">Empty description !</span>')
                this.descDiv.focus()
@@ -113,11 +113,7 @@ customElements.define(me, class extends HTMLElement {
       ])
    }
 
-   saveExistObj() {
-      const origins = []
-      this.medias.forEach(media => {
-         origins.push({ created: media.created, origin: media.origin })
-      })
+   async saveExistObj() {
       const now = APP.now()
       const obj = {
          created: this.obj.created,
@@ -127,11 +123,25 @@ customElements.define(me, class extends HTMLElement {
          labels: Array.from(this.labels).map(el => el.innerHTML),
          medias: Array.from(this.medias).map(media => media)
       }
-      APP.db.transaction("Objects", "readwrite").objectStore("Objects").put(obj).onsuccess = (ev) => {
-         document.querySelector('obj-list').setItem(obj)
-         APP.popModal()
-         APP.setMsg('Saved !')
+
+      const origins = []
+      for (const media of obj.medias) {
+         origins.push({ created: media.created, origin: media.origin })
+         media.origin = null
       }
+
+      const tran = APP.db.transaction(['Objects', 'Origins'], 'readwrite')
+      const proms = []
+
+      proms.push(new Promise(resolve => tran.objectStore("Objects").put(obj).onsuccess = resolve))
+      for (const origin of origins) {
+         proms.push(new Promise(resolve => tran.objectStore("Origins").put(origin).onsuccess = resolve))
+      }
+
+      await Promise.all(proms)
+      document.querySelector('obj-list').setItem(obj)
+      APP.popModal()
+      APP.setMsg('Saved !')
    }
 
    deleteObj(id) {
