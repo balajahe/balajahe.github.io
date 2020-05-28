@@ -125,7 +125,7 @@ customElements.define(me, class extends HTMLElement {
       }
 
       const origins = []
-      for (const media of obj.medias) {
+      for (const media of obj.medias) if (media.origin) {
          origins.push({ created: media.created, origin: media.origin })
          media.origin = null
       }
