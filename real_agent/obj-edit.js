@@ -26,7 +26,7 @@ customElements.define(me, class extends HTMLElement {
 				${me} .separ hr { display: inline-block; flex: 1 1 auto; }
 				${me} #locDiv { 
 					height: 250px; width: 100%; 
-					margin-top: var(--margin2); margin-bottom: var(--margin2);
+					margin-top: var(--margin1); margin-bottom: var(--margin2);
 				}
 				${me} #locDiv > iframe { 
 					display: inline-block; 
@@ -39,13 +39,13 @@ customElements.define(me, class extends HTMLElement {
 					writing-mode: tb-rl; text-align: right; padding-bottom: 0.3rem;
 				}
 			</style>
+			<nav w-id='labelsDiv/labels/children'></nav>
+			<div w-id='descDiv/desc' contenteditable='true'></div>
+			<media-container w-id='mediaContainer'></media-container>
 			<div id='locDiv'>
 				<iframe w-id='mapIframe'></iframe>
 				<div w-id='/loc'></div>
 			</div>
-			<div w-id='descDiv/desc' contenteditable='true'></div>
-			<nav w-id='labelsDiv/labels/children'></nav>
-			<media-container w-id='mediaContainer'></media-container>
 			<div class='separ'>&nbsp;<small>Click to add label:</small>&nbsp;<hr/></div>
 			<div w-id='allLabelsDiv'>
 				<input w-id='newLabelInp/newLabel' placeholder='New label...'/>
@@ -99,16 +99,13 @@ customElements.define(me, class extends HTMLElement {
 				if (confirm('Delete current object forever ?')) this.deleteObj()
 			}],
 			['sep'],
-			['but', 'Cancel<br>&lArr;', () => {
-				APP.popModal()
-				APP.setMsg('')
-			}],
+			['but', 'Cancel<br>&lArr;', () => history.go(-1)],
 			['but', 'Save<br>&rArr;', async () => {
 				if (!this.desc) {
-					APP.setMsg('<span style="color:red">Empty description !</span>')
+					APP.setMsg('<span style="color:red"><b>EMPTY DESCRIPTION!</b></span>')
 					this.descDiv.focus()
 				} else if (this.labels.length === 0) {
-					APP.setMsg('<span style="color:red">No labels !</span>')
+					APP.setMsg('<span style="color:red"><b>NO LABELS!</b></span>')
 				} else {
 					this.saveExistObj()
 				}
@@ -145,8 +142,8 @@ customElements.define(me, class extends HTMLElement {
 		await Promise.all(proms)
 
 		document.querySelector('obj-list').setItem(obj)
-		APP.popModal()
-		APP.setMsg('Saved !')
+		history.go(-1)
+		setTimeout(() => APP.setMsg('Saved !'), 100)
 	}
 
 	async deleteObj(id) {
@@ -158,7 +155,7 @@ customElements.define(me, class extends HTMLElement {
 		await Promise.all(proms)
 
 		document.querySelector('obj-list').getItem(this.obj.created).remove()
-		APP.popModal()
-		APP.setMsg('Deleted !')
+		history.go(-1)
+		setTimeout(() => APP.setMsg('Deleted !'), 100)
 	}
 })

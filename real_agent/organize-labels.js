@@ -30,7 +30,7 @@ customElements.define(me, class extends HTMLElement {
          	localStorage.setItem('labels', this.labels)
          	APP.remove(this)
          	APP.route('obj-list')
-         	APP.setMsg('Saved !')
+				setTimeout(() => APP.setMsg('Saved !'), 100)
          }]
 		])
 	}

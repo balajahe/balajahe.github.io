@@ -20,21 +20,21 @@ customElements.define(me, class extends HTMLElement {
 				${me} .separ hr { display: inline-block; flex: 1 1 auto; }
 				${me} #locDiv { 
 					height: 250px; width: 100%; 
-					margin-top: var(--margin2); margin-bottom: var(--margin2);
+					margin-top: var(--margin1);	
 				}
 				${me} #locDiv > iframe { 
 					display: inline-block; 
 					width: 100%;
 				}
 			</style>
-			<div id='locDiv'>
-				<iframe w-id='mapIframe'></iframe>
-			</div>
-			<div w-id='descDiv/desc' contenteditable='true'></div>
 			<div w-id='labelsDiv/labels/children'></div>
+			<div w-id='descDiv/desc' contenteditable='true'></div>
 			<div class='separ'>&nbsp;<span>Click to add label:</span>&nbsp;<hr/></div>
 			<div w-id='allLabelsDiv'>
 				<input w-id='newLabelInp/newLabel' placeholder='New label...'/>
+			</div>
+			<div id='locDiv'>
+				<iframe w-id='mapIframe'></iframe>
 			</div>
 		`
 		wcMixin(this)

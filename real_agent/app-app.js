@@ -10,26 +10,26 @@ customElements.define(me, class extends HTMLElement {
 	connectedCallback() {
 		this.innerHTML = `
 			<style scoped>
+				${me} {
+					height: 100vh;
+					width: 100vw; max-width: var(--app-max-width);
+					display: flex; flex-flow: column;
+					font-size: smaller;
+				}
 				${me} > app-bar {
 					position: fixed; z-index: 1000; top: 0;
 					height: var(--app-bar-height); 
 					width: 100%; max-width: var(--app-max-width);
 				}
-				${me} {
-					height: 100vh; 
-					width: 100vw; max-width: var(--app-max-width);
-					display: flex; flex-flow: column;
-					overflow: auto;
-					font-size: smaller;
-				}
 				${me} > div {
-					margin-top1: var(--app-bar-height);
+					margin-top: var(--app-bar-height); 
 					padding-left: var(--margin1); padding-right: var(--margin1);
+					overflow: auto;
 					flex-flow: column;
 				}
 				${me} .appModal {
 					position: fixed; top: 0; z-index:10; 
-					height: 100vh; 
+					height: calc(100vh - var(--app-bar-height)); 
 					width: 100vw; max-width: var(--app-max-width);
 					flex-flow: column;
 					overflow: auto;

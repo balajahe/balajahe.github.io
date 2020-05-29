@@ -7,7 +7,6 @@ customElements.define(me, class extends HTMLElement {
 	connectedCallback() {
 		this.innerHTML = `
 			<style scoped>
-				${me} { margin-top: var(--app-bar-height); }
 				${me} > #listDiv {
 					flex-flow: column;
 					margin-bottom: var(--margin2);
@@ -59,8 +58,7 @@ customElements.define(me, class extends HTMLElement {
 		APP.db.transaction("Objects").objectStore("Objects").openCursor(null,'prev').onsuccess = (ev) => {
 			const cursor = ev.target.result
 			if (cursor) {
-				const obj = cursor.value
-				this.listDiv.append(document.createElement('obj-list-item').build(obj))
+				this.listDiv.append(document.createElement('obj-list-item').build(cursor.value))
 				cursor.continue()
 			}
 		}

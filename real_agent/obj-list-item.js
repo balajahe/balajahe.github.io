@@ -8,7 +8,7 @@ customElements.define(me, class extends HTMLElement {
 		this.innerHTML = `
 			<div w-id='objLabels'></div>
 			<div w-id='objDesc'></div>
-			<media-container w-id='objMedias'></media-container>
+			<media-container w-id='mediaContainer'></media-container>
 		`
 		wcMixin(this)
 		
@@ -16,9 +16,13 @@ customElements.define(me, class extends HTMLElement {
 
 		this.objLabels.innerHTML = obj.labels
 		this.objDesc.innerHTML = obj.desc
-		this.objMedias.build(obj.medias)
+		this.mediaContainer.build(obj.medias)
 
-		this.onclick = () => APP.routeModal('obj-edit', document.createElement('obj-edit').build(obj))
+		this.onclick = () => {
+			APP.setMsg('')
+			APP.routeModal('obj-edit', document.createElement('obj-edit').build(obj))
+		}
+
 		return this
 	}
 })
