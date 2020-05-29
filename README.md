@@ -1,6 +1,6 @@
 Power web application examples:
 <br><br>
-<a href="/real_agent/">real_agent</a> - Real agent - Mobile PWA, is a database of arbitrary objects with geolocation, photos and video. Stores data in IndexedDB.
+<a href="/real_agent/">real_agent</a> - Mobile PWA, is a database of arbitrary objects with geolocation, photos, video and audio. Stores data in IndexedDB. Developed on vanilla web components, without frameworks and libraries, optimized for performance.
 <br><br>
 <a href="/cctv_nn/">cctv_nn</a> - CCTV system based on a power web application and COCO-SSD neural network. Detects people, records video, and sends it to an email. The application will request permission for the camera, microphone and google authorization (for sending emails through the current account).
 <br><br>
