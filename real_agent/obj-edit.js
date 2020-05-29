@@ -99,7 +99,10 @@ customElements.define(me, class extends HTMLElement {
 				if (confirm('Delete current object forever ?')) this.deleteObj()
 			}],
 			['sep'],
-			['but', 'Cancel<br>&lArr;', () => history.go(-1)],
+			['but', 'Cancel<br>&lArr;', () => {
+				APP.popModal()
+				APP.setMsg('')
+			}],
 			['but', 'Save<br>&rArr;', async () => {
 				if (!this.desc) {
 					APP.setMsg('<span style="color:red">Empty description !</span>')
