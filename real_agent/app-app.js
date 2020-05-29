@@ -14,6 +14,7 @@ customElements.define(me, class extends HTMLElement {
 					height: 100vh;
 					width: 100vw; max-width: var(--app-max-width);
 					display: flex; flex-flow: column;
+					overflow: hidden;
 					font-size: smaller;
 				}
 				${me} > app-bar {
@@ -22,6 +23,7 @@ customElements.define(me, class extends HTMLElement {
 					width: 100%; max-width: var(--app-max-width);
 				}
 				${me} > div {
+					height: calc(100vh - var(--app-bar-height));
 					margin-top: var(--app-bar-height); 
 					padding-left: var(--margin1); padding-right: var(--margin1);
 					overflow: auto;
