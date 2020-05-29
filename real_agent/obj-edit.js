@@ -54,21 +54,17 @@ customElements.define(me, class extends HTMLElement {
 		`
 		wcMixin(this)
 
-		if (!localStorage.getItem('labels')) {
-			localStorage.setItem('labels', 'Дом,Дача,Участок,Заброшен,Ветхий,Разрушен,Жилой,Продается')
-		}
 		for (const lab of localStorage.getItem('labels').split(',')) this.addAvailLabel(lab)
 
 		if (this.obj) {
 			this.desc = this.obj.desc
 			for (const lab of this.obj.labels) this.addLabel(lab)
 		}
-
 		this.mediaContainer.build(this.obj.medias, true, true)
 
 		if (this.obj.location) {
-			this.loc = this.obj.location.latitude + ' - ' + this.obj.location.longitude
 			this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${this.obj.location.longitude-0.002}%2C${this.obj.location.latitude-0.002}%2C${this.obj.location.longitude+0.002}%2C${this.obj.location.latitude+0.002}&layer=mapnik&marker=${this.obj.location.latitude}%2C${this.obj.location.longitude}`)
+			//this.loc = this.obj.location.latitude + ' - ' + this.obj.location.longitude
 		}
 
 		this.newLabelInp.onkeypress = (ev) => {
@@ -103,10 +99,10 @@ customElements.define(me, class extends HTMLElement {
 			['but', 'Cancel<br>&lArr;', () => history.go(-1)],
 			['but', 'Save<br>&rArr;', async () => {
 				if (!this.desc) {
-					APP.setMsg('<span style="color:red"><b>EMPTY DESCRIPTION!</b></span>')
+					APP.message('<span style="color:red"><b>EMPTY DESCRIPTION!</b></span>')
 					this.descDiv.focus()
 				} else if (this.labels.length === 0) {
-					APP.setMsg('<span style="color:red"><b>NO LABELS!</b></span>')
+					APP.message('<span style="color:red"><b>NO LABELS!</b></span>')
 				} else {
 					this.saveExistObj()
 				}
@@ -144,7 +140,7 @@ customElements.define(me, class extends HTMLElement {
 
 		document.querySelector('obj-list').setItem(obj)
 		history.go(-1)
-		setTimeout(() => APP.setMsg('Saved !'), 100)
+		APP.message('SAVED !')
 	}
 
 	async deleteObj(id) {
@@ -155,8 +151,8 @@ customElements.define(me, class extends HTMLElement {
 		proms.push(new Promise(resolve => tran.objectStore("Origins").delete(IDBKeyRange.lowerBound(this.obj.created, true)).onsuccess = resolve))
 		await Promise.all(proms)
 
-		document.querySelector('obj-list').getItem(this.obj.created).remove()
+		document.querySelector('obj-list').delItem(this.obj.created)
 		history.go(-1)
-		setTimeout(() => APP.setMsg('Deleted !'), 100)
+		APP.message('DELETED !')
 	}
 })

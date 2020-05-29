@@ -40,10 +40,6 @@ customElements.define(me, class extends HTMLElement {
 		`
 		wcMixin(this)
 
-		if (!localStorage.getItem('labels'))
-			localStorage.setItem('labels', 'Дом,Дача,Участок,Промзона,Заброшка,Зеленка,Жилой,Ветхий,Разрушен,Продается')
-		for (const lab of localStorage.getItem('labels').split(',')) this.addAvailLabel(lab)
-
 		this.newLabelInp.onkeypress = (ev) => {
 			if (ev.key === 'Enter') {
 				this.addAvailLabel(this.newLabel)
@@ -68,20 +64,11 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	updateLocation() {
-		const set = () => {
-			this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${this.location.longitude-0.002}%2C${this.location.latitude-0.002}%2C${this.location.longitude+0.002}%2C${this.location.latitude+0.002}&layer=mapnik&marker=${this.location.latitude}%2C${this.location.longitude}`)
-			//this.locBut.innerHTML = APP.location.latitude + ' - ' + APP.location.longitude
-		}
 		navigator.geolocation.getCurrentPosition(loc => {
 			this.location = loc.coords
-			set()
+			this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${this.location.longitude-0.002}%2C${this.location.latitude-0.002}%2C${this.location.longitude+0.002}%2C${this.location.latitude+0.002}&layer=mapnik&marker=${this.location.latitude}%2C${this.location.longitude}`)
+			//this.locBut.innerHTML = APP.location.latitude + ' - ' + APP.location.longitude
 		})
-		/*
-		navigator.geolocation.watchPosition(loc => {
-			this.location = loc.coords
-			set()
-		})
-		*/
 	}
 
 	onRoute() {
@@ -91,15 +78,16 @@ customElements.define(me, class extends HTMLElement {
 			['back'],
 			['but', 'Save<br>&rArr;', async () => {
 				if (!this.desc) {
-					APP.setMsg('<span style="color:red"><b>EMPTY DESCRIPTION!</b></span>')
+					APP.message('<span style="color:red"><b>EMPTY DESCRIPTION!</b></span>')
 					this.descDiv.focus()
 				} else if (this.labels.length === 0) {
-					APP.setMsg('<span style="color:red"><b>NO LABELS!</b></span>')
+					APP.message('<span style="color:red"><b>NO LABELS!</b></span>')
 				} else {
 					this.saveNewObj()
 				}
 			}]
 		])
+		for (const lab of localStorage.getItem('labels').split(',')) this.addAvailLabel(lab)
 		this.updateLocation()
 		this.descDiv.focus()
 	}
@@ -135,7 +123,6 @@ customElements.define(me, class extends HTMLElement {
 		APP.remove(pageMedias)
 		APP.remove(this)
 		APP.route('obj-list')
-		APP.setMsg('Saved !')
-		APP.scrollTop = 0
+		APP.message('SAVED !')
 	}
 })

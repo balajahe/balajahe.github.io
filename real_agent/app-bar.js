@@ -25,6 +25,15 @@ customElements.define(me, class extends HTMLElement {
 					overflow: hidden;
 					font-size: small;
 				}
+				${me} #msgBut {
+					display: none;
+					position: fixed; z-index: 1000;
+					top: 0; left:calc(100% - 10rem);
+					height: var(--app-bar-height);
+					width: 10rem;
+					margin: 0;
+					background-color: silver;
+				}
 			</style>
 			<app-menu w-id='appMenu' style='display:none'></app-menu>
 			<button w-id='menuBut'>&#9776;</button>
@@ -69,10 +78,6 @@ customElements.define(me, class extends HTMLElement {
 		}
 	}
 
-	setMsg(msg) { 
-		this.querySelectorAll('div')[0].innerHTML = msg ? msg : '' 
-	}
-
 	pushBar() {
 		const old = []
 		for (let b = this.menuBut.nextElementSibling; b; b = this.menuBut.nextElementSibling) {
@@ -85,5 +90,14 @@ customElements.define(me, class extends HTMLElement {
 	popBar() {
 		for (let b = this.menuBut.nextElementSibling; b; b = this.menuBut.nextElementSibling) b.remove()
 		for (const b of this._stack.pop()) this.append(b)
+	}
+
+	message(msg) { 
+		setTimeout(() => {
+			const div = this.querySelectorAll('div')[0]
+			const saveContent = div.innerHTML
+			div.innerHTML = msg
+			setTimeout(() => div.innerHTML = saveContent, 2000)
+		}, 100)
 	}
 })

@@ -76,6 +76,10 @@ customElements.define(me, class extends HTMLElement {
 		this.listDiv.prepend(document.createElement('obj-list-item').build(obj))
 	}
 
+	delItem(id) {
+		this.querySelector('#' + id).remove()
+	}
+
 	onRoute() {
 		let mman = document.querySelector('#obj-new-medias')
 		if (!mman) mman = 

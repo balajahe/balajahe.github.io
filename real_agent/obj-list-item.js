@@ -18,10 +18,7 @@ customElements.define(me, class extends HTMLElement {
 		this.objDesc.innerHTML = obj.desc
 		this.mediaContainer.build(obj.medias)
 
-		this.onclick = () => {
-			APP.setMsg('')
-			APP.routeModal('obj-edit', document.createElement('obj-edit').build(obj))
-		}
+		this.onclick = () => APP.routeModal('obj-edit', document.createElement('obj-edit').build(obj))
 
 		return this
 	}

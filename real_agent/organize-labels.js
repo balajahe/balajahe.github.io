@@ -7,7 +7,6 @@ customElements.define(me, class extends HTMLElement {
 	connectedCallback() {
 		this.innerHTML = `
 			<style scoped>
-				${me} { margin-top: var(--app-bar-height); }
 				${me} > #labelsDiv {
 					min-height: 5em;
 					margin: var(--margin1); padding-left: var(--margin2);
@@ -30,7 +29,7 @@ customElements.define(me, class extends HTMLElement {
          	localStorage.setItem('labels', this.labels)
          	APP.remove(this)
          	APP.route('obj-list')
-				setTimeout(() => APP.setMsg('Saved !'), 100)
+				APP.message('SAVED !')
          }]
 		])
 	}

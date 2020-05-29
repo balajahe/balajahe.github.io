@@ -41,6 +41,9 @@ customElements.define(me, class extends HTMLElement {
 		wcMixin(this)
 		window.APP = this
 
+		if (!localStorage.getItem('labels'))
+			localStorage.setItem('labels', 'Дом,Дача,Участок,Промзона,Заброшка,Зеленка,Черта города,Жилой,Ветхий,Разрушен,Продается')
+
 		window.onhashchange = async (ev) => {
 			if (!this._hashReplacing) {
 				if (this._hashLevel(ev.oldURL) - this._hashLevel(ev.newURL) === 1) { //history.go(-1)
@@ -56,7 +59,7 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	setBar(v) { this.appBar.setBar(v) }
-	setMsg(v) { this.appBar.setMsg(v) }
+	message(v) { this.appBar.message(v) }
 
 	route(hash, elem) {
 		const curr = this.lastElementChild._currentPage
