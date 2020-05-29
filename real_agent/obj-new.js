@@ -40,7 +40,7 @@ customElements.define(me, class extends HTMLElement {
 		wcMixin(this)
 
 		if (!localStorage.getItem('labels'))
-			localStorage.setItem('labels', 'Дом,Дача,Участок,Заброшен,Ветхий,Разрушен,Жилой,Продается')
+			localStorage.setItem('labels', 'Дом,Дача,Участок,Промзона,Заброшка,Зеленка,Жилой,Ветхий,Разрушен,Продается')
 		for (const lab of localStorage.getItem('labels').split(',')) this.addAvailLabel(lab)
 
 		this.newLabelInp.onkeypress = (ev) => {
@@ -105,32 +105,31 @@ customElements.define(me, class extends HTMLElement {
 
 	async saveNewObj() {
 		const pageMedias = document.querySelector('media-manager')
-		const pageForm = this
 		const now = APP.now()
 		const obj = {
 			created: now,
 			modified: now,
 			location: {latitude: this.location?.latitude, longitude: this.location?.longitude},
-			desc: pageForm.desc,
-			labels: Array.from(pageForm.labels).map(el => el.innerHTML),
+			desc: this.desc,
+			labels: Array.from(this.labels).map(el => el.innerHTML),
 			medias: pageMedias.medias
 		} 
 
-      const origins = []
-      for (const media of obj.medias) {
-         origins.push({ created: media.created, origin: media.origin })
-         media.origin = null
-      }
+		const origins = []
+		for (const media of obj.medias) {
+			media.created = obj.created + media.created
+			origins.push({ created: media.created, origin: media.origin })
+			media.origin = null
+		}
 
-      const tran = APP.db.transaction(['Objects', 'Origins'], 'readwrite')
-      const proms = []
-
+		const tran = APP.db.transaction(['Objects', 'Origins'], 'readwrite')
+		const proms = []
 		proms.push(new Promise(resolve => tran.objectStore("Objects").add(obj).onsuccess = resolve))
 		for (const origin of origins) {
 			proms.push(new Promise(resolve => tran.objectStore("Origins").add(origin).onsuccess = resolve))
 		}
-
 		await Promise.all(proms)
+
 		document.querySelector('obj-list').addItem(obj)
 		APP.remove(pageMedias)
 		APP.remove(this)

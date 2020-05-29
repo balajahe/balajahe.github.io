@@ -19,7 +19,7 @@ customElements.define(me, class extends HTMLElement {
 			</style>
 			<button w-id='home'>HOME</button>
 			<button w-id='labels'>Organize labels</button>
-			<button w-id='export'>Export database</button>
+			<!--<button w-id='export'>Export database</button>-->
 			<button w-id='source'>Sources on GitHub</button>
 			<a w-id='a' style='display:none'></a>
 		`

@@ -14,7 +14,7 @@ customElements.define(me, class extends HTMLElement {
 				${me} > button {
 					height: calc(100% - 1*var(--margin1));
 					margin-top: 0;
-					width: 4rem;
+					min-width: 4rem;
 				}
 				${me} > div {
 					display: inline-block;

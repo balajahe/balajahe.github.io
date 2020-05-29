@@ -3,9 +3,9 @@ import './app-bar.js'
 
 const me = 'app-app'
 customElements.define(me, class extends HTMLElement {
-	 _hashReplacing = false
-	imgPrevSize = 70
 	db = null
+	imgPrevSize = 70
+	 _hashReplacing = false
 
 	connectedCallback() {
 		this.innerHTML = `
