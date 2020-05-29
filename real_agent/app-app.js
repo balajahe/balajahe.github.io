@@ -83,8 +83,8 @@ customElements.define(me, class extends HTMLElement {
 		}
 
 		elem.id = hash
-		if (elem.onRoute) elem.onRoute()
 		elem.display()
+		if (elem.onRoute) elem.onRoute()
 
 		this.lastElementChild._currentPage = elem
 		this._replaceLastHash(hash)
@@ -98,8 +98,8 @@ customElements.define(me, class extends HTMLElement {
 		modal.append(elem)
 
 		elem.id = hash
-		if (elem.onRoute) elem.onRoute()
 		elem.display()
+		if (elem.onRoute) elem.onRoute()
 
 		this.lastElementChild._currentPage = elem
 		this._pushHash(hash)
