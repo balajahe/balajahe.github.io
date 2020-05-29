@@ -15,7 +15,6 @@ customElements.define(me, class extends HTMLElement {
 					width: 100vw; max-width: var(--app-max-width);
 					display: flex; flex-flow: column;
 					overflow: hidden;
-					font-size: smaller;
 				}
 				${me} > app-bar {
 					position: fixed; z-index: 1000; top: 0;
@@ -26,19 +25,19 @@ customElements.define(me, class extends HTMLElement {
 					height: calc(100vh - var(--app-bar-height));
 					margin-top: var(--app-bar-height); 
 					padding-left: var(--margin1); padding-right: var(--margin1);
-					overflow: auto;
 					flex-flow: column;
+					overflow: auto;
 				}
 				${me} .appModal {
 					position: fixed; top: 0; z-index:10; 
-					height: calc(100vh - var(--app-bar-height)); 
+					height: calc(100vh - var(--app-bar-height));
 					width: 100vw; max-width: var(--app-max-width);
-					flex-flow: column;
+					margin-top: var(--app-bar-height); 
+					display: flex; flex-flow: column;
 					overflow: auto;
-					background-color: white; 
-				}
+					background-color: white;
+			}
 				${me} .appModal > div {
-					margin-top1: var(--app-bar-height);
 					padding-left: var(--margin1); padding-right: var(--margin1);
 					flex-flow: column;
 				}
