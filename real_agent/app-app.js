@@ -21,7 +21,7 @@ customElements.define(me, class extends HTMLElement {
 					height: var(--app-bar-height); 
 					width: 100%; max-width: var(--app-max-width);
 				}
-				${me} > div {
+				${me}1 > div {
 					height: calc(100vh - var(--app-bar-height));
 					margin-top: var(--app-bar-height); 
 					padding-left: var(--margin1); padding-right: var(--margin1);
@@ -43,7 +43,7 @@ customElements.define(me, class extends HTMLElement {
 				}
 			</style>
 			<app-bar w-id='appBar'></app-bar>
-			<div></div> <!-- this.lastElementChild -->
+			<div class='appModal'></div> <!-- this.lastElementChild -->
 		`
 		wcMixin(this)
 		window.APP = this
