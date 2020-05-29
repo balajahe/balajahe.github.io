@@ -27,8 +27,8 @@ customElements.define(me, class extends HTMLElement {
 					<button w-id='vidBut'>Record video</button>
 					<button w-id='imgBut'>Take photo</button>
 				</nav>
+				<media-container w-id='mediaContainer'></media-container>
 			</div>
-			<media-container w-id='mediaContainer'></media-container>
 			<canvas w-id='canvas' style='display:none'></canvas>
 		`
 		wcMixin(this)
