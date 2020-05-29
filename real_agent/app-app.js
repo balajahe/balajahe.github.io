@@ -21,13 +21,6 @@ customElements.define(me, class extends HTMLElement {
 					height: var(--app-bar-height); 
 					width: 100%; max-width: var(--app-max-width);
 				}
-				${me}1 > div {
-					height: calc(100vh - var(--app-bar-height));
-					margin-top: var(--app-bar-height); 
-					padding-left: var(--margin1); padding-right: var(--margin1);
-					flex-flow: column;
-					overflow: auto;
-				}
 				${me} .appModal {
 					position: fixed; top: 0; z-index:10; 
 					height: calc(100vh - var(--app-bar-height));

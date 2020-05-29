@@ -11,7 +11,8 @@ customElements.define(me, class extends HTMLElement {
 				${me} input { height: calc(var(--button-height) * 0.8); width: 30%; }
 				${me} > #descDiv {
 					min-height: 5em;
-					margin: var(--margin1); padding-left: var(--margin2);
+					margin: var(--margin1); margin-top: var(--margin2);
+					padding-left: var(--margin2);
 					border: solid 1px silver;
 					display: block;
 				}
@@ -27,8 +28,8 @@ customElements.define(me, class extends HTMLElement {
 					width: 100%;
 				}
 			</style>
-			<div w-id='labelsDiv/labels/children'></div>
 			<div w-id='descDiv/desc' contenteditable='true'></div>
+			<div w-id='labelsDiv/labels/children'></div>
 			<div class='separ'>&nbsp;<span>Click to add label:</span>&nbsp;<hr/></div>
 			<div w-id='allLabelsDiv'>
 				<input w-id='newLabelInp/newLabel' placeholder='New label...'/>

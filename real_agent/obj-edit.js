@@ -17,7 +17,8 @@ customElements.define(me, class extends HTMLElement {
 				${me} input { height: calc(var(--button-height) * 0.8); width: 30%; }
 				${me} > #descDiv {
 					min-height: 5em;
-					margin: var(--margin1); padding-left: var(--margin2);
+					margin: var(--margin1); margin-top: var(--margin2);
+					padding-left: var(--margin2);
 					border: solid 1px silver;
 					display: block;
 				}
@@ -39,8 +40,8 @@ customElements.define(me, class extends HTMLElement {
 					writing-mode: tb-rl; text-align: right; padding-bottom: 0.3rem;
 				}
 			</style>
-			<nav w-id='labelsDiv/labels/children'></nav>
 			<div w-id='descDiv/desc' contenteditable='true'></div>
+			<nav w-id='labelsDiv/labels/children'></nav>
 			<media-container w-id='mediaContainer'></media-container>
 			<div id='locDiv'>
 				<iframe w-id='mapIframe'></iframe>
