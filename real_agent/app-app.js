@@ -71,24 +71,21 @@ customElements.define(me, class extends HTMLElement {
 			if (curr.onUnRoute) curr.onUnRoute()
 		}
 		if (elem) {
-			if (Array.from(this.lastElementChild.children).find(el => el === elem)) {
-				elem._hash = hash
-				elem.display()
-			} else {
-				elem._hash = hash
+			if (!Array.from(this.lastElementChild.children).find(el => el === elem)) {
 				this.lastElementChild.append(elem)
 			}
 		} else {
-			elem = Array.from(this.lastElementChild.children).find(el => el._hash === hash)
+			elem = Array.from(this.lastElementChild.children).find(el => el.id === hash)
 			if (!elem) {
 				elem = document.createElement(hash)
-				elem._hash = hash
 				this.lastElementChild.append(elem)
-			} else {
-				elem.display()
 			}
 		}
+
+		elem.id = hash
 		if (elem.onRoute) elem.onRoute()
+		elem.display()
+
 		this.lastElementChild._currentPage = elem
 		this._replaceLastHash(hash)
 	}
@@ -98,10 +95,11 @@ customElements.define(me, class extends HTMLElement {
 		const modal = document.createElement('div')
 		modal.className = 'appModal'
 		this.append(modal)		
-
-		elem._hash = hash
 		modal.append(elem)
+
+		elem.id = hash
 		if (elem.onRoute) elem.onRoute()
+		elem.display()
 
 		this.lastElementChild._currentPage = elem
 		this._pushHash(hash)

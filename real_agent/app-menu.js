@@ -27,7 +27,7 @@ customElements.define(me, class extends HTMLElement {
 
 		this.home.onclick = () => location.reload() //location.href = APP.baseUrl
 		this.labels.onclick = () => APP.route('organize-labels')
-		this.export.onclick = async () => await this.exportDb()
+		//this.export.onclick = async () => await this.exportDb()
 		this.source.onclick = () => location.href = 'https://github.com/balajahe/balajahe.github.io/tree/master/real_agent'
 	}
 

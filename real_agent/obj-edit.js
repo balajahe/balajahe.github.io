@@ -45,7 +45,7 @@ customElements.define(me, class extends HTMLElement {
 			</div>
 			<div w-id='descDiv/desc' contenteditable='true'></div>
 			<nav w-id='labelsDiv/labels/children'></nav>
-			<media-container w-id='objMedias/medias/value'></media-container>
+			<media-container w-id='mediaContainer'></media-container>
 			<div class='separ'>&nbsp;<small>Click to add label:</small>&nbsp;<hr/></div>
 			<div w-id='allLabelsDiv'>
 				<input w-id='newLabelInp/newLabel' placeholder='New label...'/>
@@ -63,7 +63,7 @@ customElements.define(me, class extends HTMLElement {
 			for (const lab of this.obj.labels) this.addLabel(lab)
 		}
 
-		this.objMedias.build(this.obj.medias, true, true)
+		this.mediaContainer.build(this.obj.medias, true, true)
 
 		if (this.obj.location) {
 			this.loc = this.obj.location.latitude + ' - ' + this.obj.location.longitude
@@ -124,7 +124,7 @@ customElements.define(me, class extends HTMLElement {
 			location: this.obj.location,
 			desc: this.desc,
 			labels: Array.from(this.labels).map(el => el.innerHTML),
-			medias: Array.from(this.medias).map(media => media)
+			medias: Array.from(this.mediaContainer.getMedias()).map(media => media)
 		}
 
 		const origins = []

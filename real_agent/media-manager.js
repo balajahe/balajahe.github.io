@@ -3,7 +3,6 @@ import './media-container.js'
 
 const me = 'media-manager'
 customElements.define(me, class extends HTMLElement {
-	initMedias = null
 	bar = [['sep'], ['back']]
 	stream
 	W = 0
@@ -15,12 +14,6 @@ customElements.define(me, class extends HTMLElement {
 	canvas = null
 
 	build(bar, medias) {
-		if (bar) this.bar = bar
-		if (medias) this.initMedias = medias
-		return this
-	}
-
-	connectedCallback() {
 		this.innerHTML = `
 			<style scoped>
 				${me} #vidPreview { width: 100%; }
@@ -35,19 +28,20 @@ customElements.define(me, class extends HTMLElement {
 					<button w-id='imgBut'>Take photo</button>
 				</nav>
 			</div>
-			<media-container w-id='mediaContainer/medias/value'></media-container>
+			<media-container w-id='mediaContainer'></media-container>
 			<canvas w-id='canvas' style='display:none'></canvas>
 		`
 		wcMixin(this)
-		canvas.width = APP.imgPrevSize
-		canvas.height = APP.imgPrevSize
+		if (bar) this.bar = bar
+		this.canvas.width = APP.imgPrevSize
+		this.canvas.height = APP.imgPrevSize
 
-		if (this.initMedias) this.initMedias.forEach(media => this.mediaContainer.add(media, true))
+		if (medias) medias.forEach(media => this.mediaContainer.addMedia(media, true))
 
 		this.imgBut.onclick = async () => {
 			const blob = await this.imgCapturer.takePhoto(this.imgParams)
 
-			this.mediaContainer.add(
+			this.mediaContainer.addMedia(
 				{ created: APP.now(), tagName: 'img', preview: this._takePrev('IMG'), origin: await this._takeOrigin(blob) }, 
 				true
 			)
@@ -64,6 +58,12 @@ customElements.define(me, class extends HTMLElement {
 			if (this.audBut.val) this.audRecorder.start()
 			else this.audRecorder.stop()
 		}
+
+		return this
+	}
+
+	getMedias() {
+		return this.mediaContainer.getMedias()
 	}
 
 	async onRoute() {
@@ -84,15 +84,19 @@ customElements.define(me, class extends HTMLElement {
 
 		this.vidRecorder = new MediaRecorder(this.stream, { mimeType : "video/webm" })
 		this.vidRecorder.ondataavailable = async (ev) => 
-			this.mediaContainer.add({ created: APP.now(), tagName: 'video', preview: this._takePrev('VIDEO'), origin: ev.data }, true)
+			this.mediaContainer.addMedia({ created: APP.now(), tagName: 'video', preview: this._takePrev('VIDEO'), origin: ev.data }, true)
 
 		this.audRecorder = new MediaRecorder(this.stream, { mimeType : "audio/webm" })
 		this.audRecorder.ondataavailable = async (ev) => 
-			this.mediaContainer.add({ created: APP.now(), tagName: 'audio', preview: this._takePrev('AUDIO'), origin: ev.data }, true)
+			this.mediaContainer.addMedia({ created: APP.now(), tagName: 'audio', preview: this._takePrev('AUDIO'), origin: ev.data }, true)
 	}
 
 	onUnRoute() {
 		this.vidDiv.display(false)
+		this.stream.getTracks().forEach(track => track.stop())
+	}
+
+	disconnectedCallback() {
 		this.stream.getTracks().forEach(track => track.stop())
 	}
 

@@ -68,8 +68,8 @@ customElements.define(me, class extends HTMLElement {
 
 	updateLocation() {
 		const set = () => {
-			//this.locBut.innerHTML = APP.location.latitude + ' - ' + APP.location.longitude
 			this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${this.location.longitude-0.002}%2C${this.location.latitude-0.002}%2C${this.location.longitude+0.002}%2C${this.location.latitude+0.002}&layer=mapnik&marker=${this.location.latitude}%2C${this.location.longitude}`)
+			//this.locBut.innerHTML = APP.location.latitude + ' - ' + APP.location.longitude
 		}
 		navigator.geolocation.getCurrentPosition(loc => {
 			this.location = loc.coords
@@ -84,8 +84,6 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	onRoute() {
-		this.updateLocation()
-		this.descDiv.focus()
 		APP.setBar([
 			['but', 'Geo<br>&#8853;', () => this.updateLocation()],
 			['msg', 'Enter description and add labels:'],
@@ -101,10 +99,12 @@ customElements.define(me, class extends HTMLElement {
 				}
 			}]
 		])
+		this.updateLocation()
+		this.descDiv.focus()
 	}
 
 	async saveNewObj() {
-		const pageMedias = document.querySelector('media-manager')
+		const pageMedias = document.querySelector('#obj-new-medias')
 		const now = APP.now()
 		const obj = {
 			created: now,
@@ -112,7 +112,7 @@ customElements.define(me, class extends HTMLElement {
 			location: {latitude: this.location?.latitude, longitude: this.location?.longitude},
 			desc: this.desc,
 			labels: Array.from(this.labels).map(el => el.innerHTML),
-			medias: pageMedias.medias
+			medias: pageMedias.getMedias()
 		} 
 
 		const origins = []
