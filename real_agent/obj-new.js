@@ -90,10 +90,10 @@ customElements.define(me, class extends HTMLElement {
 			['back'],
 			['but', 'Save<br>&rArr;', async () => {
 				if (!this.desc) {
-					APP.setMsg('<span style="color:red">Empty description !</span>')
+					APP.setMsg('<span style="color:red"><b>EMPTY DESCRIPTION!</b></span>')
 					this.descDiv.focus()
 				} else if (this.labels.length === 0) {
-					APP.setMsg('<span style="color:red">No labels !</span>')
+					APP.setMsg('<span style="color:red"><b>NO LABELS!</b></span>')
 				} else {
 					this.saveNewObj()
 				}
@@ -135,5 +135,6 @@ customElements.define(me, class extends HTMLElement {
 		APP.remove(this)
 		APP.route('obj-list')
 		APP.setMsg('Saved !')
+		APP.scrollTop = 0
 	}
 })
