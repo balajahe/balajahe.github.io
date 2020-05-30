@@ -4,6 +4,7 @@ import './media-container.js'
 const me = 'obj-edit'
 customElements.define(me, class extends HTMLElement {
 	obj = null
+	location = null
 
 	build(obj) {
 		this.obj = obj
@@ -88,13 +89,18 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	updateLocation() {
-		const draw = () => this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${this.obj.location.longitude-0.002}%2C${this.obj.location.latitude-0.002}%2C${this.obj.location.longitude+0.002}%2C${this.obj.location.latitude+0.002}&layer=mapnik&marker=${this.obj.location.latitude}%2C${this.obj.location.longitude}`)
+		const draw = () => this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${this.location.longitude-0.002}%2C${this.location.latitude-0.002}%2C${this.location.longitude+0.002}%2C${this.location.latitude+0.002}&layer=mapnik&marker=${this.location.latitude}%2C${this.location.longitude}`)
+	
 		if (this.obj.location.latitude && this.obj.location.longitude) {
+			this.location.latitude = this.obj.location.latitude
+			this.location.longitude = this.obj.location.longitude 
 			draw()
+	
 		} else {
 			navigator.geolocation.getCurrentPosition(loc => {
-				this.obj.location.longitude = loc.coords.longitude
-				this.obj.location.latitude = loc.coords.latitude
+				this.location.longitude = loc.coords.longitude
+				this.location.latitude = loc.coords.latitude
+				draw()
 				APP.message('LOCATION UPDATED!')
 			})
 		}
@@ -125,10 +131,10 @@ customElements.define(me, class extends HTMLElement {
 		const obj = {
 			created: this.obj.created,
 			modified: now,
-			location: this.obj.location,
+			location: {latitude: this.location?.latitude, longitude: this.location?.longitude},
 			desc: this.desc,
 			labels: Array.from(this.labels).map(el => el.innerHTML),
-			medias: Array.from(this.mediaContainer.getMedias()).map(media => media)
+			medias: this.mediaContainer.getMedias()
 		}
 
 		const origins = []
