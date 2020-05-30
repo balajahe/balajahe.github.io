@@ -11,7 +11,7 @@ customElements.define(me, class extends HTMLElement {
 					flex-flow: column;
 					margin-bottom: var(--margin2);
 				}
-				${me} > #listDiv > * {
+				${me} obj-list-item {
 					margin-bottom: var(--margin2);
 					padding-bottom: var(--margin2);
 					border-bottom: 1px solid silver;
@@ -19,12 +19,12 @@ customElements.define(me, class extends HTMLElement {
 					overflow: auto;
 					cursor: pointer; 
 				}
-				${me} > #listDiv > * > #objDesc {
+				${me} #objDesc {
 					display: block;
 					padding-left: var(--margin2);
 				}
-				${me} > #listDiv > * > #objLabels {
-					display: block;
+				${me} #objLabels {
+					display: flex; flex-flow: row wrap;
 					padding-left: var(--margin2);
 				}
 				${me} > footer { 
