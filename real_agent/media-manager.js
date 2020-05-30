@@ -80,7 +80,10 @@ customElements.define(me, class extends HTMLElement {
 
 		this.imgCapturer = new ImageCapture(this.stream.getVideoTracks()[0])
 		const caps = await this.imgCapturer.getPhotoCapabilities()
-		this.imgParams = { imageHeight: caps.imageHeight.max, imageWidth: caps.imageWidth.max }
+		if (caps.fillLightMode?.includes('auto'))
+			this.imgParams = { imageHeight: caps.imageHeight.max, imageWidth: caps.imageWidth.max, fillLightMode: 'auto' }
+		else
+			this.imgParams = { imageHeight: caps.imageHeight.max, imageWidth: caps.imageWidth.max }
 
 		this.vidRecorder = new MediaRecorder(this.stream, { mimeType : "video/webm" })
 		this.vidRecorder.ondataavailable = async (ev) => 
