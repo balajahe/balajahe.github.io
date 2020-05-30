@@ -13,8 +13,10 @@ customElements.define(me, class extends HTMLElement {
 				${me} {
 					height: 100vh;
 					width: 100vw; max-width: var(--app-max-width);
+					overflow1: hidden;
+					/*
 					display: flex; flex-flow: column;
-					overflow: hidden;
+					*/
 				}
 				${me} > app-bar {
 					position: fixed; z-index: 1000; top: 0;
@@ -26,6 +28,7 @@ customElements.define(me, class extends HTMLElement {
 					height: calc(100vh - var(--app-bar-height));
 					width: 100vw; max-width: var(--app-max-width);
 					margin-top: var(--app-bar-height); 
+					padding-bottom: 1rem;
 					display: flex; flex-flow: column;
 					overflow: auto;
 					background-color: white;

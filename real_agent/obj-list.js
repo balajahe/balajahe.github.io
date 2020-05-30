@@ -24,7 +24,7 @@ customElements.define(me, class extends HTMLElement {
 				}
 				${me} > footer { 
 					text-align: center;
-					padding-left: 1rem; padding-right: 1rem; padding-bottom: 0.5rem;
+					padding-left: 1rem; padding-right: 1rem;
 				}
 			</style>
 			<div w-id='listDiv'></div>
