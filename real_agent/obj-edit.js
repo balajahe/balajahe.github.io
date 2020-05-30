@@ -48,11 +48,11 @@ customElements.define(me, class extends HTMLElement {
 			<div w-id='allLabelsDiv'>
 				<input w-id='newLabelInp/newLabel' placeholder='New label...'/>
 			</div>
+			<media-container w-id='mediaContainer'></media-container>
 			<div id='locDiv'>
 				<iframe w-id='mapIframe'></iframe>
 				<div w-id='/loc'></div>
 			</div>
-			<media-container w-id='mediaContainer'></media-container>
 		`
 		wcMixin(this)
 

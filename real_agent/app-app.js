@@ -28,7 +28,7 @@ customElements.define(me, class extends HTMLElement {
 					height: calc(100vh - var(--app-bar-height));
 					width: 100vw; max-width: var(--app-max-width);
 					margin-top: var(--app-bar-height); 
-					padding-bottom: 1rem;
+					padding-bottom: 0.5rem;
 					display: flex; flex-flow: column;
 					overflow: auto;
 					background-color: white;
@@ -45,7 +45,7 @@ customElements.define(me, class extends HTMLElement {
 		window.APP = this
 
 		if (!localStorage.getItem('labels'))
-			localStorage.setItem('labels', 'Дом,Дача,Участок,Промзона,Заброшка,Зеленка,Черта города,Жилой,Ветхий,Разрушен,Продается')
+			localStorage.setItem('labels', 'Дом,Дача,Участок,Промзона,Заброшка,Зеленка,Черта города,Жилой,Ветхий,Разрушен,Архитектура,Продается')
 
 		window.onhashchange = async (ev) => {
 			if (!this._hashReplacing) {

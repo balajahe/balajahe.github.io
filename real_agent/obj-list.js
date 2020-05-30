@@ -21,12 +21,18 @@ customElements.define(me, class extends HTMLElement {
 				}
 				${me} > #listDiv > * > #objDesc {
 					display: block;
+					padding-left: var(--margin2);
+				}
+				${me} > #listDiv > * > #objLabels {
+					display: block;
+					padding-left: var(--margin2);
 				}
 				${me} > footer { 
 					text-align: center;
 					padding-left: 1rem; padding-right: 1rem;
 				}
 			</style>
+
 			<div w-id='listDiv'></div>
 			<footer>Real Agent is a database of arbitrary objects with geolocation, photos and videos.</footer>
 		`

@@ -28,6 +28,7 @@ customElements.define(me, class extends HTMLElement {
 					width: 100%;
 				}
 			</style>
+			
 			<div w-id='descDiv/desc' contenteditable='true'></div>
 			<div w-id='labelsDiv/labels/children'></div>
 			<div class='separ'>&nbsp;<span>Click to add label:</span>&nbsp;<hr/></div>

@@ -25,6 +25,7 @@ customElements.define(me, class extends HTMLElement {
 					${me} > * { max-height: 100%; max-width: 100%; }
 					${me} button { border-radius: 0; }
 				</style>
+
 				<button w-id='addBut' style='display:none'>Add media</button>	
 			`
 			wcMixin(this)
