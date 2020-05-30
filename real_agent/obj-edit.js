@@ -147,9 +147,8 @@ customElements.define(me, class extends HTMLElement {
 		const tran = APP.db.transaction(['Objects', 'Origins'], 'readwrite')
 		const proms = []
 		proms.push(new Promise(resolve => tran.objectStore("Objects").put(obj).onsuccess = resolve))
-		for (const origin of origins) {
+		for (const origin of origins)
 			proms.push(new Promise(resolve => tran.objectStore("Origins").put(origin).onsuccess = resolve))
-		}
 		await Promise.all(proms)
 
 		document.querySelector('obj-list').setItem(obj)
@@ -162,7 +161,8 @@ customElements.define(me, class extends HTMLElement {
 		const proms = []
 
 		proms.push(new Promise(resolve => tran.objectStore("Objects").delete(this.obj.created).onsuccess = resolve))
-		proms.push(new Promise(resolve => tran.objectStore("Origins").delete(IDBKeyRange.lowerBound(this.obj.created, true)).onsuccess = resolve))
+console.log(this.obj.created)
+		proms.push(new Promise(resolve => tran.objectStore("Origins").delete(IDBKeyRange.bound(this.obj.created, this.obj.created + '_'.repeat(this.obj.created.length))).onsuccess = resolve))
 		await Promise.all(proms)
 
 		document.querySelector('obj-list').delItem(this.obj.created)

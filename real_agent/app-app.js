@@ -114,7 +114,7 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	now() {
-		return 'D--' + (new Date()).toISOString().replace(/:/g, '-').replace(/T/g, '--').replace(/\./g, '--').slice(0, -1)
+		return '_' + (new Date()).toISOString().replace(/:/g, '-').replace(/T/g, '_').replace(/\./g, '_').slice(0, -1)
 	}
 
 	setHash(hash) {

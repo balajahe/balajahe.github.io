@@ -114,9 +114,8 @@ customElements.define(me, class extends HTMLElement {
 		const tran = APP.db.transaction(['Objects', 'Origins'], 'readwrite')
 		const proms = []
 		proms.push(new Promise(resolve => tran.objectStore("Objects").add(obj).onsuccess = resolve))
-		for (const origin of origins) {
+		for (const origin of origins)
 			proms.push(new Promise(resolve => tran.objectStore("Origins").add(origin).onsuccess = resolve))
-		}
 		await Promise.all(proms)
 
 		document.querySelector('obj-list').addItem(obj)
