@@ -78,10 +78,10 @@ customElements.define(me, class extends HTMLElement {
 			['back'],
 			['but', 'Save<br>&rArr;', async () => {
 				if (!this.desc) {
-					APP.message('<span style="color:red"><b>EMPTY DESCRIPTION!</b></span>')
+					APP.message('<span style="color:red">EMPTY DESCRIPTION!</span>')
 					this.descDiv.focus()
 				} else if (this.labels.length === 0) {
-					APP.message('<span style="color:red"><b>NO LABELS!</b></span>')
+					APP.message('<span style="color:red">NO LABELS!</span>')
 				} else {
 					this.saveNewObj()
 				}

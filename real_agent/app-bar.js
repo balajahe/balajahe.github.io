@@ -96,7 +96,7 @@ customElements.define(me, class extends HTMLElement {
 		setTimeout(() => {
 			const div = this.querySelectorAll('div')[0]
 			const saveContent = div.innerHTML
-			div.innerHTML = msg
+			div.innerHTML = '<b>' + msg + '</b>'
 			setTimeout(() => div.innerHTML = saveContent, 2000)
 		}, 100)
 	}

@@ -62,10 +62,7 @@ customElements.define(me, class extends HTMLElement {
 		}
 		this.mediaContainer.build(this.obj.medias, true, true)
 
-		if (this.obj.location) {
-			this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${this.obj.location.longitude-0.002}%2C${this.obj.location.latitude-0.002}%2C${this.obj.location.longitude+0.002}%2C${this.obj.location.latitude+0.002}&layer=mapnik&marker=${this.obj.location.latitude}%2C${this.obj.location.longitude}`)
-			//this.loc = this.obj.location.latitude + ' - ' + this.obj.location.longitude
-		}
+		this.updateLocation()
 
 		this.newLabelInp.onkeypress = (ev) => {
 			if (ev.key === 'Enter') {
@@ -90,6 +87,19 @@ customElements.define(me, class extends HTMLElement {
 		this.newLabelInp.before(but)
 	}
 
+	updateLocation() {
+		const draw = () => this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${this.obj.location.longitude-0.002}%2C${this.obj.location.latitude-0.002}%2C${this.obj.location.longitude+0.002}%2C${this.obj.location.latitude+0.002}&layer=mapnik&marker=${this.obj.location.latitude}%2C${this.obj.location.longitude}`)
+		if (this.obj.location.latitude && this.obj.location.longitude) {
+			draw()
+		} else {
+			navigator.geolocation.getCurrentPosition(loc => {
+				this.obj.location.longitude = loc.coords.longitude
+				this.obj.location.latitude = loc.coords.latitude
+				APP.message('LOCATION UPDATED!')
+			})
+		}
+	}
+
 	onRoute() {
 		APP.setBar([
 			['but', 'Delete<br>&#8224;', async () => {
@@ -99,10 +109,10 @@ customElements.define(me, class extends HTMLElement {
 			['but', 'Cancel<br>&lArr;', () => history.go(-1)],
 			['but', 'Save<br>&rArr;', async () => {
 				if (!this.desc) {
-					APP.message('<span style="color:red"><b>EMPTY DESCRIPTION!</b></span>')
+					APP.message('<span style="color:red">EMPTY DESCRIPTION!</span>')
 					this.descDiv.focus()
 				} else if (this.labels.length === 0) {
-					APP.message('<span style="color:red"><b>NO LABELS!</b></span>')
+					APP.message('<span style="color:red">NO LABELS!</span>')
 				} else {
 					this.saveExistObj()
 				}
