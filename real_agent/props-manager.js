@@ -1,7 +1,6 @@
 import wcMixin from '/WcMixin/WcMixin.js'
-import './elem-separator.js'
 
-const me = 'props-edit'
+const me = 'props-manager'
 customElements.define(me, class extends HTMLElement {
 
 	build(props) {
@@ -22,14 +21,23 @@ customElements.define(me, class extends HTMLElement {
 				}
 			</style>
 
-			<elem-separator>Selected properties:</elem-separator>
+			<sepa-rator>Selected properties:</sepa-rator>
 			<nav w-id='propsDiv/props/children'></nav>
 			<nav>
-				<elem-separator>Click to add property:</elem-separator>
+				<sepa-rator>Available properties:</sepa-rator>
 				<input w-id='newPropInp/newProp' placeholder='New property...'/>
 			</nav>
 		`
 		wcMixin(this)
+
+		this.appBar = [
+			['msg', 'Click to add / remove properties:'],
+         ['cancel'],
+         ['next', () => {
+         	document.querySelector('obj-edit').bubbleEvent('change-props', Array.from(this.props).map(el => el.innerHTML))
+         	history.go(-1)
+         }]
+		]
 
 		for (const prop of props) this.addProp(prop)
 		for (const prop of APP.props) this.addAvailProp(prop)
@@ -56,16 +64,5 @@ customElements.define(me, class extends HTMLElement {
 		but.innerHTML = prop
 		but.onclick = (ev) => this.addProp(prop)
 		this.newPropInp.before(but)
-	}
-
-	onRoute() {
-		APP.setBar([
-			['msg', 'Add or remove properties:'],
-         ['cancel'],
-         ['next', () => {
-         	document.querySelector('obj-edit').bubbleEvent('change-props', Array.from(this.props).map(el => el.innerHTML))
-         	history.go(-1)
-         }]
-		])
 	}
 })

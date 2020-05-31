@@ -1,6 +1,6 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 import './media-container.js'
-import './props-edit.js'
+import './props-manager.js'
 
 const me = 'obj-edit'
 customElements.define(me, class extends HTMLElement {
@@ -43,7 +43,7 @@ customElements.define(me, class extends HTMLElement {
 
 			<div w-id='descDiv/desc' contenteditable='true'></div>
 			<nav w-id='propsDiv'>
-				<button w-id='editPropsBut'>EDIT PROPERTIES</button>
+				<button w-id='editPropsBut'>ADD / REMOVE</button>
 			</nav>
 			<media-container w-id='mediaContainer'></media-container>
 			<div id='locDiv'>
@@ -65,7 +65,7 @@ customElements.define(me, class extends HTMLElement {
 
 		this.updateLocation()
 
-		this.editPropsBut.onclick = (ev) => APP.routeModal('props-edit', document.createElement('props-edit').build(this.getProps()))
+		this.editPropsBut.onclick = (ev) => APP.routeModal('props-manager', document.createElement('props-manager').build(this.getProps()))
 	}
 
 	setProps(props) {
@@ -108,7 +108,7 @@ customElements.define(me, class extends HTMLElement {
 				if (!this.desc) {
 					APP.message('<span style="color:red">EMPTY DESCRIPTION!</span>')
 					this.descDiv.focus()
-				} else if (this.getProps().length <= 1) {
+				} else if (this.getProps().length === 0) {
 					APP.message('<span style="color:red">NO PROPERTIES!</span>')
 				} else {
 					this.saveExistObj()

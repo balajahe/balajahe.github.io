@@ -1,4 +1,4 @@
-const me = 'elem-separator'
+const me = 'sepa-rator'
 customElements.define(me, class extends HTMLElement {
 
 	connectedCallback() {

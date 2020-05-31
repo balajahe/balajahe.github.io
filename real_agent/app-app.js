@@ -104,6 +104,7 @@ customElements.define(me, class extends HTMLElement {
 
 		elem.id = hash
 		elem.display()
+		if (elem.appBar) this.setBar(elem.appBar)
 		if (elem.onRoute) elem.onRoute()
 
 		this.lastElementChild._currentPage = elem
@@ -120,6 +121,7 @@ customElements.define(me, class extends HTMLElement {
 		elem.id = id
 		modal.append(elem)
 		elem.display()
+		if (elem.appBar) this.setBar(elem.appBar)
 		if (elem.onRoute) elem.onRoute()
 
 		this.lastElementChild._currentPage = elem

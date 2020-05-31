@@ -29,7 +29,7 @@ customElements.define(me, class extends HTMLElement {
 			
 			<div w-id='descDiv/desc' contenteditable='true'></div>
 			<div w-id='propsDiv/props/children'></div>
-			<elem-separator>Click to add property:</elem-separator>
+			<sepa-rator>Click to add properties:</sepa-rator>
 			<div w-id='allpropsDiv'>
 				<input w-id='newPropInp/newProp' placeholder='New property...'/>
 			</div>
