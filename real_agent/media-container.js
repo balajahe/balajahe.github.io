@@ -19,16 +19,18 @@ customElements.define(me, class extends HTMLElement {
 						display: flex; flex-flow: row wrap; align-items: center;
 					}
 					${me} > * { 
-						height: auto; width: calc(100%/5 - 2*var(--margin1));
+						height: ${APP.imgPrevSize}px; width: ${APP.imgPrevSize}px;
 						margin: var(--margin1);
 					}
 					${me} > button { 
-						height: var(--button-height); width: calc(100%/5 - 3*var(--margin1));
+						height: ${APP.imgPrevSize}px; width: ${APP.imgPrevSize}px;
+						border-radius: 0;
 					}
 					${me} > *:hover { cursor: pointer; }
 				</style>
 
-				<button w-id='addBut' style='display:none'>Add<br>media</button>	
+				<button w-id='addBut' style='display:none'>ADD<br>MEDIA</button>	
+
 			`
 			wcMixin(this)
 

@@ -105,22 +105,31 @@ customElements.define(me, class extends HTMLElement {
 
 	_takePrev(tagName) {
 		const can = this.canvas.getContext('2d')
+
 		if (tagName === 'IMG') {
 			can.drawImage(this.vidPreview, 0, 0, APP.imgPrevSize, APP.imgPrevSize)
+			return this.canvas.toDataURL()
+
 		} else if (tagName === 'VIDEO') {
 			can.drawImage(this.vidPreview, 0, 0, APP.imgPrevSize, APP.imgPrevSize)
 			can.fillStyle = 'black';
-			can.font = 'bold 20px serif';
-			can.fillText('VIDEO', 2, 42)
+			can.font = 'bold 23px serif';
+			can.fillText('VIDEO', 3, 47)
+			return this.canvas.toDataURL()
+			
 		} else if (tagName === 'AUDIO') {
-			can.rect(0, 0, APP.imgPrevSize, APP.imgPrevSize);
-			can.fillStyle = 'silver';
+			return 'res/audio.png'
+
+/*			can.rect(0, 0, APP.imgPrevSize, APP.imgPrevSize);
+			can.fillStyle = 'white';
 			can.fill()
 			can.fillStyle = 'black';
-			can.font = 'bold 20px serif';
-			can.fillText('AUDIO', 1.1, 42)
+			can.font = 'bold 21px serif';
+			can.fillText('ADD', 17, 33)
+			can.fillText('MEDIA', 4, 57)
+			can.fillText('AUDIO', 2, 47)
+*/
 		}
-		return this.canvas.toDataURL()
 	}
 
 	async _takeOrigin(blob) {

@@ -16,9 +16,7 @@ customElements.define(me, class extends HTMLElement {
 					border: solid 1px silver;
 					display: block;
 				}
-				${me} #labelsDiv { min-height: calc(var(--button-height) * 0.9); }
-				${me} .separ { margin-top: var(--margin2); flex-flow: row nowrap; }
-				${me} .separ hr { display: inline-block; flex: 1 1 auto; }
+				${me} #propsDiv { min-height: calc(var(--button-height) * 0.9); }
 				${me} #locDiv { 
 					height: 250px; width: 100%; 
 					margin-top: var(--margin1);	
@@ -30,10 +28,10 @@ customElements.define(me, class extends HTMLElement {
 			</style>
 			
 			<div w-id='descDiv/desc' contenteditable='true'></div>
-			<div w-id='labelsDiv/labels/children'></div>
-			<div class='separ'>&nbsp;<span>Click to add label:</span>&nbsp;<hr/></div>
-			<div w-id='allLabelsDiv'>
-				<input w-id='newLabelInp/newLabel' placeholder='New label...'/>
+			<div w-id='propsDiv/props/children'></div>
+			<elem-separator>Click to add property:</elem-separator>
+			<div w-id='allpropsDiv'>
+				<input w-id='newPropInp/newProp' placeholder='New property...'/>
 			</div>
 			<div id='locDiv'>
 				<iframe w-id='mapIframe'></iframe>
@@ -41,27 +39,27 @@ customElements.define(me, class extends HTMLElement {
 		`
 		wcMixin(this)
 
-		this.newLabelInp.onkeypress = (ev) => {
+		this.newPropInp.onkeypress = (ev) => {
 			if (ev.key === 'Enter') {
-				this.addAvailLabel(this.newLabel)
-				localStorage.setItem('labels', localStorage.getItem('labels') + ',' + this.newLabel)
-				this.newLabel = ''
+				this.addAvailProp(this.newProp)
+				APP.props = APP.props.concat(this.newProp)
+				this.newProp = ''
 			}
 		}
 	}
 
-	addLabel(lab) {
+	addProp(prop) {
 		const but = document.createElement("button")
-		but.innerHTML = lab
+		but.innerHTML = prop
 		but.onclick = () => but.remove()
-		this.labelsDiv.append(but)
+		this.propsDiv.append(but)
 	}
 
-	addAvailLabel(lab) {
+	addAvailProp(prop) {
 		const but = document.createElement("button")
-		but.innerHTML = lab
-		but.onclick = (ev) => this.addLabel(ev.target.innerHTML)
-		this.newLabelInp.before(but)
+		but.innerHTML = prop
+		but.onclick = (ev) => this.addProp(ev.target.innerHTML)
+		this.newPropInp.before(but)
 	}
 
 	updateLocation() {
@@ -75,20 +73,20 @@ customElements.define(me, class extends HTMLElement {
 	onRoute() {
 		APP.setBar([
 			['but', 'Geo<br>&#8853;', () => this.updateLocation()],
-			['msg', 'Enter description and add labels:'],
+			['msg', 'Enter description and add properties:'],
 			['back'],
 			['but', 'Save<br>&rArr;', async () => {
 				if (!this.desc) {
 					APP.message('<span style="color:red">EMPTY DESCRIPTION!</span>')
 					this.descDiv.focus()
-				} else if (this.labels.length === 0) {
-					APP.message('<span style="color:red">NO LABELS!</span>')
+				} else if (this.props.length === 0) {
+					APP.message('<span style="color:red">NO PROPERTIES!</span>')
 				} else {
 					this.saveNewObj()
 				}
 			}]
 		])
-		for (const lab of localStorage.getItem('labels').split(',')) this.addAvailLabel(lab)
+		for (const prop of APP.props) this.addAvailProp(prop)
 		this.updateLocation()
 		this.descDiv.focus()
 	}
@@ -101,7 +99,7 @@ customElements.define(me, class extends HTMLElement {
 			modified: now,
 			location: {latitude: this.location?.latitude, longitude: this.location?.longitude},
 			desc: this.desc,
-			labels: Array.from(this.labels).map(el => el.innerHTML),
+			labels: Array.from(this.props).map(el => el.innerHTML),
 			medias: pageMedias.getMedias()
 		} 
 

@@ -3,8 +3,9 @@ import './app-bar.js'
 
 const me = 'app-app'
 customElements.define(me, class extends HTMLElement {
+	imgPrevSize = 80
 	db = null
-	imgPrevSize = 70
+	_props = []
 	 _hashReplacing = false
 
 	connectedCallback() {
@@ -13,10 +14,6 @@ customElements.define(me, class extends HTMLElement {
 				${me} {
 					height: 100vh;
 					width: 100vw; max-width: var(--app-max-width);
-					overflow1: hidden;
-					/*
-					display: flex; flex-flow: column;
-					*/
 				}
 				${me} > app-bar {
 					position: fixed; z-index: 1000; top: 0;
@@ -44,8 +41,23 @@ customElements.define(me, class extends HTMLElement {
 		wcMixin(this)
 		window.APP = this
 
-		if (!localStorage.getItem('labels'))
-			localStorage.setItem('labels', 'Дом,Дача,Участок,Промзона,Заброшка,Зеленка,Черта города,Жилой,Ветхий,Разрушен,Архитектура,Продается')
+		const dbr = window.indexedDB.open("RealAgent", 3)
+		dbr.onerror = (ev) => { console.log(ev); alert(ev.target.error) }
+		dbr.onupgradeneeded = (ev) => {
+			const db = ev.target.result
+			try {
+				db.createObjectStore("Objects", { keyPath: "created" })
+			} catch(_) {}
+			db.createObjectStore("Origins", { keyPath: "created" })
+		}
+		dbr.onsuccess = (ev) => {
+			this.db = ev.target.result
+
+			if (localStorage.getItem('props'))
+				this.props = localStorage.getItem('props').split(',')
+			else
+				this.props = 'Дом,Дача,Участок,Промзона,Заброшка,Зеленка,Архитектура,Черта города,Жилое,Ветхое,Разрушено,Продается'.split(',')
+		}
 
 		window.onhashchange = async (ev) => {
 			if (!this._hashReplacing) {
@@ -61,7 +73,15 @@ customElements.define(me, class extends HTMLElement {
 		}
 	}
 
+	get props() { return this._props }
+
+	set props(props) { 
+		this._props = props
+		localStorage.setItem('props', this._props) 
+	}
+
 	setBar(v) { this.appBar.setBar(v) }
+
 	message(v) { this.appBar.message(v) }
 
 	route(hash, elem) {
@@ -90,19 +110,20 @@ customElements.define(me, class extends HTMLElement {
 		this._replaceLastHash(hash)
 	}
 
-	routeModal(hash, elem) {
+	routeModal(id, elem) {
 		this.appBar.pushBar()
 		const modal = document.createElement('div')
 		modal.className = 'appModal'
 		this.append(modal)		
-		modal.append(elem)
 
-		elem.id = hash
+		if (!elem) elem = document.createElement(id)
+		elem.id = id
+		modal.append(elem)
 		elem.display()
 		if (elem.onRoute) elem.onRoute()
 
 		this.lastElementChild._currentPage = elem
-		this._pushHash(hash)
+		this._pushHash(id)
 	}
 
 	popModal(sys) {

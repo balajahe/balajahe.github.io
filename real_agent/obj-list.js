@@ -93,7 +93,7 @@ customElements.define(me, class extends HTMLElement {
 				[
 					['msg', 'Take photo, video, or audio:'],
 					['back'],
-					['but', 'Next<br>&rArr;', () => APP.route('obj-new')]
+					['next', () => APP.route('obj-new')]
 				],
 				null
 			)

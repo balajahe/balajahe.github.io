@@ -1,5 +1,5 @@
 import wcMixin from '/WcMixin/WcMixin.js'
-import './labels-organize.js'
+import './props-setup.js'
 
 const me = 'app-menu'
 customElements.define(me, class extends HTMLElement {
@@ -18,7 +18,7 @@ customElements.define(me, class extends HTMLElement {
 				${me} > button {flex: 1 1 auto; margin: 0.2em;}
 			</style>
 			<button w-id='home'>HOME</button>
-			<button w-id='labels'>Organize labels</button>
+			<button w-id='props'>Properties setup</button>
 			<!--<button w-id='export'>Export database</button>-->
 			<button w-id='source'>Sources on GitHub</button>
 			<a w-id='a' style='display:none'></a>
@@ -26,7 +26,7 @@ customElements.define(me, class extends HTMLElement {
 		wcMixin(this)
 
 		this.home.onclick = () => location.reload() //location.href = APP.baseUrl
-		this.labels.onclick = () => APP.route('labels-organize')
+		this.props.onclick = () => APP.routeModal('props-setup')
 		//this.export.onclick = async () => await this.exportDb()
 		this.source.onclick = () => location.href = 'https://github.com/balajahe/balajahe.github.io/tree/master/real_agent'
 	}

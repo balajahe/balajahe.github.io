@@ -1,5 +1,6 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 import './media-container.js'
+import './props-edit.js'
 
 const me = 'obj-edit'
 customElements.define(me, class extends HTMLElement {
@@ -23,9 +24,7 @@ customElements.define(me, class extends HTMLElement {
 					border: solid 1px silver;
 					display: block;
 				}
-				${me} #labelsDiv { min-height: calc(var(--button-height) * 0.9); }
-				${me} .separ { margin-top: var(--margin2); flex-flow: row nowrap; }
-				${me} .separ hr { display: inline-block; flex: 1 1 auto; }
+				${me} #propsDiv { min-height: calc(var(--button-height) * 0.9); }
 				${me} #locDiv { 
 					height: 250px; width: 100%; 
 					margin-top: var(--margin1); margin-bottom: var(--margin1);
@@ -43,11 +42,9 @@ customElements.define(me, class extends HTMLElement {
 			</style>
 
 			<div w-id='descDiv/desc' contenteditable='true'></div>
-			<nav w-id='labelsDiv/labels/children'></nav>
-			<div class='separ'>&nbsp;<small>Click to add label:</small>&nbsp;<hr/></div>
-			<div w-id='allLabelsDiv'>
-				<input w-id='newLabelInp/newLabel' placeholder='New label...'/>
-			</div>
+			<nav w-id='propsDiv'>
+				<button w-id='editPropsBut'>EDIT PROPERTIES</button>
+			</nav>
 			<media-container w-id='mediaContainer'></media-container>
 			<div id='locDiv'>
 				<iframe w-id='mapIframe'></iframe>
@@ -56,37 +53,32 @@ customElements.define(me, class extends HTMLElement {
 		`
 		wcMixin(this)
 
-		for (const lab of localStorage.getItem('labels').split(',')) this.addAvailLabel(lab)
-
 		if (this.obj) {
 			this.desc = this.obj.desc
-			for (const lab of this.obj.labels) this.addLabel(lab)
+			this.setProps(this.obj.labels)
 		}
 		this.mediaContainer.build(this.obj.medias, true, true)
 
+		this.addEventListener('change-props', (ev) => {
+			this.setProps(ev.val)
+		})
+
 		this.updateLocation()
 
-		this.newLabelInp.onkeypress = (ev) => {
-			if (ev.key === 'Enter') {
-				this.addAvailLabel(this.newLabel)
-				localStorage.setItem('labels', localStorage.getItem('labels') + ',' + this.newLabel)
-				this.newLabel = ''
-			}
+		this.editPropsBut.onclick = (ev) => APP.routeModal('props-edit', document.createElement('props-edit').build(this.getProps()))
+	}
+
+	setProps(props) {
+		for (let el = this.editPropsBut.previousElementSibling; el; el = this.editPropsBut.previousElementSibling) el.remove()
+		for (const prop of props) {
+			const but = document.createElement("button")
+			but.innerHTML = prop
+			this.editPropsBut.before(but)
 		}
 	}
 
-	addLabel(lab) {
-		const but = document.createElement("button")
-		but.innerHTML = lab
-		but.onclick = () => but.remove()
-		this.labelsDiv.append(but)
-	}
-
-	addAvailLabel(lab) {
-		const but = document.createElement("button")
-		but.innerHTML = lab
-		but.onclick = (ev) => this.addLabel(ev.target.innerHTML)
-		this.newLabelInp.before(but)
+	getProps() {
+		return Array.from(this.propsDiv.children).slice(0, -1).map(el => el.innerHTML)
 	}
 
 	updateLocation() {
@@ -111,13 +103,13 @@ customElements.define(me, class extends HTMLElement {
 				if (confirm('Delete current object forever ?')) this.deleteObj()
 			}],
 			['sep'],
-			['but', 'Cancel<br>&lArr;', () => history.go(-1)],
-			['but', 'Save<br>&rArr;', async () => {
+			['cancel', () => history.go(-1)],
+			['save', async () => {
 				if (!this.desc) {
 					APP.message('<span style="color:red">EMPTY DESCRIPTION!</span>')
 					this.descDiv.focus()
-				} else if (this.labels.length === 0) {
-					APP.message('<span style="color:red">NO LABELS!</span>')
+				} else if (this.getProps().length <= 1) {
+					APP.message('<span style="color:red">NO PROPERTIES!</span>')
 				} else {
 					this.saveExistObj()
 				}
@@ -132,7 +124,7 @@ customElements.define(me, class extends HTMLElement {
 			modified: now,
 			location: {latitude: this.location?.latitude, longitude: this.location?.longitude},
 			desc: this.desc,
-			labels: Array.from(this.labels).map(el => el.innerHTML),
+			labels: this.getProps(),
 			medias: this.mediaContainer.getMedias()
 		}
 
@@ -162,7 +154,6 @@ customElements.define(me, class extends HTMLElement {
 		const proms = []
 
 		proms.push(new Promise(resolve => tran.objectStore("Objects").delete(this.obj.created).onsuccess = resolve))
-console.log(this.obj.created)
 		proms.push(new Promise(resolve => tran.objectStore("Origins").delete(IDBKeyRange.bound(this.obj.created, this.obj.created + '_'.repeat(this.obj.created.length))).onsuccess = resolve))
 		await Promise.all(proms)
 
