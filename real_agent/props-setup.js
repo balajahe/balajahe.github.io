@@ -23,7 +23,7 @@ customElements.define(me, class extends HTMLElement {
 			['msg', 'Enter properties separated by commas:'],
          ['cancel'],
          ['save', () => {
-         	APP.props = this.props.split(',').map(v => trim(v))
+         	APP.props = this.props.split(',').map(v => v.trim())
          	history.go(-1)
 				APP.message('SAVED !')
          }]
