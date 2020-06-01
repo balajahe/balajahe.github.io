@@ -46,7 +46,7 @@ customElements.define(me, class extends HTMLElement {
 			<nav w-id='propsDiv'>
 				<button w-id='editPropsBut'>ADD / REMOVE</button>
 			</nav>
-			<media-container w-id='mediaContainer' add='true' del='true'></media-container>
+			<media-container w-id='mediaContainer/medias' add='true' del='true'></media-container>
 			<div id='locDiv'>
 				<iframe w-id='mapIframe'></iframe>
 				<div w-id='/loc'></div>
@@ -124,7 +124,7 @@ customElements.define(me, class extends HTMLElement {
 			location: {latitude: this.location?.latitude, longitude: this.location?.longitude},
 			desc: this.desc,
 			props: this.props,
-			medias: this.mediaContainer.getMedias()
+			medias: this.medias
 		}
 
 		const origins = []

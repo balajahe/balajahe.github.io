@@ -27,7 +27,7 @@ customElements.define(me, class extends HTMLElement {
 					<button w-id='vidBut'>Record video</button>
 					<button w-id='imgBut'>Take photo</button>
 				</nav>
-				<media-container w-id='mediaContainer'></media-container>
+				<media-container w-id='mediaContainer/medias'></media-container>
 			</div>
 			<canvas w-id='canvas' style='display:none'></canvas>
 		`
@@ -63,7 +63,7 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	getMedias() {
-		return this.mediaContainer.getMedias()
+		return this.medias
 	}
 
 	async onRoute() {

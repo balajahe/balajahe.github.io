@@ -7,7 +7,7 @@ customElements.define(me, class extends HTMLElement {
 	delFlag = false
 
 	connectedCallback() {
-		if (!this.built) this.build(null, this.getAttribute('add'), this.getAttribute('del'))
+		if (!this.built) this.build([], this.getAttribute('add'), this.getAttribute('del'))
 	}
 
 	build(medias, addFlag, delFlag) {
@@ -52,10 +52,8 @@ customElements.define(me, class extends HTMLElement {
 			APP.routeModal('media-manager', mman)
 		}
 
-		if (medias) {
-			for (let el=this.addBut.nexElementSibling; el; el=this.addBut.nexElementSibling) el.remove()
-			medias.forEach(media => this.addMedia(media))
-		}
+		medias.forEach(media => this.addMedia(media))
+
 		if (addFlag) this.addBut.display()
 
 		return this
@@ -66,7 +64,7 @@ customElements.define(me, class extends HTMLElement {
 		med._source = media
 		med.src = media.preview
 
-		const delActiion = this.delFlag || this.delFlag ? () => med.remove() : null
+		const delActiion = this.delFlag ? () => med.remove() : null
 		med.onclick = (ev) => {
 			ev.stopPropagation()
 			APP.routeModal('media-player', document.createElement('media-player').build(media, delActiion))
@@ -75,7 +73,7 @@ customElements.define(me, class extends HTMLElement {
 		this.addBut.before(med)
 	}
 
-	getMedias() {
+	get val() {
 		return Array.from(this.querySelectorAll('img')).map(el => el._source)
 	}
 })
