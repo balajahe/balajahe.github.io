@@ -54,20 +54,36 @@ customElements.define(me, class extends HTMLElement {
 		`
 		wcMixin(this)
 
+		this.appBar = [
+			['but', 'Delete<br>&#8224;', async () => {
+				if (confirm('Delete current object forever ?')) this.deleteObj()
+			}],
+			['sep'],
+			['cancel', () => history.go(-1)],
+			['save', async () => {
+				if (!this.desc) {
+					APP.message('<span style="color:red">EMPTY DESCRIPTION!</span>')
+					this.descDiv.focus()
+				} else if (this.props.length === 0) {
+					APP.message('<span style="color:red">NO PROPERTIES!</span>')
+				} else {
+					this.saveExistObj()
+				}
+			}]
+		]
+
 		if (this.obj) {
 			this.desc = this.obj.desc
 			this.setProps(this.obj.props)
 		}
 		
-		this.obj.medias.forEach(media => this.mediaContainer.addMedia(media))
-
-		this.addEventListener('change-props', (ev) => {
-			this.setProps(ev.val)
-		})
+		this.mediaContainer.build(this.obj.medias)
 
 		this.updateLocation()
 
-		this.editPropsBut.onclick = (ev) => APP.routeModal('props-manager', document.createElement('props-manager').build(this.props))
+		this.addEventListener('change-props', (ev) => this.setProps(ev.val))
+
+		this.editPropsBut.onclick = () => APP.routeModal('props-manager', document.createElement('props-manager').build(this.props))
 	}
 
 	setProps(props = []) {
@@ -94,26 +110,6 @@ customElements.define(me, class extends HTMLElement {
 				APP.message('LOCATION UPDATED!')
 			})
 		}
-	}
-
-	onRoute() {
-		APP.setBar([
-			['but', 'Delete<br>&#8224;', async () => {
-				if (confirm('Delete current object forever ?')) this.deleteObj()
-			}],
-			['sep'],
-			['cancel', () => history.go(-1)],
-			['save', async () => {
-				if (!this.desc) {
-					APP.message('<span style="color:red">EMPTY DESCRIPTION!</span>')
-					this.descDiv.focus()
-				} else if (this.props.length === 0) {
-					APP.message('<span style="color:red">NO PROPERTIES!</span>')
-				} else {
-					this.saveExistObj()
-				}
-			}]
-		])
 	}
 
 	async saveExistObj() {

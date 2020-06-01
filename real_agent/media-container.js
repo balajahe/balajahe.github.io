@@ -3,23 +3,19 @@ import './media-player.js'
 
 const me = 'media-container'
 customElements.define(me, class extends HTMLElement {
-	built = false
+	addFlag = false
 	delFlag = false
 
-	connectedCallback() {
-		if (!this.built) this.build([], this.getAttribute('add'), this.getAttribute('del'))
-	}
-
-	build(medias, addFlag, delFlag) {
-		this.built = true
-		this.delFlag = delFlag
+	build(medias) {
+		this.addFlag = this.getAttribute('add') === 'true'
+		this.delFlag = this.getAttribute('del') === 'true'
 
 		this.innerHTML = `
 			<style scoped>
 				${me} { 
 					width: 100%;
-					/*display: grid; grid-template-columns: repeat(auto-fill, minmax(${APP.imgPrevSize}px, 1fr));*/
 					display: flex; flex-flow: row wrap;
+					/*display: grid; grid-template-columns: repeat(auto-fill, minmax(${APP.imgPrevSize}px, 1fr));*/
 				}
 				${me} > * { 
 					height: ${APP.imgPrevSize}px; width: ${APP.imgPrevSize}px;
@@ -43,7 +39,7 @@ customElements.define(me, class extends HTMLElement {
 	            ['msg', 'Take photo, video, or audio:'],
 	            ['but', 'Cancel<br>&lArr;', () => history.go(-1)],
 	            ['but', 'Next<br>&rArr;', () => {
-	            	mman.getMedias().forEach(media => this.addMedia(media, true))
+	            	mman.getMedias().forEach(media => this.add(media))
 	               history.go(-1)
 	            }]
 	         ],
@@ -52,14 +48,12 @@ customElements.define(me, class extends HTMLElement {
 			APP.routeModal('media-manager', mman)
 		}
 
-		medias.forEach(media => this.addMedia(media))
+		if (medias) for (const media of medias) this.add(media)
 
-		if (addFlag) this.addBut.display()
-
-		return this
+		if (this.addFlag) this.addBut.display('block')
 	}
 
-	addMedia(media) {
+	add(media) {
 		const med = document.createElement('img')
 		med._source = media
 		med.src = media.preview
@@ -67,7 +61,7 @@ customElements.define(me, class extends HTMLElement {
 		const delActiion = this.delFlag ? () => med.remove() : null
 		med.onclick = (ev) => {
 			ev.stopPropagation()
-			APP.routeModal('media-player', document.createElement('media-player').build(media, delActiion))
+			APP.routeModal('media-player', document.createElement('media-player').build(media, this.val, delActiion))
 		}
 
 		this.addBut.before(med)

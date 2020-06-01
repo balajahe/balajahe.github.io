@@ -27,7 +27,7 @@ customElements.define(me, class extends HTMLElement {
 					<button w-id='vidBut'>Record video</button>
 					<button w-id='imgBut'>Take photo</button>
 				</nav>
-				<media-container w-id='mediaContainer/medias'></media-container>
+				<media-container w-id='mediaContainer/medias' add='false' del='true'></media-container>
 			</div>
 			<canvas w-id='canvas' style='display:none'></canvas>
 		`
@@ -36,14 +36,13 @@ customElements.define(me, class extends HTMLElement {
 		this.canvas.width = APP.imgPrevSize
 		this.canvas.height = APP.imgPrevSize
 
-		if (medias) medias.forEach(media => this.mediaContainer.addMedia(media, true))
+		this.mediaContainer.build(medias)
 
 		this.imgBut.onclick = async () => {
 			const blob = await this.imgCapturer.takePhoto(this.imgParams)
 
-			this.mediaContainer.addMedia(
-				{ created: APP.now(), tagName: 'img', preview: this._takePrev('IMG'), origin: await this._takeOrigin(blob) }, 
-				true
+			this.mediaContainer.add(
+				{ created: APP.now(), tagName: 'img', preview: this._takePrev('IMG'), origin: await this._takeOrigin(blob) }
 			)
 		}
 
@@ -87,11 +86,11 @@ customElements.define(me, class extends HTMLElement {
 
 		this.vidRecorder = new MediaRecorder(this.stream, { mimeType : "video/webm" })
 		this.vidRecorder.ondataavailable = async (ev) => 
-			this.mediaContainer.addMedia({ created: APP.now(), tagName: 'video', preview: this._takePrev('VIDEO'), origin: ev.data }, true)
+			this.mediaContainer.add({ created: APP.now(), tagName: 'video', preview: this._takePrev('VIDEO'), origin: ev.data })
 
 		this.audRecorder = new MediaRecorder(this.stream, { mimeType : "audio/webm" })
 		this.audRecorder.ondataavailable = async (ev) => 
-			this.mediaContainer.addMedia({ created: APP.now(), tagName: 'audio', preview: this._takePrev('AUDIO'), origin: ev.data }, true)
+			this.mediaContainer.add({ created: APP.now(), tagName: 'audio', preview: this._takePrev('AUDIO'), origin: ev.data })
 	}
 
 	onUnRoute() {

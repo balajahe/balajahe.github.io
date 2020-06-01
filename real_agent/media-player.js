@@ -3,15 +3,14 @@ import wcMixin from '/WcMixin/WcMixin.js'
 const me = 'media-player'
 customElements.define(me, class extends HTMLElement {
 	source = null
+	sources = null
 	delAction = null
 
-	build(source, delAction) {
+	build(source, sources, delAction) {
 		this.source = source
+		this.sources = sources	
 		this.delAction = delAction
-		return this
-	}
 
-	async connectedCallback() {
 		this.innerHTML = `
 			<style scoped>
 				${me} { 
@@ -23,6 +22,16 @@ customElements.define(me, class extends HTMLElement {
 			</style>
 		`
 		wcMixin(this)
+
+   	const bar = []
+   	if (this.delAction) bar.push(['delete', () => { 
+   		this.delAction()
+   		history.go(-1)
+   	}])
+      this.appBar = bar.concat([
+         ['msg', ''],
+         ['back'],
+      ])
 
 		this.onclick = () => history.go(-1)
 
@@ -42,17 +51,7 @@ customElements.define(me, class extends HTMLElement {
 			
 			this.append(el)
 		}
-	}
 
-   onRoute() {
-   	const bar = []
-   	if (this.delAction) bar.push(['but', 'Delete<br>&#8224;', () => { 
-   		this.delAction()
-   		history.go(-1)
-   	}])
-      APP.setBar(bar.concat([
-         ['msg', ''],
-         ['back'],
-      ]))
-   }
+		return this
+	}
 })

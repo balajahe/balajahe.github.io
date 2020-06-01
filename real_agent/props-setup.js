@@ -19,18 +19,16 @@ customElements.define(me, class extends HTMLElement {
 		`
 		wcMixin(this)
 
-		this.props = APP.props
-	}
-
-	onRoute() {
-		APP.setBar([
+		this.appBar = [
 			['msg', 'Enter properties separated by commas:'],
          ['cancel'],
          ['save', () => {
-         	APP.props = this.props.split(',')
+         	APP.props = this.props.split(',').map(v => trim(v))
          	history.go(-1)
 				APP.message('SAVED !')
          }]
-		])
+		]
+
+		this.props = APP.props.join(',')
 	}
 })

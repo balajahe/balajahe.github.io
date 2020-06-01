@@ -70,7 +70,7 @@ customElements.define(me, class extends HTMLElement {
 				} else if (b[0] === 'save') {
 					el.innerHTML = 'Save<br>&rArr;'
 					el.onclick = b[1]
-				} else if (b[0] === 'delele') {
+				} else if (b[0] === 'delete') {
 					el.innerHTML = 'Delete<br>&#8224;'
 					el.onclick = b[1]
 				} else if (b[0] === 'msg') {

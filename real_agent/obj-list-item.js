@@ -8,7 +8,7 @@ customElements.define(me, class extends HTMLElement {
 		this.innerHTML = `
 			<div w-id='objDesc'></div>
 			<div w-id='objProps'></div>
-			<media-container w-id='mediaContainer'></media-container>
+			<media-container w-id='mediaContainer' add='false' del='false'></media-container>
 		`
 		wcMixin(this)
 		
