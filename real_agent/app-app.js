@@ -1,5 +1,6 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 import './app-bar.js'
+import './obj-list.js'
 
 const me = 'app-app'
 customElements.define(me, class extends HTMLElement {

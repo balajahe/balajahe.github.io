@@ -1,5 +1,7 @@
 import wcMixin from '/WcMixin/WcMixin.js'
 import './obj-list-item.js'
+import './media-manager.js'
+import './obj-new.js'
 
 const me = 'obj-list'
 customElements.define(me, class extends HTMLElement {

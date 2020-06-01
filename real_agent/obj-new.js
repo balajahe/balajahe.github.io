@@ -1,4 +1,5 @@
 import wcMixin from '/WcMixin/WcMixin.js'
+import './props-manager.js'
 
 const me = 'obj-new'
 customElements.define(me, class extends HTMLElement {
