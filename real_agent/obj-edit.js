@@ -5,6 +5,7 @@ import './props-manager.js'
 const me = 'obj-edit'
 customElements.define(me, class extends HTMLElement {
 	obj = null
+	props = null
 	location = null
 
 	build(obj) {
@@ -45,7 +46,7 @@ customElements.define(me, class extends HTMLElement {
 			<nav w-id='propsDiv'>
 				<button w-id='editPropsBut'>ADD / REMOVE</button>
 			</nav>
-			<media-container w-id='mediaContainer'></media-container>
+			<media-container w-id='mediaContainer' add='true' del='true'></media-container>
 			<div id='locDiv'>
 				<iframe w-id='mapIframe'></iframe>
 				<div w-id='/loc'></div>
@@ -55,9 +56,10 @@ customElements.define(me, class extends HTMLElement {
 
 		if (this.obj) {
 			this.desc = this.obj.desc
-			this.setProps(this.obj.labels)
+			this.setProps(this.obj.props)
 		}
-		this.mediaContainer.build(this.obj.medias, true, true)
+		
+		this.obj.medias.forEach(media => this.mediaContainer.addMedia(media))
 
 		this.addEventListener('change-props', (ev) => {
 			this.setProps(ev.val)
@@ -65,20 +67,17 @@ customElements.define(me, class extends HTMLElement {
 
 		this.updateLocation()
 
-		this.editPropsBut.onclick = (ev) => APP.routeModal('props-manager', document.createElement('props-manager').build(this.getProps()))
+		this.editPropsBut.onclick = (ev) => APP.routeModal('props-manager', document.createElement('props-manager').build(this.props))
 	}
 
-	setProps(props) {
+	setProps(props = []) {
+		this.props = props
 		for (let el = this.editPropsBut.previousElementSibling; el; el = this.editPropsBut.previousElementSibling) el.remove()
 		for (const prop of props) {
 			const but = document.createElement("button")
 			but.innerHTML = prop
 			this.editPropsBut.before(but)
 		}
-	}
-
-	getProps() {
-		return Array.from(this.propsDiv.children).slice(0, -1).map(el => el.innerHTML)
 	}
 
 	updateLocation() {
@@ -108,7 +107,7 @@ customElements.define(me, class extends HTMLElement {
 				if (!this.desc) {
 					APP.message('<span style="color:red">EMPTY DESCRIPTION!</span>')
 					this.descDiv.focus()
-				} else if (this.getProps().length === 0) {
+				} else if (this.props.length === 0) {
 					APP.message('<span style="color:red">NO PROPERTIES!</span>')
 				} else {
 					this.saveExistObj()
@@ -124,7 +123,7 @@ customElements.define(me, class extends HTMLElement {
 			modified: now,
 			location: {latitude: this.location?.latitude, longitude: this.location?.longitude},
 			desc: this.desc,
-			labels: this.getProps(),
+			props: this.props,
 			medias: this.mediaContainer.getMedias()
 		}
 

@@ -16,7 +16,6 @@ customElements.define(me, class extends HTMLElement {
 					border: solid 1px silver;
 					display: block;
 				}
-				${me} #propsDiv { min-height: calc(var(--button-height) * 0.9); }
 				${me} #locDiv { 
 					height: 250px; width: 100%; 
 					margin-top: var(--margin1);	
@@ -28,50 +27,14 @@ customElements.define(me, class extends HTMLElement {
 			</style>
 			
 			<div w-id='descDiv/desc' contenteditable='true'></div>
-			<div w-id='propsDiv/props/children'></div>
-			<sepa-rator>Click to add properties:</sepa-rator>
-			<div w-id='allpropsDiv'>
-				<input w-id='newPropInp/newProp' placeholder='New property...'/>
-			</div>
+			<props-manager w-id='propsManager/props'></props-manager>
 			<div id='locDiv'>
 				<iframe w-id='mapIframe'></iframe>
 			</div>
 		`
 		wcMixin(this)
 
-		this.newPropInp.onkeypress = (ev) => {
-			if (ev.key === 'Enter') {
-				this.addAvailProp(this.newProp)
-				APP.props = APP.props.concat(this.newProp)
-				this.newProp = ''
-			}
-		}
-	}
-
-	addProp(prop) {
-		const but = document.createElement("button")
-		but.innerHTML = prop
-		but.onclick = () => but.remove()
-		this.propsDiv.append(but)
-	}
-
-	addAvailProp(prop) {
-		const but = document.createElement("button")
-		but.innerHTML = prop
-		but.onclick = (ev) => this.addProp(ev.target.innerHTML)
-		this.newPropInp.before(but)
-	}
-
-	updateLocation() {
-		navigator.geolocation.getCurrentPosition(loc => {
-			this.location = loc.coords
-			this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${this.location.longitude-0.002}%2C${this.location.latitude-0.002}%2C${this.location.longitude+0.002}%2C${this.location.latitude+0.002}&layer=mapnik&marker=${this.location.latitude}%2C${this.location.longitude}`)
-			//this.locBut.innerHTML = APP.location.latitude + ' - ' + APP.location.longitude
-		})
-	}
-
-	onRoute() {
-		APP.setBar([
+		this.appBar = [
 			['but', 'Geo<br>&#8853;', () => this.updateLocation()],
 			['msg', 'Enter description and add properties:'],
 			['back'],
@@ -85,8 +48,18 @@ customElements.define(me, class extends HTMLElement {
 					this.saveNewObj()
 				}
 			}]
-		])
-		for (const prop of APP.props) this.addAvailProp(prop)
+		]
+	}
+
+	updateLocation() {
+		navigator.geolocation.getCurrentPosition(loc => {
+			this.location = loc.coords
+			this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${this.location.longitude-0.002}%2C${this.location.latitude-0.002}%2C${this.location.longitude+0.002}%2C${this.location.latitude+0.002}&layer=mapnik&marker=${this.location.latitude}%2C${this.location.longitude}`)
+			//this.locBut.innerHTML = APP.location.latitude + ' - ' + APP.location.longitude
+		})
+	}
+
+	onRoute() {
 		this.updateLocation()
 		this.descDiv.focus()
 	}
@@ -99,7 +72,7 @@ customElements.define(me, class extends HTMLElement {
 			modified: now,
 			location: {latitude: this.location?.latitude, longitude: this.location?.longitude},
 			desc: this.desc,
-			labels: Array.from(this.props).map(el => el.innerHTML),
+			props: this.props,
 			medias: pageMedias.getMedias()
 		} 
 

@@ -12,7 +12,7 @@ customElements.define(me, class extends HTMLElement {
 					margin-bottom: var(--margin2);
 				}
 				${me} obj-list-item {
-					margin-bottom: var(--margin2);
+					margin-top: var(--margin2);
 					padding-bottom: var(--margin2);
 					border-bottom: 1px solid silver;
 					flex-flow: column;
@@ -23,7 +23,7 @@ customElements.define(me, class extends HTMLElement {
 					display: block;
 					padding-left: var(--margin2);
 				}
-				${me} #objLabels {
+				${me} #objProps {
 					display: flex; flex-flow: row wrap;
 					padding-left: var(--margin2);
 				}
@@ -40,23 +40,7 @@ customElements.define(me, class extends HTMLElement {
 
 		APP.setHash(me)
 
-		if (!APP.db) {
-			const dbr = window.indexedDB.open("RealAgent", 3)
-			dbr.onerror = (ev) => { console.log(ev); alert(ev.target.error) }
-			dbr.onupgradeneeded = (ev) => {
-				const db = ev.target.result
-				try {
-					db.createObjectStore("Objects", { keyPath: "created" })
-				} catch(_) {}
-				db.createObjectStore("Origins", { keyPath: "created" })
-			}
-			dbr.onsuccess = (ev) => {
-				APP.db = ev.target.result
-				this.refreshList()
-			}
-		} else {
-			this.refreshList()
-		}
+		this.refreshList()
 	}
 
 	refreshList() {

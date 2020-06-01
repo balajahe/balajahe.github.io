@@ -6,16 +6,16 @@ customElements.define(me, class extends HTMLElement {
 
 	build(obj) {
 		this.innerHTML = `
-			<div w-id='objLabels'></div>
 			<div w-id='objDesc'></div>
+			<div w-id='objProps'></div>
 			<media-container w-id='mediaContainer'></media-container>
 		`
 		wcMixin(this)
 		
 		this.id = obj.created
 
-		this.objLabels.innerHTML = obj.labels
 		this.objDesc.innerHTML = obj.desc
+		this.objProps.innerHTML = obj.props?.join(', ')
 		this.mediaContainer.build(obj.medias)
 
 		this.onclick = () => APP.routeModal('obj-edit', document.createElement('obj-edit').build(obj))

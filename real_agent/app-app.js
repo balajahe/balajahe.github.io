@@ -57,6 +57,8 @@ customElements.define(me, class extends HTMLElement {
 				this.props = localStorage.getItem('props').split(',')
 			else
 				this.props = 'Дом,Дача,Участок,Промзона,Заброшка,Зеленка,Архитектура,Черта города,Жилое,Ветхое,Разрушено,Продается'.split(',')
+
+			APP.route('obj-list')
 		}
 
 		window.onhashchange = async (ev) => {

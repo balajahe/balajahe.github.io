@@ -2,8 +2,14 @@ import wcMixin from '/WcMixin/WcMixin.js'
 
 const me = 'props-manager'
 customElements.define(me, class extends HTMLElement {
+	built = false
+
+	connectedCallback() {
+		if (!this.built) this.build([])
+	}
 
 	build(props) {
+		this.built = true
 		this.innerHTML = `
 			<style scoped>
 				${me} { 
@@ -17,14 +23,14 @@ customElements.define(me, class extends HTMLElement {
 					height: calc(var(--button-height) * 0.8); width: 30%; 
 				}
 				${me} #propsDiv { 
-					min-height: calc(var(--button-height) * 0.9); 
+					min-height1: calc(var(--button-height) * 1.4); 
 				}
 			</style>
 
 			<sepa-rator>Selected properties:</sepa-rator>
-			<nav w-id='propsDiv/props/children'></nav>
+			<nav w-id='propsDiv'></nav>
+			<sepa-rator>Available properties:</sepa-rator>
 			<nav>
-				<sepa-rator>Available properties:</sepa-rator>
 				<input w-id='newPropInp/newProp' placeholder='New property...'/>
 			</nav>
 		`
@@ -34,17 +40,17 @@ customElements.define(me, class extends HTMLElement {
 			['msg', 'Click to add / remove properties:'],
          ['cancel'],
          ['next', () => {
-         	document.querySelector('obj-edit').bubbleEvent('change-props', Array.from(this.props).map(el => el.innerHTML))
+         	document.querySelector('obj-edit').bubbleEvent('change-props', this.val)
          	history.go(-1)
          }]
 		]
 
-		for (const prop of props) this.addProp(prop)
-		for (const prop of APP.props) this.addAvailProp(prop)
+		for (const prop of props) this._addProp(prop)
+		for (const prop of APP.props) this._addAvailProp(prop)
 
 		this.newPropInp.onkeypress = (ev) => {
 			if (ev.key === 'Enter') {
-				this.addAvailProp(this.newProp)
+				this._addAvailProp(this.newProp)
 				APP.props = APP.props.concat(this.newProp)
 			}
 		}
@@ -52,17 +58,21 @@ customElements.define(me, class extends HTMLElement {
 		return this
 	}
 
-	addProp(prop) {
+	get val() {
+		return Array.from(this.propsDiv.children).map(el => el.innerHTML)
+	}
+
+	_addProp(prop) {
 		const but = document.createElement("button")
 		but.innerHTML = prop
 		but.onclick = () => but.remove()
 		this.propsDiv.append(but)
 	}
 
-	addAvailProp(prop) {
+	_addAvailProp(prop) {
 		const but = document.createElement("button")
 		but.innerHTML = prop
-		but.onclick = (ev) => this.addProp(prop)
+		but.onclick = (ev) => this._addProp(prop)
 		this.newPropInp.before(but)
 	}
 })
