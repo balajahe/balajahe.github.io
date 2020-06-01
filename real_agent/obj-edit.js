@@ -44,7 +44,7 @@ customElements.define(me, class extends HTMLElement {
 
 			<div w-id='descDiv/desc' contenteditable='true'></div>
 			<nav w-id='propsDiv'>
-				<button w-id='editPropsBut'>ADD / REMOVE</button>
+				<button w-id='editPropsBut'>&plusmn; PROPERTIES</button>
 			</nav>
 			<media-container w-id='mediaContainer/medias' add='true' del='true'></media-container>
 			<div id='locDiv'>
