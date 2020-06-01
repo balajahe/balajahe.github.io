@@ -28,7 +28,7 @@ customElements.define(me, class extends HTMLElement {
 				${me} > *:hover { cursor: pointer; }
 			</style>
 
-			<button w-id='addBut' style='display:none'>ADD<br>MEDIA</button>	
+			<button w-id='addBut' style='display:none'>ADD<br>MEDIAS</button>	
 
 		`
 		wcMixin(this)

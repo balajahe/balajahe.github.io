@@ -16,7 +16,7 @@ customElements.define(me, class extends HTMLElement {
 				${me} obj-list-item {
 					min-width: 100%;
 					margin-top: var(--margin2);
-					padding-bottom: var(--margin2);
+					padding-bottom: var(--margin1);
 					border-bottom: 1px solid silver;
 					flex-flow: column;
 					overflow: auto;
