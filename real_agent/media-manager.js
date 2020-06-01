@@ -3,7 +3,6 @@ import './media-container.js'
 
 const me = 'media-manager'
 customElements.define(me, class extends HTMLElement {
-	bar = [['sep'], ['back']]
 	stream
 	W = 0
 	H = 0
@@ -13,13 +12,18 @@ customElements.define(me, class extends HTMLElement {
 	audRecorder = null
 	canvas = null
 
-	build(bar, medias) {
+	connectedCallback() {
+		if(this.innerHTML === '') this.build([], null)
+	}
+
+	build(medias, bar) {
 		this.innerHTML = `
 			<style scoped>
 				${me} #vidPreview { width: 100%; }
 				${me} nav { width: 100%; flex-flow: row nowrap; }
 				${me} nav > button { flex: 1 1 auto; }
 			</style>
+
 			<div w-id='vidDiv' style='display:none'>
 				<video w-id='vidPreview' autoplay muted></video>
 				<nav>
@@ -29,10 +33,24 @@ customElements.define(me, class extends HTMLElement {
 				</nav>
 				<media-container w-id='mediaContainer/medias' add='false' del='true'></media-container>
 			</div>
+
 			<canvas w-id='canvas' style='display:none'></canvas>
 		`
 		wcMixin(this)
-		if (bar) this.bar = bar
+
+		if (bar) {
+			this.appBar = bar
+		} else {
+			this.appBar = [
+				['msg', 'Take photo, video, or audio:'],
+	         ['cancel'],
+	         ['next', () => {
+	         	this.bubbleEvent('change-medias', this.val)
+	         	history.go(-1)
+	         }]
+			]
+		}
+
 		this.canvas.width = APP.imgPrevSize
 		this.canvas.height = APP.imgPrevSize
 
@@ -61,13 +79,11 @@ customElements.define(me, class extends HTMLElement {
 		return this
 	}
 
-	getMedias() {
+	get val() {
 		return this.medias
 	}
 
 	async onRoute() {
-		APP.setBar(this.bar)
-
 		this.stream = await navigator.mediaDevices.getUserMedia(
 			{ video: { facingMode: { ideal: "environment" }}, audio: true }
 		)

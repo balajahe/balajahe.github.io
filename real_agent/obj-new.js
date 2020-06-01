@@ -73,7 +73,7 @@ customElements.define(me, class extends HTMLElement {
 			location: {latitude: this.location?.latitude, longitude: this.location?.longitude},
 			desc: this.desc,
 			props: this.props,
-			medias: pageMedias.getMedias()
+			medias: pageMedias.val
 		} 
 
 		const origins = []

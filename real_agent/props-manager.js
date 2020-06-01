@@ -2,14 +2,12 @@ import wcMixin from '/WcMixin/WcMixin.js'
 
 const me = 'props-manager'
 customElements.define(me, class extends HTMLElement {
-	built = false
 
 	connectedCallback() {
-		if (!this.built) this.build([])
+		if(this.innerHTML === '') this.build([])
 	}
 
 	build(props) {
-		this.built = true
 		this.innerHTML = `
 			<style scoped>
 				${me} { 
@@ -40,7 +38,7 @@ customElements.define(me, class extends HTMLElement {
 			['msg', 'Click to add / remove properties:'],
          ['cancel'],
          ['next', () => {
-         	document.querySelector('obj-edit').bubbleEvent('change-props', this.val)
+         	this.bubbleEvent('change-props', this.val)
          	history.go(-1)
          }]
 		]

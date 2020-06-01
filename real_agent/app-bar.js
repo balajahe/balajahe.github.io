@@ -35,6 +35,7 @@ customElements.define(me, class extends HTMLElement {
 					background-color: silver;
 				}
 			</style>
+			
 			<app-menu w-id='appMenu' style='display:none'></app-menu>
 			<button w-id='menuBut'>&#9776;</button>
 		`

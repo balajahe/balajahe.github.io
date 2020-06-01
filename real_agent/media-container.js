@@ -33,24 +33,11 @@ customElements.define(me, class extends HTMLElement {
 		`
 		wcMixin(this)
 
-		this.addBut.onclick = () => {
-	      const mman = document.createElement('media-manager').build(
-	         [
-	            ['msg', 'Take photo, video, or audio:'],
-	            ['but', 'Cancel<br>&lArr;', () => history.go(-1)],
-	            ['but', 'Next<br>&rArr;', () => {
-	            	mman.getMedias().forEach(media => this.add(media))
-	               history.go(-1)
-	            }]
-	         ],
-	         this.medias
-	      )
-			APP.routeModal('media-manager', mman)
-		}
-
 		if (medias) for (const media of medias) this.add(media)
 
 		if (this.addFlag) this.addBut.display('block')
+
+		this.addBut.onclick = () => APP.routeModal('media-manager')
 	}
 
 	add(media) {

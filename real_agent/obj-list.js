@@ -5,6 +5,8 @@ const me = 'obj-list'
 customElements.define(me, class extends HTMLElement {
 
 	connectedCallback() {
+		APP.setHash(me)
+
 		this.innerHTML = `
 			<style scoped>
 				${me} > #listDiv {
@@ -39,7 +41,19 @@ customElements.define(me, class extends HTMLElement {
 		`
 		wcMixin(this)
 
-		APP.setHash(me)
+		let mman = document.querySelector('#obj-new-medias')
+		if (!mman) mman = document.createElement('media-manager').build(
+			[],
+			[
+				['msg', 'Take photo, video, or audio:'],
+				['cancel'],
+				['next', () => APP.route('obj-new')]
+			]
+		)
+		this.appBar = [
+			['sep'],
+			['but', 'New<br>&rArr;', () => APP.route('obj-new-medias', mman)]
+		]
 
 		this.refreshList()
 	}
@@ -69,22 +83,5 @@ customElements.define(me, class extends HTMLElement {
 
 	delItem(id) {
 		this.querySelector('#' + id).remove()
-	}
-
-	onRoute() {
-		let mman = document.querySelector('#obj-new-medias')
-		if (!mman) mman = 
-			document.createElement('media-manager').build(
-				[
-					['msg', 'Take photo, video, or audio:'],
-					['back'],
-					['next', () => APP.route('obj-new')]
-				],
-				null
-			)
-		APP.setBar([
-			['sep'],
-			['but', 'New<br>&rArr;', () => APP.route('obj-new-medias', mman)]
-		])
 	}
 })

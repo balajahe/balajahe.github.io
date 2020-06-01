@@ -81,9 +81,13 @@ customElements.define(me, class extends HTMLElement {
 
 		this.updateLocation()
 
+		this.editPropsBut.onclick = () => APP.routeModal('props-manager', document.createElement('props-manager').build(this.props))
 		this.addEventListener('change-props', (ev) => this.setProps(ev.val))
 
-		this.editPropsBut.onclick = () => APP.routeModal('props-manager', document.createElement('props-manager').build(this.props))
+		this.addEventListener('change-medias', (ev) => {
+			for (const media of ev.val) this.mediaContainer.add(media)
+		})
+
 	}
 
 	setProps(props = []) {

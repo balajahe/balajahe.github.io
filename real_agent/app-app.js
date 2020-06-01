@@ -3,10 +3,12 @@ import './app-bar.js'
 
 const me = 'app-app'
 customElements.define(me, class extends HTMLElement {
+	_stack = []
+	_hashReplacing = false
+
 	imgPrevSize = 80
 	db = null
 	_props = []
-	 _hashReplacing = false
 
 	connectedCallback() {
 		this.innerHTML = `
@@ -20,7 +22,7 @@ customElements.define(me, class extends HTMLElement {
 					height: var(--app-bar-height); 
 					width: 100%; max-width: var(--app-max-width);
 				}
-				${me} .appModal {
+				${me} .modalPagePlace {
 					position: fixed; top: 0; z-index:10; 
 					height: calc(100vh - var(--app-bar-height));
 					width: 100vw; max-width: var(--app-max-width);
@@ -30,16 +32,19 @@ customElements.define(me, class extends HTMLElement {
 					overflow: auto;
 					background-color: white;
 			}
-				${me} .appModal > div {
+				${me} .modalPagePlace > div {
 					padding-left: var(--margin1); padding-right: var(--margin1);
 					flex-flow: column;
 				}
 			</style>
+
 			<app-bar w-id='appBar'></app-bar>
-			<div class='appModal'></div> <!-- this.lastElementChild -->
+			<div class='modalPagePlace'></div>
 		`
 		wcMixin(this)
 		window.APP = this
+
+		this._stack.push({ place: this.querySelector('div'), currentPage: null })
 
 		const dbr = window.indexedDB.open("RealAgent", 3)
 		dbr.onerror = (ev) => { console.log(ev); alert(ev.target.error) }
@@ -87,51 +92,55 @@ customElements.define(me, class extends HTMLElement {
 	message(v) { this.appBar.message(v) }
 
 	route(hash, elem) {
-		const curr = this.lastElementChild._currentPage
+		const top = this._stack[this._stack.length-1]
+		const place = top.place
+		const curr = top.currentPage
 		if (curr) {
 			curr.display(false)
 			if (curr.onUnRoute) curr.onUnRoute()
 		}
 		if (elem) {
-			if (!Array.from(this.lastElementChild.children).find(el => el === elem)) {
-				this.lastElementChild.append(elem)
+			if (!Array.from(place.children).find(el => el === elem)) {
+				place.append(elem)
 			}
 		} else {
-			elem = Array.from(this.lastElementChild.children).find(el => el.id === hash)
+			elem = Array.from(place.children).find(el => el.id === hash)
 			if (!elem) {
 				elem = document.createElement(hash)
-				this.lastElementChild.append(elem)
+				place.append(elem)
 			}
 		}
 
 		elem.id = hash
 		elem.display()
-		if (elem.appBar) this.setBar(elem.appBar)
+		if (elem.appBar) this.appBar.setBar(elem.appBar)
 		if (elem.onRoute) elem.onRoute()
 
-		this.lastElementChild._currentPage = elem
+		top.currentPage = elem
 		this._replaceLastHash(hash)
 	}
 
 	routeModal(id, elem) {
 		this.appBar.pushBar()
-		const modal = document.createElement('div')
-		modal.className = 'appModal'
-		this.append(modal)		
+
+		const curr = this._stack[this._stack.length-1].currentPage
+		const place = document.createElement('div')
+		place.className = 'modalPagePlace'
+		curr.prepend(place)		
 
 		if (!elem) elem = document.createElement(id)
+		place.append(elem)
+
 		elem.id = id
-		modal.append(elem)
-		elem.display()
 		if (elem.appBar) this.setBar(elem.appBar)
 		if (elem.onRoute) elem.onRoute()
 
-		this.lastElementChild._currentPage = elem
+		this._stack.push({ place: place, currentPage: elem })
 		this._pushHash(id)
 	}
 
 	popModal(sys) {
-		this.lastElementChild.remove()
+		this._stack.pop().place.remove()
 		this.appBar.popBar()
 		if (!sys) this._popHash()
 	}
