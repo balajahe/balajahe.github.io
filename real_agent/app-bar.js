@@ -61,7 +61,8 @@ customElements.define(me, class extends HTMLElement {
 					el.onclick = b[2]
 				} else if (b[0] === 'back') {
 					el.innerHTML = 'Back<br>&lArr;'
-					el.onclick = () => history.go(-1)
+					if (b[1]) el.onclick = b[1]
+					else el.onclick = () => history.go(-1)
 				} else if (b[0] === 'cancel') {
 					el.innerHTML = 'Cancel<br>&lArr;'
 					el.onclick = () => history.go(-1)

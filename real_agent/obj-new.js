@@ -46,7 +46,10 @@ customElements.define(me, class extends HTMLElement {
 				} else if (this.props.length === 0) {
 					APP.message('<span style="color:red">NO PROPERTIES!</span>')
 				} else {
-					this.saveNewObj()
+					const obj = await this.saveNewObj()
+					document.querySelector('obj-list').addItem(obj)
+					APP.route('obj-list')
+					APP.message('SAVED !')
 				}
 			}]
 		]
@@ -91,10 +94,8 @@ customElements.define(me, class extends HTMLElement {
 			proms.push(new Promise(resolve => tran.objectStore("Origins").add(origin).onsuccess = resolve))
 		await Promise.all(proms)
 
-		document.querySelector('obj-list').addItem(obj)
 		APP.remove(pageMedias)
 		APP.remove(this)
-		APP.route('obj-list')
-		APP.message('SAVED !')
+		return obj
 	}
 })

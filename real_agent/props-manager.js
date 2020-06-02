@@ -36,8 +36,7 @@ customElements.define(me, class extends HTMLElement {
 
 		this.appBar = [
 			['msg', 'Click to add / remove properties:'],
-         ['cancel'],
-         ['next', () => {
+         ['back', () => {
          	this.bubbleEvent('change-props', this.val)
          	history.go(-1)
          }]

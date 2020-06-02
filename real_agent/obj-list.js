@@ -43,21 +43,31 @@ customElements.define(me, class extends HTMLElement {
 		`
 		wcMixin(this)
 
-		let mman = document.querySelector('#obj-new-medias')
-		if (!mman) mman = document.createElement('media-manager').build(
-			[],
-			[
-				['msg', 'Take photo, video, or audio:'],
-				['cancel'],
-				['next', () => APP.route('obj-new')]
-			]
-		)
 		this.appBar = [
 			['sep'],
-			['but', 'New<br>&rArr;', () => APP.route('obj-new-medias', mman)]
+			['but', 'New<br>&rArr;', () => {
+				let mman = document.querySelector('#obj-new-medias')
+				if (!mman) mman = document.createElement('media-manager').build(
+					[],
+					[
+						['msg', 'Take photo, video, or audio:'],
+						['cancel'],
+						['next', () => APP.route('obj-new')]
+					]
+				)
+				APP.route('obj-new-medias', mman)
+			}]
 		]
 
 		this.refreshList()
+
+		this.addEventListener('set-item', (ev) => {
+			this.querySelector('#' + ev.val.created).replaceWith(document.createElement('obj-list-item').build(ev.val))
+		})
+
+		this.addEventListener('del-item', (ev) => {
+			this.querySelector('#' + ev.val).remove()
+		})
 	}
 
 	refreshList() {
@@ -71,19 +81,7 @@ customElements.define(me, class extends HTMLElement {
 		}
 	}
 
-	getItem(id) {
-		return this.querySelector('#' + id)
-	}
-
-	setItem(obj) {
-		this.querySelector('#' + obj.created).replaceWith(document.createElement('obj-list-item').build(obj))
-	}
-
 	addItem(obj) {
 		this.listDiv.prepend(document.createElement('obj-list-item').build(obj))
-	}
-
-	delItem(id) {
-		this.querySelector('#' + id).remove()
 	}
 })

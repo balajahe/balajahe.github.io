@@ -55,11 +55,16 @@ customElements.define(me, class extends HTMLElement {
 		wcMixin(this)
 
 		this.appBar = [
-			['but', 'Delete<br>&#8224;', async () => {
-				if (confirm('Delete current object forever ?')) this.deleteObj()
+			['delete', async () => {
+				if (confirm('Delete current object forever ?')) {
+					await this.deleteObj()
+					this.bubbleEvent('del-item', this.obj.created)
+					history.go(-1)
+					APP.message('DELETED !')
+				}
 			}],
 			['sep'],
-			['cancel', () => history.go(-1)],
+			['cancel'],
 			['save', async () => {
 				if (!this.desc) {
 					APP.message('<span style="color:red">EMPTY DESCRIPTION!</span>')
@@ -67,7 +72,10 @@ customElements.define(me, class extends HTMLElement {
 				} else if (this.props.length === 0) {
 					APP.message('<span style="color:red">NO PROPERTIES!</span>')
 				} else {
-					this.saveExistObj()
+					const obj = await this.saveExistObj()
+					this.bubbleEvent('set-item', obj)
+					history.go(-1)
+					APP.message('SAVED !')
 				}
 			}]
 		]
@@ -142,10 +150,7 @@ customElements.define(me, class extends HTMLElement {
 		for (const origin of origins)
 			proms.push(new Promise(resolve => tran.objectStore("Origins").put(origin).onsuccess = resolve))
 		await Promise.all(proms)
-
-		document.querySelector('obj-list').setItem(obj)
-		history.go(-1)
-		APP.message('SAVED !')
+		return obj
 	}
 
 	async deleteObj(id) {
@@ -155,9 +160,5 @@ customElements.define(me, class extends HTMLElement {
 		proms.push(new Promise(resolve => tran.objectStore("Objects").delete(this.obj.created).onsuccess = resolve))
 		proms.push(new Promise(resolve => tran.objectStore("Origins").delete(IDBKeyRange.bound(this.obj.created, this.obj.created + '_'.repeat(this.obj.created.length))).onsuccess = resolve))
 		await Promise.all(proms)
-
-		document.querySelector('obj-list').delItem(this.obj.created)
-		history.go(-1)
-		APP.message('DELETED !')
 	}
 })
