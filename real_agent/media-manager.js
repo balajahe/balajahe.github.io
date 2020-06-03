@@ -11,6 +11,7 @@ customElements.define(me, class extends HTMLElement {
 	vidRecorder = null
 	audRecorder = null
 	canvas = null
+	vidPreview = null
 
 	connectedCallback() {
 		if(this.innerHTML === '') this.build([], null)
@@ -19,16 +20,16 @@ customElements.define(me, class extends HTMLElement {
 	build(medias, bar) {
 		this.innerHTML = `
 			<style scoped>
-				${me} #vidPreview { width: 100%; }
+				${me} #video { width: 100%; }
 				${me} nav { width: 100%; flex-flow: row nowrap; }
 				${me} nav > button { flex: 1 1 auto; }
 			</style>
 
 			<div w-id='vidDiv' style='display:none'>
-				<video w-id='vidPreview' autoplay muted></video>
+				<video w-id='video' autoplay muted></video>
 				<nav>
-					<button w-id='audBut'>Record audio</button>
-					<button w-id='vidBut'>Record video</button>
+					<button w-id='audBut/audRecording'>Record audio</button>
+					<button w-id='vidBut/vidRecording'>Record video</button>
 					<button w-id='imgBut'>Take photo</button>
 				</nav>
 				<media-container w-id='mediaContainer/medias' add='false' del='true'></media-container>
@@ -59,20 +60,27 @@ customElements.define(me, class extends HTMLElement {
 			const blob = await this.imgCapturer.takePhoto(this.imgParams)
 
 			this.mediaContainer.add(
-				{ created: APP.now(), tagName: 'img', preview: this._takePrev('IMG'), origin: await this._takeOrigin(blob) }
+				{ created: APP.now(), tagName: 'img', preview: this._takePreview('IMG'), origin: await this._takeOrigin(blob) }
 			)
 		}
 
 		this.vidBut.onclick = () => {
-			this.vidBut.className = this.vidBut.val
-			if (this.vidBut.val) this.vidRecorder.start()
-			else this.vidRecorder.stop()
+			this.vidBut.className = this.vidRecording
+			if (this.vidRecording) {
+				this.vidRecorder.start()
+				this.vidPreview = this._takePreview('VIDEO')
+			} else {
+				this.vidRecorder.stop()
+			}
 		}
 
 		this.audBut.onclick = () => {
-			this.audBut.className = this.audBut.val
-			if (this.audBut.val) this.audRecorder.start()
-			else this.audRecorder.stop()
+			this.audBut.className = this.audRecording
+			if (this.audRecording) {
+				this.audRecorder.start()
+			} else {
+				this.audRecorder.stop()
+			}
 		}
 
 		return this
@@ -86,10 +94,10 @@ customElements.define(me, class extends HTMLElement {
 		this.stream = await navigator.mediaDevices.getUserMedia(
 			{ video: { facingMode: { ideal: "environment" }}, audio: true }
 		)
-		this.vidPreview.srcObject = this.stream
-		await new Promise(resolve => this.vidPreview.onloadedmetadata = () => resolve())
-		this.W = this.vidPreview.videoWidth
-		this.H = this.vidPreview.videoHeight
+		this.video.srcObject = this.stream
+		await new Promise(resolve => this.video.onloadedmetadata = () => resolve())
+		this.W = this.video.videoWidth
+		this.H = this.video.videoHeight
 		this.vidDiv.display('flex')
 
 		this.imgCapturer = new ImageCapture(this.stream.getVideoTracks()[0])
@@ -101,14 +109,16 @@ customElements.define(me, class extends HTMLElement {
 
 		this.vidRecorder = new MediaRecorder(this.stream, { mimeType : "video/webm" })
 		this.vidRecorder.ondataavailable = async (ev) => 
-			this.mediaContainer.add({ created: APP.now(), tagName: 'video', preview: this._takePrev('VIDEO'), origin: ev.data })
+			this.mediaContainer.add({ created: APP.now(), tagName: 'video', preview: this.vidPreview, origin: ev.data })
 
 		this.audRecorder = new MediaRecorder(this.stream, { mimeType : "audio/webm" })
 		this.audRecorder.ondataavailable = async (ev) => 
-			this.mediaContainer.add({ created: APP.now(), tagName: 'audio', preview: this._takePrev('AUDIO'), origin: ev.data })
+			this.mediaContainer.add({ created: APP.now(), tagName: 'audio', preview: this._takePreview('AUDIO'), origin: ev.data })
 	}
 
 	onUnRoute() {
+		if (this.vidRecording) this.vidBut.click()
+		if (this.audRecording) this.audBut.click()
 		this.vidDiv.display(false)
 		this.stream.getTracks().forEach(track => track.stop())
 	}
@@ -117,15 +127,15 @@ customElements.define(me, class extends HTMLElement {
 		this.stream.getTracks().forEach(track => track.stop())
 	}
 
-	_takePrev(tagName) {
+	_takePreview(tagName) {
 		const can = this.canvas.getContext('2d')
 
 		if (tagName === 'IMG') {
-			can.drawImage(this.vidPreview, 0, 0, APP.imgPrevSize, APP.imgPrevSize)
+			can.drawImage(this.video, 0, 0, APP.imgPrevSize, APP.imgPrevSize)
 			return this.canvas.toDataURL()
 
 		} else if (tagName === 'VIDEO') {
-			can.drawImage(this.vidPreview, 0, 0, APP.imgPrevSize, APP.imgPrevSize)
+			can.drawImage(this.video, 0, 0, APP.imgPrevSize, APP.imgPrevSize)
 			can.fillStyle = 'black';
 			can.font = 'bold 23px serif';
 			can.fillText('VIDEO', 3, 48)
