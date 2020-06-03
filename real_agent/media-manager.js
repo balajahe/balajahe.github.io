@@ -44,7 +44,7 @@ customElements.define(me, class extends HTMLElement {
 		} else {
 			this.appBar = [
 				['msg', 'Take photo, video, or audio:'],
-	         ['back', () => {
+	         ['ok', () => {
 	         	this.bubbleEvent('change-medias', this.val)
 	         	history.go(-1)
 	         }]

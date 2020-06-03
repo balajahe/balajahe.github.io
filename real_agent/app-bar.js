@@ -56,36 +56,51 @@ customElements.define(me, class extends HTMLElement {
 		for (const b of bar) {
 			if (b) {
 				let el = document.createElement('button')
+
 				if (b[0] === 'but') {
 					el.innerHTML = b[1]
 					el.onclick = b[2]
+
 				} else if (b[0] === 'back') {
 					el.innerHTML = 'Back<br>&lArr;'
 					if (b[1]) el.onclick = b[1]
 					else el.onclick = () => history.go(-1)
+
+				} else if (b[0] === 'ok') {
+					el.innerHTML = 'OK'
+					if (b[1]) el.onclick = b[1]
+					else el.onclick = () => history.go(-1)
+
 				} else if (b[0] === 'cancel') {
 					el.innerHTML = 'Cancel<br>&lArr;'
 					el.onclick = () => history.go(-1)
+
 				} else if (b[0] === 'next') {
 					el.innerHTML = 'Next<br>&rArr;'
 					el.onclick = b[1]
+
 				} else if (b[0] === 'new') {
 					el.innerHTML = 'New<br>&rArr;'
 					el.onclick = b[1]
+
 				} else if (b[0] === 'save') {
 					el.innerHTML = 'Save<br>&rArr;'
 					el.onclick = b[1]
+
 				} else if (b[0] === 'delete') {
 					el.innerHTML = 'Delete<br>&#8224;'
 					el.onclick = b[1]
+
 				} else if (b[0] === 'msg') {
 					el = document.createElement('div')
 					el.className = 'msgDiv'
 					el.innerHTML = b[1]
+
 				} else if (b[0] === 'sep') {
 					el = document.createElement('div')
 					el.className = 'msgDiv'
 				}
+
 				this.append(el)
 			}
 		}
