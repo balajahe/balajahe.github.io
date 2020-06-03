@@ -69,6 +69,9 @@ customElements.define(me, class extends HTMLElement {
 				} else if (b[0] === 'next') {
 					el.innerHTML = 'Next<br>&rArr;'
 					el.onclick = b[1]
+				} else if (b[0] === 'new') {
+					el.innerHTML = 'New<br>&rArr;'
+					el.onclick = b[1]
 				} else if (b[0] === 'save') {
 					el.innerHTML = 'Save<br>&rArr;'
 					el.onclick = b[1]

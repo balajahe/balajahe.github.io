@@ -55,25 +55,31 @@ customElements.define(me, class extends HTMLElement {
 		wcMixin(this)
 
 		this.appBar = [
-			['delete', async () => {
+			['delete', () => {
 				if (confirm('Delete current object forever ?')) {
-					await this.deleteObj()
-					this.bubbleEvent('del-item', this.obj.created)
+					this.bubbleEvent('delete-item', this.obj.created)
 					history.go(-1)
 					APP.message('DELETED !')
 				}
 			}],
 			['sep'],
 			['cancel'],
-			['save', async () => {
+			['save', () => {
 				if (!this.desc) {
 					APP.message('<span style="color:red">EMPTY DESCRIPTION!</span>')
 					this.descDiv.focus()
 				} else if (this.props.length === 0) {
 					APP.message('<span style="color:red">NO PROPERTIES!</span>')
 				} else {
-					const obj = await this.saveExistObj()
-					this.bubbleEvent('set-item', obj)
+					const obj = {
+						created: this.obj.created,
+						modified: APP.now(),
+						location: {latitude: this.location?.latitude, longitude: this.location?.longitude},
+						desc: this.desc,
+						props: this.props,
+						medias: this.medias
+					}
+					this.bubbleEvent('save-item', obj)
 					history.go(-1)
 					APP.message('SAVED !')
 				}
@@ -125,15 +131,6 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	async saveExistObj() {
-		const now = APP.now()
-		const obj = {
-			created: this.obj.created,
-			modified: now,
-			location: {latitude: this.location?.latitude, longitude: this.location?.longitude},
-			desc: this.desc,
-			props: this.props,
-			medias: this.medias
-		}
 
 		const origins = []
 		for (const media of obj.medias) {
@@ -153,12 +150,4 @@ customElements.define(me, class extends HTMLElement {
 		return obj
 	}
 
-	async deleteObj(id) {
-		const tran = APP.db.transaction(['Objects', 'Origins'], 'readwrite')
-		const proms = []
-
-		proms.push(new Promise(resolve => tran.objectStore("Objects").delete(this.obj.created).onsuccess = resolve))
-		proms.push(new Promise(resolve => tran.objectStore("Origins").delete(IDBKeyRange.bound(this.obj.created, this.obj.created + '_'.repeat(this.obj.created.length))).onsuccess = resolve))
-		await Promise.all(proms)
-	}
 })

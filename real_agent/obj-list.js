@@ -45,7 +45,7 @@ customElements.define(me, class extends HTMLElement {
 
 		this.appBar = [
 			['sep'],
-			['but', 'New<br>&rArr;', () => {
+			['new', () => {
 				let mman = document.querySelector('#obj-new-medias')
 				if (!mman) mman = document.createElement('media-manager').build(
 					[],
@@ -61,11 +61,13 @@ customElements.define(me, class extends HTMLElement {
 
 		this.refreshList()
 
-		this.addEventListener('set-item', (ev) => {
+		this.addEventListener('save-item', async (ev) => {
+			await this.saveExistObj(ev.val)
 			this.querySelector('#' + ev.val.created).replaceWith(document.createElement('obj-list-item').build(ev.val))
 		})
 
-		this.addEventListener('del-item', (ev) => {
+		this.addEventListener('delete-item', async (ev) => {
+			await this.deleteObj(ev.val)
 			this.querySelector('#' + ev.val).remove()
 		})
 	}
@@ -84,4 +86,30 @@ customElements.define(me, class extends HTMLElement {
 	addItem(obj) {
 		this.listDiv.prepend(document.createElement('obj-list-item').build(obj))
 	}
-})
+
+	async saveExistObj(obj) {
+		const origins = []
+		for (const media of obj.medias) {
+			if (media.origin) {
+				media.created = obj.created + media.created
+				origins.push({ created: media.created, origin: media.origin })
+				media.origin = null
+			}
+		}
+		const tran = APP.db.transaction(['Objects', 'Origins'], 'readwrite')
+		const proms = []
+		proms.push(new Promise(resolve => tran.objectStore("Objects").put(obj).onsuccess = resolve))
+		for (const origin of origins)
+			proms.push(new Promise(resolve => tran.objectStore("Origins").put(origin).onsuccess = resolve))
+		await Promise.all(proms)
+	}
+
+	async deleteObj(id) {
+		const tran = APP.db.transaction(['Objects', 'Origins'], 'readwrite')
+		const proms = []
+		proms.push(new Promise(resolve => tran.objectStore("Objects").delete(id).onsuccess = resolve))
+		proms.push(new Promise(resolve => tran.objectStore("Origins").delete(IDBKeyRange.bound(id, id + '_'.repeat(id.length))).onsuccess = resolve))
+		await Promise.all(proms)
+	}
+
+1})
