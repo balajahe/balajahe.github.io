@@ -12,7 +12,7 @@ customElements.define(me, class extends HTMLElement {
 			<style scoped>
 				${me} { 
 					width: 100%;
-					display: flex; flex-flow: row wrap; 
+					display: flex; flex-flow: column; 
 				}
 				${me} button { 
 					height: calc(var(--button-height) * 0.8); 
@@ -21,7 +21,7 @@ customElements.define(me, class extends HTMLElement {
 					height: calc(var(--button-height) * 0.8); width: 30%; 
 				}
 				${me} #propsDiv { 
-					min-height1: calc(var(--button-height) * 1.4); 
+					min-height: calc(var(--button-height) * 0.9); 
 				}
 			</style>
 

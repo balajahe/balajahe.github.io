@@ -8,7 +8,8 @@ customElements.define(me, class extends HTMLElement {
 					display: block; width: 100%;
 				}
 				${me} > div {
-					width:100%; margin-top: var(--margin2); 
+					width:100%; 
+					margin-top: var(--margin3); 
 					display: flex; flex-flow: row nowrap; 
 				}
 				${me} hr { 

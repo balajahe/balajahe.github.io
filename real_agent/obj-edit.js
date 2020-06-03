@@ -44,7 +44,7 @@ customElements.define(me, class extends HTMLElement {
 
 			<div w-id='descDiv/desc' contenteditable='true'></div>
 			<nav w-id='propsDiv'>
-				<button w-id='editPropsBut'>&plusmn; PROPERTIES</button>
+				<button w-id='editPropsBut'>&plusmn; PROPS</button>
 			</nav>
 			<media-container w-id='mediaContainer/medias' add='true' del='true'></media-container>
 			<div id='locDiv'>
@@ -69,6 +69,7 @@ customElements.define(me, class extends HTMLElement {
 					APP.message('<span style="color:red">EMPTY DESCRIPTION!</span>')
 					this.descDiv.focus()
 				} else if (this.props.length === 0) {
+					this.editPropsBut.focus()
 					APP.message('<span style="color:red">NO PROPERTIES!</span>')
 				} else {
 					const obj = {
@@ -109,6 +110,7 @@ customElements.define(me, class extends HTMLElement {
 		for (let el = this.editPropsBut.previousElementSibling; el; el = this.editPropsBut.previousElementSibling) el.remove()
 		for (const prop of props) {
 			const but = document.createElement("button")
+			but.disabled = true
 			but.innerHTML = prop
 			this.editPropsBut.before(but)
 		}
