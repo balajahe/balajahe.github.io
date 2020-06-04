@@ -83,8 +83,25 @@ customElements.define(me, class extends HTMLElement {
 		}
 	}
 
-	addItem(obj) {
+	async addItem(obj) {
+		await this.saveNewObj(obj)
 		this.listDiv.prepend(document.createElement('obj-list-item').build(obj))
+	}
+
+	async saveNewObj(obj) {
+		const origins = []
+		for (const media of obj.medias) {
+			media.created = obj.created + media.created
+			origins.push({ created: media.created, origin: media.origin })
+			media.origin = null
+		}
+
+		const tran = APP.db.transaction(['Objects', 'Origins'], 'readwrite')
+		const proms = []
+		proms.push(new Promise(resolve => tran.objectStore("Objects").add(obj).onsuccess = resolve))
+		for (const origin of origins)
+			proms.push(new Promise(resolve => tran.objectStore("Origins").add(origin).onsuccess = resolve))
+		await Promise.all(proms)
 	}
 
 	async saveExistObj(obj) {
@@ -111,5 +128,4 @@ customElements.define(me, class extends HTMLElement {
 		proms.push(new Promise(resolve => tran.objectStore("Origins").delete(IDBKeyRange.bound(id, id + '_'.repeat(id.length))).onsuccess = resolve))
 		await Promise.all(proms)
 	}
-
-1})
+})

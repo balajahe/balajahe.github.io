@@ -46,8 +46,20 @@ customElements.define(me, class extends HTMLElement {
 				} else if (this.props.length === 0) {
 					APP.message('<span style="color:red">NO PROPERTIES!</span>')
 				} else {
-					const obj = await this.saveNewObj()
+					const pageMedias = document.querySelector('#obj-new-medias')
+					const now = APP.now()
+					const obj = {
+						created: now,
+						modified: now,
+						location: {latitude: this.location?.latitude, longitude: this.location?.longitude},
+						desc: this.desc,
+						props: this.props,
+						medias: pageMedias.val
+					} 
 					document.querySelector('obj-list').addItem(obj)
+
+					APP.remove(pageMedias)
+					APP.remove(this)
 					APP.route('obj-list')
 					APP.message('SAVED !')
 				}
@@ -66,36 +78,5 @@ customElements.define(me, class extends HTMLElement {
 	onRoute() {
 		this.updateLocation()
 		this.descDiv.focus()
-	}
-
-	async saveNewObj() {
-		const pageMedias = document.querySelector('#obj-new-medias')
-		const now = APP.now()
-		const obj = {
-			created: now,
-			modified: now,
-			location: {latitude: this.location?.latitude, longitude: this.location?.longitude},
-			desc: this.desc,
-			props: this.props,
-			medias: pageMedias.val
-		} 
-
-		const origins = []
-		for (const media of obj.medias) {
-			media.created = obj.created + media.created
-			origins.push({ created: media.created, origin: media.origin })
-			media.origin = null
-		}
-
-		const tran = APP.db.transaction(['Objects', 'Origins'], 'readwrite')
-		const proms = []
-		proms.push(new Promise(resolve => tran.objectStore("Objects").add(obj).onsuccess = resolve))
-		for (const origin of origins)
-			proms.push(new Promise(resolve => tran.objectStore("Origins").add(origin).onsuccess = resolve))
-		await Promise.all(proms)
-
-		APP.remove(pageMedias)
-		APP.remove(this)
-		return obj
 	}
 })
