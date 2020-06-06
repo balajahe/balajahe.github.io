@@ -68,11 +68,18 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	updateLocation() {
-		navigator.geolocation.getCurrentPosition(loc => {
-			this.location = loc.coords
-			this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${this.location.longitude-0.002}%2C${this.location.latitude-0.002}%2C${this.location.longitude+0.002}%2C${this.location.latitude+0.002}&layer=mapnik&marker=${this.location.latitude}%2C${this.location.longitude}`)
-			//this.locBut.innerHTML = APP.location.latitude + ' - ' + APP.location.longitude
-		})
+		navigator.geolocation.getCurrentPosition(
+			loc => {
+				this.location = { latitude: loc.coords.latitude, longitude: loc.coords.longitude }
+				this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${this.location.longitude-0.002}%2C${this.location.latitude-0.002}%2C${this.location.longitude+0.002}%2C${this.location.latitude+0.002}&layer=mapnik&marker=${this.location.latitude}%2C${this.location.longitude}`)
+			},
+			null,
+			{
+			  enableHighAccuracy: true,
+			  timeout: 0,
+			  maximumAge: 0
+			}
+		)
 	}
 
 	onRoute() {

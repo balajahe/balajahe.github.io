@@ -120,12 +120,12 @@ customElements.define(me, class extends HTMLElement {
 		for (const b of this._stack.pop()) this.append(b)
 	}
 
-	message(msg) { 
+	message(msg, timeout = 2000) { 
 		setTimeout(() => {
 			const div = this.querySelectorAll('div')[0]
 			const saveContent = div.innerHTML
 			div.innerHTML = '<b>' + msg + '</b>'
-			setTimeout(() => div.innerHTML = saveContent, 2000)
+			setTimeout(() => div.innerHTML = saveContent, timeout)
 		}, 100)
 	}
 })

@@ -90,9 +90,9 @@ customElements.define(me, class extends HTMLElement {
 
 	setBar(v) { this.appBar.setBar(v) }
 
-	message(v) { this.appBar.message(v) }
+	message(msg, timeout) { this.appBar.message(msg, timeout) }
 
-	route(hash, elem) {
+	route(id, elem) {
 		const top = this._stack[this._stack.length-1]
 		const place = top.place
 		const curr = top.currentPage
@@ -105,20 +105,20 @@ customElements.define(me, class extends HTMLElement {
 				place.append(elem)
 			}
 		} else {
-			elem = Array.from(place.children).find(el => el.id === hash)
+			elem = Array.from(place.children).find(el => el.id === id)
 			if (!elem) {
-				elem = document.createElement(hash)
+				elem = document.createElement(id)
 				place.append(elem)
 			}
 		}
 
-		elem.id = hash
-		elem.display()
-		if (elem.appBar) this.appBar.setBar(elem.appBar)
-		if (elem.onRoute) elem.onRoute()
-
+		elem.id = id
 		top.currentPage = elem
-		this._replaceLastHash(hash)
+		this._replaceLastHash(id)
+
+		if (elem.appBar) this.appBar.setBar(elem.appBar)
+		elem.display()
+		if (elem.onRoute) elem.onRoute()
 	}
 
 	routeModal(id, elem) {
@@ -133,11 +133,11 @@ customElements.define(me, class extends HTMLElement {
 		place.append(elem)
 
 		elem.id = id
-		if (elem.appBar) this.setBar(elem.appBar)
-		if (elem.onRoute) elem.onRoute()
-
 		this._stack.push({ place: place, currentPage: elem })
 		this._pushHash(id)
+		if (elem.appBar) this.setBar(elem.appBar)
+
+		if (elem.onRoute) elem.onRoute()
 	}
 
 	popModal(sys) {

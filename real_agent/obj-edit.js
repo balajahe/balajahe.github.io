@@ -122,34 +122,20 @@ customElements.define(me, class extends HTMLElement {
 		if (this.obj.location.latitude && this.obj.location.longitude) {
 			this.location = { latitude: this.obj.location.latitude, longitude: this.obj.location.longitude }
 			draw()
-	
 		} else {
-			navigator.geolocation.getCurrentPosition(loc => {
-				this.location = { latitude: loc.coords.latitude, longitude: loc.coords.longitude }
-				draw()
-				APP.message('LOCATION UPDATED!')
-			})
+			navigator.geolocation.getCurrentPosition(
+				loc => {
+					this.location = { latitude: loc.coords.latitude, longitude: loc.coords.longitude }
+					draw()
+					APP.message('LOCATION UPDATED!', 30000)
+				},
+				null,
+				{
+				  enableHighAccuracy: true,
+				  timeout: 0,
+				  maximumAge: 0
+				}
+			)
 		}
 	}
-
-	async saveExistObj() {
-
-		const origins = []
-		for (const media of obj.medias) {
-			if (media.origin) {
-				media.created = obj.created + media.created
-				origins.push({ created: media.created, origin: media.origin })
-				media.origin = null
-			}
-		}
-
-		const tran = APP.db.transaction(['Objects', 'Origins'], 'readwrite')
-		const proms = []
-		proms.push(new Promise(resolve => tran.objectStore("Objects").put(obj).onsuccess = resolve))
-		for (const origin of origins)
-			proms.push(new Promise(resolve => tran.objectStore("Origins").put(origin).onsuccess = resolve))
-		await Promise.all(proms)
-		return obj
-	}
-
 })
