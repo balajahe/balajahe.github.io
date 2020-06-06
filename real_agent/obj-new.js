@@ -73,10 +73,10 @@ customElements.define(me, class extends HTMLElement {
 				this.location = { latitude: loc.coords.latitude, longitude: loc.coords.longitude }
 				this.mapIframe.contentWindow.location.replace(`https://www.openstreetmap.org/export/embed.html?bbox=${this.location.longitude-0.002}%2C${this.location.latitude-0.002}%2C${this.location.longitude+0.002}%2C${this.location.latitude+0.002}&layer=mapnik&marker=${this.location.latitude}%2C${this.location.longitude}`)
 			},
-			null,
+			err => alert(err),
 			{
 			  enableHighAccuracy: true,
-			  timeout: 0,
+			  timeout: 10000,
 			  maximumAge: 0
 			}
 		)
