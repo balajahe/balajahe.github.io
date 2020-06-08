@@ -40,15 +40,16 @@ customElements.define(me, class extends HTMLElement {
    }
 
    async login(ev) {
-      APP.message('Authorization...')
+      APP.setMessage('Authorization...')
       ev.target.disabled = true
-      setTimeout(() => {
+      setTimeout(async () => {
          ev.target.disabled = false
          if (this.user) {
             this.bubbleEvent('login-change', { logged: true, user: this.user })
-            APP.route('page-work')
+            await import('./demo-page-work.js')
+            APP.route('demo-page-work')
          } else {
-            APP.message('Empty user !')
+            APP.setMessage('Empty user !')
             this.userInp.focus()
          }
       }, 1500)

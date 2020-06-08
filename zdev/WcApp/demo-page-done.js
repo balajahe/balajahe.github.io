@@ -1,9 +1,9 @@
 import wcMixin from './WcMixin.js'
 
-const me = 'demo-page-home'
+const me = 'demo-page-done'
 customElements.define(me, class extends HTMLElement {
 
-   connectedCallback() {
+   build(text) {
       this.innerHTML = `
          <style>
             ${me} {
@@ -13,16 +13,13 @@ customElements.define(me, class extends HTMLElement {
             }
          </style>
          
-         <p>WC PWA Template welcomes you !</p>
+         <p>${text}</p>
       `
       wcMixin(this)
 
       this.appBar = [
          ['sep'],
-         ['next', async () => {
-            await import('./demo-page-login.js')
-            APP.route('demo-page-login')
-         }]
+         ['ok', history.go(-1)]
       ]
    }
 })

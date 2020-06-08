@@ -37,7 +37,6 @@ export default class extends HTMLElement {
 			</style>
 
 			<app-bar w-id='appBar'></app-bar>
-
 			<div class='modalPageLayer'></div>
 		`
 		wcMixin(this)
@@ -60,7 +59,7 @@ export default class extends HTMLElement {
 
 	setBar(v) { this.appBar.setBar(v) }
 
-	message(msg, timeout) { this.appBar.message(msg, timeout) }
+	setMessage(msg, timeout) { this.appBar.setMessage(msg, timeout) }
 
 	route(id, elem) {
 		const top = this._stackOfLayers[this._stackOfLayers.length-1]

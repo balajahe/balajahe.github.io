@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-	<title>Real Agent</title>
+	<title>Vanilla web components PWA template</title>
 	<meta charset='utf-8'>
 	<meta name='viewport' content='width=device-width, initial-scale=1' />
 	<script type='module'>//navigator.serviceWorker.register('./app-sw.js')</script>
@@ -33,12 +33,12 @@
 		button {
 			height: var(--button-height);
 			margin-top: var(--margin1); margin-bottom: var(--margin1);
-			border-radius: calc(var(--button-height)/2)/calc(var(--button-height));
+			border-radius: calc(var(--button-height)/1.5)/calc(var(--button-height));
 		}
 		input {
 			height: var(--button-height);
 			margin-top: var(--margin1); margin-bottom: var(--margin1);
-			border-radius: calc(var(--button-height)/2)/calc(var(--button-height));
+			border-radius: calc(var(--button-height)/1.5)/calc(var(--button-height));
 			padding-left: 1em;
 		}
 		button:active { background-color: red; }
@@ -46,6 +46,6 @@
 	</style>
 </head>
 <body>
-	<app-app></app-app>
+	<app-app/>
 </body>
 </html>

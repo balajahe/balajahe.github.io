@@ -5,7 +5,7 @@ export default class extends HTMLElement {
 	_stackOfBars = []
 
 	connectedCallback() {
-		customElements.define('app-menu', WcAppMenu)
+		if (!customElements.get('app-menu')) customElements.define('app-menu', WcAppMenu)
 		const me = this.tagName
 		
 		this.innerHTML = `
@@ -15,8 +15,9 @@ export default class extends HTMLElement {
 				}
 				${me} > button {
 					height: calc(100% - 1*var(--margin1));
-					margin-top: 0;
 					min-width: 3.8rem;
+					margin-top: 0; margin-bottom: var(--margin1);
+					border-radius: calc(var(--button-height)/1.5)/calc(var(--button-height));
 				}
 				${me} > div {
 					display: inline-block;
@@ -25,7 +26,7 @@ export default class extends HTMLElement {
 					margin-top: var(--margin1); margin-left: 0.5em; margin-right: 0.5em;
 					display: flex; flex-flow: row wrap; justify-content: center; align-items: center; text-align: center;
 					overflow: hidden;
-					font-size: small;
+					line-height: 1em; font-size: small;
 				}
 				${me} #msgBut {
 					display: none;
@@ -39,7 +40,6 @@ export default class extends HTMLElement {
 			</style>
 			
 			<app-menu w-id='appMenu' style='display:none'></app-menu>
-
 			<button w-id='menuBut'>&#9776;</button>
 		`
 		wcMixin(this)
@@ -109,13 +109,17 @@ export default class extends HTMLElement {
 		}
 	}
 
-	message(msg, timeout = 2000) { 
-		setTimeout(() => {
-			const div = this.querySelectorAll('div')[0]
-			const saveContent = div.innerHTML
-			div.innerHTML = '<b>' + msg + '</b>'
-			setTimeout(() => div.innerHTML = saveContent, timeout)
-		}, 100)
+	setMessage(msg, timeout) { 
+		const msgDiv = this.querySelectorAll('div')[0]
+		if (timeout) {
+			setTimeout(() => {
+				const saveContent = msgDiv.innerHTML
+				msgDiv.innerHTML = '<b>' + msg + '</b>'
+				setTimeout(() => msgDiv.innerHTML = saveContent, timeout)
+			}, 100)
+		} else {
+			msgDiv.innerHTML = msg
+		}
 	}
 
 	pushBar() {
