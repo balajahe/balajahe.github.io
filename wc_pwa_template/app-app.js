@@ -83,7 +83,7 @@ customElements.define(me, class extends HTMLElement {
          this.drownEvent('notify-timer', this._elapsed)
       }, 1000)
 
-         window.onhashchange = async (ev) => {
+      window.onhashchange = async (ev) => {
          if (!this._routeHashChanging) {
             const uu = ev.newURL.split('#')
             if (uu.length > 1) this.route(uu[uu.length-1])
