@@ -20,7 +20,7 @@ customElements.define(me, class extends HTMLElement {
 				${me} input { height: calc(var(--button-height) * 0.8); width: 30%; }
 				${me} > #descDiv {
 					min-height: 5em;
-					margin: var(--margin1);
+					margin: var(--margin1); margin-top: var(--margin2);
 					padding-left: var(--margin2);
 					border: solid 1px silver;
 					display: block;
