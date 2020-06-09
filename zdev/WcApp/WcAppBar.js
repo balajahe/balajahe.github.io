@@ -51,6 +51,12 @@ export default class extends HTMLElement {
 				this.appMenu.display(false)
 				APP.onclick = null
 			}
+			APP.onkeyup = (ev) => {
+				if (ev.key === 'Escape') {
+					this.appMenu.display(false)
+					APP.onkeyup = null
+				}
+			}
 		}
 	}
 

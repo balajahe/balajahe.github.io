@@ -22,7 +22,7 @@ customElements.define(me, class extends HTMLElement {
          ['back'],
          ['but', 'Done<br>&rArr;', async () => {
             await import('./demo-page-done.js')
-            APP.routeModal('demo-page-done', document.createElement('demo-page-done').build(this.text))
+            APP.route('demo-page-done', document.createElement('demo-page-done').build(this.text))
          }]
       ]
 
@@ -31,7 +31,7 @@ customElements.define(me, class extends HTMLElement {
       })
    }
 
-   async onRoute() {
+   onRoute() {
       this.textDiv.focus()
       document.execCommand('selectAll',false,null)
    }

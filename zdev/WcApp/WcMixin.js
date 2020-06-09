@@ -1,5 +1,5 @@
 // WcMixin.js
-// v0.2.3
+// v0.2.4
 export default function wcMixin(target) {
    target.on = on.bind(target)
    target.onAny = onAny.bind(target)
@@ -152,10 +152,8 @@ function generateProps() {
          })
       }
 
-      if (wid) {
-         try {
-            Object.defineProperty(this, wid, { get: () => el })
-         } catch(e) { console.error(e) }
+      if (wid && !(wid in this)) {
+         Object.defineProperty(this, wid, { get: () => el })
 
          if (!el.id) {
             el.id = wid
@@ -172,13 +170,11 @@ function generateProps() {
          }
       }
 
-      if (wval) {
-         try {
-            Object.defineProperty(this, wval, {
-               get: () => el.val,
-               set: (v) => el.val = v
-            })
-         } catch(e) { console.error(e) }
+      if (wval && !(wval in this)) {
+         Object.defineProperty(this, wval, {
+            get: () => el.val,
+            set: (v) => el.val = v
+         })
       }
    }
 
