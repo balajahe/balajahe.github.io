@@ -118,7 +118,7 @@ export default class extends HTMLElement {
 		setTimeout(() => {
 			const msgDiv = this.querySelectorAll('div')[0]
 			const saveContent = msgDiv.innerHTML
-			msgDiv.innerHTML = '<b>' + msg + '</b>'
+			msgDiv.innerHTML = msg
 			if (timeout) {
 				setTimeout(() => msgDiv.innerHTML = saveContent, timeout)
 			}
