@@ -46,8 +46,10 @@ customElements.define(me, class extends HTMLElement {
    async login(ev) {
       APP.setMessage('Authorization...')
       ev.target.disabled = true
+
       setTimeout(async () => {
          ev.target.disabled = false
+         
          if (this.user) {
             await import('./demo-page-work.js')
             APP.route('demo-page-work')

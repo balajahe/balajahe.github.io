@@ -69,12 +69,17 @@ export default class extends HTMLElement {
 			curr.display(false)
 			if (curr.onUnRoute) curr.onUnRoute()
 		}
+
 		if (!elem) {
 			elem = Array.from(layer.children).find(el => el.id === id)
 			if (!elem) {
 				elem = document.createElement(id)
 				layer.append(elem)
+			} else {
+				elem.display()
 			}
+		} else {
+			layer.append(elem)
 		}
 
 		elem.id = id
@@ -82,7 +87,6 @@ export default class extends HTMLElement {
 		this._replaceLastHash(id)
 
 		if (elem.appBar) this.appBar.setBar(elem.appBar)
-		elem.display()
 		if (elem.onRoute) elem.onRoute()
 	}
 
@@ -92,7 +96,7 @@ export default class extends HTMLElement {
 		const curr = this._stackOfLayers[this._stackOfLayers.length-1].currentPage
 		const layer = document.createElement('div')
 		layer.className = 'modalPageLayer'
-		curr.prepend(layer)		
+		curr.append(layer)		
 
 		if (!elem) elem = document.createElement(id)
 		layer.append(elem)
