@@ -59,7 +59,7 @@ customElements.define(me, class extends HTMLElement {
 					APP.remove(pageMedias)
 					APP.remove(this)
 					APP.route('obj-list')
-					APP.setMessage('SAVED !', 5000)
+					APP.setMessage('SAVED !', 3000)
 				}
 			}]
 		]

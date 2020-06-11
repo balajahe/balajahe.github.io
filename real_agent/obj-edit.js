@@ -56,7 +56,7 @@ customElements.define(me, class extends HTMLElement {
 				if (confirm('Delete current object forever ?')) {
 					this.bubbleEvent('delete-item', this.obj.created)
 					history.go(-1)
-					APP.setMessage('DELETED !', 5000)
+					APP.setMessage('DELETED !', 3000)
 				}
 			}],
 			['sep'],
@@ -79,7 +79,7 @@ customElements.define(me, class extends HTMLElement {
 					}
 					this.bubbleEvent('save-item', obj)
 					history.go(-1)
-					APP.setMessage('SAVED !', 5000)
+					APP.setMessage('SAVED !', 3000)
 				}
 			}]
 		]

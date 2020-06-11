@@ -24,7 +24,7 @@ customElements.define(me, class extends HTMLElement {
 			['save', () => {
 				APP.props = this.props.split(',').map(v => v.trim())
 				history.go(-1)
-				APP.setMessage('SAVED !', 5000)
+				APP.setMessage('SAVED !', 3000)
 			}]
 		]
 
