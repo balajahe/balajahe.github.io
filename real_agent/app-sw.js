@@ -1,4 +1,4 @@
-const APP = 'wc_pwa_template'
+const APP = 'real_agent'
 const VERSION = '.v00'
 
 self.oninstall = (ev) => ev.waitUntil(

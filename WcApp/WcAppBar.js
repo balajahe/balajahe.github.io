@@ -115,16 +115,14 @@ export default class extends HTMLElement {
 	}
 
 	setMessage(msg, timeout) { 
-		const msgDiv = this.querySelectorAll('div')[0]
-		if (timeout) {
-			setTimeout(() => {
-				const saveContent = msgDiv.innerHTML
-				msgDiv.innerHTML = '<b>' + msg + '</b>'
+		setTimeout(() => {
+			const msgDiv = this.querySelectorAll('div')[0]
+			const saveContent = msgDiv.innerHTML
+			msgDiv.innerHTML = '<b>' + msg + '</b>'
+			if (timeout) {
 				setTimeout(() => msgDiv.innerHTML = saveContent, timeout)
-			}, 100)
-		} else {
-			msgDiv.innerHTML = msg
-		}
+			}
+		}, 100)
 	}
 
 	pushBar() {

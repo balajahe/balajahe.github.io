@@ -1,12 +1,11 @@
-import wcMixin from '/WcMixin/WcMixin.js'
-import './props-manager.js'
+import * as WcMixin from '/WcApp/WcMixin.js'
 
 const me = 'obj-new'
 customElements.define(me, class extends HTMLElement {
 	location = null
 
 	connectedCallback() {
-		this.innerHTML = `
+		WcMixin.addAdjacentHTML(this, `
 			<style scoped>
 				${me} button { height: calc(var(--button-height) * 0.8); }
 				${me} input { height: calc(var(--button-height) * 0.8); width: 30%; }
@@ -32,19 +31,18 @@ customElements.define(me, class extends HTMLElement {
 			<div id='locDiv'>
 				<iframe w-id='mapIframe'></iframe>
 			</div>
-		`
-		wcMixin(this)
-
+		`)
+		
 		this.appBar = [
 			['but', 'Geo<br>&#8853;', () => this.updateLocation()],
 			['msg', 'Enter description and add properties:'],
 			['back'],
 			['but', 'Save<br>&rArr;', async () => {
 				if (!this.desc) {
-					APP.message('<span style="color:red">EMPTY DESCRIPTION!</span>')
+					APP.setMessage('<span style="color:red">EMPTY DESCRIPTION!</span>', 3000)
 					this.descDiv.focus()
 				} else if (this.props.length === 0) {
-					APP.message('<span style="color:red">NO PROPERTIES!</span>')
+					APP.setMessage('<span style="color:red">NO PROPERTIES!</span>', 3000)
 				} else {
 					const pageMedias = document.querySelector('#obj-new-medias')
 					const now = APP.now()
@@ -61,7 +59,7 @@ customElements.define(me, class extends HTMLElement {
 					APP.remove(pageMedias)
 					APP.remove(this)
 					APP.route('obj-list')
-					APP.message('SAVED !')
+					APP.setMessage('SAVED !', 5000)
 				}
 			}]
 		]

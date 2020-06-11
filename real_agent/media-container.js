@@ -1,5 +1,4 @@
-import wcMixin from '/WcMixin/WcMixin.js'
-import './media-player.js'
+import * as WcMixin from '/WcApp/WcMixin.js'
 
 const me = 'media-container'
 customElements.define(me, class extends HTMLElement {
@@ -10,7 +9,7 @@ customElements.define(me, class extends HTMLElement {
 		this.addFlag = this.getAttribute('add') === 'true'
 		this.delFlag = this.getAttribute('del') === 'true'
 
-		this.innerHTML = `
+		WcMixin.addAdjacentHTML(this, `
 			<style scoped>
 				${me} { 
 					width: 100%;
@@ -29,9 +28,7 @@ customElements.define(me, class extends HTMLElement {
 			</style>
 
 			<button w-id='addBut' style='display:none'>ADD<br>MEDIAS</button>	
-
-		`
-		wcMixin(this)
+		`)
 
 		if (medias) for (const media of medias) this.add(media)
 

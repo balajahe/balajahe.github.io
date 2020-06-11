@@ -1,4 +1,4 @@
-import wcMixin from '/WcMixin/WcMixin.js'
+import * as WcMixin from '/WcApp/WcMixin.js'
 
 const me = 'media-player'
 customElements.define(me, class extends HTMLElement {
@@ -11,7 +11,7 @@ customElements.define(me, class extends HTMLElement {
 		this.sources = sources	
 		this.delAction = delAction
 
-		this.innerHTML = `
+		WcMixin.addAdjacentHTML(this, `
 			<style scoped>
 				${me} { 
 					height: calc(100vh - var(--app-bar-height)); width: 100%;
@@ -20,18 +20,17 @@ customElements.define(me, class extends HTMLElement {
 				${me}:hover { cursor: pointer; }
 				${me} > * { height1: auto; width: 100%; }
 			</style>
-		`
-		wcMixin(this)
+		`)
 
-   	const bar = []
-   	if (this.delAction) bar.push(['delete', () => { 
-   		this.delAction()
-   		history.go(-1)
-   	}])
-      this.appBar = bar.concat([
-         ['msg', ''],
-         ['back'],
-      ])
+		const bar = []
+		if (this.delAction) bar.push(['delete', () => { 
+			this.delAction()
+			history.go(-1)
+		}])
+		this.appBar = bar.concat([
+			['msg', ''],
+			['ok'],
+		])
 
 		this.onclick = () => history.go(-1)
 

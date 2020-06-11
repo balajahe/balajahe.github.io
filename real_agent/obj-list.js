@@ -1,15 +1,10 @@
-import wcMixin from '/WcMixin/WcMixin.js'
-import './obj-list-item.js'
-import './media-manager.js'
-import './obj-new.js'
+import * as WcMixin from '/WcApp/WcMixin.js'
 
 const me = 'obj-list'
 customElements.define(me, class extends HTMLElement {
 
 	connectedCallback() {
-		APP.setHash(me)
-
-		this.innerHTML = `
+		WcMixin.addAdjacentHTML(this, `
 			<style scoped>
 				${me} > #listDiv {
 					flex-flow: column;
@@ -40,12 +35,13 @@ customElements.define(me, class extends HTMLElement {
 
 			<div w-id='listDiv'></div>
 			<footer>Real Agent is a database of arbitrary objects with geolocation, photos and videos.</footer>
-		`
-		wcMixin(this)
+		`)
+
+		APP.forceSetHash(me)
 
 		this.appBar = [
 			['sep'],
-			['new', () => {
+			['new', async () => {
 				let mman = document.querySelector('#obj-new-medias')
 				if (!mman) mman = document.createElement('media-manager').build(
 					[],
@@ -59,8 +55,6 @@ customElements.define(me, class extends HTMLElement {
 			}]
 		]
 
-		this.refreshList()
-
 		this.addEventListener('save-item', async (ev) => {
 			await this.saveExistObj(ev.val)
 			this.querySelector('#' + ev.val.created).replaceWith(document.createElement('obj-list-item').build(ev.val))
@@ -70,6 +64,8 @@ customElements.define(me, class extends HTMLElement {
 			await this.deleteObj(ev.val)
 			this.querySelector('#' + ev.val).remove()
 		})
+
+		this.refreshList()
 	}
 
 	refreshList() {

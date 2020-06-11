@@ -1,5 +1,5 @@
-import * as WcMixin from './WcMixin.js'
-import WcAppMenu from './WcAppMenu.js'
+import * as WcMixin from '../WcMixin.js'
+import WcAppMenu from '../WcAppMenu.js'
 
 const me = 'app-menu'
 customElements.define(me, class extends WcAppMenu {

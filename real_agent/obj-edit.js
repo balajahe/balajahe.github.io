@@ -1,6 +1,4 @@
-import wcMixin from '/WcMixin/WcMixin.js'
-import './media-container.js'
-import './props-manager.js'
+import * as WcMixin from '/WcApp/WcMixin.js'
 
 const me = 'obj-edit'
 customElements.define(me, class extends HTMLElement {
@@ -14,7 +12,7 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	connectedCallback() {
-		this.innerHTML = `
+		WcMixin.addAdjacentHTML(this, `
 			<style scoped>
 				${me} button { height: calc(var(--button-height) * 0.8); }
 				${me} input { height: calc(var(--button-height) * 0.8); width: 30%; }
@@ -51,26 +49,25 @@ customElements.define(me, class extends HTMLElement {
 				<iframe w-id='mapIframe'></iframe>
 				<div w-id='/loc'></div>
 			</div>
-		`
-		wcMixin(this)
+		`)
 
 		this.appBar = [
 			['delete', () => {
 				if (confirm('Delete current object forever ?')) {
 					this.bubbleEvent('delete-item', this.obj.created)
 					history.go(-1)
-					APP.message('DELETED !')
+					APP.setMessage('DELETED !', 5000)
 				}
 			}],
 			['sep'],
 			['cancel'],
 			['save', () => {
 				if (!this.desc) {
-					APP.message('<span style="color:red">EMPTY DESCRIPTION!</span>')
+					APP.setMessage('<span style="color:red">EMPTY DESCRIPTION!</span>', 3000)
 					this.descDiv.focus()
 				} else if (this.props.length === 0) {
 					this.editPropsBut.focus()
-					APP.message('<span style="color:red">NO PROPERTIES!</span>')
+					APP.setMessage('<span style="color:red">NO PROPERTIES!</span>', 3000)
 				} else {
 					const obj = {
 						created: this.obj.created,
@@ -82,7 +79,7 @@ customElements.define(me, class extends HTMLElement {
 					}
 					this.bubbleEvent('save-item', obj)
 					history.go(-1)
-					APP.message('SAVED !')
+					APP.setMessage('SAVED !', 5000)
 				}
 			}]
 		]

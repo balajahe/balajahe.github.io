@@ -1,4 +1,4 @@
-import wcMixin from '/WcMixin/WcMixin.js'
+import * as WcMixin from '/WcApp/WcMixin.js'
 
 const me = 'props-manager'
 customElements.define(me, class extends HTMLElement {
@@ -8,7 +8,7 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	build(props) {
-		this.innerHTML = `
+		WcMixin.addAdjacentHTML(this, `
 			<style scoped>
 				${me} { 
 					width: 100%;
@@ -31,15 +31,14 @@ customElements.define(me, class extends HTMLElement {
 			<nav>
 				<input w-id='newPropInp/newProp' placeholder='New property...'/>
 			</nav>
-		`
-		wcMixin(this)
-
+		`)
+		
 		this.appBar = [
 			['msg', 'Click to add / remove properties:'],
-         ['ok', () => {
-         	this.bubbleEvent('change-props', this.val)
-         	history.go(-1)
-         }]
+			['ok', () => {
+				this.bubbleEvent('change-props', this.val)
+				history.go(-1)
+			}]
 		]
 
 		for (const prop of props) this._addProp(prop)

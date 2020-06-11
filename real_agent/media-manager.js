@@ -1,5 +1,4 @@
-import wcMixin from '/WcMixin/WcMixin.js'
-import './media-container.js'
+import * as WcMixin from '/WcApp/WcMixin.js'
 
 const me = 'media-manager'
 customElements.define(me, class extends HTMLElement {
@@ -10,7 +9,6 @@ customElements.define(me, class extends HTMLElement {
 	imgParams = null
 	vidRecorder = null
 	audRecorder = null
-	canvas = null
 	vidPreview = null
 
 	connectedCallback() {
@@ -18,7 +16,7 @@ customElements.define(me, class extends HTMLElement {
 	}
 
 	build(medias, bar) {
-		this.innerHTML = `
+		WcMixin.addAdjacentHTML(this, `
 			<style scoped>
 				${me} #video { width: 100%; }
 				${me} nav { width: 100%; flex-flow: row nowrap; }
@@ -36,18 +34,17 @@ customElements.define(me, class extends HTMLElement {
 			</div>
 
 			<canvas w-id='canvas' style='display:none'></canvas>
-		`
-		wcMixin(this)
+		`)
 
 		if (bar) {
 			this.appBar = bar
 		} else {
 			this.appBar = [
 				['msg', 'Take photo, video, or audio:'],
-	         ['ok', () => {
-	         	this.bubbleEvent('change-medias', this.val)
-	         	history.go(-1)
-	         }]
+				['ok', () => {
+					this.bubbleEvent('change-medias', this.val)
+					history.go(-1)
+				}]
 			]
 		}
 

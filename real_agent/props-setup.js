@@ -1,10 +1,10 @@
-import wcMixin from '/WcMixin/WcMixin.js'
+import * as WcMixin from '/WcApp/WcMixin.js'
 
 const me = 'props-setup'
 customElements.define(me, class extends HTMLElement {
 
 	connectedCallback() {
-		this.innerHTML = `
+		WcMixin.addAdjacentHTML(this, `
 			<style scoped>
 				${me} > #propsDiv {
 					min-height: 5em;
@@ -16,17 +16,16 @@ customElements.define(me, class extends HTMLElement {
 			</style>
 			
 			<div w-id='propsDiv/props' contenteditable='true'></div>
-		`
-		wcMixin(this)
-
+		`)
+		
 		this.appBar = [
 			['msg', 'Enter properties separated by commas:'],
-         ['cancel'],
-         ['save', () => {
-         	APP.props = this.props.split(',').map(v => v.trim())
-         	history.go(-1)
-				APP.message('SAVED !')
-         }]
+			['cancel'],
+			['save', () => {
+				APP.props = this.props.split(',').map(v => v.trim())
+				history.go(-1)
+				APP.setMessage('SAVED !', 5000)
+			}]
 		]
 
 		this.props = APP.props.join(',')
