@@ -17,7 +17,7 @@ customElements.define(me, class extends HTMLElement {
 
          <p w-id='/msg'>Enter text:</p>
          <p w-id='textDiv/text' contenteditable='true'>
-            Web reactivity<br>Is optional !
+            web-reactivity<br>is optional !
          </p>
       `)
 
