@@ -41,7 +41,9 @@
 			border-radius: calc(var(--button-height)/1.5)/calc(var(--button-height));
 			padding-left: 1em;
 		}
-		button:active { background-color: red; }
+		button:active, button:focus, input:active, input:focus {
+    		outline: none;
+    	}
 		button.true { background-color: red; }
 	</style>
 </head>

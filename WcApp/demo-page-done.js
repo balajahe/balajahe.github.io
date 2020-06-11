@@ -7,12 +7,13 @@ customElements.define(me, class extends HTMLElement {
       WcMixin.addAdjacentHTML(this, `
          <style>
             ${me} {
-               height: 90%; width: 100%;
-               display: flex; flex-flow: column;
-               justify-content: center; align-items: center;
+               width: 100%;
+               display: flex;
+               justify-content: center;
             }
             ${me} > div {
                display: flex; flex-flow: column;
+               margin-top: 1rem;
                padding: 1rem;
                border: solid silver 1px;
             }

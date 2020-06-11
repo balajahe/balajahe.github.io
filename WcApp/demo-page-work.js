@@ -6,8 +6,11 @@ customElements.define(me, class extends HTMLElement {
    connectedCallback() {
       WcMixin.addAdjacentHTML(this, `
          <style scoped>
+            ${me} {
+               padding-left: 0.5rem; padding-right: 0.5rem;
+            }
             ${me} #textDiv { 
-               min-height: 5em;
+               min-height: 5rem;
                border: 1px solid silver; 
             }
          </style>
