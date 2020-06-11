@@ -1,10 +1,10 @@
-import wcMixin from './WcMixin.js'
+import * as WcMixin from './WcMixin.js'
 
 const me = 'demo-page-home'
 customElements.define(me, class extends HTMLElement {
 
    connectedCallback() {
-      this.innerHTML = `
+      WcMixin.addAdjacentHTML(this, `
          <style>
             ${me} {
                height: 90%; width: 100%;
@@ -15,8 +15,7 @@ customElements.define(me, class extends HTMLElement {
          </style>
          
          <p>Vanilla web components PWA template<br>welcomes you !</p>
-      `
-      wcMixin(this)
+      `)
 
       this.appBar = [
          ['sep'],

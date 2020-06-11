@@ -1,11 +1,11 @@
-import wcMixin from './WcMixin.js'
+import * as WcMixin from './WcMixin.js'
 
 export default class extends HTMLElement {
 
 	connectedCallback() {
 		const me = this.tagName
 		
-		this.innerHTML = `
+		WcMixin.addAdjacentHTML(this, `
 			<style>
 				${me} {
 					position: absolute;
@@ -19,8 +19,7 @@ export default class extends HTMLElement {
 			</style>
 
 			<button w-id='home'>HOME</button>
-		`
-		wcMixin(this)
+		`)
 
 		this.home.onclick = () => location.reload()
 	}

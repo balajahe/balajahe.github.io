@@ -1,4 +1,4 @@
-import wcMixin from './WcMixin.js'
+import * as WcMixin from './WcMixin.js'
 import WcAppMenu from './WcAppMenu.js'
 
 export default class extends HTMLElement {
@@ -8,7 +8,7 @@ export default class extends HTMLElement {
 		if (!customElements.get('app-menu')) customElements.define('app-menu', WcAppMenu)
 		const me = this.tagName
 		
-		this.innerHTML = `
+		WcMixin.addAdjacentHTML(this, `
 			<style scoped>
 				${me} {
 					display: flex; flex-flow: row nowrap;
@@ -41,8 +41,7 @@ export default class extends HTMLElement {
 			
 			<app-menu w-id='appMenu' style='display:none'></app-menu>
 			<button w-id='menuBut'>&#9776;</button>
-		`
-		wcMixin(this)
+		`)
 
 		this.menuBut.onclick = (ev) => {
 			ev.stopPropagation()

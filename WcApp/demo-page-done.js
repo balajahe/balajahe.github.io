@@ -1,10 +1,10 @@
-import wcMixin from './WcMixin.js'
+import * as WcMixin from './WcMixin.js'
 
 const me = 'demo-page-done'
 customElements.define(me, class extends HTMLElement {
 
    build(text) {
-      this.innerHTML = `
+      WcMixin.addAdjacentHTML(this, `
          <style>
             ${me} {
                height: 90%; width: 100%;
@@ -19,12 +19,11 @@ customElements.define(me, class extends HTMLElement {
          </style>
          
          <div>${text}</div>
-      `
-      wcMixin(this)
+      `)
 
       this.appBar = [
          ['sep'],
-         ['ok']
+         ['back']
       ]
       
       return this

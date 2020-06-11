@@ -1,12 +1,16 @@
 // WcMixin.js
-// v0.2.4
-export default function wcMixin(target) {
+// v0.3.0
+
+export function addAdjacentHTML(target, html) {
    target.on = on.bind(target)
    target.onAny = onAny.bind(target)
    target.bubbleEvent = bubbleEvent.bind(target)
    target.drownEvent = drownEvent.bind(target)
+
    target.display = display.bind(target)
    target.generateProps = generateProps.bind(target)
+
+   target.insertAdjacentHTML('beforeend', html)
    target.generateProps()
 }
 

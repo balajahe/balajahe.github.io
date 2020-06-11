@@ -1,11 +1,10 @@
-import wcMixin from './WcMixin.js'
-// import './demo-page-done.js'
+import * as WcMixin from './WcMixin.js'
 
 const me = 'demo-page-work'
 customElements.define(me, class extends HTMLElement {
 
    connectedCallback() {
-      this.innerHTML = `
+      WcMixin.addAdjacentHTML(this, `
          <style scoped>
             ${me} #textDiv { 
                min-height: 5em;
@@ -17,8 +16,7 @@ customElements.define(me, class extends HTMLElement {
          <p w-id='textDiv/text' contenteditable='true'>
             Web reactivity<br>Is optional !
          </p>
-      `
-      wcMixin(this)
+      `)
 
       this.appBar = [
          ['sep'],

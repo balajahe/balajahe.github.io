@@ -1,10 +1,10 @@
-import wcMixin from './WcMixin.js'
+import * as WcMixin from './WcMixin.js'
 
 const me = 'demo-page-login'
 customElements.define(me, class extends HTMLElement {
 
    connectedCallback() {
-      this.innerHTML = `
+      WcMixin.addAdjacentHTML(this, `
          <style scoped>
             ${me} {
                height: 90%; width: 100%;
@@ -17,8 +17,7 @@ customElements.define(me, class extends HTMLElement {
          <input w-id='userInp/user' placeholder='user'/>
          &nbsp;
          <input w-id='passInp/pass' type='password' placeholder='password'/>
-      `
-      wcMixin(this)
+      `)
 
       this.appBar = [
          ['sep'],

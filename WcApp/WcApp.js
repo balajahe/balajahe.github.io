@@ -1,4 +1,4 @@
-import wcMixin from './WcMixin.js'
+import * as WcMixin from './WcMixin.js'
 import WcAppBar from './WcAppBar.js'
 
 export default class extends HTMLElement {
@@ -9,7 +9,7 @@ export default class extends HTMLElement {
 		customElements.define('app-bar', WcAppBar)
 		const me = this.tagName
 
-		this.innerHTML = `
+		WcMixin.addAdjacentHTML(this, `
 			<style scoped>
 				${me} {
 					height: 100vh;
@@ -38,8 +38,8 @@ export default class extends HTMLElement {
 
 			<app-bar w-id='appBar'></app-bar>
 			<div class='modalPageLayer'></div>
-		`
-		wcMixin(this)
+		`)
+	
 		window.APP = this
 		this._stackOfLayers.push({ layer: this.querySelector('div'), currentPage: null })
 
