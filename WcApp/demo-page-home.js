@@ -17,6 +17,8 @@ customElements.define(me, class extends HTMLElement {
          <p>Vanilla web components PWA template<br>welcomes you !</p>
       `)
 
+      APP.forceSetHash(me)
+
       this.appBar = [
          ['sep'],
          ['next', async () => {
