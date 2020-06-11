@@ -10,10 +10,11 @@ customElements.define(me, class extends HTMLElement {
                height: 90%; width: 100%;
                display: flex; flex-flow: column;
                justify-content: center; align-items: center;
+               text-align: center;
             }
          </style>
          
-         <p>WC PWA Template welcomes you !</p>
+         <p>Vanilla web components PWA template<br>welcomes you !</p>
       `
       wcMixin(this)
 

@@ -7,9 +7,9 @@ customElements.define(me, class extends WcAppMenu {
 	connectedCallback() {
 		super.connectedCallback()
 		
-		this.innerHTML += `
+		this.insertAdjacentHTML('beforeend', `
 			<button w-id='source'>Sources on GitHub</button>
-		`
+		`)
 		wcMixin(this)
 
 		this.source.onclick = () => location.href = 'https://github.com/balajahe/balajahe.github.io/tree/master/WcApp'

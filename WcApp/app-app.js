@@ -15,11 +15,11 @@ customElements.define(me, class extends WcApp {
          APP.setMessage(this.user ? `Logged as: ${this.user}` : `Not logged: ${ev.val.user}`)
       })
 
-/*      setInterval(() => {
+      setInterval(() => {
          this.elapsed += 1
          this.drownEvent('notify-timer', this.elapsed)
       }, 1000)
-*/
+
 		APP.route('demo-page-home')
 	}
 })

@@ -11,18 +11,20 @@ customElements.define(me, class extends HTMLElement {
                display: flex; flex-flow: column;
                justify-content: center; align-items: center;
             }
-            ${me} > p {
+            ${me} > div {
+               display: flex; flex-flow: column;
+               padding: 1rem;
                border: solid silver 1px;
             }
          </style>
          
-         <p>${text}</p>
+         <div>${text}</div>
       `
       wcMixin(this)
 
       this.appBar = [
          ['sep'],
-         ['ok', history.go(-1)]
+         ['ok']
       ]
       
       return this

@@ -1,4 +1,5 @@
 import wcMixin from './WcMixin.js'
+// import './demo-page-done.js'
 
 const me = 'demo-page-work'
 customElements.define(me, class extends HTMLElement {
@@ -13,7 +14,9 @@ customElements.define(me, class extends HTMLElement {
          </style>
 
          <p w-id='/msg'>Enter text:</p>
-         <p w-id='textDiv/text' contenteditable='true'>1)<br>2)<br>3)</p>
+         <p w-id='textDiv/text' contenteditable='true'>
+            Web reactivity<br>Is optional !
+         </p>
       `
       wcMixin(this)
 
@@ -22,7 +25,7 @@ customElements.define(me, class extends HTMLElement {
          ['back'],
          ['but', 'Done<br>&rArr;', async () => {
             await import('./demo-page-done.js')
-            APP.route('demo-page-done', document.createElement('demo-page-done').build(this.text))
+            APP.routeModal('demo-page-done', document.createElement('demo-page-done').build(this.text))
          }]
       ]
 
