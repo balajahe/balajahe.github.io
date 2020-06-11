@@ -1,6 +1,6 @@
 Power web application examples:
 <br><br>
-<a href="/WcApp/">WcApp</a> - The template demonstrates the use of vanilla web components in the development of a mobile PWA application. The WcMixin library provides syntactic sugar for extracting data from HTML elements and reactivity based on custom DOM events.
+<a href="/WcApp/demo">WcApp</a> - The template demonstrates the use of vanilla web components in the development of a mobile PWA application. The WcMixin library provides syntactic sugar for extracting data from HTML elements and reactivity based on custom DOM events.
 <br><br>
 <a href="/real_agent/">real_agent</a> - Mobile PWA, is a database of arbitrary objects with geolocation, photos, video and audio. Stores data in IndexedDB. Developed on vanilla web components, without frameworks and libraries, optimized for performance.
 <br><br>
