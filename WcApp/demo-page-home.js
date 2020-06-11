@@ -14,7 +14,7 @@ customElements.define(me, class extends HTMLElement {
             }
          </style>
          
-         <p>Vanilla web components PWA template<br>welcomes you !</p>
+         <p>Vanilla web-components PWA template<br>welcomes you !</p>
       `)
 
       APP.forceSetHash(me)
