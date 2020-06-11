@@ -69,11 +69,7 @@ export default class extends HTMLElement {
 			curr.display(false)
 			if (curr.onUnRoute) curr.onUnRoute()
 		}
-		if (elem) {
-			if (!Array.from(layer.children).find(el => el === elem)) {
-				layer.append(elem)
-			}
-		} else {
+		if (!elem) {
 			elem = Array.from(layer.children).find(el => el.id === id)
 			if (!elem) {
 				elem = document.createElement(id)
@@ -104,8 +100,8 @@ export default class extends HTMLElement {
 		elem.id = id
 		this._stackOfLayers.push({ layer: layer, currentPage: elem })
 		this._pushHash(id)
-		if (elem.appBar) this.setBar(elem.appBar)
 
+		if (elem.appBar) this.setBar(elem.appBar)
 		if (elem.onRoute) elem.onRoute()
 	}
 

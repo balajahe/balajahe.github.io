@@ -21,5 +21,7 @@ customElements.define(me, class extends HTMLElement {
          ['sep'],
          ['ok', history.go(-1)]
       ]
+      
+      return this
    }
 })

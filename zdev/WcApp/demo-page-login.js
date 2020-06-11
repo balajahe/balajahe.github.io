@@ -30,6 +30,10 @@ customElements.define(me, class extends HTMLElement {
          this.bubbleEvent('login-change', { logged: false, user: this.user })
       }
 
+      this.userInp.onkeypress = (ev) => {
+         if (ev.key === 'Enter') this.passInp.focus()
+      }
+   
       this.passInp.onkeypress = (ev) => {
          if (ev.key === 'Enter') this.login(ev)
       }
