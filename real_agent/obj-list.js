@@ -47,7 +47,7 @@ customElements.define(me, class extends HTMLElement {
 					[],
 					[
 						['msg', 'Take photo, video, or audio:'],
-						['cancel'],
+						['back'],
 						['next', () => APP.route('obj-new')]
 					]
 				)

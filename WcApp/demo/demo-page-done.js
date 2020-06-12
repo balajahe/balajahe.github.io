@@ -23,7 +23,7 @@ customElements.define(me, class extends HTMLElement {
 		`)
 
 		this.appBar = [
-			['sep'],
+			['msg', 'Modal page demo, see URL hash !'],
 			['back']
 		]
 		

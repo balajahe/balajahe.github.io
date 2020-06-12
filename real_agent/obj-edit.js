@@ -60,7 +60,7 @@ customElements.define(me, class extends HTMLElement {
 				}
 			}],
 			['sep'],
-			['cancel'],
+			['back'],
 			['save', () => {
 				if (!this.desc) {
 					APP.setMessage('<span style="color:red">EMPTY DESCRIPTION!</span>', 3000)

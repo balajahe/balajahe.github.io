@@ -32,7 +32,7 @@ customElements.define(me, class extends HTMLElement {
 				</nav>
 				<media-container w-id='mediaContainer/medias' add='false' del='true'></media-container>
 			</div>
-
+			<div w-id='/msg'></div>
 			<canvas w-id='canvas' style='display:none'></canvas>
 		`)
 
@@ -98,11 +98,13 @@ customElements.define(me, class extends HTMLElement {
 		this.vidDiv.display('flex')
 
 		this.imgCapturer = new ImageCapture(this.stream.getVideoTracks()[0])
+
 		const caps = await this.imgCapturer.getPhotoCapabilities()
-		if (caps.fillLightMode?.includes('auto'))
-			this.imgParams = { imageHeight: caps.imageHeight.max, imageWidth: caps.imageWidth.max, fillLightMode: 'auto' }
-		else
-			this.imgParams = { imageHeight: caps.imageHeight.max, imageWidth: caps.imageWidth.max }
+		this.msg = JSON.stringify(caps)
+		this.imgParams = {}
+		if (caps.imageHeight) this.imgParams.imageHeight = caps.imageHeight.max
+		if (caps.imageWidth) this.imgParams.imageWidth = caps.imageWidth.max
+		if (caps.fillLightMode?.includes('auto')) this.imgParams.fillLightMode = 'auto'
 
 		this.vidRecorder = new MediaRecorder(this.stream, { mimeType : "video/webm" })
 		this.vidRecorder.ondataavailable = async (ev) => 

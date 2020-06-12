@@ -1,8 +1,53 @@
 <!doctype html>
 <html>
 <head>
-	<meta http-equiv="refresh" content="0;URL=demo" />
+	<title>Vanilla web-components PWA template</title>
+	<meta charset='utf-8'>
+	<meta name='viewport' content='width=device-width, initial-scale=1' />
+	<script type='module'>//navigator.serviceWorker.register('./app-sw.js')</script>
+	<script type='module' src='./demo/app-app.js'></script>
+	<style>
+		:root {
+			--app-max-width: 50rem;
+			--app-bar-height: 3.1rem;
+			--button-height: 2.5rem;
+			--margin1: 0.1rem;
+			--margin2: 0.2rem;
+			--margin3: 0.4rem;
+		}
+		* { 
+			box-sizing: border-box; 
+		}
+		body, div, nav, video, img, iframe { 
+			margin: 0; padding: 0; border: 0; 
+		}
+		body {
+			height: 100vh; width: 100vw;
+			overflow: hidden;
+			display: flex; flex-flow: row; justify-content: center;
+			font-size: smaller;
+		}
+		div, nav { 
+			display: flex; flex-flow: row wrap;
+		}
+		button {
+			height: var(--button-height);
+			margin-top: var(--margin1); margin-bottom: var(--margin1);
+			border-radius: calc(var(--button-height)/1.5)/calc(var(--button-height));
+		}
+		input {
+			height: var(--button-height);
+			margin-top: var(--margin1); margin-bottom: var(--margin1);
+			border-radius: calc(var(--button-height)/1.5)/calc(var(--button-height));
+			padding-left: 1em;
+		}
+		button:active, button:focus, input:active, input:focus {
+	 		outline: none;
+	 	}
+		button.true { background-color: red; }
+	</style>
 </head>
 <body>
+	<app-app/>
 </body>
 </html>
