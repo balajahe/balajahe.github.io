@@ -48,10 +48,9 @@ customElements.define(me, class extends HTMLElement {
 			]
 		}
 
+		this.mediaContainer.build(medias)
 		this.canvas.width = APP.imgPrevSize
 		this.canvas.height = APP.imgPrevSize
-
-		this.mediaContainer.build(medias)
 
 		this.imgBut.onclick = async () => {
 			const blob = await this.imgCapturer.takePhoto(this.imgParams)
@@ -100,11 +99,12 @@ customElements.define(me, class extends HTMLElement {
 		this.imgCapturer = new ImageCapture(this.stream.getVideoTracks()[0])
 
 		const caps = await this.imgCapturer.getPhotoCapabilities()
-		this.msg = JSON.stringify(caps)
+		console.log(caps)
 		this.imgParams = {}
 		if (caps.imageHeight) this.imgParams.imageHeight = caps.imageHeight.max
 		if (caps.imageWidth) this.imgParams.imageWidth = caps.imageWidth.max
 		if (caps.fillLightMode?.includes('auto')) this.imgParams.fillLightMode = 'auto'
+		console.log(this.imgParams)
 
 		this.vidRecorder = new MediaRecorder(this.stream, { mimeType : "video/webm" })
 		this.vidRecorder.ondataavailable = async (ev) => 

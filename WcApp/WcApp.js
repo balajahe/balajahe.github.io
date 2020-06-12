@@ -75,8 +75,6 @@ export default class extends HTMLElement {
 			if (!elem) {
 				elem = document.createElement(id)
 				layer.append(elem)
-			} else {
-				elem.display()
 			}
 		} else {
 			layer.append(elem)
@@ -86,6 +84,7 @@ export default class extends HTMLElement {
 		top.currentPage = elem
 		this._replaceLastHash(id)
 
+		elem.display()
 		if (elem.appBar) this.appBar.setBar(elem.appBar)
 		if (elem.onRoute) elem.onRoute()
 	}
@@ -105,6 +104,7 @@ export default class extends HTMLElement {
 		this._stackOfLayers.push({ layer: layer, currentPage: elem })
 		this._pushHash(id)
 
+		elem.display()
 		if (elem.appBar) this.setBar(elem.appBar)
 		if (elem.onRoute) elem.onRoute()
 	}
