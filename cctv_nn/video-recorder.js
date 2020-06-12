@@ -1,4 +1,4 @@
-import wcMixin from '/WcMixin/WcMixin.js'
+import * as WcMixin from '/WcApp/WcMixin.js'
 
 const CHUNK_DURATION = 7000
 
@@ -13,7 +13,7 @@ customElements.define('video-recorder', class extends HTMLElement {
    H = 0
 
    async init() {
-      this.innerHTML = `
+      WcMixin.addAdjacentHTML(this, `
          <div w-id='div' style='display:none; flex-flow:column'>
             <video w-id='video' autoplay muted></video>
             <canvas w-id='c_canvas' style='display:none'></canvas>
@@ -25,9 +25,9 @@ customElements.define('video-recorder', class extends HTMLElement {
                &nbsp;<button w-id='b_noalarm/noalarm' style='flex-grow:1'>No alarm</button>
             </nav>
          </div>
-         <audio w-id='alarm' loop src='./alarm.mp3'></audio>
-      `
-      wcMixin(this)
+         <audio w-id='alarm' loop src='./res/alarm.mp3'></audio>
+      `)
+
       this.canvas = this.c_canvas.getContext('2d')
       this.bbox = this.c_bbox.getContext('2d')
 

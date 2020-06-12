@@ -1,16 +1,16 @@
-import wcMixin from '/WcMixin/WcMixin.js'
+import * as WcMixin from '/WcApp/WcMixin.js'
 
 const API_KEY = 'AIzaSyDWwZB5DbLaT_11i4C7L9Ch_0rslAncDro'
 const CLIENT_ID = '62101814784-23re0bkiiihnb99sid30pgt21spu9ubk.apps.googleusercontent.com'
 
 customElements.define('video-sender', class extends HTMLElement {
    async init() {
-      this.innerHTML = `
+      WcMixin.addAdjacentHTML(this, `
          <input w-id='el_email/email' type='email' style='display:none; width:99.5%' required placeholder='Email to send...'/>
          <div w-id='/log'>Connecting to Gmail...<br></div>
          <a w-id='a' style="display:none"></a>
-      `
-      wcMixin(this)
+      `)
+
       this.email = localStorage.getItem('email')
 
       await import('https://apis.google.com/js/api.js')

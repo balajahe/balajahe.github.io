@@ -1,4 +1,4 @@
-import wcMixin from '/WcMixin/WcMixin.js'
+import * as WcMixin from '/WcApp/WcMixin.js'
 
 const CHUNK_DURATION = 5000
 
@@ -17,7 +17,7 @@ customElements.define('video-recorder', class extends HTMLElement {
    }
 
    async connectedCallback() {
-      this.innerHTML = `
+      WcMixin.addAdjacentHTML(this, `
          <p w-id='msg'>Loading camera...</p>
          <div w-id='recdiv' id='recdiv' style='display:none; flex-flow:column'>
             <video w-id='video' autoplay muted></video>
@@ -34,8 +34,8 @@ customElements.define('video-recorder', class extends HTMLElement {
             <button w-id='unlock' style='width:100%; height:4%'>Unlock</button>
             <iframe src='https://ru.wikipedia.org' style='width:100%; height:96%' sandbox='allow-forms allow-scripts'></iframe>
          </div>
-      `
-      wcMixin(this)
+      `)
+
       this.email = localStorage.getItem('email')
 
       const stream = await navigator.mediaDevices.getUserMedia(

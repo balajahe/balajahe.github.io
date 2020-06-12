@@ -1,5 +1,5 @@
 const APP = 'emergency_cam'
-const VERSION = '.v100'
+const VERSION = '.v0.9'
 
 self.oninstall = (ev) => ev.waitUntil(
   caches.open(APP + VERSION)
@@ -18,17 +18,14 @@ self.onactivate = (ev) => ev.waitUntil(
 )
 
 self.onfetch = (ev) => ev.respondWith(
-  (async () => {
-    try {
-      const resp = await fetch(ev.request)
-      if (resp) {
-        (await caches.open(APP + VERSION)).put(ev.request, resp.clone())
-        return resp
-      } else {
-        return caches.match(ev.request)
-      }
-    } catch(e) {
-      return caches.match(ev.request)
-    }
-  })()
+  caches.match(ev.request).then(
+    (resp) => resp || fetch(ev.request).then(
+      (resp1) => caches.open(APP + VERSION).then(
+        (cache) => {
+          cache.put(ev.request, resp1.clone())
+          return resp1
+        }
+      )
+    )
+  )
 )
