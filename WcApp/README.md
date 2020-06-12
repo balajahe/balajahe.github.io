@@ -5,6 +5,6 @@ The WcMixin library provides syntactic sugar for extracting data from HTML eleme
 
 The WcApp class provides an application framework with a panel of context-sensitive buttons, hash-based navigation and modalities.
 <br><br>
-Demo: https://balajahe.github.io/WcApp/demo
+Demo: https://balajahe.github.io/WcApp
 <br><br>
 Article: https://habr.com/ru/post/500484/
