@@ -6,7 +6,7 @@ const CLIENT_ID = '62101814784-23re0bkiiihnb99sid30pgt21spu9ubk.apps.googleuserc
 customElements.define('video-sender', class extends HTMLElement {
    async init() {
       WcMixin.addAdjacentHTML(this, `
-         <input w-id='el_email/email' type='email' style='display:none; width:99.5%' required placeholder='Email to send...'/>
+         <input w-id='el_email/email' type='email' style='display:none; width:100%' required placeholder='Email to send...'/>
          <div w-id='/log'>Connecting to Gmail...<br></div>
          <a w-id='a' style="display:none"></a>
       `)
