@@ -16,7 +16,7 @@ class PersonPageDetail extends StatelessWidget {
           title: Text(TITLE + ' detail'),
         ),
         body: Center(
-          child: ListView(children: [
+          child: Column(children: [
             Image.network(_person.pictureLarge),
             ListTile(
                 title: Text(
