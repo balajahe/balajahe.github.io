@@ -6,6 +6,7 @@ import '../constants.dart';
 import '../model/Persons.dart';
 import './PersonPageDetail.dart';
 
+// не заморачивался с полосой прокрутки, хотя желательно
 class PersonPageList extends StatelessWidget {
   @override
   build(context) {
@@ -17,9 +18,9 @@ class PersonPageList extends StatelessWidget {
       body: Center(
         child: ListView.builder(
             itemCount: persons.length > 0 ? persons.length + 1 : 1,
-            scrollDirection: Axis.vertical,
             itemBuilder: (context, i) {
               if (i < persons.length) {
+                // данные есть, берем из массива
                 var person = persons.getByNum(i);
                 return ListTile(
                   leading: Image.network(person.pictureThumbnail),
@@ -28,14 +29,19 @@ class PersonPageList extends StatelessWidget {
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => PersonPageDetail(),
+                      fullscreenDialog: true,
+                      builder: (context) => PersonPageDetail(person),
                     ),
                   ),
                 );
               } else {
+                // данных не хватает, делаем запрос к серверу
                 if (persons.error == '') {
                   persons.loadNextPart();
-                  return Center(child: CircularProgressIndicator());
+                  return Center(
+                      child: Container(
+                          margin: const EdgeInsets.only(top: 10.0),
+                          child: CircularProgressIndicator()));
                 } else {
                   return Column(children: [
                     Container(

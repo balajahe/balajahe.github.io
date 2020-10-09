@@ -19,11 +19,12 @@ class Persons with ChangeNotifier {
   // нарушение SOLID
   // не очень хорошо зашивать логику сториджа в доменную модель, нужно вынести в отдельный класс
   Future<void> loadNextPart() async {
+    _error = '';
+    notifyListeners();
     try {
       var response = await http.get(PERSONS_URL);
       jsonDecode(response.body)['results']
           .forEach((el) => _persons.add(Person.fromJSON(el)));
-      _error = '';
     } catch (e) {
       _error = e.toString();
     }

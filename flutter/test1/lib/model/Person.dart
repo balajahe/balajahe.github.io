@@ -6,12 +6,13 @@ class Person {
   final String city;
   final String state;
   final String country;
-  //final double postcode;
+  final String postcode;
 
   final String email;
   final String phone;
 
   final String pictureThumbnail;
+  final String pictureLarge;
 
   Person.fromJSON(Map<String, dynamic> json)
       : nameFirst = json['name']['first'],
@@ -20,16 +21,17 @@ class Person {
         city = json['location']['city'],
         state = json['location']['state'],
         country = json['location']['country'],
-        //postcode = json['location']['postcode'],
+        postcode = json['location']['postcode'].toString(),
         email = json['email'],
         phone = json['phone'],
-        pictureThumbnail = json['picture']['thumbnail'];
+        pictureThumbnail = json['picture']['thumbnail'],
+        pictureLarge = json['picture']['large'];
 
   get name => this.nameFirst + ' ' + this.nameLast;
 
   get address =>
-      // this.postcode +
-      // ', ' +
+      this.postcode +
+      ', ' +
       this.streetName +
       ', ' +
       this.city +
