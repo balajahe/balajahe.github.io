@@ -33,6 +33,11 @@ class _PersonPageDetailState extends State<PersonPageDetail> {
     return Scaffold(
       backgroundColor: Color(0xAAFFFFFF),
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.close),
+          tooltip: 'close details',
+          onPressed: () => Navigator.pop(context, _personIndex),
+        ),
         title: Text(' Person Details'),
         actions: [
           IconButton(

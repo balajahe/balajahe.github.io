@@ -22,6 +22,7 @@ class Persons with ChangeNotifier {
     try {
       var response = await http.get(PERSONS_URL, headers: {
         'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': '*',
       });
       if (response.statusCode != 200) {
         throw response.body.toString();

@@ -5,8 +5,16 @@ import '../model/Persons.dart';
 import './PersonPageDetail.dart';
 import './progressAndErrorWidgets.dart';
 
-// не заморачивался с полосой прокрутки, хотя наверное желательно
-class PersonPageList extends StatelessWidget {
+const double _ITEM_HEIGHT = 60.0;
+
+class PersonPageList extends StatefulWidget {
+  @override
+  createState() => _PersonPageListState();
+}
+
+class _PersonPageListState extends State<PersonPageList> {
+  final _scrollController = ScrollController();
+
   @override
   build(context) {
     var persons = context.watch<Persons>();
@@ -16,23 +24,28 @@ class PersonPageList extends StatelessWidget {
       ),
       body: Center(
         child: ListView.builder(
+            controller: _scrollController,
             itemCount: persons.length + 1,
             itemBuilder: (context, i) {
               // данные есть, берем из массива
               if (i < persons.length) {
                 var person = persons.getByNum(i);
-                return ListTile(
-                  leading: Image.network(person.pictureThumbnail),
-                  title: Text(person.name),
-                  subtitle: Text(person.address),
-                  onTap: () => Navigator.of(context).push(
-                    PageRouteBuilder(
-                      fullscreenDialog: true,
-                      opaque: false,
-                      pageBuilder: (_, __, ___) => PersonPageDetail(i),
-                    ),
-                  ),
-                );
+                return Container(
+                    height: _ITEM_HEIGHT,
+                    child: ListTile(
+                      leading: Image.network(person.pictureThumbnail),
+                      title: Text(person.name),
+                      subtitle: Text(person.address),
+                      onTap: () async {
+                        var newPersonIndex =
+                            await Navigator.of(context).push(PageRouteBuilder(
+                          fullscreenDialog: true,
+                          opaque: false,
+                          pageBuilder: (_, __, ___) => PersonPageDetail(i),
+                        ));
+                        _scrollController.jumpTo(newPersonIndex * _ITEM_HEIGHT);
+                      },
+                    ));
                 // идет загрузка
               } else if (!persons.isError) {
                 persons.loadNextPart();
