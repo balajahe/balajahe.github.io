@@ -28314,7 +28314,7 @@ n.b8()
 q=3
 k=t.bi
 s=6
-return P.aC(G.adA("https://randomuser.me/api?results=10",P.bf(["Accept","application/json"],k,k)),$async$jk)
+return P.aC(G.adA("https://randomuser.me/api?results=10",P.bf(["Access-Control-Allow-Origin","*"],k,k)),$async$jk)
 case 6:m=b
 if(m.b!==200){k=J.a6o(m)
 throw H.a(k)}k=m
