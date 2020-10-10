@@ -31,6 +31,7 @@ class _PersonPageDetailState extends State<PersonPageDetail> {
     }
 
     return Scaffold(
+      backgroundColor: Color(0xAAFFFFFF),
       appBar: AppBar(
         title: Text(' Person Details'),
         actions: [
@@ -46,14 +47,13 @@ class _PersonPageDetailState extends State<PersonPageDetail> {
           ),
         ],
       ),
-      //backgroundColor: Colors.transparent,
       body: _showBody(),
     );
   }
 
   Widget _showBody() {
+    // данные есть, берем из массива
     if (_personIndex < _persons.length) {
-      // данные есть, берем из массива
       return GestureDetector(
           onPanUpdate: (details) {
             if (details.delta.dx < 0) {
@@ -63,8 +63,8 @@ class _PersonPageDetailState extends State<PersonPageDetail> {
             }
           },
           child: Container(
-            margin: EdgeInsets.all(30.0),
-            color: Colors.black12,
+            margin: EdgeInsets.all(40.0),
+            color: Color(0xFFEEEEEE),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -89,8 +89,8 @@ class _PersonPageDetailState extends State<PersonPageDetail> {
                   ),
                 ]),
           ));
-    } else if (!_persons.isError) {
       // идет загрузка
+    } else if (!_persons.isError) {
       return progerssWidget();
       // ошибка
     } else {

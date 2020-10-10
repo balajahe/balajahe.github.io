@@ -20,7 +20,8 @@ class Persons with ChangeNotifier {
     _error = null;
     notifyListeners();
     try {
-      var response = await http.get(PERSONS_URL);
+      var response =
+          await http.get(PERSONS_URL, headers: {"Accept": "application/json"});
       if (response.statusCode != 200) {
         throw response.body.toString();
       }

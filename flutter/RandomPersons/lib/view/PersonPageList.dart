@@ -18,8 +18,8 @@ class PersonPageList extends StatelessWidget {
         child: ListView.builder(
             itemCount: persons.length + 1,
             itemBuilder: (context, i) {
+              // данные есть, берем из массива
               if (i < persons.length) {
-                // данные есть, берем из массива
                 var person = persons.getByNum(i);
                 return ListTile(
                   leading: Image.network(person.pictureThumbnail),
@@ -33,8 +33,8 @@ class PersonPageList extends StatelessWidget {
                     ),
                   ),
                 );
-              } else if (!persons.isError) {
                 // идет загрузка
+              } else if (!persons.isError) {
                 persons.loadNextPart();
                 return progerssWidget();
                 // ошибка
