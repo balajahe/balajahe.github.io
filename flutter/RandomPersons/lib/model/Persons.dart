@@ -21,6 +21,9 @@ class Persons with ChangeNotifier {
     notifyListeners();
     try {
       var response = await http.get(PERSONS_URL);
+      if (response.statusCode != 200) {
+        throw response.body.toString();
+      }
       jsonDecode(response.body)['results']
           .forEach((el) => _persons.add(Person.fromJSON(el)));
     } catch (e) {
