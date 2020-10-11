@@ -20,7 +20,7 @@ class _PersonPageListState extends State<PersonPageList> {
     var persons = context.watch<Persons>();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Person List'),
+        title: Text('Random person list'),
       ),
       body: Center(
         child: ListView.builder(

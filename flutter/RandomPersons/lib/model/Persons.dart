@@ -20,8 +20,7 @@ class Persons with ChangeNotifier {
     _error = null;
     notifyListeners();
     try {
-      var response =
-          await http.get(PERSONS_URL, headers: {'authority': 'randomuser.me'});
+      var response = await http.get(PERSONS_URL, headers: {});
       if (response.statusCode != 200) {
         throw response.body.toString();
       }

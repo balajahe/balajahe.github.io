@@ -18,7 +18,7 @@ class _PersonPageDetailState extends State<PersonPageDetail> {
   int _personIndex;
   Persons _persons;
   Person _person;
-  bool _isLoading = false;
+  bool _isNavigating = false;
 
   _PersonPageDetailState(this._personIndex);
 
@@ -38,7 +38,7 @@ class _PersonPageDetailState extends State<PersonPageDetail> {
           tooltip: 'close details',
           onPressed: () => Navigator.pop(context, _personIndex),
         ),
-        title: Text(' Person Details'),
+        title: Text(' Person #$_personIndex details'),
         actions: [
           IconButton(
             icon: Icon(Icons.arrow_back),
@@ -60,11 +60,11 @@ class _PersonPageDetailState extends State<PersonPageDetail> {
     // данные есть, берем из массива
     if (_personIndex < _persons.length) {
       return GestureDetector(
-          onPanUpdate: (details) {
-            if (details.delta.dx < 0) {
-              //_prevPerson();
-            } else if (details.delta.dx > 0) {
-              //_nextPerson();
+          onHorizontalDragUpdate: (details) {
+            if (details.delta.dx > 10) {
+              _prevPerson();
+            } else if (details.delta.dx < -10) {
+              _nextPerson();
             }
           },
           child: Container(
@@ -104,16 +104,27 @@ class _PersonPageDetailState extends State<PersonPageDetail> {
   }
 
   void _prevPerson() {
-    if (_personIndex > 0) {
-      setState(() => _personIndex--);
+    if (!_isNavigating && _personIndex > 0) {
+      _isNavigating = true;
+      setState(() {
+        _personIndex--;
+        _isNavigating = false;
+      });
     }
   }
 
   void _nextPerson() {
-    setState(() => _personIndex++);
-    if (_personIndex >= _persons.length && !_isLoading) {
-      _isLoading = true;
-      _persons.loadNextPart().then((_) => _isLoading = false);
+    if (!_isNavigating) {
+      _isNavigating = true;
+      if (_personIndex < _persons.length) {
+        setState(() {
+          _personIndex++;
+          _isNavigating = false;
+        });
+      } else {
+        setState(() => _personIndex++);
+        _persons.loadNextPart().then((_) => _isNavigating = false);
+      }
     }
   }
 }
