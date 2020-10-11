@@ -20,10 +20,8 @@ class Persons with ChangeNotifier {
     _error = null;
     notifyListeners();
     try {
-      var response = await http.get(PERSONS_URL, headers: {
-        'user-agent':
-            'user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36',
-      });
+      var response =
+          await http.get(PERSONS_URL, headers: {'authority': 'randomuser.me'});
       if (response.statusCode != 200) {
         throw response.body.toString();
       }

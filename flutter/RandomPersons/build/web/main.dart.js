@@ -28323,7 +28323,7 @@ n.b8()
 q=3
 k=t.bi
 s=6
-return P.aA(G.adD("https://randomuser.me/api?results=10",P.bf(["user-agent","user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36"],k,k)),$async$jk)
+return P.aA(G.adD("https://randomuser.me/api?results=10",P.bf(["authority","randomuser.me"],k,k)),$async$jk)
 case 6:m=b
 if(m.b!==200){k=J.a6r(m)
 throw H.a(k)}k=m
