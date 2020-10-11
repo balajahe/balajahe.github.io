@@ -21,8 +21,8 @@ class Persons with ChangeNotifier {
     notifyListeners();
     try {
       var response = await http.get(PERSONS_URL, headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': '*',
+        'user-agent':
+            'user-agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36',
       });
       if (response.statusCode != 200) {
         throw response.body.toString();
