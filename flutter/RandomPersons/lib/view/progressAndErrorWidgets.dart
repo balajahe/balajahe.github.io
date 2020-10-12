@@ -6,7 +6,7 @@ Widget progerssWidget() => Center(
           child: CircularProgressIndicator()),
     );
 
-Widget errorWidget(String errorMsg, Function onResume) => Center(
+Widget errorWidget(String errorMsg, Function() onResume) => Center(
     child: Container(
         margin: const EdgeInsets.all(10.0),
         child: Column(children: [

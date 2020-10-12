@@ -6,28 +6,25 @@ import '../model/Persons.dart';
 import './progressAndErrorWidgets.dart';
 
 class PersonPageDetail extends StatefulWidget {
-  final int _personIndex;
-
-  PersonPageDetail(this._personIndex);
-
+  final int _personNum;
+  PersonPageDetail(this._personNum);
   @override
-  createState() => _PersonPageDetailState(_personIndex);
+  createState() => _PersonPageDetailState(_personNum);
 }
 
 class _PersonPageDetailState extends State<PersonPageDetail> {
-  int _personIndex;
+  int _personNum;
   Persons _persons;
   Person _person;
-  bool _isNavigating = false;
 
-  _PersonPageDetailState(this._personIndex);
+  _PersonPageDetailState(this._personNum);
 
   @override
   build(context) {
     _persons = context.watch<Persons>();
 
-    if (_personIndex < _persons.length) {
-      _person = _persons.getByNum(_personIndex);
+    if (_persons.testByNum(_personNum)) {
+      _person = _persons.getByNum(_personNum);
     }
 
     return Scaffold(
@@ -36,9 +33,9 @@ class _PersonPageDetailState extends State<PersonPageDetail> {
         leading: IconButton(
           icon: Icon(Icons.close),
           tooltip: 'close details',
-          onPressed: () => Navigator.pop(context, _personIndex),
+          onPressed: () => Navigator.pop(context, _personNum),
         ),
-        title: Text(' Person #$_personIndex details'),
+        title: Text(' Person #$_personNum'),
         actions: [
           IconButton(
             icon: Icon(Icons.arrow_back),
@@ -57,8 +54,8 @@ class _PersonPageDetailState extends State<PersonPageDetail> {
   }
 
   Widget _showBody() {
-    // данные есть, берем из массива
-    if (_personIndex < _persons.length) {
+    // данные есть, берем из модели
+    if (_persons.testByNum(_personNum)) {
       return GestureDetector(
           onHorizontalDragUpdate: (details) {
             if (details.delta.dx > 10) {
@@ -69,7 +66,10 @@ class _PersonPageDetailState extends State<PersonPageDetail> {
           },
           child: Container(
             margin: EdgeInsets.all(40.0),
-            color: Color(0xFFEEEEEE),
+            decoration: BoxDecoration(
+              color: Color(0xFFEEEEEE),
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+            ),
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -94,36 +94,25 @@ class _PersonPageDetailState extends State<PersonPageDetail> {
                   ),
                 ]),
           ));
-      // идет загрузка
-    } else if (!_persons.isError) {
+      // загружаем новую порцию данных
+    } else if (_persons.isLoading && !_persons.isError) {
       return progerssWidget();
-      // ошибка
     } else {
       return errorWidget(_persons.errorMsg, _persons.loadNextPart);
     }
   }
 
   void _prevPerson() {
-    if (!_isNavigating && _personIndex > 0) {
-      _isNavigating = true;
-      setState(() {
-        _personIndex--;
-        _isNavigating = false;
-      });
+    if (_personNum > 0) {
+      setState(() => _personNum--);
     }
   }
 
   void _nextPerson() {
-    if (!_isNavigating) {
-      _isNavigating = true;
-      if (_personIndex < _persons.length) {
-        setState(() {
-          _personIndex++;
-          _isNavigating = false;
-        });
-      } else {
-        setState(() => _personIndex++);
-        _persons.loadNextPart().then((_) => _isNavigating = false);
+    if (!_persons.isLoading) {
+      setState(() => _personNum++);
+      if (!_persons.testByNum(_personNum)) {
+        _persons.loadNextPart();
       }
     }
   }

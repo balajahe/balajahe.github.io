@@ -14,6 +14,7 @@ class PersonPageList extends StatefulWidget {
 
 class _PersonPageListState extends State<PersonPageList> {
   final _scrollController = ScrollController();
+  int _currPersonNum = -1;
 
   @override
   build(context) {
@@ -25,10 +26,10 @@ class _PersonPageListState extends State<PersonPageList> {
       body: Center(
         child: ListView.builder(
             controller: _scrollController,
-            itemCount: persons.length + 1,
+            itemCount: persons.length + 1, //добавляем виджет загрузки
             itemBuilder: (context, i) {
-              // данные есть, берем из массива
-              if (i < persons.length) {
+              // данные загружены, берем из модели
+              if (persons.testByNum(i)) {
                 var person = persons.getByNum(i);
                 return Container(
                     height: _ITEM_HEIGHT,
@@ -46,13 +47,14 @@ class _PersonPageListState extends State<PersonPageList> {
                         _scrollController.jumpTo(newPersonIndex * _ITEM_HEIGHT);
                       },
                     ));
-                // идет загрузка
-              } else if (!persons.isError) {
-                persons.loadNextPart();
-                return progerssWidget();
-                // ошибка
+                // загружаем новую порцию данных
               } else {
-                return errorWidget(persons.errorMsg, persons.loadNextPart);
+                persons.loadNextPart();
+                if (persons.isLoading && !persons.isError) {
+                  return progerssWidget();
+                } else {
+                  return errorWidget(persons.errorMsg, persons.loadNextPart);
+                }
               }
             }),
       ),
