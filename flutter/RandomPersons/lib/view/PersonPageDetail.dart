@@ -28,7 +28,7 @@ class _PersonPageDetailState extends State<PersonPageDetail> {
     }
 
     return Scaffold(
-      backgroundColor: Color(0xAAFFFFFF),
+      backgroundColor: Color(0xBBFFFFFF),
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.close),
@@ -95,7 +95,7 @@ class _PersonPageDetailState extends State<PersonPageDetail> {
                 ]),
           ));
       // загружаем новую порцию данных
-    } else if (_persons.isLoading && !_persons.isError) {
+    } else if (!_persons.isError) {
       return progerssWidget();
     } else {
       return errorWidget(_persons.errorMsg, _persons.loadNextPart);

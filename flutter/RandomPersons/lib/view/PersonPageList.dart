@@ -34,23 +34,24 @@ class _PersonPageListState extends State<PersonPageList> {
                 return Container(
                     height: _ITEM_HEIGHT,
                     child: ListTile(
+                      //tileColor: i == _currPersonNum ? Color(0xFFDDDDDD) : null, // тормозит!
                       leading: Image.network(person.pictureThumbnail),
                       title: Text(person.name),
                       subtitle: Text(person.address),
                       onTap: () async {
-                        var newPersonIndex =
+                        _currPersonNum =
                             await Navigator.of(context).push(PageRouteBuilder(
                           fullscreenDialog: true,
                           opaque: false,
                           pageBuilder: (_, __, ___) => PersonPageDetail(i),
                         ));
-                        _scrollController.jumpTo(newPersonIndex * _ITEM_HEIGHT);
+                        _scrollController.jumpTo(_currPersonNum * _ITEM_HEIGHT);
                       },
                     ));
                 // загружаем новую порцию данных
               } else {
-                persons.loadNextPart();
-                if (persons.isLoading && !persons.isError) {
+                if (!persons.isError) {
+                  persons.loadNextPart();
                   return progerssWidget();
                 } else {
                   return errorWidget(persons.errorMsg, persons.loadNextPart);
