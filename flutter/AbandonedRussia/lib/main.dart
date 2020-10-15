@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'constants.dart';
 import 'model/Places.dart';
 import 'view/HomePage.dart';
-
-const TITLE = 'Заброшено у нас';
 
 void main() => runApp(App());
 

@@ -10,7 +10,7 @@ class PlaceAddPage extends StatelessWidget {
   build(context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Новая заброшка'),
+        title: Text('Новое место'),
       ),
       body: null,
     );

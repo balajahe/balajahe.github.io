@@ -9,8 +9,8 @@ class Place {
 
   Place(this.id);
 
-  factory Place.fromMap(Map<String, dynamic> data) {
-    var place = Place(data['id']);
+  factory Place.fromMap(int id, Map<String, dynamic> data) {
+    var place = Place(id);
     place.title = data['title'];
     return place;
   }

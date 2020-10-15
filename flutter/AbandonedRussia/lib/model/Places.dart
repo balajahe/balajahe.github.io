@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
-import 'Place.dart';
-//import '../dao/PlacesDAO.dart'
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'Place.dart';
+//import '../dao/PlacesDAO.dart'
 
 class Places with ChangeNotifier {
   final List<Place> _places = [];
@@ -35,7 +37,7 @@ class Places with ChangeNotifier {
     if (!noMoreData) {
       _dbCollection.doc('$i').get().then((v) {
         if (v.exists) {
-          _places.add(Place.fromMap(v.data()));
+          _places.add(Place.fromMap(int.parse(v.id), v.data()));
         } else {
           _noMoreData = true;
         }

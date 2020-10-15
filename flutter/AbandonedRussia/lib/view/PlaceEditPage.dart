@@ -4,13 +4,15 @@ import 'package:provider/provider.dart';
 import '../model/Places.dart';
 
 class PlaceEditPage extends StatelessWidget {
-  PlaceEditPage({Key key}) : super(key: key);
+  final int id;
+
+  PlaceEditPage(this.id);
 
   @override
   build(context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Новая заброшка'),
+        title: Text('Место #$id'),
       ),
       body: null,
     );

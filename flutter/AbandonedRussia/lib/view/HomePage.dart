@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../main.dart';
+import '../constants.dart';
 import '../model/Places.dart';
 import 'LoginPage.dart';
 import 'PlaceAddPage.dart';
@@ -22,7 +22,12 @@ class HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(TITLE),
         actions: [
-          MaterialButton(
+          FlatButton(
+            child: Text('Добавить'),
+            onPressed: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => PlaceAddPage())),
+          ),
+          FlatButton(
             child: Text('Войти'),
             onPressed: () => Navigator.push(
                 context, MaterialPageRoute(builder: (context) => LoginPage())),
@@ -36,18 +41,22 @@ class HomePageState extends State<HomePage> {
             var place = places.getById(i);
             return ListTile(
               title: Text(place.title),
-              onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => PlaceEditPage())),
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PlaceEditPage(place.id))),
             );
           } else if (!places.noMoreData) {
-            return Center(child: CircularProgressIndicator());
+            return Container(
+                margin: EdgeInsets.only(top: 15),
+                child: Center(child: CircularProgressIndicator()));
           } else {
             return null;
           }
         },
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Добавить заброшку',
+        tooltip: 'Добавить место',
         child: Icon(Icons.add),
         onPressed: () => Navigator.push(
             context, MaterialPageRoute(builder: (context) => PlaceAddPage())),
