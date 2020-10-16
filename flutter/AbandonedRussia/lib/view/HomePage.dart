@@ -2,22 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
+import 'CommonWidgets.dart';
 import '../model/Places.dart';
 import 'LoginPage.dart';
 import 'PlaceAddPage.dart';
 import 'PlaceEditPage.dart';
 
-class HomePage extends StatefulWidget {
-  @override
-  createState() => HomePageState();
-}
-
-class HomePageState extends State<HomePage> {
-  String userName;
-
+class HomePage extends StatelessWidget {
   @override
   build(context) {
-    var places = context.watch<Places>();
     return Scaffold(
       appBar: AppBar(
         title: Text(TITLE),
@@ -34,33 +27,39 @@ class HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: ListView.builder(
-        itemCount: places.length + 1,
-        itemBuilder: (context, i) {
-          if (places.testById(i)) {
-            var place = places.getById(i);
-            return ListTile(
-              title: Text(place.title),
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PlaceEditPage(place.id))),
-            );
-          } else if (!places.noMoreData) {
-            return Container(
-                margin: EdgeInsets.only(top: 15),
-                child: Center(child: CircularProgressIndicator()));
-          } else {
-            return null;
-          }
-        },
-      ),
+      body: _HomePageBody(),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Добавить место',
         child: Icon(Icons.add),
         onPressed: () => Navigator.push(
             context, MaterialPageRoute(builder: (context) => PlaceAddPage())),
       ),
+    );
+  }
+}
+
+class _HomePageBody extends StatelessWidget {
+  @override
+  build(context) {
+    var places = context.watch<Places>();
+    return ListView.builder(
+      itemCount: places.length + 1,
+      itemBuilder: (context, i) {
+        if (places.testById(i)) {
+          var place = places.getById(i);
+          return ListTile(
+            title: Text(place.title),
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => PlaceEditPage(place.id))),
+          );
+        } else if (!places.noMoreData) {
+          return Waiting();
+        } else {
+          return null;
+        }
+      },
     );
   }
 }

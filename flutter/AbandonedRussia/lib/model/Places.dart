@@ -9,13 +9,13 @@ import 'Place.dart';
 
 class Places with ChangeNotifier {
   final List<Place> _places = [];
-  CollectionReference _dbCollection;
+  CollectionReference _dbPlaces;
   bool _noMoreData = false;
 
   Future<dynamic> connect() async {
     await Firebase.initializeApp();
     await FirebaseAuth.instance.signInAnonymously();
-    _dbCollection = FirebaseFirestore.instance.collection('Places');
+    _dbPlaces = FirebaseFirestore.instance.collection('Places');
   }
 
   int get length => _places.length;
@@ -28,21 +28,24 @@ class Places with ChangeNotifier {
     if (i < _places.length) {
       return true;
     } else {
-      _loadNext(i);
+      _loadNextPart(i);
       return false;
     }
   }
 
-  void _loadNext(int i) {
+  Future<void> _loadNextPart(int i) async {
     if (!noMoreData) {
-      _dbCollection.doc('$i').get().then((v) {
-        if (v.exists) {
-          _places.add(Place.fromMap(int.parse(v.id), v.data()));
-        } else {
-          _noMoreData = true;
-        }
-        notifyListeners();
-      });
+      var data = await _dbPlaces
+          //.orderBy('id', descending: false)
+          //.startAt(['$i'])
+          .get();
+      if (data.docs.length > 0) {
+        data.docs.forEach(
+            (doc) => _places.add(Place.fromMap(int.parse(doc.id), doc.data())));
+      } else {
+        _noMoreData = true;
+      }
+      notifyListeners();
     }
   }
 

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'constants.dart';
+import 'view/CommonWidgets.dart';
 import 'model/Places.dart';
 import 'view/HomePage.dart';
 
@@ -38,7 +39,7 @@ class StartApp extends StatelessWidget {
                 appBar: AppBar(title: Text(TITLE)),
                 body: snapshot.hasError
                     ? Center(child: SelectableText(snapshot.error.toString()))
-                    : Center(child: CircularProgressIndicator()));
+                    : ListView(children: [Waiting()]));
           }
         });
   }
