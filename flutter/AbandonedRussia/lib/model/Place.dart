@@ -4,8 +4,8 @@ class Place {
   String creator;
   String title;
   String description;
-  List<String> images;
   List<String> labels;
+  List<String> images;
 
   Place({this.title, this.description, this.labels, this.images});
 
@@ -15,7 +15,16 @@ class Place {
     creator = data['creator'];
     title = data['title'];
     description = data['description'];
-    images = data['images'];
     labels = data['labels'];
+    images = data['images'];
   }
+
+  Map<String, dynamic> toMap() => {
+        'created': created,
+        'creator': creator,
+        'title': title,
+        'description': description,
+        'labels': labels,
+        'images': images,
+      };
 }

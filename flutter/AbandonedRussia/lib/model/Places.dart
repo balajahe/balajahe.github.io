@@ -64,11 +64,18 @@ class Places with ChangeNotifier {
   }
 
   Future<void> addPlace(Place place) async {
-    place.created = DateTime.now();
-    place.creator = FirebaseAuth.instance.currentUser.uid;
-    _places.insert(0, place);
-    _noMorePlaces = false;
-    notifyListeners();
+    try {
+      place.created = DateTime.now();
+      place.creator = FirebaseAuth.instance.currentUser.uid;
+      var addedPlace = await _dbPlaces.add(place.toMap());
+      place.id = addedPlace.id;
+      print(place.id);
+      _places.insert(0, place);
+      _noMorePlaces = false;
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<dynamic> connect() async {

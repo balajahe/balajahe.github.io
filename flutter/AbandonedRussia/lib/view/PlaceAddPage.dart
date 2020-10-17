@@ -10,10 +10,10 @@ class PlaceAddPage extends StatelessWidget {
   build(context) => FutureBuilder<List<String>>(
       future: context.select<Places, Function>((places) => places.getLabels)(),
       builder: (context, snapshot) {
-        print(snapshot);
+        //print(snapshot);
         if (!snapshot.hasError &&
             snapshot.connectionState == ConnectionState.done) {
-          return _PlaceAdd(snapshot.data);
+          return _PlaceAddForm(snapshot.data);
         } else if (snapshot.hasError) {
           return Error(snapshot.error);
         } else {
@@ -22,14 +22,14 @@ class PlaceAddPage extends StatelessWidget {
       });
 }
 
-class _PlaceAdd extends StatefulWidget {
+class _PlaceAddForm extends StatefulWidget {
   final List<String> allLabels;
-  _PlaceAdd(this.allLabels);
+  _PlaceAddForm(this.allLabels);
   @override
-  createState() => _PlaceAddState();
+  createState() => _PlaceAddFormState();
 }
 
-class _PlaceAddState extends State<_PlaceAdd> {
+class _PlaceAddFormState extends State<_PlaceAddForm> {
   final _form = GlobalKey<FormState>();
   final _title = TextEditingController();
   final _desctiption = TextEditingController();
@@ -109,6 +109,7 @@ class _PlaceAddState extends State<_PlaceAdd> {
       title: _title.text,
       description: _desctiption.text,
       labels: _selectedLabels,
+      images: [],
     );
     Navigator.pop(context, place);
   }

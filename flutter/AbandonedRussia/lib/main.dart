@@ -31,8 +31,8 @@ class _StartApp extends StatelessWidget {
     return FutureBuilder(
         future: placesConnect(),
         builder: (context, snapshot) {
-          print(snapshot.connectionState);
-          print(snapshot.hasError);
+          //print(snapshot.connectionState);
+          //print(snapshot.hasError);
           if (!snapshot.hasError &&
               snapshot.connectionState == ConnectionState.done) {
             return HomePage();
