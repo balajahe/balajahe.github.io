@@ -40,16 +40,14 @@ class _HomePageBody extends StatelessWidget {
     return ListView.builder(
       itemCount: places.length + 1,
       itemBuilder: (context, i) {
-        if (places.testById(i)) {
-          var place = places.getById(i);
+        if (places.testPlaceByNum(i)) {
+          var place = places.getPlaceByNum(i);
           return ListTile(
             title: Text(place.title),
-            onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => PlaceEditPage(place.id))),
+            onTap: () => Navigator.push(context,
+                MaterialPageRoute(builder: (context) => PlaceEditPage(place))),
           );
-        } else if (places.noMoreData) {
+        } else if (places.noMorePlaces) {
           return null;
         } else {
           return Waiting();

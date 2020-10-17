@@ -13,7 +13,7 @@ class Place {
   }
 
   Place.fromMap(String id, Map<String, dynamic> data) {
-    id = id;
+    this.id = id;
     created = data['created'];
     creator = data['creator'];
     title = data['title'];

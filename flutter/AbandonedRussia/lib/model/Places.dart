@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -10,31 +12,31 @@ import 'Place.dart';
 class Places with ChangeNotifier {
   final List<Place> _places = [];
   CollectionReference _dbPlaces;
-  bool _noMoreData = false;
+  CollectionReference _dbSettings;
+  bool _noMorePlaces = false;
 
   Future<dynamic> connect() async {
     await Firebase.initializeApp();
     await FirebaseAuth.instance.signInAnonymously();
     _dbPlaces = FirebaseFirestore.instance.collection('Places');
+    _dbSettings = FirebaseFirestore.instance.collection('Settings');
   }
 
   int get length => _places.length;
+  bool get noMorePlaces => _noMorePlaces;
+  Place getPlaceByNum(int i) => _places[i];
 
-  Place getById(int i) => _places[i];
-
-  bool get noMoreData => _noMoreData;
-
-  bool testById(int i) {
+  bool testPlaceByNum(int i) {
     if (i < _places.length) {
       return true;
     } else {
-      _loadNextPart(i);
+      _loadNextPlaces(i);
       return false;
     }
   }
 
-  Future<void> _loadNextPart(int i) async {
-    if (!noMoreData) {
+  Future<void> _loadNextPlaces(int i) async {
+    if (!noMorePlaces) {
       var data = await _dbPlaces
           //.orderBy('created', descending: false)
           //.startAt(['$i'])
@@ -43,15 +45,22 @@ class Places with ChangeNotifier {
         data.docs
             .forEach((doc) => _places.add(Place.fromMap(doc.id, doc.data())));
       } else {
-        _noMoreData = true;
+        _noMorePlaces = true;
       }
       notifyListeners();
     }
   }
 
-  Future<void> add(Place place) {
+  Future<List<String>> getLabels() async {
+    var data = await _dbSettings.doc('labels').get();
+    List<String> res = [];
+    data.data()['labels'].forEach((v) => res.add(v));
+    return res;
+  }
+
+  Future<void> addPlace(Place place) {
     _places.add(place);
-    _noMoreData = false;
+    _noMorePlaces = false;
     notifyListeners();
   }
 }
