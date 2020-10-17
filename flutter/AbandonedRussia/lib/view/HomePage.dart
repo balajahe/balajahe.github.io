@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
-import 'CommonWidgets.dart';
 import '../model/Places.dart';
+import 'commonWidgets.dart';
 import 'LoginPage.dart';
 import 'PlaceAddPage.dart';
 import 'PlaceEditPage.dart';
@@ -20,20 +20,15 @@ class HomePage extends StatelessWidget {
             onPressed: () => Navigator.push(context,
                 MaterialPageRoute(builder: (context) => PlaceAddPage())),
           ),
-          FlatButton(
-            child: Text('Войти'),
-            onPressed: () => Navigator.push(
-                context, MaterialPageRoute(builder: (context) => LoginPage())),
-          ),
         ],
       ),
-      body: _HomePageBody(),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Добавить место',
         child: Icon(Icons.add),
         onPressed: () => Navigator.push(
             context, MaterialPageRoute(builder: (context) => PlaceAddPage())),
       ),
+      body: _HomePageBody(),
     );
   }
 }
@@ -54,10 +49,10 @@ class _HomePageBody extends StatelessWidget {
                 MaterialPageRoute(
                     builder: (context) => PlaceEditPage(place.id))),
           );
-        } else if (!places.noMoreData) {
-          return Waiting();
-        } else {
+        } else if (places.noMoreData) {
           return null;
+        } else {
+          return Waiting();
         }
       },
     );

@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../model/Places.dart';
 
 class PlaceEditPage extends StatelessWidget {
-  final int id;
+  final String id;
 
   PlaceEditPage(this.id);
 

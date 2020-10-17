@@ -1,17 +1,24 @@
-import 'package:flutter/material.dart';
-
 class Place {
-  final int id;
+  String id;
+  DateTime created;
+  String creator;
   String title;
   String description;
-  final List<Image> images = [];
-  final List<String> labels = [];
+  List<String> images;
+  List<String> labels;
 
-  Place(this.id);
+  Place() {
+    images = [];
+    labels = [];
+  }
 
-  factory Place.fromMap(int id, Map<String, dynamic> data) {
-    var place = Place(id);
-    place.title = data['title'];
-    return place;
+  Place.fromMap(String id, Map<String, dynamic> data) {
+    id = id;
+    created = data['created'];
+    creator = data['creator'];
+    title = data['title'];
+    description = data['description'];
+    images = data['images'];
+    labels = data['labels'];
   }
 }

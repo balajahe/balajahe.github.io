@@ -36,12 +36,12 @@ class Places with ChangeNotifier {
   Future<void> _loadNextPart(int i) async {
     if (!noMoreData) {
       var data = await _dbPlaces
-          //.orderBy('id', descending: false)
+          //.orderBy('created', descending: false)
           //.startAt(['$i'])
           .get();
       if (data.docs.length > 0) {
-        data.docs.forEach(
-            (doc) => _places.add(Place.fromMap(int.parse(doc.id), doc.data())));
+        data.docs
+            .forEach((doc) => _places.add(Place.fromMap(doc.id, doc.data())));
       } else {
         _noMoreData = true;
       }
@@ -49,7 +49,7 @@ class Places with ChangeNotifier {
     }
   }
 
-  void add(Place place) {
+  Future<void> add(Place place) {
     _places.add(place);
     _noMoreData = false;
     notifyListeners();
