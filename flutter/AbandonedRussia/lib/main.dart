@@ -27,12 +27,12 @@ class _StartApp extends StatelessWidget {
   @override
   build(context) {
     var placesConnect =
-        context.select<Places, Function()>((places) => places.connect);
+        context.select<Places, Function>((places) => places.connect);
     return FutureBuilder(
         future: placesConnect(),
         builder: (context, snapshot) {
-          print(snapshot.hasError);
           print(snapshot.connectionState);
+          print(snapshot.hasError);
           if (!snapshot.hasError &&
               snapshot.connectionState == ConnectionState.done) {
             return HomePage();
@@ -41,7 +41,7 @@ class _StartApp extends StatelessWidget {
               appBar: AppBar(title: Text(TITLE)),
               body: ListView(
                   children: snapshot.hasError
-                      ? [SelectableText(snapshot.error.toString())]
+                      ? [Error(snapshot.error)]
                       : [Waiting()]),
             );
           }

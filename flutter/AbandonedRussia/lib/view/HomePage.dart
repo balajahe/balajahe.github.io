@@ -4,13 +4,20 @@ import 'package:provider/provider.dart';
 import '../constants.dart';
 import '../model/Places.dart';
 import 'commonWidgets.dart';
-import 'LoginPage.dart';
 import 'PlaceAddPage.dart';
 import 'PlaceEditPage.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final _scrollController = ScrollController();
+
   @override
   build(context) {
+    var places = context.watch<Places>();
     return Scaffold(
       appBar: AppBar(
         title: Text(TITLE),
@@ -25,34 +32,35 @@ class HomePage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         tooltip: 'Добавить место',
         child: Icon(Icons.add),
-        onPressed: () => Navigator.push(
-            context, MaterialPageRoute(builder: (context) => PlaceAddPage())),
+        onPressed: () async {
+          var newPlace = await Navigator.push(
+              context, MaterialPageRoute(builder: (context) => PlaceAddPage()));
+          await places.addPlace(newPlace);
+          _scrollController.jumpTo(0);
+        },
       ),
-      body: _HomePageBody(),
-    );
-  }
-}
-
-class _HomePageBody extends StatelessWidget {
-  @override
-  build(context) {
-    var places = context.watch<Places>();
-    return ListView.builder(
-      itemCount: places.length + 1,
-      itemBuilder: (context, i) {
-        if (places.testPlaceByNum(i)) {
-          var place = places.getPlaceByNum(i);
-          return ListTile(
-            title: Text(place.title),
-            onTap: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PlaceEditPage(place))),
-          );
-        } else if (places.noMorePlaces) {
-          return null;
-        } else {
-          return Waiting();
-        }
-      },
+      body: ListView.builder(
+        controller: _scrollController,
+        itemCount: places.length + 1,
+        itemBuilder: (context, i) {
+          if (places.testPlaceByNum(i)) {
+            var place = places.getPlaceByNum(i);
+            return ListTile(
+              title: Text(place.title),
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PlaceEditPage(place))),
+            );
+          } else if (places.noMorePlaces) {
+            return null;
+          } else if (places.hasError) {
+            return Error(places.error);
+          } else {
+            return Waiting();
+          }
+        },
+      ),
     );
   }
 }

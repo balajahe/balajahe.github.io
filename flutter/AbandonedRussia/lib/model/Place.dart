@@ -7,10 +7,7 @@ class Place {
   List<String> images;
   List<String> labels;
 
-  Place() {
-    images = [];
-    labels = [];
-  }
+  Place({this.title, this.description, this.labels, this.images});
 
   Place.fromMap(String id, Map<String, dynamic> data) {
     this.id = id;
