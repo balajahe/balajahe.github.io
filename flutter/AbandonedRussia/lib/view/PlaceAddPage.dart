@@ -3,12 +3,13 @@ import 'package:provider/provider.dart';
 
 import '../model/Place.dart';
 import '../model/Places.dart';
+import '../model/Labels.dart';
 import 'commonWidgets.dart';
 
 class PlaceAddPage extends StatelessWidget {
   @override
   build(context) => FutureBuilder<List<String>>(
-      future: context.select<Places, Function>((places) => places.getLabels)(),
+      future: context.select<Labels, Function>((places) => places.getAll)(),
       builder: (context, snapshot) {
         //print(snapshot);
         if (!snapshot.hasError &&
@@ -38,56 +39,65 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
   @override
   build(context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Новое место'),
-      ),
-      body: Form(
-          key: _form,
-          child: Column(children: <Widget>[
-            TextFormField(
-              controller: _title,
-              decoration: InputDecoration(labelText: 'Краткое название'),
-              validator: _emptyValidator,
-            ),
-            TextFormField(
-              controller: _desctiption,
-              decoration: InputDecoration(labelText: 'Описание'),
-              minLines: 3,
-              maxLines: 10,
-              validator: _emptyValidator,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                      children: widget.allLabels
-                          .map((v) => ElevatedButton(
-                              child: Text(v), onPressed: () => _selectLabel(v)))
-                          .toList()),
-                ),
-                Expanded(
+        appBar: AppBar(
+          title: Text('Новое место'),
+        ),
+        body: Form(
+            key: _form,
+            child: Column(children: <Widget>[
+              TextFormField(
+                controller: _title,
+                decoration: InputDecoration(labelText: 'Краткое название'),
+                validator: _emptyValidator,
+              ),
+              TextFormField(
+                controller: _desctiption,
+                decoration: InputDecoration(labelText: 'Описание'),
+                minLines: 3,
+                maxLines: 10,
+                validator: _emptyValidator,
+              ),
+              Row(
+                children: [
+                  Expanded(
                     child: Column(
-                        children: _selectedLabels
+                        children: widget.allLabels
                             .map((v) => ElevatedButton(
                                 child: Text(v),
-                                onPressed: () => _deselectLabel(v)))
-                            .toList()))
-              ],
-            )
-          ])),
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'Сохранить изменения',
-        child: Icon(Icons.done),
-        onPressed: () {
-          if (_form.currentState.validate() && _selectedLabels.length > 0) {
-            _savePlace();
-          } else {
-            Scaffold.of(context)
-                .showSnackBar(SnackBar(content: Text('Выберите метки!')));
-          }
-        },
-      ),
-    );
+                                onPressed: () => _selectLabel(v)))
+                            .toList()),
+                  ),
+                  Expanded(
+                      child: Column(
+                          children: _selectedLabels
+                              .map((v) => ElevatedButton(
+                                  child: Text(v),
+                                  onPressed: () => _deselectLabel(v)))
+                              .toList()))
+                ],
+              )
+            ])),
+        floatingActionButton: Builder(
+          builder: (context) => FloatingActionButton(
+            tooltip: 'Сохранить изменения',
+            child: Icon(Icons.done),
+            onPressed: () async {
+              if (_form.currentState.validate() && _selectedLabels.length > 0) {
+                try {
+                  await _savePlace(context.read<Places>());
+                  Navigator.pop(context);
+                } catch (e) {
+                  Scaffold.of(context)
+                      .showSnackBar(SnackBar(content: Text(e.toString())));
+                }
+              } else {
+                Scaffold.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                        'Выберите хотя бы одну метку и заполните все поля!')));
+              }
+            },
+          ),
+        ));
   }
 
   void _selectLabel(String label) {
@@ -104,14 +114,14 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
     });
   }
 
-  void _savePlace() {
+  Future _savePlace(places) async {
     var place = Place(
       title: _title.text,
       description: _desctiption.text,
       labels: _selectedLabels,
       images: [],
     );
-    Navigator.pop(context, place);
+    await places.add(place);
   }
 
   String _emptyValidator(dynamic v) => v.isEmpty ? 'Введите что-нибудь!' : null;

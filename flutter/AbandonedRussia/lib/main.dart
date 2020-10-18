@@ -3,15 +3,19 @@ import 'package:provider/provider.dart';
 
 import 'constants.dart';
 import 'model/Places.dart';
+import 'model/Labels.dart';
 import 'view/commonWidgets.dart';
-import 'view/HomePage.dart';
+import 'view/PlaceListPage.dart';
 
 void main() => runApp(App());
 
 class App extends StatelessWidget {
   @override
-  build(context) => ChangeNotifierProvider(
-        create: (context) => Places(),
+  build(context) => MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => Places()),
+          ChangeNotifierProvider(create: (context) => Labels()),
+        ],
         child: MaterialApp(
           title: TITLE,
           theme: ThemeData(
@@ -35,7 +39,7 @@ class _StartApp extends StatelessWidget {
           //print(snapshot.hasError);
           if (!snapshot.hasError &&
               snapshot.connectionState == ConnectionState.done) {
-            return HomePage();
+            return PlaceListPage();
           } else {
             return Scaffold(
               appBar: AppBar(title: Text(TITLE)),

@@ -7,12 +7,12 @@ import 'commonWidgets.dart';
 import 'PlaceAddPage.dart';
 import 'PlaceEditPage.dart';
 
-class HomePage extends StatefulWidget {
+class PlaceListPage extends StatefulWidget {
   @override
-  createState() => _HomePageState();
+  createState() => _PlaceListPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _PlaceListPageState extends State<PlaceListPage> {
   final _scrollController = ScrollController();
 
   @override
@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
         onPressed: () async {
           var newPlace = await Navigator.push(
               context, MaterialPageRoute(builder: (context) => PlaceAddPage()));
-          await places.addPlace(newPlace);
+
           _scrollController.jumpTo(0);
         },
       ),
@@ -43,8 +43,8 @@ class _HomePageState extends State<HomePage> {
         controller: _scrollController,
         itemCount: places.length + 1,
         itemBuilder: (context, i) {
-          if (places.testPlaceByNum(i)) {
-            var place = places.getPlaceByNum(i);
+          if (places.testByNum(i)) {
+            var place = places.getByNum(i);
             return ListTile(
               title: Text(place.title),
               onTap: () => Navigator.push(
@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                   MaterialPageRoute(
                       builder: (context) => PlaceEditPage(place))),
             );
-          } else if (places.noMorePlaces) {
+          } else if (places.noMoreData) {
             return null;
           } else if (places.hasError) {
             return Error(places.error);

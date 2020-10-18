@@ -1,44 +1,38 @@
-import 'dart:async';
-
 import 'package:flutter/foundation.dart';
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../constants.dart';
+import '../dao/Dao.dart';
 import 'Place.dart';
-//import '../dao/PlacesDAO.dart'
 
 class Places with ChangeNotifier {
   final List<Place> _places = [];
-  CollectionReference _dbPlaces;
-  CollectionReference _dbSettings;
 
-  bool _hasError = false;
-  String _error;
-  bool _noMorePlaces = false;
+  Error _error;
+  bool _noMoreData = false;
 
-  bool get hasError => _hasError;
-  String get error => _error;
-  bool get noMorePlaces => _noMorePlaces;
+  bool get hasError => _error != null;
+  String get error => _error.toString();
+  bool get noMoreData => _noMoreData;
 
   int get length => _places.length;
-  Place getPlaceByNum(int i) => _places[i];
+  Place getByNum(int i) => _places[i];
 
-  bool testPlaceByNum(int i) {
+  bool testByNum(int i) {
     if (i < _places.length) {
       return true;
     } else {
-      _loadNextPlaces(i);
+      _loadNextPart(i);
       return false;
     }
   }
 
-  Future<void> _loadNextPlaces(int i) async {
-    if (!noMorePlaces) {
-      _hasError = false;
+  Future<void> _loadNextPart(int from) async {
+    if (!_noMoreData) {
+      _error = null;
       try {
-        var data = await _dbPlaces
+        var data = await FirebaseFirestore.instance
+            .collection('Places')
             //.orderBy('created', descending: false)
             //.startAt(['$i'])
             .get();
@@ -46,42 +40,29 @@ class Places with ChangeNotifier {
           data.docs
               .forEach((doc) => _places.add(Place.fromMap(doc.id, doc.data())));
         } else {
-          _noMorePlaces = true;
+          _noMoreData = true;
         }
       } catch (e) {
-        _hasError = true;
+        _error = e;
       }
       notifyListeners();
     }
   }
 
-  Future<List<String>> getLabels() async {
-    List<String> res = [];
-    (await _dbSettings.doc('labels').get())
-        .data()['labels']
-        .forEach((v) => res.add(v));
-    return res;
-  }
-
-  Future<void> addPlace(Place place) async {
-    try {
-      place.created = DateTime.now();
-      place.creator = FirebaseAuth.instance.currentUser.uid;
-      var addedPlace = await _dbPlaces.add(place.toMap());
-      place.id = addedPlace.id;
-      print(place.id);
-      _places.insert(0, place);
-      _noMorePlaces = false;
-      notifyListeners();
-    } catch (e) {
-      print(e);
-    }
+  Future<void> add(Place place) async {
+    place.created = DateTime.now();
+    place.creator = Dao.currentUser;
+    var addedPlace = await FirebaseFirestore.instance
+        .collection('Places')
+        .add(place.toMap());
+    place.id = addedPlace.id;
+    print(place.id);
+    _places.insert(0, place);
+    _noMoreData = false;
+    notifyListeners();
   }
 
   Future<dynamic> connect() async {
-    await Firebase.initializeApp();
-    await FirebaseAuth.instance.signInAnonymously();
-    _dbPlaces = FirebaseFirestore.instance.collection('Places');
-    _dbSettings = FirebaseFirestore.instance.collection('Settings');
+    await Dao.connect();
   }
 }
