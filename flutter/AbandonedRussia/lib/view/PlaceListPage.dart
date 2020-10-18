@@ -21,13 +21,6 @@ class _PlaceListPageState extends State<PlaceListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(TITLE),
-        actions: [
-          FlatButton(
-            child: Text('Добавить'),
-            onPressed: () => Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PlaceAddPage())),
-          ),
-        ],
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Добавить место',
@@ -55,7 +48,7 @@ class _PlaceListPageState extends State<PlaceListPage> {
           } else if (places.noMoreData) {
             return null;
           } else if (places.hasError) {
-            return Error(places.error);
+            return Errors(places.error);
           } else {
             return Waiting();
           }

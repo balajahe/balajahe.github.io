@@ -3,10 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class Dao {
   static Future<dynamic> connect() async {
-    if (Firebase.apps.isEmpty) {
-      await Firebase.initializeApp();
-      await FirebaseAuth.instance.signInAnonymously();
-    }
+    await Firebase.initializeApp();
+    await FirebaseAuth.instance.signInAnonymously();
   }
 
   static String get currentUser {

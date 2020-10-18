@@ -9,14 +9,14 @@ import 'commonWidgets.dart';
 class PlaceAddPage extends StatelessWidget {
   @override
   build(context) => FutureBuilder<List<String>>(
-      future: context.select<Labels, Function>((places) => places.getAll)(),
+      future: context.select((Labels places) => places.getAll)(),
       builder: (context, snapshot) {
         //print(snapshot);
         if (!snapshot.hasError &&
             snapshot.connectionState == ConnectionState.done) {
           return _PlaceAddForm(snapshot.data);
         } else if (snapshot.hasError) {
-          return Error(snapshot.error);
+          return Errors(snapshot.error);
         } else {
           return Waiting();
         }
@@ -93,7 +93,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
               } else {
                 Scaffold.of(context).showSnackBar(SnackBar(
                     content: Text(
-                        'Выберите хотя бы одну метку и заполните все поля!')));
+                        'Выберите хотя бы одну метку и заполните все обязательные поля!')));
               }
             },
           ),

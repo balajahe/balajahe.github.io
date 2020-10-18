@@ -7,11 +7,11 @@ class Waiting extends StatelessWidget {
       child: Center(child: CircularProgressIndicator()));
 }
 
-class Error extends StatelessWidget {
-  final dynamic error;
-  Error(this.error);
+class Errors extends StatelessWidget {
+  final dynamic _error;
+  Errors(this._error);
   @override
   build(_) => Container(
       margin: EdgeInsets.only(top: 15),
-      child: Center(child: SelectableText('ERROR: ' + error.toString())));
+      child: Center(child: SelectableText('ERROR: ${_error.toString()}')));
 }

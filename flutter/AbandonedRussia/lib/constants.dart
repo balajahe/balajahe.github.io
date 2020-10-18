@@ -1,2 +1,2 @@
 const TITLE = 'Заброшенные места';
-const LOAD_PART_SIZE = 2;
+const LOADING_PART_SIZE = 2;
