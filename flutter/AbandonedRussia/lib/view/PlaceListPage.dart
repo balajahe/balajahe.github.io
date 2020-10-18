@@ -20,16 +20,17 @@ class _PlaceListPageState extends State<PlaceListPage> {
     var places = context.watch<Places>();
     return Scaffold(
       appBar: AppBar(
-        title: Text(TITLE),
+        title: Text(APP_TITLE),
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Добавить место',
         child: Icon(Icons.add),
         onPressed: () async {
-          var newPlace = await Navigator.push(
+          var added = await Navigator.push(
               context, MaterialPageRoute(builder: (context) => PlaceAddPage()));
-
-          _scrollController.jumpTo(0);
+          if (added) {
+            _scrollController.jumpTo(0);
+          }
         },
       ),
       body: ListView.builder(

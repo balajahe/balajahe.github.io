@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'constants.dart';
-import 'dao/Dao.dart';
+import 'dao/Database.dart';
 import 'model/Places.dart';
 import 'model/Labels.dart';
 import 'view/commonWidgets.dart';
@@ -18,7 +18,7 @@ class App extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => Labels()),
         ],
         child: MaterialApp(
-          title: TITLE,
+          title: APP_TITLE,
           theme: ThemeData(
             primarySwatch: Colors.blue,
             visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -31,7 +31,7 @@ class App extends StatelessWidget {
 class _StartApp extends StatelessWidget {
   @override
   build(context) => FutureBuilder(
-      future: Dao.connect(),
+      future: Database.connect(),
       builder: (context, snapshot) {
         print(snapshot.connectionState);
         print(snapshot.hasError);
@@ -40,7 +40,7 @@ class _StartApp extends StatelessWidget {
           return PlaceListPage();
         } else {
           return Scaffold(
-            appBar: AppBar(title: Text(TITLE)),
+            appBar: AppBar(title: Text(APP_TITLE)),
             body: ListView(
                 children:
                     snapshot.hasError ? [Errors(snapshot.error)] : [Waiting()]),

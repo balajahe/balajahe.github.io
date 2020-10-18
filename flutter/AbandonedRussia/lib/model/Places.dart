@@ -1,9 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../constants.dart';
-import '../dao/Dao.dart';
-import 'Place.dart';
+import '../model/Place.dart';
+import '../dao/PlacesDao.dart';
 
 class Places with ChangeNotifier {
   final List<Place> _places = [];
@@ -29,26 +28,16 @@ class Places with ChangeNotifier {
     }
   }
 
-  Future _loadNextPart(int from) async {
+  Future<void> _loadNextPart(int from) async {
     if (!_isLoading && !_noMoreData) {
       _isLoading = true;
       _error = null;
       try {
-        var startAt = _places.length > 0
-            ? _places.last.created
-            : DateTime.fromMillisecondsSinceEpoch(0);
-        var data = await FirebaseFirestore.instance
-            .collection('Places')
-            //.orderBy('created', descending: false)
-            //.startAt([startAt])
-            //.limit(LOADING_PART_SIZE)
-            .get();
-        print(data.docs.length);
-        if (data.docs.length > 0) {
-          data.docs.forEach((doc) {
-            print(doc.data());
-            _places.add(Place.fromMap(doc.id, doc.data()));
-          });
+        var newPlaces = await PlacesDao.getNextPart(
+            _places.length > 0 ? _places.last.created : null,
+            LOADING_PART_SIZE);
+        if (newPlaces.length > 0) {
+          newPlaces.forEach((v) => _places.add(v));
         } else {
           _noMoreData = true;
         }
@@ -60,15 +49,9 @@ class Places with ChangeNotifier {
     }
   }
 
-  Future add(Place place) async {
-    place.created = DateTime.now();
-    place.creator = Dao.currentUser;
-    var addedPlace = await FirebaseFirestore.instance
-        .collection('Places')
-        .add(place.toMap());
-    place.id = addedPlace.id;
-    print(place.id);
-    _places.insert(0, place);
+  Future<void> add(Place place) async {
+    var newPlace = await PlacesDao.add(place);
+    _places.insert(0, newPlace);
     _noMoreData = false;
     notifyListeners();
   }

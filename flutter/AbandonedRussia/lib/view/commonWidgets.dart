@@ -11,7 +11,14 @@ class Errors extends StatelessWidget {
   final dynamic _error;
   Errors(this._error);
   @override
-  build(_) => Container(
-      margin: EdgeInsets.only(top: 15),
-      child: Center(child: SelectableText('ERROR: ${_error.toString()}')));
+  build(_) {
+    var stackTrace = '';
+    try {
+      stackTrace = _error.stackTrace.toString();
+    } catch (_) {}
+    return Container(
+        margin: EdgeInsets.only(top: 15),
+        child: Center(
+            child: SelectableText('ERROR: ${_error.toString()}\n$stackTrace')));
+  }
 }

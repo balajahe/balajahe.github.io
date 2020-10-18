@@ -6,19 +6,23 @@ import '../model/Places.dart';
 import '../model/Labels.dart';
 import 'commonWidgets.dart';
 
+const TITLE = Text('Новое место');
+
 class PlaceAddPage extends StatelessWidget {
   @override
   build(context) => FutureBuilder<List<String>>(
-      future: context.select((Labels places) => places.getAll)(),
+      future: context.select((Labels labels) => labels.getAll)(),
       builder: (context, snapshot) {
         //print(snapshot);
         if (!snapshot.hasError &&
             snapshot.connectionState == ConnectionState.done) {
           return _PlaceAddForm(snapshot.data);
-        } else if (snapshot.hasError) {
-          return Errors(snapshot.error);
         } else {
-          return Waiting();
+          return Scaffold(
+              appBar: AppBar(
+                title: TITLE,
+              ),
+              body: snapshot.hasError ? Errors(snapshot.error) : Waiting());
         }
       });
 }
@@ -35,12 +39,13 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
   final _title = TextEditingController();
   final _desctiption = TextEditingController();
   final List<String> _selectedLabels = [];
+  bool _isSaving = false;
 
   @override
   build(context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text('Новое место'),
+          title: TITLE,
         ),
         body: Form(
             key: _form,
@@ -48,14 +53,13 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
               TextFormField(
                 controller: _title,
                 decoration: InputDecoration(labelText: 'Краткое название'),
-                validator: _emptyValidator,
+                autofocus: true,
               ),
               TextFormField(
                 controller: _desctiption,
                 decoration: InputDecoration(labelText: 'Описание'),
                 minLines: 3,
                 maxLines: 10,
-                validator: _emptyValidator,
               ),
               Row(
                 children: [
@@ -75,28 +79,34 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                                   onPressed: () => _deselectLabel(v)))
                               .toList()))
                 ],
-              )
+              ),
             ])),
         floatingActionButton: Builder(
-          builder: (context) => FloatingActionButton(
-            tooltip: 'Сохранить изменения',
-            child: Icon(Icons.done),
-            onPressed: () async {
-              if (_form.currentState.validate() && _selectedLabels.length > 0) {
-                try {
-                  await _savePlace(context.read<Places>());
-                  Navigator.pop(context);
-                } catch (e) {
-                  Scaffold.of(context)
-                      .showSnackBar(SnackBar(content: Text(e.toString())));
-                }
-              } else {
-                Scaffold.of(context).showSnackBar(SnackBar(
-                    content: Text(
-                        'Выберите хотя бы одну метку и заполните все обязательные поля!')));
-              }
-            },
-          ),
+          builder: (context) => !_isSaving
+              ? FloatingActionButton(
+                  tooltip: 'Сохранить изменения',
+                  child: Icon(Icons.done),
+                  onPressed: () async {
+                    if (_form.currentState.validate() &&
+                        _title.text.length > 0 &&
+                        _desctiption.text.length > 0 &&
+                        _selectedLabels.length > 0) {
+                      setState(() => _isSaving = true);
+                      try {
+                        await _savePlace(context.read<Places>());
+                        Navigator.pop(context, true);
+                      } catch (e) {
+                        Scaffold.of(context).showSnackBar(
+                            SnackBar(content: Text(e.toString())));
+                      }
+                    } else {
+                      Scaffold.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                              'Выберите хотя бы одну метку и заполните все обязательные поля!')));
+                    }
+                  },
+                )
+              : FloatingActionButton(onPressed: null),
         ));
   }
 
