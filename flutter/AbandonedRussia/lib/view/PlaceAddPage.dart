@@ -13,7 +13,6 @@ class PlaceAddPage extends StatelessWidget {
   build(context) => FutureBuilder<List<String>>(
       future: context.select((Labels labels) => labels.getAll)(),
       builder: (context, snapshot) {
-        //print(snapshot);
         if (!snapshot.hasError &&
             snapshot.connectionState == ConnectionState.done) {
           return _PlaceAddForm(snapshot.data);
@@ -43,71 +42,82 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
 
   @override
   build(context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: TITLE,
-        ),
-        body: Form(
-            key: _form,
-            child: Column(children: <Widget>[
-              TextFormField(
-                controller: _title,
-                decoration: InputDecoration(labelText: 'Краткое название'),
-                autofocus: true,
-              ),
-              TextFormField(
-                controller: _desctiption,
-                decoration: InputDecoration(labelText: 'Описание'),
-                minLines: 3,
-                maxLines: 10,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                        children: widget.allLabels
-                            .map((v) => ElevatedButton(
-                                child: Text(v),
-                                onPressed: () => _selectLabel(v)))
-                            .toList()),
-                  ),
-                  Expanded(
-                      child: Column(
-                          children: _selectedLabels
+    return Stack(children: [
+      Scaffold(
+          appBar: AppBar(
+            title: TITLE,
+          ),
+          body: Form(
+              key: _form,
+              child: Column(children: <Widget>[
+                TextFormField(
+                  controller: _title,
+                  decoration: InputDecoration(labelText: 'Краткое название'),
+                  autofocus: true,
+                ),
+                TextFormField(
+                  controller: _desctiption,
+                  decoration: InputDecoration(labelText: 'Описание'),
+                  minLines: 2,
+                  maxLines: 5,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Wrap(
+                          spacing: 5,
+                          runSpacing: 5,
+                          children: widget.allLabels
                               .map((v) => ElevatedButton(
                                   child: Text(v),
-                                  onPressed: () => _deselectLabel(v)))
-                              .toList()))
-                ],
-              ),
-            ])),
-        floatingActionButton: Builder(
-          builder: (context) => !_isSaving
-              ? FloatingActionButton(
-                  tooltip: 'Сохранить изменения',
-                  child: Icon(Icons.done),
-                  onPressed: () async {
-                    if (_form.currentState.validate() &&
-                        _title.text.length > 0 &&
-                        _desctiption.text.length > 0 &&
-                        _selectedLabels.length > 0) {
-                      setState(() => _isSaving = true);
-                      try {
-                        await _savePlace(context.read<Places>());
-                        Navigator.pop(context, true);
-                      } catch (e) {
-                        Scaffold.of(context).showSnackBar(
-                            SnackBar(content: Text(e.toString())));
+                                  onPressed: () => _selectLabel(v)))
+                              .toList()),
+                    ),
+                    Expanded(
+                        child: Wrap(
+                            spacing: 5,
+                            runSpacing: 5,
+                            children: _selectedLabels
+                                .map((v) => ElevatedButton(
+                                    child: Text(v),
+                                    onPressed: () => _deselectLabel(v)))
+                                .toList()))
+                  ],
+                ),
+              ])),
+          floatingActionButton: Builder(
+              builder: (context) => FloatingActionButton(
+                    tooltip: 'Сохранить',
+                    child: Icon(Icons.done),
+                    onPressed: () async {
+                      if (_form.currentState.validate() &&
+                              _title.text.length > 0
+                          //_desctiption.text.length > 0 &&
+                          //_selectedLabels.length > 0
+                          ) {
+                        setState(() => _isSaving = true);
+                        try {
+                          await _savePlace(context.read<Places>());
+                          Navigator.pop(context, true);
+                        } catch (e) {
+                          Scaffold.of(context).showSnackBar(
+                              SnackBar(content: Text(e.toString())));
+                        }
+                      } else {
+                        Scaffold.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                'Выберите хотя бы одну метку и заполните все обязательные поля!')));
                       }
-                    } else {
-                      Scaffold.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                              'Выберите хотя бы одну метку и заполните все обязательные поля!')));
-                    }
-                  },
-                )
-              : FloatingActionButton(onPressed: null),
-        ));
+                    },
+                  ))),
+      _isSaving
+          ? Container(
+              color: Color(0xAAAAAAAA),
+              child: Center(child: CircularProgressIndicator()),
+            )
+          : Container(),
+    ]);
   }
 
   void _selectLabel(String label) {
@@ -134,5 +144,5 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
     await places.add(place);
   }
 
-  String _emptyValidator(dynamic v) => v.isEmpty ? 'Введите что-нибудь!' : null;
+  //String _emptyValidator(dynamic v) => v.isEmpty ? 'Введите что-нибудь!' : null;
 }

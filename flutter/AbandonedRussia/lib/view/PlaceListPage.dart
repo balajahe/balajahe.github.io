@@ -21,6 +21,13 @@ class _PlaceListPageState extends State<PlaceListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(APP_TITLE),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.refresh),
+            tooltip: 'Обновить',
+            onPressed: places.refresh,
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         tooltip: 'Добавить место',
@@ -29,7 +36,8 @@ class _PlaceListPageState extends State<PlaceListPage> {
           var added = await Navigator.push(
               context, MaterialPageRoute(builder: (context) => PlaceAddPage()));
           if (added) {
-            _scrollController.jumpTo(0);
+            _scrollController.animateTo(0,
+                duration: Duration(milliseconds: 1000), curve: Curves.ease);
           }
         },
       ),
@@ -41,6 +49,7 @@ class _PlaceListPageState extends State<PlaceListPage> {
             var place = places.getByNum(i);
             return ListTile(
               title: Text(place.title),
+              subtitle: Text(place.description),
               onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(

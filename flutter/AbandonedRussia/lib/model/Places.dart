@@ -55,4 +55,10 @@ class Places with ChangeNotifier {
     _noMoreData = false;
     notifyListeners();
   }
+
+  void refresh() {
+    _places.clear();
+    _noMoreData = false;
+    notifyListeners();
+  }
 }
