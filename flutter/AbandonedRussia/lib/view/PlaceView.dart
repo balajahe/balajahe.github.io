@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../model/Place.dart';
-import '../model/Places.dart';
 
 class PlaceView extends StatelessWidget {
   final Place place;

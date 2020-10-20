@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:camera/camera.dart';
-//import 'package:path_provider/path_provider.dart';
+import 'dart:html';
+import 'dart:ui' as ui;
 
 import '../view/commonWidgets.dart';
 
@@ -10,7 +10,8 @@ class TakePhoto extends StatefulWidget {
 }
 
 class _TakePhotoState extends State<TakePhoto> {
-  CameraController _camera;
+  Widget _cameraWidget;
+  VideoElement _cameraVideoElement;
 
   @override
   build(context) => Scaffold(
@@ -19,7 +20,7 @@ class _TakePhotoState extends State<TakePhoto> {
         future: _initCamera(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return CameraPreview(_camera);
+            return Waiting(); //_cameraWidget;
           } else {
             return Waiting();
           }
@@ -27,13 +28,10 @@ class _TakePhotoState extends State<TakePhoto> {
       ));
 
   Future<void> _initCamera() async {
-    _camera =
-        CameraController((await availableCameras())[0], ResolutionPreset.high);
-    await _camera.initialize();
-    // _dir = (await getTemporaryDirectory()).path;
-    // _srvAddr = TextEditingController(text: widget.srvAddr);
-    // final cams = ;
-    // print('-------\n $cams \n $_dir \n-------');
-    // _camera =
+    _cameraVideoElement = VideoElement();
+    // ui.platformViewRegistry.registerViewFactory(
+    //     'cameraVideoElement', (int viewId) => _cameraVideoElement);
+    // _cameraWidget =
+    //     HtmlElementView(key: UniqueKey(), viewType: 'cameraVideoElement');
   }
 }

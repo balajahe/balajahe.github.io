@@ -29,6 +29,30 @@ class PlacesDao {
         'images': v.images,
       };
 
+  static Future<List<Place>> getNextPart(
+      {DateTime after, int count, bool onlyMy = false}) async {
+    QuerySnapshot data;
+    if (onlyMy) {
+      data = await FirebaseFirestore.instance
+          .collection('Places')
+          .where('creator.uid', isEqualTo: Database.currentUser.uid)
+          .orderBy('created', descending: true)
+          .startAfter(
+              [after != null ? Timestamp.fromDate(after) : Timestamp.now()])
+          .limit(count)
+          .get();
+    } else {
+      data = await FirebaseFirestore.instance
+          .collection('Places')
+          .orderBy('created', descending: true)
+          .startAfter(
+              [after != null ? Timestamp.fromDate(after) : Timestamp.now()])
+          .limit(count)
+          .get();
+    }
+    return data.docs.map((v) => _fromMap(v.id, v.data())).toList();
+  }
+
   static Future<Place> add(Place place) async {
     place.creator = Database.currentUser;
     place.created = Timestamp.now().toDate();
@@ -37,16 +61,5 @@ class PlacesDao {
         .add(_toMap(place));
     place.id = addedPlace.id;
     return place;
-  }
-
-  static Future<List<Place>> getNextPart({DateTime after, int count}) async {
-    var data = await FirebaseFirestore.instance
-        .collection('Places')
-        .orderBy('created', descending: true)
-        .startAfter(
-            [after != null ? Timestamp.fromDate(after) : Timestamp.now()])
-        .limit(count)
-        .get();
-    return data.docs.map((v) => _fromMap(v.id, v.data())).toList();
   }
 }

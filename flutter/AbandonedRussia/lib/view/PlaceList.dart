@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 
 import '../constants.dart';
 import '../model/Places.dart';
-import 'commonWidgets.dart';
-import 'PlaceAdd.dart';
-import 'PlaceView.dart';
+import '../view/commonWidgets.dart';
+import '../view/PlaceAdd.dart';
+import '../view/PlaceView.dart';
 
 class PlaceList extends StatefulWidget {
   @override
@@ -23,9 +23,14 @@ class _PlaceListState extends State<PlaceList> {
         title: Text(APP_TITLE),
         actions: [
           IconButton(
+            icon: Icon(Icons.my_library_add),
+            tooltip: 'Добавленные мной',
+            onPressed: () => places.refresh(onlyMy: true),
+          ),
+          IconButton(
             icon: Icon(Icons.refresh),
-            tooltip: 'Обновить',
-            onPressed: places.refresh,
+            tooltip: 'Обновить все',
+            onPressed: () => places.refresh(),
           ),
         ],
       ),
@@ -53,10 +58,10 @@ class _PlaceListState extends State<PlaceList> {
               onTap: () => Navigator.push(context,
                   MaterialPageRoute(builder: (context) => PlaceView(place))),
             );
-          } else if (places.noMoreData) {
-            return null;
           } else if (places.hasError) {
             return Errors(places.error);
+          } else if (places.noMoreData) {
+            return null;
           } else {
             return Waiting();
           }

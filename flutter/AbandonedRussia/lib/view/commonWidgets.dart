@@ -9,7 +9,9 @@ class Waiting extends StatelessWidget {
 
 class Errors extends StatelessWidget {
   final dynamic _error;
+
   Errors(this._error);
+
   @override
   build(_) {
     var stackTrace = '';

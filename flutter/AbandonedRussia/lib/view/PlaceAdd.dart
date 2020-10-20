@@ -141,8 +141,6 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
     });
   }
 
-  void _takePhoto() {}
-
   Future _savePlace(places) async {
     var place = Place(
       title: _title.text,
