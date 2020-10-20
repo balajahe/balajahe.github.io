@@ -7,7 +7,6 @@ class LabelsDao {
               .doc('labels')
               .get())
           .data()['labels']
-          .map((v) => v)
-          .cast<String>()
+          .map<String>((v) => v.toString())
           .toList();
 }

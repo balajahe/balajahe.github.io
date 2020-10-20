@@ -4,15 +4,15 @@ import 'package:provider/provider.dart';
 import '../constants.dart';
 import '../model/Places.dart';
 import 'commonWidgets.dart';
-import 'PlaceAddPage.dart';
-import 'PlaceEditPage.dart';
+import 'PlaceAdd.dart';
+import 'PlaceView.dart';
 
-class PlaceListPage extends StatefulWidget {
+class PlaceList extends StatefulWidget {
   @override
-  createState() => _PlaceListPageState();
+  createState() => _PlaceListState();
 }
 
-class _PlaceListPageState extends State<PlaceListPage> {
+class _PlaceListState extends State<PlaceList> {
   final _scrollController = ScrollController();
 
   @override
@@ -30,11 +30,11 @@ class _PlaceListPageState extends State<PlaceListPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Добавить место',
+        tooltip: 'Добавить',
         child: Icon(Icons.add),
         onPressed: () async {
           var added = await Navigator.push(
-              context, MaterialPageRoute(builder: (context) => PlaceAddPage()));
+              context, MaterialPageRoute(builder: (context) => PlaceAdd()));
           if (added) {
             _scrollController.animateTo(0,
                 duration: Duration(milliseconds: 1000), curve: Curves.ease);
@@ -50,10 +50,8 @@ class _PlaceListPageState extends State<PlaceListPage> {
             return ListTile(
               title: Text(place.title),
               subtitle: Text(place.description),
-              onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PlaceEditPage(place))),
+              onTap: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => PlaceView(place))),
             );
           } else if (places.noMoreData) {
             return null;

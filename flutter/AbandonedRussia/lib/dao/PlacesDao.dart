@@ -4,11 +4,12 @@ import '../dao/Database.dart';
 import '../model/Place.dart';
 
 class PlacesDao {
-  static Future<List<Place>> getNextPart(DateTime from, int count) async {
+  static Future<List<Place>> getNextPart({DateTime after, int count}) async {
     var data = await FirebaseFirestore.instance
         .collection('Places')
         .orderBy('created', descending: true)
-        .startAfter([from != null ? Timestamp.fromDate(from) : Timestamp.now()])
+        .startAfter(
+            [after != null ? Timestamp.fromDate(after) : Timestamp.now()])
         .limit(count)
         .get();
     return data.docs.map((v) => _fromMap(v.id, v.data())).toList();

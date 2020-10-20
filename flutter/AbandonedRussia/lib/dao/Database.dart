@@ -8,6 +8,6 @@ class Database {
   }
 
   static String get currentUser {
-    return FirebaseAuth.instance.currentUser.toString();
+    return FirebaseAuth.instance.currentUser.uid;
   }
 }

@@ -6,7 +6,7 @@ import 'dao/Database.dart';
 import 'model/Places.dart';
 import 'model/Labels.dart';
 import 'view/commonWidgets.dart';
-import 'view/PlaceListPage.dart';
+import 'view/PlaceList.dart';
 
 void main() => runApp(App());
 
@@ -37,7 +37,7 @@ class _StartApp extends StatelessWidget {
         print(snapshot.hasError);
         if (!snapshot.hasError &&
             snapshot.connectionState == ConnectionState.done) {
-          return PlaceListPage();
+          return PlaceList();
         } else {
           return Scaffold(
             appBar: AppBar(title: Text(APP_TITLE)),

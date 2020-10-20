@@ -8,13 +8,13 @@ const RESOURCES = {
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "b14fcf3ee94e3ace300b192e9e7c8c5d",
 "assets/fonts/MaterialIcons-Regular.otf": "1288c9e28052e028aba623321f7826ac",
-"assets/NOTICES": "46ca77b8c580f2a08250bd4768a58545",
+"assets/NOTICES": "0dfb16a2ffe0691e957bc1987a9d1fbc",
 "assets/AssetManifest.json": "2efbb41d7877d10aac9d091f58ccd7b9",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
-"index.html": "80be565b6a18dbfc95125eb3855634a1",
-"/": "80be565b6a18dbfc95125eb3855634a1",
+"index.html": "68217b380603c1077dd8b6af5971cf7f",
+"/": "68217b380603c1077dd8b6af5971cf7f",
 "manifest.json": "55a695e0731fd0a6880113ca498c07cf",
-"main.dart.js": "08de434a7df8f60900a1165a602f937a",
+"main.dart.js": "3b33b6d44b24309cc1d41658e82bad23",
 "version.json": "7e4a0cb4f92851d27cafd6c4e0146772"
 };
 

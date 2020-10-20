@@ -34,14 +34,15 @@ class Places with ChangeNotifier {
       _error = null;
       try {
         var newPlaces = await PlacesDao.getNextPart(
-            _places.length > 0 ? _places.last.created : null,
-            LOADING_PART_SIZE);
+            after: _places.length > 0 ? _places.last.created : null,
+            count: LOADING_PART_SIZE);
         if (newPlaces.length > 0) {
           newPlaces.forEach((v) => _places.add(v));
         } else {
           _noMoreData = true;
         }
       } catch (e) {
+        _noMoreData = false;
         _error = e;
       }
       _isLoading = false;
