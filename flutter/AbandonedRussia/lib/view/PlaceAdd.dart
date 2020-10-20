@@ -39,6 +39,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
   final _title = TextEditingController();
   final _desctiption = TextEditingController();
   final List<String> _selectedLabels = [];
+  //final List<Blob> _photos = [];
   bool _isSaving = false;
 
   @override
@@ -116,8 +117,9 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                 tooltip: 'Добавить фото',
                 child: Icon(Icons.photo_camera),
                 onPressed: () async {
-                  var photo = await Navigator.push(
+                  var blobPhoto = await Navigator.push(
                       context, MaterialPageRoute(builder: (_) => TakePhoto()));
+                  debugPrint(blobPhoto);
                 })),
         _isSaving
             ? Container(
