@@ -4,7 +4,8 @@ import 'package:provider/provider.dart';
 import '../model/Place.dart';
 import '../model/Places.dart';
 import '../model/Labels.dart';
-import 'commonWidgets.dart';
+import '../view/commonWidgets.dart';
+import '../view/TakePhoto.dart';
 
 const TITLE = Text('Новое место');
 
@@ -46,8 +47,30 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
             appBar: AppBar(
               title: TITLE,
               actions: [
-                ElevatedButton(
-                    child: Text('Добавить фото'), onPressed: _takePhoto),
+                Builder(
+                    builder: (context) => FlatButton(
+                          child: Text('Сохранить'),
+                          onPressed: () async {
+                            if (_form.currentState.validate() &&
+                                _title.text.length > 0 &&
+                                _desctiption.text.length > 0 &&
+                                _selectedLabels.length > 0) {
+                              setState(() => _isSaving = true);
+                              try {
+                                await _savePlace(context.read<Places>());
+                                Navigator.pop(context, true);
+                              } catch (e) {
+                                debugPrint(e);
+                                Scaffold.of(context).showSnackBar(
+                                    SnackBar(content: Text(e.toString())));
+                              }
+                            } else {
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                  content: Text(
+                                      'Выберите хотя бы одну метку и заполните все обязательные поля!')));
+                            }
+                          },
+                        )),
               ],
             ),
             body: Form(
@@ -89,31 +112,13 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     ],
                   ),
                 ])),
-            floatingActionButton: Builder(
-                builder: (context) => FloatingActionButton(
-                      tooltip: 'Сохранить',
-                      child: Icon(Icons.done),
-                      onPressed: () async {
-                        if (_form.currentState.validate() &&
-                                _title.text.length > 0
-                            //_desctiption.text.length > 0 &&
-                            //_selectedLabels.length > 0
-                            ) {
-                          setState(() => _isSaving = true);
-                          try {
-                            await _savePlace(context.read<Places>());
-                            Navigator.pop(context, true);
-                          } catch (e) {
-                            Scaffold.of(context).showSnackBar(
-                                SnackBar(content: Text(e.toString())));
-                          }
-                        } else {
-                          Scaffold.of(context).showSnackBar(SnackBar(
-                              content: Text(
-                                  'Выберите хотя бы одну метку и заполните все обязательные поля!')));
-                        }
-                      },
-                    ))),
+            floatingActionButton: FloatingActionButton(
+                tooltip: 'Добавить фото',
+                child: Icon(Icons.photo_camera),
+                onPressed: () async {
+                  var photo = await Navigator.push(
+                      context, MaterialPageRoute(builder: (_) => TakePhoto()));
+                })),
         _isSaving
             ? Container(
                 color: Color(0xAAAAAAAA),

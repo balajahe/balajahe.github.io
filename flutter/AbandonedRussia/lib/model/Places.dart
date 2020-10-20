@@ -14,7 +14,7 @@ class Places with ChangeNotifier {
   bool get isLoading => _isLoading;
   bool get noMoreData => _noMoreData;
   bool get hasError => _error != null;
-  Exception get error => _error;
+  dynamic get error => _error;
 
   int get length => _places.length;
   Place getByNum(int i) => _places[i];
@@ -42,8 +42,9 @@ class Places with ChangeNotifier {
           _noMoreData = true;
         }
       } catch (e) {
-        _noMoreData = false;
+        debugPrint(e);
         _error = e;
+        _noMoreData = false;
       }
       _isLoading = false;
       notifyListeners();
@@ -51,10 +52,15 @@ class Places with ChangeNotifier {
   }
 
   Future<void> add(Place place) async {
-    var newPlace = await PlacesDao.add(place);
-    _places.insert(0, newPlace);
-    _noMoreData = false;
-    notifyListeners();
+    try {
+      var newPlace = await PlacesDao.add(place);
+      _places.insert(0, newPlace);
+      _noMoreData = false;
+      notifyListeners();
+    } catch (e) {
+      print(e.toString());
+      throw e.toString();
+    }
   }
 
   void refresh() {

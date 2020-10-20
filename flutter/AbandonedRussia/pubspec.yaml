@@ -28,6 +28,7 @@ dependencies:
   firebase_auth:
   cloud_firestore:
   camera:
+  path_provider:
 
 
   # The following adds the Cupertino Icons font to your application.

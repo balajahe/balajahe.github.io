@@ -17,10 +17,18 @@ class PlaceView extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          ListTile(title: Text(place.title)),
-          ListTile(title: Text(place.description)),
           ListTile(
-              subtitle: Text(place.created.toString() + ' - ' + place.creator)),
+            title: SelectableText(place.title),
+            subtitle: SelectableText(place.labels.toString()),
+          ),
+          ListTile(
+            title: SelectableText(place.description),
+          ),
+          ListTile(
+              subtitle: SelectableText('добавлено ' +
+                  place.created.toString() +
+                  '\nпользователем ' +
+                  place.creator.created.toString())),
         ],
       ),
     );

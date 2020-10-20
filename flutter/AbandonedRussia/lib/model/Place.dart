@@ -1,7 +1,9 @@
+import '../model/AppUser.dart';
+
 class Place {
   String id;
+  AppUser creator;
   DateTime created;
-  String creator;
   String title;
   String description;
   List<String> labels;
@@ -9,8 +11,8 @@ class Place {
 
   Place(
       {this.id,
-      this.created,
       this.creator,
+      this.created,
       this.title,
       this.description,
       this.labels,
