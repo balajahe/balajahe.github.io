@@ -69,32 +69,53 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     minLines: 2,
                     maxLines: 5,
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                          flex: 3,
-                          child: Container(
-                            color: Colors.grey,
-                            child: Wrap(
-                              children: widget.allLabels
-                                  .map((v) => MaterialButton(
-                                        child: Text(v),
-                                        onPressed: () => _selectLabel(v),
-                                      ))
-                                  .toList(),
-                            ),
-                          )),
-                      Expanded(
-                        child: Container(
-                          color: Colors.grey,
+                  Container(
+                    height: 35,
+                    child: Row(
+                      children: [
+                        Expanded(
                           child: Wrap(
+                            spacing: 0,
                             children: _selectedLabels
                                 .map((v) => MaterialButton(
+                                      minWidth: 0,
+                                      height: 30,
                                       child: Text(v),
                                       onPressed: () => _deselectLabel(v),
                                     ))
                                 .toList(),
                           ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 20,
+                    child: Row(children: [
+                      Text('Все метки: ',
+                          style: TextStyle(fontStyle: FontStyle.italic)),
+                      Expanded(
+                        child: Container(
+                            height: 2,
+                            margin: EdgeInsets.only(top: 10),
+                            color: Colors.grey[400]),
+                      ),
+                    ]),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Wrap(
+                          spacing: 10,
+                          children: widget.allLabels
+                              .map((v) => MaterialButton(
+                                    minWidth: 0,
+                                    height: 35,
+                                    //padding: EdgeInsets.all(0),
+                                    child: Text(v),
+                                    onPressed: () => _selectLabel(v),
+                                  ))
+                              .toList(),
                         ),
                       ),
                     ],

@@ -37,6 +37,10 @@ class _TakePhotoState extends State<TakePhoto> {
           tooltip: 'Сделать снимок',
           onPressed: () async {
             _photoBlob = await _imageCapture.takePhoto();
+            var reader = html.FileReader();
+            reader.readAsArrayBuffer(_photoBlob);
+            var res = reader.onLoadEnd;
+            print(res);
             //var file = html.File(_photoBlob., 'photo.bmp');
             //var photoUrl = ui..createObjectURL(photoBlob);
             Navigator.pop(context, _photoBlob);
