@@ -7,7 +7,7 @@ import '../dao/PlacesDao.dart';
 class Places with ChangeNotifier {
   final List<Place> _places = [];
 
-  bool _onlyMy = false;
+  bool _onlyMine = false;
   bool _isLoading = false;
   bool _noMoreData = false;
   dynamic _error;
@@ -37,7 +37,7 @@ class Places with ChangeNotifier {
         var newPlaces = await PlacesDao.getNextPart(
           after: _places.length > 0 ? _places.last.created : null,
           count: LOADING_PART_SIZE,
-          onlyMy: _onlyMy,
+          onlyMine: _onlyMine,
         );
         newPlaces.forEach((v) => _places.add(v));
         if (newPlaces.length < LOADING_PART_SIZE) {
@@ -65,9 +65,9 @@ class Places with ChangeNotifier {
     }
   }
 
-  void refresh({bool onlyMy = false}) {
+  void refresh({bool onlyMine = false}) {
     _places.clear();
-    _onlyMy = onlyMy;
+    _onlyMine = onlyMine;
     _noMoreData = false;
     notifyListeners();
   }

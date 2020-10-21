@@ -19,10 +19,11 @@ class PlaceAdd extends StatelessWidget {
           return _PlaceAddForm(snapshot.data);
         } else {
           return Scaffold(
-              appBar: AppBar(
-                title: TITLE,
-              ),
-              body: snapshot.hasError ? Errors(snapshot.error) : Waiting());
+            appBar: AppBar(
+              title: TITLE,
+            ),
+            body: snapshot.hasError ? Errors(snapshot.error) : Waiting(),
+          );
         }
       });
 }
@@ -43,8 +44,9 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
   bool _isSaving = false;
 
   @override
-  build(context) => Stack(children: [
-        Scaffold(
+  build(context) => Stack(
+        children: [
+          Scaffold(
             appBar: AppBar(
               title: TITLE,
               actions: [
@@ -75,12 +77,12 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
               ],
             ),
             body: Form(
-                key: _form,
-                child: Column(children: <Widget>[
+              key: _form,
+              child: Column(
+                children: <Widget>[
                   TextFormField(
                     controller: _title,
                     decoration: InputDecoration(labelText: 'Краткое название'),
-                    autofocus: true,
                   ),
                   TextFormField(
                     controller: _desctiption,
@@ -88,46 +90,56 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     minLines: 2,
                     maxLines: 5,
                   ),
-                  Row(
+                  Column(
                     children: [
-                      Expanded(
-                        flex: 2,
-                        child: Wrap(
-                            spacing: 5,
-                            runSpacing: 5,
-                            children: widget.allLabels
-                                .map((v) => ElevatedButton(
-                                    child: Text(v),
-                                    onPressed: () => _selectLabel(v)))
-                                .toList()),
+                      Wrap(
+                        spacing: 5,
+                        runSpacing: 5,
+                        children: widget.allLabels
+                            .map((v) => ElevatedButton(
+                                  child: Text(v),
+                                  onPressed: () => _selectLabel(v),
+                                ))
+                            .toList(),
                       ),
-                      Expanded(
-                          child: Wrap(
-                              spacing: 5,
-                              runSpacing: 2,
-                              children: _selectedLabels
-                                  .map((v) => ElevatedButton(
-                                      child: Text(v),
-                                      onPressed: () => _deselectLabel(v)))
-                                  .toList()))
+                      Container(
+                        color: Colors.grey,
+                        height: 5,
+                      ),
+                      Wrap(
+                          spacing: 5,
+                          runSpacing: 2,
+                          children: _selectedLabels
+                              .map((v) => ElevatedButton(
+                                    child: Text(v),
+                                    onPressed: () => _deselectLabel(v),
+                                  ))
+                              .toList()),
                     ],
                   ),
-                ])),
+                ],
+              ),
+            ),
             floatingActionButton: FloatingActionButton(
-                tooltip: 'Добавить фото',
-                child: Icon(Icons.photo_camera),
-                onPressed: () async {
-                  var blobPhoto = await Navigator.push(
-                      context, MaterialPageRoute(builder: (_) => TakePhoto()));
-                  debugPrint(blobPhoto);
-                })),
-        _isSaving
-            ? Container(
-                color: Color(0xAAAAAAAA),
-                child: Center(child: CircularProgressIndicator()),
-              )
-            : Container(),
-      ]);
+              tooltip: 'Добавить фото',
+              child: Icon(Icons.photo_camera),
+              onPressed: () async {
+                var blobPhoto = await Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => TakePhoto()),
+                );
+                debugPrint(blobPhoto);
+              },
+            ),
+          ),
+          _isSaving
+              ? Container(
+                  color: Color(0xAAAAAAAA),
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              : Container(),
+        ],
+      );
 
   void _selectLabel(String label) {
     setState(() {
@@ -152,6 +164,4 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
     );
     await places.add(place);
   }
-
-  //String _emptyValidator(dynamic v) => v.isEmpty ? 'Введите что-нибудь!' : null;
 }

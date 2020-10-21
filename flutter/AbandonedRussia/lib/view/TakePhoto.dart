@@ -10,8 +10,9 @@ class TakePhoto extends StatefulWidget {
 }
 
 class _TakePhotoState extends State<TakePhoto> {
-  Widget _cameraWidget;
-  VideoElement _cameraVideoElement;
+  MediaStream _videoStream;
+  VideoElement _videoElement;
+  Widget _videoWidget;
   ImageCapture _imageCapture;
 
   @override
@@ -21,7 +22,7 @@ class _TakePhotoState extends State<TakePhoto> {
           future: _initCamera(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return _cameraWidget;
+              return _videoWidget;
             } else {
               return Waiting();
             }
@@ -39,20 +40,33 @@ class _TakePhotoState extends State<TakePhoto> {
       );
 
   Future<void> _initCamera() async {
-    var stream = await window.navigator.getUserMedia(video: true, audio: false);
-    _cameraVideoElement = VideoElement()
+    _videoStream = await window.navigator.mediaDevices.getUserMedia({
+      'video': {
+        'facingMode': {'ideal': "environment"}
+      },
+      'audio': false,
+    });
+    _videoElement = VideoElement()
       ..autoplay = true
-      ..srcObject = stream;
+      ..srcObject = _videoStream;
 
     ui.platformViewRegistry.registerViewFactory(
       'cameraVideoElement',
-      (int viewId) => _cameraVideoElement,
+      (int viewId) => _videoElement,
     );
-    _cameraWidget = HtmlElementView(
+    _videoWidget = HtmlElementView(
       key: UniqueKey(),
       viewType: 'cameraVideoElement',
     );
 
-    _imageCapture = ImageCapture(stream.getVideoTracks()[0]);
+    _imageCapture = ImageCapture(_videoStream.getVideoTracks()[0]);
+  }
+
+  @override
+  void dispose() {
+    _videoElement.pause();
+    _videoElement.srcObject = null;
+    _videoStream.getTracks().forEach((track) => track.stop());
+    super.dispose();
   }
 }

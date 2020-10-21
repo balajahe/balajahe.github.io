@@ -10,8 +10,9 @@ class Database {
     await Firebase.initializeApp();
     await FirebaseAuth.instance.signInAnonymously();
     _currentUser = AppUser(
-        uid: FirebaseAuth.instance.currentUser.uid,
-        created: FirebaseAuth.instance.currentUser.metadata.creationTime);
+      uid: FirebaseAuth.instance.currentUser.uid,
+      created: FirebaseAuth.instance.currentUser.metadata.creationTime,
+    );
   }
 
   static AppUser get currentUser => _currentUser;

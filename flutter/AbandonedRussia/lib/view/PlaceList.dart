@@ -23,15 +23,13 @@ class _PlaceListState extends State<PlaceList> {
         title: Text(APP_TITLE),
         actions: [
           IconButton(
-            icon: Icon(Icons.my_library_add),
-            tooltip: 'Добавленные мной',
-            onPressed: () => places.refresh(onlyMy: true),
-          ),
+              icon: Icon(Icons.my_library_add),
+              tooltip: 'Добавленные мной',
+              onPressed: () => places.refresh(onlyMine: true)),
           IconButton(
-            icon: Icon(Icons.refresh),
-            tooltip: 'Обновить все',
-            onPressed: () => places.refresh(),
-          ),
+              icon: Icon(Icons.refresh),
+              tooltip: 'Обновить все',
+              onPressed: () => places.refresh()),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -39,7 +37,9 @@ class _PlaceListState extends State<PlaceList> {
         child: Icon(Icons.add),
         onPressed: () async {
           var added = await Navigator.push(
-              context, MaterialPageRoute(builder: (context) => PlaceAdd()));
+            context,
+            MaterialPageRoute(builder: (context) => PlaceAdd()),
+          );
           if (added) {
             _scrollController.animateTo(0,
                 duration: Duration(milliseconds: 1000), curve: Curves.ease);
@@ -55,8 +55,10 @@ class _PlaceListState extends State<PlaceList> {
             return ListTile(
               title: Text(place.title),
               subtitle: Text(place.description),
-              onTap: () => Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => PlaceView(place))),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PlaceView(place)),
+              ),
             );
           } else if (places.hasError) {
             return Errors(places.error);

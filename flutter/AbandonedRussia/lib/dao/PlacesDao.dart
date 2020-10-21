@@ -8,8 +8,9 @@ class PlacesDao {
   static Place _fromMap(String id, Map<String, dynamic> data) => Place(
         id: id,
         creator: AppUser(
-            uid: data['creator']['uid'],
-            created: data['creator']['created'].toDate()),
+          uid: data['creator']['uid'],
+          created: data['creator']['created'].toDate(),
+        ),
         created: data['created'].toDate(),
         title: data['title'],
         description: data['description'],
@@ -20,7 +21,7 @@ class PlacesDao {
   static Map<String, dynamic> _toMap(Place v) => {
         'creator': {
           'uid': v.creator.uid,
-          'created': Timestamp.fromDate(v.creator.created)
+          'created': Timestamp.fromDate(v.creator.created),
         },
         'created': Timestamp.fromDate(v.created),
         'title': v.title,
@@ -29,10 +30,13 @@ class PlacesDao {
         'images': v.images,
       };
 
-  static Future<List<Place>> getNextPart(
-      {DateTime after, int count, bool onlyMy = false}) async {
+  static Future<List<Place>> getNextPart({
+    DateTime after,
+    int count,
+    bool onlyMine = false,
+  }) async {
     QuerySnapshot data;
-    if (onlyMy) {
+    if (onlyMine) {
       data = await FirebaseFirestore.instance
           .collection('Places')
           .where('creator.uid', isEqualTo: Database.currentUser.uid)
