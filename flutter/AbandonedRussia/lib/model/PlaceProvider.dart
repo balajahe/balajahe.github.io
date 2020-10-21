@@ -1,20 +1,20 @@
 import 'package:flutter/foundation.dart';
 
 import '../constants.dart';
-import '../model/Place.dart';
+import 'Place.dart';
 import '../dao/PlacesDao.dart';
 
-class Places with ChangeNotifier {
-  final List<Place> _places = [];
-
-  bool _onlyMine = false;
+class PlaceProvider with ChangeNotifier {
   bool _isLoading = false;
   bool _noMoreData = false;
   dynamic _error;
 
+  final List<Place> _places = [];
+  bool _onlyMine = false;
+
   bool get isLoading => _isLoading;
   bool get noMoreData => _noMoreData;
-  bool get hasError => _error != null;
+  bool get isError => _error != null;
   dynamic get error => _error;
 
   int get length => _places.length;

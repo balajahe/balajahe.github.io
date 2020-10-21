@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../model/Place.dart';
-import '../model/Places.dart';
-import '../model/Labels.dart';
+import '../model/PlaceProvider.dart';
+import '../model/LabelProvider.dart';
 import '../view/commonWidgets.dart';
 import '../view/TakePhoto.dart';
 
@@ -12,7 +12,7 @@ const TITLE = Text('Новое место');
 class PlaceAdd extends StatelessWidget {
   @override
   build(context) => FutureBuilder(
-      future: context.watch<Labels>().getAll(),
+      future: context.watch<LabelProvider>().getAll(),
       builder: (context, snapshot) {
         if (!snapshot.hasError &&
             snapshot.connectionState == ConnectionState.done) {
@@ -47,35 +47,14 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
   build(context) => Stack(
         children: [
           Scaffold(
-            appBar: AppBar(
-              title: TITLE,
-              actions: [
-                Builder(
-                    builder: (context) => FlatButton(
-                          child: Text('Сохранить'),
-                          onPressed: () async {
-                            if (_form.currentState.validate() &&
-                                _title.text.length > 0 &&
-                                _desctiption.text.length > 0 &&
-                                _selectedLabels.length > 0) {
-                              setState(() => _isSaving = true);
-                              try {
-                                await _savePlace(context.read<Places>());
-                                Navigator.pop(context, true);
-                              } catch (e) {
-                                debugPrint(e);
-                                Scaffold.of(context).showSnackBar(
-                                    SnackBar(content: Text(e.toString())));
-                              }
-                            } else {
-                              Scaffold.of(context).showSnackBar(SnackBar(
-                                  content: Text(
-                                      'Выберите хотя бы одну метку и заполните все обязательные поля!')));
-                            }
-                          },
-                        )),
-              ],
-            ),
+            appBar: AppBar(title: TITLE, actions: [
+              Builder(
+                builder: (context) => IconButton(
+                    icon: Icon(Icons.save),
+                    tooltip: 'Сохранить',
+                    onPressed: () => _save(context)),
+              )
+            ]),
             body: Form(
               key: _form,
               child: Column(
@@ -90,31 +69,34 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     minLines: 2,
                     maxLines: 5,
                   ),
-                  Column(
+                  Row(
                     children: [
-                      Wrap(
-                        spacing: 5,
-                        //runSpacing: 5,
-                        children: widget.allLabels
-                            .map((v) => ElevatedButton(
-                                  child: Text(v),
-                                  onPressed: () => _selectLabel(v),
-                                ))
-                            .toList(),
+                      Expanded(
+                          flex: 3,
+                          child: Container(
+                            color: Colors.grey,
+                            child: Wrap(
+                              children: widget.allLabels
+                                  .map((v) => MaterialButton(
+                                        child: Text(v),
+                                        onPressed: () => _selectLabel(v),
+                                      ))
+                                  .toList(),
+                            ),
+                          )),
+                      Expanded(
+                        child: Container(
+                          color: Colors.grey,
+                          child: Wrap(
+                            children: _selectedLabels
+                                .map((v) => MaterialButton(
+                                      child: Text(v),
+                                      onPressed: () => _deselectLabel(v),
+                                    ))
+                                .toList(),
+                          ),
+                        ),
                       ),
-                      Container(
-                        color: Colors.grey,
-                        height: 5,
-                      ),
-                      Wrap(
-                          spacing: 5,
-                          runSpacing: 2,
-                          children: _selectedLabels
-                              .map((v) => ElevatedButton(
-                                    child: Text(v),
-                                    onPressed: () => _deselectLabel(v),
-                                  ))
-                              .toList()),
                     ],
                   ),
                 ],
@@ -154,13 +136,30 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
     });
   }
 
-  Future _savePlace(places) async {
-    var place = Place(
-      title: _title.text,
-      description: _desctiption.text,
-      labels: _selectedLabels,
-      images: [],
-    );
-    await places.add(place);
+  Future<void> _save(newContext) async {
+    if (_form.currentState.validate() &&
+        _title.text.length > 0 &&
+        _desctiption.text.length > 0 &&
+        _selectedLabels.length > 0) {
+      setState(() => _isSaving = true);
+      try {
+        var place = Place(
+          title: _title.text,
+          description: _desctiption.text,
+          labels: _selectedLabels,
+          images: [],
+        );
+        await context.read<PlaceProvider>().add(place);
+        Navigator.pop(context, true);
+      } catch (e) {
+        print(e);
+        Scaffold.of(newContext)
+            .showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    } else {
+      Scaffold.of(newContext).showSnackBar(SnackBar(
+          content: Text(
+              'Выберите хотя бы одну метку и заполните все обязательные поля!')));
+    }
   }
 }

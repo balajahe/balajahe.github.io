@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../constants.dart';
-import '../model/Places.dart';
+import '../model/PlaceProvider.dart';
 import '../view/commonWidgets.dart';
 import '../view/PlaceAdd.dart';
 import '../view/PlaceView.dart';
@@ -17,7 +17,7 @@ class _PlaceListState extends State<PlaceList> {
 
   @override
   build(context) {
-    var places = context.watch<Places>();
+    var places = context.watch<PlaceProvider>();
     return Scaffold(
       appBar: AppBar(
         title: Text(APP_TITLE),
@@ -60,7 +60,7 @@ class _PlaceListState extends State<PlaceList> {
                 MaterialPageRoute(builder: (context) => PlaceView(place)),
               ),
             );
-          } else if (places.hasError) {
+          } else if (places.isError) {
             return Errors(places.error);
           } else if (places.noMoreData) {
             return null;

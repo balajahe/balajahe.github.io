@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import 'constants.dart';
 import 'dao/Database.dart';
-import 'model/Places.dart';
-import 'model/Labels.dart';
+import 'model/PlaceProvider.dart';
+import 'model/LabelProvider.dart';
 import 'view/commonWidgets.dart';
 import 'view/PlaceList.dart';
 
@@ -14,8 +14,8 @@ class App extends StatelessWidget {
   @override
   build(context) => MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => Places()),
-          ChangeNotifierProvider(create: (context) => Labels()),
+          ChangeNotifierProvider(create: (context) => PlaceProvider()),
+          ChangeNotifierProvider(create: (context) => LabelProvider()),
         ],
         child: MaterialApp(
           title: APP_TITLE,
