@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'dart:html';
 import 'dart:ui' as ui;
+import 'dart:html' as html;
 
 import '../view/commonWidgets.dart';
 
@@ -10,10 +10,11 @@ class TakePhoto extends StatefulWidget {
 }
 
 class _TakePhotoState extends State<TakePhoto> {
-  MediaStream _videoStream;
-  VideoElement _videoElement;
+  html.MediaStream _videoStream;
+  html.VideoElement _videoElement;
   Widget _videoWidget;
-  ImageCapture _imageCapture;
+  html.ImageCapture _imageCapture;
+  html.Blob _photoBlob;
 
   @override
   build(context) => Scaffold(
@@ -22,7 +23,10 @@ class _TakePhotoState extends State<TakePhoto> {
           future: _initCamera(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return _videoWidget;
+              return Column(children: [
+                _videoWidget,
+                //Image.file(html_photoBlob,
+              ]);
             } else {
               return Waiting();
             }
@@ -32,35 +36,37 @@ class _TakePhotoState extends State<TakePhoto> {
           child: Icon(Icons.camera_sharp),
           tooltip: 'Сделать снимок',
           onPressed: () async {
-            var photoBlob = await _imageCapture.takePhoto();
-            //var photoUrl = URL.createObjectURL(photoBlob);
-            Navigator.pop(context, photoBlob);
+            _photoBlob = await _imageCapture.takePhoto();
+            //var file = html.File(_photoBlob., 'photo.bmp');
+            //var photoUrl = ui..createObjectURL(photoBlob);
+            Navigator.pop(context, _photoBlob);
           },
         ),
       );
 
   Future<void> _initCamera() async {
-    ui.platformViewRegistry.registerViewFactory(
-        'cameraVideoElement', (int viewId) => _videoElement);
+    ui.platformViewRegistry
+        .registerViewFactory('htmlVideoElement', (int viewId) => _videoElement);
     _videoWidget =
-        HtmlElementView(key: UniqueKey(), viewType: 'cameraVideoElement');
+        HtmlElementView(key: UniqueKey(), viewType: 'htmlVideoElement');
 
-    _videoStream = await window.navigator.mediaDevices.getUserMedia({
+    _videoStream = await html.window.navigator.mediaDevices.getUserMedia({
       'video': {
         'facingMode': {'ideal': "environment"}
       },
       'audio': false,
     });
-    _videoElement = VideoElement()
+    _videoElement = html.VideoElement()
       ..srcObject = _videoStream
       ..autoplay = true;
 
-    _imageCapture = ImageCapture(_videoStream.getVideoTracks()[0]);
+    _imageCapture = html.ImageCapture(_videoStream.getVideoTracks()[0]);
   }
 
   @override
   void dispose() {
-    super.dispose();
     _videoStream.getTracks().forEach((track) => track.stop());
+    super.dispose();
+    print('dispose');
   }
 }
