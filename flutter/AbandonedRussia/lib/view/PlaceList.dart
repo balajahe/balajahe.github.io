@@ -24,7 +24,7 @@ class _PlaceListState extends State<PlaceList> {
         actions: [
           IconButton(
               icon: Icon(Icons.my_library_add),
-              tooltip: 'Добавленные мной',
+              tooltip: 'Добавлены мной',
               onPressed: () => places.refresh(onlyMine: true)),
           IconButton(
               icon: Icon(Icons.refresh),
@@ -33,7 +33,7 @@ class _PlaceListState extends State<PlaceList> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Добавить',
+        tooltip: 'Новое место',
         child: Icon(Icons.add),
         onPressed: () async {
           var added = await Navigator.push(

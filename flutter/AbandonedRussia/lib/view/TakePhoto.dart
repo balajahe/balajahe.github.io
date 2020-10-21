@@ -40,6 +40,11 @@ class _TakePhotoState extends State<TakePhoto> {
       );
 
   Future<void> _initCamera() async {
+    ui.platformViewRegistry.registerViewFactory(
+        'cameraVideoElement', (int viewId) => _videoElement);
+    _videoWidget =
+        HtmlElementView(key: UniqueKey(), viewType: 'cameraVideoElement');
+
     _videoStream = await window.navigator.mediaDevices.getUserMedia({
       'video': {
         'facingMode': {'ideal': "environment"}
@@ -47,26 +52,15 @@ class _TakePhotoState extends State<TakePhoto> {
       'audio': false,
     });
     _videoElement = VideoElement()
-      ..autoplay = true
-      ..srcObject = _videoStream;
-
-    ui.platformViewRegistry.registerViewFactory(
-      'cameraVideoElement',
-      (int viewId) => _videoElement,
-    );
-    _videoWidget = HtmlElementView(
-      key: UniqueKey(),
-      viewType: 'cameraVideoElement',
-    );
+      ..srcObject = _videoStream
+      ..autoplay = true;
 
     _imageCapture = ImageCapture(_videoStream.getVideoTracks()[0]);
   }
 
   @override
   void dispose() {
-    _videoElement.pause();
-    _videoElement.srcObject = null;
-    _videoStream.getTracks().forEach((track) => track.stop());
     super.dispose();
+    _videoStream.getTracks().forEach((track) => track.stop());
   }
 }

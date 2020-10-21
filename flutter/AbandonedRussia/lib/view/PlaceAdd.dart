@@ -94,7 +94,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     children: [
                       Wrap(
                         spacing: 5,
-                        runSpacing: 5,
+                        //runSpacing: 5,
                         children: widget.allLabels
                             .map((v) => ElevatedButton(
                                   child: Text(v),
@@ -128,7 +128,6 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                   context,
                   MaterialPageRoute(builder: (_) => TakePhoto()),
                 );
-                debugPrint(blobPhoto);
               },
             ),
           ),
