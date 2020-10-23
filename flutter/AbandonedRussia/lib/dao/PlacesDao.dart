@@ -1,8 +1,8 @@
-import 'package:AbandonedRussia/model/AppUser.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../dao/Database.dart';
 import '../model/Place.dart';
+import '../model/AppUser.dart';
 
 class PlacesDao {
   static Place _fromMap(String id, Map<String, dynamic> data) => Place(

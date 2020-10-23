@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+
 import '../dao/LabelsDao.dart';
 
 class LabelProvider with ChangeNotifier {

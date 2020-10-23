@@ -29,19 +29,22 @@ class PlaceAdd extends StatelessWidget {
 }
 
 class _PlaceAddForm extends StatefulWidget {
-  final List<String> allLabels;
-  _PlaceAddForm(this.allLabels);
+  final List<String> _allLabels;
+  _PlaceAddForm(this._allLabels);
   @override
-  createState() => _PlaceAddFormState();
+  createState() => _PlaceAddFormState(_allLabels.map((v) => v).toList());
 }
 
 class _PlaceAddFormState extends State<_PlaceAddForm> {
+  final List<String> _allLabels;
   final _form = GlobalKey<FormState>();
   final _title = TextEditingController();
   final _desctiption = TextEditingController();
   final List<String> _selectedLabels = [];
   //final List<Blob> _photos = [];
   bool _isSaving = false;
+
+  _PlaceAddFormState(this._allLabels);
 
   @override
   build(context) => Stack(
@@ -70,16 +73,17 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     maxLines: 5,
                   ),
                   Container(
-                    height: 35,
+                    constraints: BoxConstraints(minHeight: 30),
                     child: Row(
                       children: [
                         Expanded(
                           child: Wrap(
-                            spacing: 0,
+                            spacing: 10,
                             children: _selectedLabels
                                 .map((v) => MaterialButton(
                                       minWidth: 0,
-                                      height: 30,
+                                      height: 35,
+                                      padding: EdgeInsets.all(0),
                                       child: Text(v),
                                       onPressed: () => _deselectLabel(v),
                                     ))
@@ -91,6 +95,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                   ),
                   Container(
                     height: 20,
+                    margin: EdgeInsets.only(top: 5),
                     child: Row(children: [
                       Text('Все метки: ',
                           style: TextStyle(fontStyle: FontStyle.italic)),
@@ -107,11 +112,11 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                       Expanded(
                         child: Wrap(
                           spacing: 10,
-                          children: widget.allLabels
+                          children: _allLabels
                               .map((v) => MaterialButton(
                                     minWidth: 0,
                                     height: 35,
-                                    //padding: EdgeInsets.all(0),
+                                    padding: EdgeInsets.all(0),
                                     child: Text(v),
                                     onPressed: () => _selectLabel(v),
                                   ))
@@ -145,14 +150,14 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
 
   void _selectLabel(String label) {
     setState(() {
-      widget.allLabels.remove(label);
+      _allLabels.remove(label);
       _selectedLabels.add(label);
     });
   }
 
   void _deselectLabel(String label) {
     setState(() {
-      widget.allLabels.add(label);
+      _allLabels.add(label);
       _selectedLabels.remove(label);
     });
   }

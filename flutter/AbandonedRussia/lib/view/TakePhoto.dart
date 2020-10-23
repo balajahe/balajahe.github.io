@@ -14,7 +14,7 @@ class _TakePhotoState extends State<TakePhoto> {
   html.VideoElement _videoElement;
   Widget _videoWidget;
   html.ImageCapture _imageCapture;
-  html.Blob _photoBlob;
+  dynamic _photoData;
 
   @override
   build(context) => Scaffold(
@@ -23,9 +23,9 @@ class _TakePhotoState extends State<TakePhoto> {
           future: _initCamera(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return Column(children: [
+              return Stack(children: [
                 _videoWidget,
-                //Image.file(html_photoBlob,
+                _photoData != null ? Image.memory(_photoData) : Container(),
               ]);
             } else {
               return Waiting();
@@ -35,16 +35,7 @@ class _TakePhotoState extends State<TakePhoto> {
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.camera_sharp),
           tooltip: 'Сделать снимок',
-          onPressed: () async {
-            _photoBlob = await _imageCapture.takePhoto();
-            var reader = html.FileReader();
-            reader.readAsArrayBuffer(_photoBlob);
-            var res = reader.onLoadEnd;
-            print(res);
-            //var file = html.File(_photoBlob., 'photo.bmp');
-            //var photoUrl = ui..createObjectURL(photoBlob);
-            Navigator.pop(context, _photoBlob);
-          },
+          onPressed: _takePhoto,
         ),
       );
 
@@ -65,6 +56,19 @@ class _TakePhotoState extends State<TakePhoto> {
       ..autoplay = true;
 
     _imageCapture = html.ImageCapture(_videoStream.getVideoTracks()[0]);
+  }
+
+  Future<void> _takePhoto() async {
+    var photoBlob = await _imageCapture.takePhoto();
+    var reader = html.FileReader();
+    reader.readAsArrayBuffer(photoBlob);
+    reader.onLoadEnd.listen((_) {
+      print(reader.result);
+      setState(() {
+        _photoData = reader.result;
+      });
+      //Navigator.pop(context, null);
+    });
   }
 
   @override

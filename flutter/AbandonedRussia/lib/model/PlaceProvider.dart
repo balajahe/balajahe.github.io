@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../constants.dart';
-import 'Place.dart';
+import '../model/Place.dart';
 import '../dao/PlacesDao.dart';
 
 class PlaceProvider with ChangeNotifier {
