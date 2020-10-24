@@ -41,18 +41,20 @@ class _PhotoTakeState extends State<PhotoTake> {
       );
 
   Future<void> _initCamera() async {
+    _videoStream = await html.window.navigator.mediaDevices.getUserMedia({
+      'video': {'facingMode': "environment"},
+      'audio': false,
+    });
+
+    _htmlVideoElement = html.VideoElement();
+
     ui.platformViewRegistry.registerViewFactory(
         'htmlVideoElement', (int viewId) => _htmlVideoElement);
+
     _videoElement =
         HtmlElementView(key: UniqueKey(), viewType: 'htmlVideoElement');
 
-    _videoStream = await html.window.navigator.mediaDevices.getUserMedia({
-      'video': {
-        'facingMode': {'ideal': "environment"}
-      },
-      'audio': false,
-    });
-    _htmlVideoElement = html.VideoElement()
+    _htmlVideoElement
       ..srcObject = _videoStream
       ..play();
 
@@ -62,7 +64,7 @@ class _PhotoTakeState extends State<PhotoTake> {
   @override
   void dispose() {
     super.dispose();
-    _htmlVideoElement.pause();
+    //_htmlVideoElement.pause();
     //_htmlVideoElement.srcObject = null;
     //_htmlVideoElement.remove();
     _videoStream.getTracks().forEach((track) {
@@ -77,11 +79,15 @@ class _PhotoTakeState extends State<PhotoTake> {
     var photoBlob = await _imageCapture.takePhoto();
     var reader = html.FileReader();
     reader.readAsArrayBuffer(photoBlob);
-    reader.onLoadEnd.listen((_) {
+    reader.onLoadEnd.listen((_) async {
       var photoData = reader.result;
-      setState(() => _isCapturing = false);
-      Navigator.push(context,
+      var accepted = await Navigator.push(context,
           MaterialPageRoute(builder: (context) => PhotoAccept(photoData)));
+      if (accepted) {
+        Navigator.pop(context, photoData);
+      } else {
+        setState(() => _isCapturing = false);
+      }
     });
   }
 }

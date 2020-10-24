@@ -8,14 +8,14 @@ class PlaceProvider with ChangeNotifier {
   bool _isLoading = false;
   bool _noMoreData = false;
   dynamic _error;
-
-  final List<Place> _places = [];
   bool _onlyMine = false;
+  final List<Place> _places = [];
 
   bool get isLoading => _isLoading;
   bool get noMoreData => _noMoreData;
   bool get isError => _error != null;
   dynamic get error => _error;
+  bool get onlyMine => _onlyMine;
 
   int get length => _places.length;
   Place getByNum(int i) => _places[i];

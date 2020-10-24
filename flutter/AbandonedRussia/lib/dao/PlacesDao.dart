@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../dao/Database.dart';
@@ -15,7 +16,7 @@ class PlacesDao {
         title: data['title'],
         description: data['description'],
         labels: data['labels'].map((v) => v).cast<String>().toList(),
-        images: data['images'].map((v) => v).cast<String>().toList(),
+        //photos: data['photos'].map((v) => v).cast<Uint8List>().toList(),
       );
 
   static Map<String, dynamic> _toMap(Place v) => {
@@ -27,7 +28,7 @@ class PlacesDao {
         'title': v.title,
         'description': v.description,
         'labels': v.labels,
-        'images': v.images,
+        //'photos': v.photos,
       };
 
   static Future<List<Place>> getNextPart({

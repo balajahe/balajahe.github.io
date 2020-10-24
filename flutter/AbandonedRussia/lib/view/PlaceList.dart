@@ -7,6 +7,8 @@ import '../view/commonWidgets.dart';
 import '../view/PlaceAdd.dart';
 import '../view/PlaceView.dart';
 
+const ONLY_MINE_TITLE = 'Добавлены мной';
+
 class PlaceList extends StatefulWidget {
   @override
   createState() => _PlaceListState();
@@ -20,11 +22,11 @@ class _PlaceListState extends State<PlaceList> {
     var places = context.watch<PlaceProvider>();
     return Scaffold(
       appBar: AppBar(
-        title: Text(APP_TITLE),
+        title: Text(places.onlyMine ? ONLY_MINE_TITLE : APP_TITLE),
         actions: [
           IconButton(
-              icon: Icon(Icons.my_library_add),
-              tooltip: 'Добавлены мной',
+              icon: Icon(Icons.library_books),
+              tooltip: ONLY_MINE_TITLE,
               onPressed: () => places.refresh(onlyMine: true)),
           IconButton(
               icon: Icon(Icons.refresh),
@@ -39,7 +41,6 @@ class _PlaceListState extends State<PlaceList> {
           var added = await Navigator.push(
             context,
             MaterialPageRoute(
-              settings: RouteSettings(name: "/PlaceAdd"),
               builder: (context) => PlaceAdd(),
             ),
           );

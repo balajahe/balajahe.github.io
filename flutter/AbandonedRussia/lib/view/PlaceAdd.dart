@@ -62,6 +62,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
             body: Form(
               key: _form,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   TextFormField(
                     controller: _title,
@@ -74,24 +75,19 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     maxLines: 5,
                   ),
                   Container(
-                    constraints: BoxConstraints(minHeight: 20),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Wrap(
-                            spacing: 10,
-                            children: _selectedLabels
-                                .map((v) => FlatButton(
-                                      minWidth: 0,
-                                      height: 20,
-                                      padding: EdgeInsets.all(1),
-                                      child: Text(v),
-                                      onPressed: () => _deselectLabel(v),
-                                    ))
-                                .toList(),
-                          ),
-                        ),
-                      ],
+                    constraints: BoxConstraints(minHeight: 30),
+                    child: Wrap(
+                      spacing: 10,
+                      runSpacing: 0,
+                      children: _selectedLabels
+                          .map((v) => FlatButton(
+                                minWidth: 0,
+                                height: 20,
+                                padding: EdgeInsets.all(1),
+                                child: Text(v),
+                                onPressed: () => _deselectLabel(v),
+                              ))
+                          .toList(),
                     ),
                   ),
                   Container(
@@ -108,28 +104,24 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                       ),
                     ]),
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Wrap(
-                          spacing: 10,
-                          children: _allLabels
-                              .map((v) => FlatButton(
-                                    minWidth: 0,
-                                    height: 20,
-                                    padding: EdgeInsets.all(1),
-                                    child: Text(v),
-                                    onPressed: () => _selectLabel(v),
-                                  ))
-                              .toList(),
-                        ),
-                      ),
-                    ],
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 0,
+                    children: _allLabels
+                        .map((v) => FlatButton(
+                              minWidth: 0,
+                              height: 20,
+                              padding: EdgeInsets.all(1),
+                              child: Text(v),
+                              onPressed: () => _selectLabel(v),
+                            ))
+                        .toList(),
                   ),
                   Container(
                     padding: EdgeInsets.only(top: 10),
                     child: Wrap(
                       spacing: 5,
+                      runSpacing: 5,
                       children: _photos
                           .map((data) => Image.memory(
                                 data,
@@ -184,7 +176,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
           title: _title.text,
           description: _desctiption.text,
           labels: _selectedLabels,
-          images: [],
+          photos: _photos,
         );
         await context.read<PlaceProvider>().add(place);
         Navigator.pop(context, true);

@@ -1,4 +1,5 @@
 import '../model/AppUser.dart';
+import 'dart:typed_data';
 
 class Place {
   String id;
@@ -7,7 +8,7 @@ class Place {
   String title;
   String description;
   List<String> labels;
-  List<String> images;
+  List<Uint8List> photos;
 
   Place(
       {this.id,
@@ -16,5 +17,5 @@ class Place {
       this.title,
       this.description,
       this.labels,
-      this.images});
+      this.photos});
 }
