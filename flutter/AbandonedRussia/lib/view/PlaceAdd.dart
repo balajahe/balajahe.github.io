@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:typed_data';
 
 import '../model/Place.dart';
 import '../model/PlaceProvider.dart';
 import '../model/LabelProvider.dart';
 import '../view/commonWidgets.dart';
-import '../view/TakePhoto.dart';
+import '../view/PhotoTake.dart';
 
 const TITLE = Text('Новое место');
 
@@ -41,7 +42,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
   final _title = TextEditingController();
   final _desctiption = TextEditingController();
   final List<String> _selectedLabels = [];
-  //final List<Blob> _photos = [];
+  final List<Uint8List> _photos = [];
   bool _isSaving = false;
 
   _PlaceAddFormState(this._allLabels);
@@ -125,6 +126,21 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                       ),
                     ],
                   ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Wrap(
+                          spacing: 5,
+                          children: _photos
+                              .map((data) => Image.memory(
+                                    data,
+                                    scale: 10,
+                                  ))
+                              .toList(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -132,19 +148,17 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
               tooltip: 'Добавить фото',
               child: Icon(Icons.photo_camera),
               onPressed: () async {
-                var blobPhoto = await Navigator.push(
+                var photoData = await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => TakePhoto()),
+                  MaterialPageRoute(builder: (_) => PhotoTake()),
                 );
+                if (photoData != null) {
+                  setState(() => _photos.add(photoData));
+                }
               },
             ),
           ),
-          _isSaving
-              ? Container(
-                  color: Color(0xAAAAAAAA),
-                  child: Center(child: CircularProgressIndicator()),
-                )
-              : Container(),
+          _isSaving ? WaitingTransparent() : Container(),
         ],
       );
 
