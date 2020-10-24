@@ -13,7 +13,7 @@ class PhotoTake extends StatefulWidget {
 class _PhotoTakeState extends State<PhotoTake> {
   html.MediaStream _videoStream;
   html.VideoElement _htmlVideoElement;
-  Widget _videoPreview;
+  Widget _videoElement;
   html.ImageCapture _imageCapture;
   bool _isCapturing = false;
 
@@ -25,7 +25,7 @@ class _PhotoTakeState extends State<PhotoTake> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return Stack(children: [
-                _videoPreview,
+                _videoElement,
                 _isCapturing ? Waiting() : Container(),
               ]);
             } else {
@@ -36,14 +36,14 @@ class _PhotoTakeState extends State<PhotoTake> {
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.camera_sharp),
           tooltip: 'Сделать снимок',
-          onPressed: _take,
+          onPressed: _takePhoto,
         ),
       );
 
   Future<void> _initCamera() async {
     ui.platformViewRegistry.registerViewFactory(
         'htmlVideoElement', (int viewId) => _htmlVideoElement);
-    _videoPreview =
+    _videoElement =
         HtmlElementView(key: UniqueKey(), viewType: 'htmlVideoElement');
 
     _videoStream = await html.window.navigator.mediaDevices.getUserMedia({
@@ -54,12 +54,25 @@ class _PhotoTakeState extends State<PhotoTake> {
     });
     _htmlVideoElement = html.VideoElement()
       ..srcObject = _videoStream
-      ..autoplay = true;
+      ..play();
 
     _imageCapture = html.ImageCapture(_videoStream.getVideoTracks()[0]);
   }
 
-  Future<void> _take() async {
+  @override
+  void dispose() {
+    super.dispose();
+    _htmlVideoElement.pause();
+    //_htmlVideoElement.srcObject = null;
+    //_htmlVideoElement.remove();
+    _videoStream.getTracks().forEach((track) {
+      track.stop();
+      _videoStream.removeTrack(track);
+    });
+    print('dispose');
+  }
+
+  Future<void> _takePhoto() async {
     setState(() => _isCapturing = true);
     var photoBlob = await _imageCapture.takePhoto();
     var reader = html.FileReader();
@@ -70,16 +83,5 @@ class _PhotoTakeState extends State<PhotoTake> {
       Navigator.push(context,
           MaterialPageRoute(builder: (context) => PhotoAccept(photoData)));
     });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _htmlVideoElement.pause();
-    _videoStream.getTracks().forEach((track) {
-      track.stop();
-      _videoStream.removeTrack(track);
-    });
-    print('dispose');
   }
 }

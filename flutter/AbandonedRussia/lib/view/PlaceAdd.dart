@@ -74,16 +74,16 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     maxLines: 5,
                   ),
                   Container(
-                    constraints: BoxConstraints(minHeight: 30),
+                    constraints: BoxConstraints(minHeight: 20),
                     child: Row(
                       children: [
                         Expanded(
                           child: Wrap(
                             spacing: 10,
                             children: _selectedLabels
-                                .map((v) => MaterialButton(
+                                .map((v) => FlatButton(
                                       minWidth: 0,
-                                      height: 30,
+                                      height: 20,
                                       padding: EdgeInsets.all(1),
                                       child: Text(v),
                                       onPressed: () => _deselectLabel(v),
@@ -114,9 +114,9 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                         child: Wrap(
                           spacing: 10,
                           children: _allLabels
-                              .map((v) => MaterialButton(
+                              .map((v) => FlatButton(
                                     minWidth: 0,
-                                    height: 30,
+                                    height: 20,
                                     padding: EdgeInsets.all(1),
                                     child: Text(v),
                                     onPressed: () => _selectLabel(v),
@@ -126,20 +126,17 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                       ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Wrap(
-                          spacing: 5,
-                          children: _photos
-                              .map((data) => Image.memory(
-                                    data,
-                                    scale: 10,
-                                  ))
-                              .toList(),
-                        ),
-                      ),
-                    ],
+                  Container(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Wrap(
+                      spacing: 5,
+                      children: _photos
+                          .map((data) => Image.memory(
+                                data,
+                                width: 100,
+                              ))
+                          .toList(),
+                    ),
                   ),
                 ],
               ),
