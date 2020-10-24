@@ -82,8 +82,8 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                             children: _selectedLabels
                                 .map((v) => MaterialButton(
                                       minWidth: 0,
-                                      height: 35,
-                                      padding: EdgeInsets.all(0),
+                                      height: 30,
+                                      padding: EdgeInsets.all(1),
                                       child: Text(v),
                                       onPressed: () => _deselectLabel(v),
                                     ))
@@ -115,8 +115,8 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                           children: _allLabels
                               .map((v) => MaterialButton(
                                     minWidth: 0,
-                                    height: 35,
-                                    padding: EdgeInsets.all(0),
+                                    height: 30,
+                                    padding: EdgeInsets.all(1),
                                     child: Text(v),
                                     onPressed: () => _selectLabel(v),
                                   ))
