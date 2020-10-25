@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'dart:ui' as ui;
 import 'dart:html' as html;
 
+import '../model/CameraProvider.dart';
 import '../view/commonWidgets.dart';
 import '../view/PhotoAccept.dart';
 
@@ -16,28 +18,28 @@ class _PhotoTakeState extends State<PhotoTake> {
   html.ImageCapture _imageCapture;
   bool _isCapturing = false;
 
-  @override
-  void initState() {
-    _htmlVideoElement = html.VideoElement();
+  // @override
+  // void initState() {
+  //   _htmlVideoElement = html.VideoElement();
 
-    ui.platformViewRegistry.registerViewFactory(
-        'htmlVideoElement', (int viewId) => _htmlVideoElement);
+  //   ui.platformViewRegistry.registerViewFactory(
+  //       'htmlVideoElement', (int viewId) => _htmlVideoElement);
 
-    super.initState();
-  }
+  //   super.initState();
+  // }
 
-  Future<void> _initCamera() async {
-    _videoStream = await html.window.navigator.mediaDevices.getUserMedia({
-      'video': true, //{'facingMode': "environment"},
-      'audio': false,
-    });
+  // Future<void> _initCamera() async {
+  //   _videoStream = await html.window.navigator.mediaDevices.getUserMedia({
+  //     'video': true, //{'facingMode': "environment"},
+  //     'audio': false,
+  //   });
 
-    _htmlVideoElement
-      ..srcObject = _videoStream
-      ..play();
+  //   _htmlVideoElement
+  //     ..srcObject = _videoStream
+  //     ..play();
 
-    _imageCapture = html.ImageCapture(_videoStream.getVideoTracks()[0]);
-  }
+  //   _imageCapture = html.ImageCapture(_videoStream.getVideoTracks()[0]);
+  // }
 
   @override
   void dispose() {
@@ -57,11 +59,11 @@ class _PhotoTakeState extends State<PhotoTake> {
   build(context) => Scaffold(
         appBar: AppBar(title: Text('Добавить фото')),
         body: FutureBuilder(
-          future: _initCamera(),
+          future: context.watch<CameraProvider>().initCamera(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return Stack(children: [
-                HtmlElementView(key: UniqueKey(), viewType: 'htmlVideoElement'),
+                snapshot.data,
                 _isCapturing ? Waiting() : Container(),
               ]);
             } else {

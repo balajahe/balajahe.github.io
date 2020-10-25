@@ -5,6 +5,7 @@ import 'constants.dart';
 import 'dao/Database.dart';
 import 'model/PlaceProvider.dart';
 import 'model/LabelProvider.dart';
+import 'model/CameraProvider.dart';
 import 'view/commonWidgets.dart';
 import 'view/PlaceList.dart';
 
@@ -16,6 +17,7 @@ class App extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(create: (context) => PlaceProvider()),
           ChangeNotifierProvider(create: (context) => LabelProvider()),
+          ChangeNotifierProvider(create: (context) => CameraProvider()),
         ],
         child: MaterialApp(
           title: APP_TITLE,
