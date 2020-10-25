@@ -39,11 +39,7 @@ class _PlaceListState extends State<PlaceList> {
         child: Icon(Icons.add),
         onPressed: () async {
           var added = await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PlaceAdd(),
-            ),
-          );
+              context, MaterialPageRoute(builder: (context) => PlaceAdd()));
           if (added) {
             _scrollController.animateTo(0,
                 duration: Duration(milliseconds: 1000), curve: Curves.ease);

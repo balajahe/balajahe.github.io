@@ -83,10 +83,9 @@ class _PhotoTakeState extends State<PhotoTake> {
       var photoData = reader.result;
       var accepted = await Navigator.push(context,
           MaterialPageRoute(builder: (context) => PhotoAccept(photoData)));
-      if (accepted) {
+      setState(() => _isCapturing = false);
+      if (accepted != null) {
         Navigator.pop(context, photoData);
-      } else {
-        setState(() => _isCapturing = false);
       }
     });
   }

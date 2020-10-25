@@ -40,11 +40,11 @@ class _StartApp extends StatelessWidget {
           return PlaceList();
         } else {
           return Scaffold(
-            appBar: AppBar(title: Text(APP_TITLE)),
-            body: ListView(
-                children:
-                    snapshot.hasError ? [Errors(snapshot.error)] : [Waiting()]),
-          );
+              appBar: AppBar(title: Text(APP_TITLE)),
+              body: ListView(
+                  children: snapshot.hasError
+                      ? [Errors(snapshot.error)]
+                      : [Waiting()]));
         }
       });
 }

@@ -20,9 +20,7 @@ class PlaceAdd extends StatelessWidget {
           return _PlaceAddForm(snapshot.data);
         } else {
           return Scaffold(
-            appBar: AppBar(
-              title: TITLE,
-            ),
+            appBar: AppBar(title: TITLE),
             body: snapshot.hasError ? Errors(snapshot.error) : Waiting(),
           );
         }
@@ -32,6 +30,7 @@ class PlaceAdd extends StatelessWidget {
 class _PlaceAddForm extends StatefulWidget {
   final List<String> _allLabels;
   _PlaceAddForm(this._allLabels);
+
   @override
   createState() => _PlaceAddFormState(_allLabels.map((v) => v).toList());
 }
@@ -80,10 +79,10 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                       spacing: 10,
                       runSpacing: 0,
                       children: _selectedLabels
-                          .map((v) => FlatButton(
-                                minWidth: 0,
-                                height: 20,
-                                padding: EdgeInsets.all(1),
+                          .map((v) => TextButton(
+                                style: ButtonStyle(
+                                    padding: MaterialStateProperty.all(
+                                        EdgeInsets.all(1))),
                                 child: Text(v),
                                 onPressed: () => _deselectLabel(v),
                               ))
@@ -94,7 +93,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     height: 20,
                     margin: EdgeInsets.only(top: 5),
                     child: Row(children: [
-                      Text('Все метки: ',
+                      Text('Добавить метку: ',
                           style: TextStyle(fontStyle: FontStyle.italic)),
                       Expanded(
                         child: Container(
@@ -108,10 +107,11 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     spacing: 10,
                     runSpacing: 0,
                     children: _allLabels
-                        .map((v) => FlatButton(
-                              minWidth: 0,
-                              height: 20,
-                              padding: EdgeInsets.all(1),
+                        .map((v) => TextButton(
+                              style: ButtonStyle(
+                                padding: MaterialStateProperty.all(
+                                    EdgeInsets.all(1)),
+                              ),
                               child: Text(v),
                               onPressed: () => _selectLabel(v),
                             ))
