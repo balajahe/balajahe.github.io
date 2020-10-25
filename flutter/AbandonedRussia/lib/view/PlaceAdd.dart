@@ -81,8 +81,11 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                       children: _selectedLabels
                           .map((v) => TextButton(
                                 style: ButtonStyle(
-                                    padding: MaterialStateProperty.all(
-                                        EdgeInsets.all(1))),
+                                  padding: MaterialStateProperty.all(
+                                      EdgeInsets.all(1)),
+                                  minimumSize:
+                                      MaterialStateProperty.all(Size(0, 20)),
+                                ),
                                 child: Text(v),
                                 onPressed: () => _deselectLabel(v),
                               ))
@@ -111,6 +114,8 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                               style: ButtonStyle(
                                 padding: MaterialStateProperty.all(
                                     EdgeInsets.all(1)),
+                                minimumSize:
+                                    MaterialStateProperty.all(Size(0, 20)),
                               ),
                               child: Text(v),
                               onPressed: () => _selectLabel(v),

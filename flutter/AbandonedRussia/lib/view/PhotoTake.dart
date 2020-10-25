@@ -18,6 +18,46 @@ class _PhotoTakeState extends State<PhotoTake> {
   bool _isCapturing = false;
 
   @override
+  void initState() {
+    _htmlVideoElement = html.VideoElement();
+
+    ui.platformViewRegistry.registerViewFactory(
+        'htmlVideoElement', (int viewId) => _htmlVideoElement);
+
+    _videoElement =
+        HtmlElementView(key: UniqueKey(), viewType: 'htmlVideoElement');
+
+    super.initState();
+  }
+
+  Future<void> _initCamera() async {
+    _videoStream = await html.window.navigator.mediaDevices.getUserMedia({
+      'video': true, //{'facingMode': "environment"},
+      'audio': false,
+    });
+
+    _htmlVideoElement
+      ..srcObject = _videoStream
+      ..play();
+
+    _imageCapture = html.ImageCapture(_videoStream.getVideoTracks()[0]);
+  }
+
+  @override
+  void dispose() {
+    _htmlVideoElement
+      ..pause()
+      ..srcObject = null;
+
+    _videoStream.getTracks().forEach((track) {
+      track.stop();
+      _videoStream.removeTrack(track);
+    });
+
+    super.dispose();
+  }
+
+  @override
   build(context) => Scaffold(
         appBar: AppBar(title: Text('Добавить фото')),
         body: FutureBuilder(
@@ -39,40 +79,6 @@ class _PhotoTakeState extends State<PhotoTake> {
           onPressed: _takePhoto,
         ),
       );
-
-  Future<void> _initCamera() async {
-    _videoStream = await html.window.navigator.mediaDevices.getUserMedia({
-      'video': {'facingMode': "environment"},
-      'audio': false,
-    });
-
-    _htmlVideoElement = html.VideoElement();
-
-    ui.platformViewRegistry.registerViewFactory(
-        'htmlVideoElement', (int viewId) => _htmlVideoElement);
-
-    _videoElement =
-        HtmlElementView(key: UniqueKey(), viewType: 'htmlVideoElement');
-
-    _htmlVideoElement
-      ..srcObject = _videoStream
-      ..play();
-
-    _imageCapture = html.ImageCapture(_videoStream.getVideoTracks()[0]);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    //_htmlVideoElement.pause();
-    //_htmlVideoElement.srcObject = null;
-    //_htmlVideoElement.remove();
-    _videoStream.getTracks().forEach((track) {
-      track.stop();
-      _videoStream.removeTrack(track);
-    });
-    print('dispose');
-  }
 
   Future<void> _takePhoto() async {
     setState(() => _isCapturing = true);
