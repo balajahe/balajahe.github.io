@@ -77,14 +77,13 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     constraints: BoxConstraints(minHeight: 30),
                     child: Wrap(
                       spacing: 10,
-                      runSpacing: 0,
                       children: _selectedLabels
                           .map((v) => TextButton(
                                 style: ButtonStyle(
                                   padding: MaterialStateProperty.all(
                                       EdgeInsets.all(1)),
                                   minimumSize:
-                                      MaterialStateProperty.all(Size(0, 30)),
+                                      MaterialStateProperty.all(Size(0, 20)),
                                 ),
                                 child: Text(v),
                                 onPressed: () => _deselectLabel(v),
@@ -93,7 +92,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     ),
                   ),
                   Container(
-                    height: 20,
+                    height: 15,
                     margin: EdgeInsets.only(top: 5),
                     child: Row(children: [
                       Text('Добавить метку: ',
@@ -108,14 +107,13 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                   ),
                   Wrap(
                     spacing: 10,
-                    runSpacing: 0,
                     children: _allLabels
                         .map((v) => TextButton(
                               style: ButtonStyle(
                                 padding: MaterialStateProperty.all(
                                     EdgeInsets.all(1)),
                                 minimumSize:
-                                    MaterialStateProperty.all(Size(0, 30)),
+                                    MaterialStateProperty.all(Size(0, 20)),
                               ),
                               child: Text(v),
                               onPressed: () => _selectLabel(v),
@@ -192,8 +190,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
       }
     } else {
       Scaffold.of(newContext).showSnackBar(SnackBar(
-          content: Text(
-              'Выберите хотя бы одну метку и заполните все обязательные поля!')));
+          content: Text('Хотя бы одно фото, одна метка, и название!')));
     }
   }
 }

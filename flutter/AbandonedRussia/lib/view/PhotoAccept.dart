@@ -7,7 +7,7 @@ class PhotoAccept extends StatelessWidget {
 
   @override
   build(context) => Scaffold(
-        appBar: AppBar(title: Text('Одобрить снимок')),
+        appBar: AppBar(title: Text('Одобрить фото')),
         body: Center(child: Image.memory(_photoData)),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.done),

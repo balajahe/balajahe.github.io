@@ -71,7 +71,7 @@ class _PhotoTakeState extends State<PhotoTake> {
         ),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.camera_sharp),
-          tooltip: 'Сделать снимок',
+          tooltip: 'Снимок!',
           onPressed: _takePhoto,
         ),
       );
