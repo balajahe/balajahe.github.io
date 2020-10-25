@@ -84,7 +84,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                                   padding: MaterialStateProperty.all(
                                       EdgeInsets.all(1)),
                                   minimumSize:
-                                      MaterialStateProperty.all(Size(0, 20)),
+                                      MaterialStateProperty.all(Size(0, 30)),
                                 ),
                                 child: Text(v),
                                 onPressed: () => _deselectLabel(v),
@@ -115,7 +115,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                                 padding: MaterialStateProperty.all(
                                     EdgeInsets.all(1)),
                                 minimumSize:
-                                    MaterialStateProperty.all(Size(0, 20)),
+                                    MaterialStateProperty.all(Size(0, 30)),
                               ),
                               child: Text(v),
                               onPressed: () => _selectLabel(v),

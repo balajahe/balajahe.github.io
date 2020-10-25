@@ -13,7 +13,6 @@ class PhotoTake extends StatefulWidget {
 class _PhotoTakeState extends State<PhotoTake> {
   html.MediaStream _videoStream;
   html.VideoElement _htmlVideoElement;
-  Widget _videoElement;
   html.ImageCapture _imageCapture;
   bool _isCapturing = false;
 
@@ -23,9 +22,6 @@ class _PhotoTakeState extends State<PhotoTake> {
 
     ui.platformViewRegistry.registerViewFactory(
         'htmlVideoElement', (int viewId) => _htmlVideoElement);
-
-    _videoElement =
-        HtmlElementView(key: UniqueKey(), viewType: 'htmlVideoElement');
 
     super.initState();
   }
@@ -65,7 +61,7 @@ class _PhotoTakeState extends State<PhotoTake> {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
               return Stack(children: [
-                _videoElement,
+                HtmlElementView(key: UniqueKey(), viewType: 'htmlVideoElement'),
                 _isCapturing ? Waiting() : Container(),
               ]);
             } else {

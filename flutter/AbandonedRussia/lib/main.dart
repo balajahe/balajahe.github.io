@@ -21,7 +21,7 @@ class App extends StatelessWidget {
           title: APP_TITLE,
           theme: ThemeData(
             primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
+            //visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           home: _StartApp(),
         ),
