@@ -55,29 +55,62 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                 builder: (context) => IconButton(
                     icon: Icon(Icons.save),
                     tooltip: 'Сохранить',
+                    iconSize: 40,
                     onPressed: () => _save(context)),
               )
             ]),
-            body: Form(
-              key: _form,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  TextFormField(
-                    controller: _title,
-                    decoration: InputDecoration(labelText: 'Краткое название'),
-                  ),
-                  TextFormField(
-                    controller: _desctiption,
-                    decoration: InputDecoration(labelText: 'Описание'),
-                    minLines: 2,
-                    maxLines: 5,
-                  ),
-                  Container(
-                    constraints: BoxConstraints(minHeight: 30),
-                    child: Wrap(
+            body: SingleChildScrollView(
+              child: Form(
+                key: _form,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    TextFormField(
+                      controller: _title,
+                      decoration:
+                          InputDecoration(labelText: 'Краткое название'),
+                    ),
+                    TextFormField(
+                      controller: _desctiption,
+                      decoration: InputDecoration(labelText: 'Описание'),
+                      minLines: 2,
+                      maxLines: 5,
+                    ),
+                    Container(
+                      constraints: BoxConstraints(minHeight: 30),
+                      child: Wrap(
+                        spacing: 10,
+                        children: _selectedLabels
+                            .map((v) => TextButton(
+                                  style: ButtonStyle(
+                                    padding: MaterialStateProperty.all(
+                                        EdgeInsets.all(1)),
+                                    minimumSize:
+                                        MaterialStateProperty.all(Size(1, 1)),
+                                  ),
+                                  child: Text(v),
+                                  onPressed: () => _deselectLabel(v),
+                                ))
+                            .toList(),
+                      ),
+                    ),
+                    Container(
+                      height: 15,
+                      margin: EdgeInsets.only(top: 5),
+                      child: Row(children: [
+                        Text('Добавить метку: ',
+                            style: TextStyle(fontStyle: FontStyle.italic)),
+                        Expanded(
+                          child: Container(
+                              height: 1,
+                              margin: EdgeInsets.only(top: 10),
+                              color: Colors.grey[400]),
+                        ),
+                      ]),
+                    ),
+                    Wrap(
                       spacing: 10,
-                      children: _selectedLabels
+                      children: _allLabels
                           .map((v) => TextButton(
                                 style: ButtonStyle(
                                   padding: MaterialStateProperty.all(
@@ -86,54 +119,25 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                                       MaterialStateProperty.all(Size(1, 1)),
                                 ),
                                 child: Text(v),
-                                onPressed: () => _deselectLabel(v),
+                                onPressed: () => _selectLabel(v),
                               ))
                           .toList(),
                     ),
-                  ),
-                  Container(
-                    height: 15,
-                    margin: EdgeInsets.only(top: 5),
-                    child: Row(children: [
-                      Text('Добавить метку: ',
-                          style: TextStyle(fontStyle: FontStyle.italic)),
-                      Expanded(
-                        child: Container(
-                            height: 1,
-                            margin: EdgeInsets.only(top: 10),
-                            color: Colors.grey[400]),
+                    Container(
+                      padding: EdgeInsets.only(top: 10),
+                      child: Wrap(
+                        spacing: 5,
+                        runSpacing: 5,
+                        children: _photos
+                            .map((data) => Image.memory(
+                                  data,
+                                  width: 100,
+                                ))
+                            .toList(),
                       ),
-                    ]),
-                  ),
-                  Wrap(
-                    spacing: 10,
-                    children: _allLabels
-                        .map((v) => TextButton(
-                              style: ButtonStyle(
-                                padding: MaterialStateProperty.all(
-                                    EdgeInsets.all(1)),
-                                minimumSize:
-                                    MaterialStateProperty.all(Size(1, 1)),
-                              ),
-                              child: Text(v),
-                              onPressed: () => _selectLabel(v),
-                            ))
-                        .toList(),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 10),
-                    child: Wrap(
-                      spacing: 5,
-                      runSpacing: 5,
-                      children: _photos
-                          .map((data) => Image.memory(
-                                data,
-                                width: 100,
-                              ))
-                          .toList(),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             floatingActionButton: FloatingActionButton(

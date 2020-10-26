@@ -18,12 +18,8 @@ class CameraProvider extends ChangeNotifier {
   }
 
   Future<Widget> initCamera() async {
-    _videoStream = await html.window.navigator.mediaDevices.getUserMedia({
-      'video': {
-        'facingMode': {'exact': 'environment'}
-      },
-      'audio': false,
-    });
+    _videoStream =
+        await html.window.navigator.getUserMedia(video: true, audio: false);
 
     _htmlVideoElement
       ..srcObject = _videoStream
@@ -51,6 +47,7 @@ class CameraProvider extends ChangeNotifier {
     var photoBlob = await _imageCapture.takePhoto();
     var reader = html.FileReader();
     reader.readAsArrayBuffer(photoBlob);
+    //reader.readAsDataUrl(photoBlob);
     await reader.onLoadEnd.first;
     return reader.result;
   }
