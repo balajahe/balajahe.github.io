@@ -4436,6 +4436,7 @@ firebase_auth_platform_interface
 firebase_auth_web
 firebase_core
 firebase_core_platform_interface
+firebase_storage
 
 // Copyright 2017 The Chromium Authors. All rights reserved.
 //

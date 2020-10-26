@@ -83,7 +83,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                                   padding: MaterialStateProperty.all(
                                       EdgeInsets.all(1)),
                                   minimumSize:
-                                      MaterialStateProperty.all(Size(0, 20)),
+                                      MaterialStateProperty.all(Size(1, 1)),
                                 ),
                                 child: Text(v),
                                 onPressed: () => _deselectLabel(v),
@@ -99,7 +99,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                           style: TextStyle(fontStyle: FontStyle.italic)),
                       Expanded(
                         child: Container(
-                            height: 2,
+                            height: 1,
                             margin: EdgeInsets.only(top: 10),
                             color: Colors.grey[400]),
                       ),
@@ -113,7 +113,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                                 padding: MaterialStateProperty.all(
                                     EdgeInsets.all(1)),
                                 minimumSize:
-                                    MaterialStateProperty.all(Size(0, 20)),
+                                    MaterialStateProperty.all(Size(1, 1)),
                               ),
                               child: Text(v),
                               onPressed: () => _selectLabel(v),

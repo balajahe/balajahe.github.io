@@ -8,18 +8,20 @@ class CameraProvider extends ChangeNotifier {
   html.VideoElement _htmlVideoElement;
   html.MediaStream _videoStream;
   html.ImageCapture _imageCapture;
-  //Widget _videoPreview;
   bool _isCapturing = false;
 
   CameraProvider() {
     _htmlVideoElement = html.VideoElement();
+
     ui.platformViewRegistry.registerViewFactory(
         'htmlVideoElement', (int viewId) => _htmlVideoElement);
   }
 
   Future<Widget> initCamera() async {
     _videoStream = await html.window.navigator.mediaDevices.getUserMedia({
-      'video': {"facingMode": "user"},
+      'video': {
+        'facingMode': {'exact': 'environment'}
+      },
       'audio': false,
     });
 
@@ -30,6 +32,19 @@ class CameraProvider extends ChangeNotifier {
     _imageCapture = html.ImageCapture(_videoStream.getVideoTracks()[0]);
 
     return HtmlElementView(key: UniqueKey(), viewType: 'htmlVideoElement');
+  }
+
+  void disposeCamera() {
+    _htmlVideoElement
+      ..pause()
+      ..srcObject = null;
+
+    _videoStream.getTracks().forEach((track) {
+      track.stop();
+      _videoStream.removeTrack(track);
+    });
+
+    print('dispose camera');
   }
 
   Future<Uint8List> takePhoto() async {
