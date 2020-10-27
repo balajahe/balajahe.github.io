@@ -175,8 +175,8 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
   Future<void> _save(newContext) async {
     if (_form.currentState.validate() &&
         _title.text.length > 0 &&
-        _desctiption.text.length > 0 &&
-        _selectedLabels.length > 0) {
+        _selectedLabels.length > 0 &&
+        _photos.length > 0) {
       setState(() => _isSaving = true);
       try {
         var place = Place(

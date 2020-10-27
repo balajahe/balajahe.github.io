@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase/firebase.dart' as fb;
 
 import '../dao/Database.dart';
 import '../model/Place.dart';
@@ -28,7 +29,7 @@ class PlacesDao {
         'title': v.title,
         'description': v.description,
         'labels': v.labels,
-        //'photos': v.photos,
+        //'photosData': v.photos,
       };
 
   static Future<List<Place>> getNextPart({
@@ -61,6 +62,16 @@ class PlacesDao {
   static Future<Place> add(Place place) async {
     place.creator = Database.currentUser;
     place.created = Timestamp.now().toDate();
+    // print(fb.app().storage());
+    // for (var photoData in place.photos) {
+    //   var storageRef = fb
+    //       .app()
+    //       .storage()
+    //       .ref('photos/${DateTime.now().millisecondsSinceEpoch}');
+    //   var snapshot = await storageRef.put(photoData).future;
+    //   var url = await snapshot.ref.getDownloadURL();
+    //   print(url);
+    // }
     var addedPlace = await FirebaseFirestore.instance
         .collection('Places')
         .add(_toMap(place));

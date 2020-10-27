@@ -79,7 +79,7 @@ packages:
     source: hosted
     version: "1.2.0-nullsafety.1"
   firebase:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase
       url: "https://pub.dartlang.org"
