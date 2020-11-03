@@ -54,7 +54,7 @@ class _PlaceListState extends State<PlaceList> {
             var place = places.getByNum(i);
             return ListTile(
               title: Text(place.title),
-              subtitle: Text(place.description),
+              subtitle: Text(place.fullDescription),
               leading: Wrap(
                 spacing: 5,
                 runSpacing: 5,

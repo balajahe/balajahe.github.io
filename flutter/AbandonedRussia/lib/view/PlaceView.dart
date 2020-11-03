@@ -17,7 +17,7 @@ class PlaceView extends StatelessWidget {
         children: [
           ListTile(
             title: SelectableText(place.title),
-            subtitle: SelectableText(place.labels.toString()),
+            subtitle: SelectableText(place.labelsAsString),
           ),
           ListTile(
             title: SelectableText(place.description),

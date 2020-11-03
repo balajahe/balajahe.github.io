@@ -113,11 +113,11 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                       children: _allLabels
                           .map((v) => TextButton(
                                 style: ButtonStyle(
-                                  padding: MaterialStateProperty.all(
-                                      EdgeInsets.all(1)),
-                                  minimumSize:
-                                      MaterialStateProperty.all(Size(1, 1)),
-                                ),
+                                    padding: MaterialStateProperty.all(
+                                        EdgeInsets.all(1)),
+                                    minimumSize:
+                                        MaterialStateProperty.all(Size(1, 27)),
+                                    visualDensity: VisualDensity.compact),
                                 child: Text(v),
                                 onPressed: () => _selectLabel(v),
                               ))
@@ -149,6 +149,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                   MaterialPageRoute(builder: (_) => PhotoTake()),
                 );
                 if (photoData != null) {
+                  print(MediaQuery.of(context).orientation);
                   setState(() => _photos.add(photoData));
                 }
               },
@@ -175,8 +176,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
   Future<void> _save(newContext) async {
     if (_form.currentState.validate() &&
         _title.text.length > 0 &&
-        _selectedLabels.length > 0 &&
-        _photos.length > 0) {
+        _selectedLabels.length > 0) {
       setState(() => _isSaving = true);
       try {
         var place = Place(
@@ -193,8 +193,8 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
             .showSnackBar(SnackBar(content: Text(e.toString())));
       }
     } else {
-      Scaffold.of(newContext).showSnackBar(SnackBar(
-          content: Text('Хотя бы одно фото, одна метка, и название!')));
+      Scaffold.of(newContext).showSnackBar(
+          SnackBar(content: Text('Хотя бы одна метка и непустое название!')));
     }
   }
 }

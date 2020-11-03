@@ -23,6 +23,10 @@ class Place {
       this.photos,
       this.thumbnails});
 
+  String get labelsAsString => labels.toString();
+
+  String get fullDescription => labels.toString() + '\n' + description;
+
   void generateThumbnails() {
     thumbnails = List<Uint8List>.from(
         photos.map((v) => encodePng(copyResize(decodeImage(v), height: 60))));
