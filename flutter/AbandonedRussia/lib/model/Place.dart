@@ -1,5 +1,7 @@
-import '../model/AppUser.dart';
 import 'dart:typed_data';
+import 'package:image/image.dart';
+
+import '../model/AppUser.dart';
 
 class Place {
   String id;
@@ -9,6 +11,7 @@ class Place {
   String description;
   List<String> labels;
   List<Uint8List> photos;
+  List<Uint8List> thumbnails;
 
   Place(
       {this.id,
@@ -17,5 +20,11 @@ class Place {
       this.title,
       this.description,
       this.labels,
-      this.photos});
+      this.photos,
+      this.thumbnails});
+
+  void generateThumbnails() {
+    thumbnails = List<Uint8List>.from(
+        photos.map((v) => copyResize(decodeImage(v), height: 60).getBytes()));
+  }
 }

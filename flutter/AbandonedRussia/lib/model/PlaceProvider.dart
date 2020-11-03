@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../constants.dart';
+import '../statics.dart';
 import '../model/Place.dart';
 import '../dao/PlacesDao.dart';
 

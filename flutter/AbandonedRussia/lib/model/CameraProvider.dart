@@ -17,9 +17,7 @@ class CameraProvider extends ChangeNotifier {
   }
 
   Future<Widget> initCamera() async {
-    _videoStream = await html.window.navigator.mediaDevices.getUserMedia({
-      'video': {'facingMode': 'environment'}
-    });
+    _videoStream = await html.window.navigator.getUserMedia(video: true);
 
     _htmlVideoElement
       ..srcObject = _videoStream

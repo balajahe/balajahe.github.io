@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'constants.dart';
+import 'statics.dart';
 import 'dao/Database.dart';
 import 'model/PlaceProvider.dart';
 import 'model/LabelProvider.dart';
@@ -23,7 +23,7 @@ class App extends StatelessWidget {
           title: APP_TITLE,
           theme: ThemeData(
             primarySwatch: Colors.blue,
-            //visualDensity: VisualDensity.adaptivePlatformDensity,
+            visualDensity: VisualDensity.compact, //.adaptivePlatformDensity,
           ),
           home: _StartApp(),
         ),

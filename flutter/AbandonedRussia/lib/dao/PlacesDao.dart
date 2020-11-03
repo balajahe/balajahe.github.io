@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase/firebase.dart' as fb;
 
@@ -16,21 +17,27 @@ class PlacesDao {
         created: data['created'].toDate(),
         title: data['title'],
         description: data['description'],
-        labels: data['labels'].map((v) => v).cast<String>().toList(),
-        //photos: data['photos'].map((v) => v).cast<Uint8List>().toList(),
+        labels: data['labels'] is List ? List<String>.from(data['labels']) : [],
+        thumbnails: data['thumbnails'] is List
+            ? List<Uint8List>.from(
+                data['thumbnails'].map((t) => base64Decode(t)))
+            : [],
       );
 
-  static Map<String, dynamic> _toMap(Place v) => {
-        'creator': {
-          'uid': v.creator.uid,
-          'created': Timestamp.fromDate(v.creator.created),
-        },
-        'created': Timestamp.fromDate(v.created),
-        'title': v.title,
-        'description': v.description,
-        'labels': v.labels,
-        //'photosData': v.photos,
-      };
+  static Map<String, dynamic> _toMap(Place v) {
+    v.generateThumbnails();
+    return {
+      'creator': {
+        'uid': v.creator.uid,
+        'created': Timestamp.fromDate(v.creator.created),
+      },
+      'created': Timestamp.fromDate(v.created),
+      'title': v.title,
+      'description': v.description,
+      'labels': List<String>.from(v.labels),
+      'thumbnails': List<String>.from(v.thumbnails.map((t) => base64Encode(t))),
+    };
+  }
 
   static Future<List<Place>> getNextPart({
     DateTime after,

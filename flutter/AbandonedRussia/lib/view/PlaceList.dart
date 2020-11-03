@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../constants.dart';
+import '../statics.dart';
 import '../model/PlaceProvider.dart';
 import '../view/commonWidgets.dart';
 import '../view/PlaceAdd.dart';
@@ -55,6 +55,10 @@ class _PlaceListState extends State<PlaceList> {
             return ListTile(
               title: Text(place.title),
               subtitle: Text(place.description),
+              leading: Wrap(
+                children: List<Widget>.from(
+                    place.thumbnails.map((t) => Image.memory(t))),
+              ),
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => PlaceView(place)),
