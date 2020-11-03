@@ -25,6 +25,6 @@ class Place {
 
   void generateThumbnails() {
     thumbnails = List<Uint8List>.from(
-        photos.map((v) => copyResize(decodeImage(v), height: 60).getBytes()));
+        photos.map((v) => encodePng(copyResize(decodeImage(v), height: 60))));
   }
 }

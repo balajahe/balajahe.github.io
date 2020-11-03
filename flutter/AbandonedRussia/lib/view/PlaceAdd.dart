@@ -73,8 +73,8 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     TextFormField(
                       controller: _desctiption,
                       decoration: InputDecoration(labelText: 'Описание'),
-                      minLines: 2,
-                      maxLines: 5,
+                      minLines: 3,
+                      maxLines: 7,
                     ),
                     Container(
                       constraints: BoxConstraints(minHeight: 30),

@@ -56,6 +56,8 @@ class _PlaceListState extends State<PlaceList> {
               title: Text(place.title),
               subtitle: Text(place.description),
               leading: Wrap(
+                spacing: 5,
+                runSpacing: 5,
                 children: List<Widget>.from(
                     place.thumbnails.map((t) => Image.memory(t))),
               ),
