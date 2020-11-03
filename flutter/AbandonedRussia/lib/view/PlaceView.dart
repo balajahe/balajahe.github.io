@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../model/Place.dart';
+import '../model/PlaceProvider.dart';
 
 class PlaceView extends StatelessWidget {
   final Place place;
@@ -12,6 +14,19 @@ class PlaceView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(place.title),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.delete),
+            onPressed: () async {
+              await context.read<PlaceProvider>().delete(place.id);
+              Navigator.pop(context);
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () async {},
+          ),
+        ],
       ),
       body: ListView(
         children: [

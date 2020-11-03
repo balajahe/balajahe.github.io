@@ -85,4 +85,8 @@ class PlacesDao {
     place.id = addedPlace.id;
     return place;
   }
+
+  static Future<void> delete(String id) async {
+    await FirebaseFirestore.instance.collection('Places').doc(id).delete();
+  }
 }

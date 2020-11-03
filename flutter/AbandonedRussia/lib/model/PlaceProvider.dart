@@ -65,6 +65,17 @@ class PlaceProvider with ChangeNotifier {
     }
   }
 
+  Future<void> delete(String id) async {
+    try {
+      await PlacesDao.delete(id);
+      _places.removeWhere((v) => v.id == id);
+      notifyListeners();
+    } catch (e) {
+      print(e.toString());
+      throw e.toString();
+    }
+  }
+
   void refresh({bool onlyMine = false}) {
     _places.clear();
     _onlyMine = onlyMine;

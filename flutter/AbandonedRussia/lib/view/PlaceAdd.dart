@@ -83,11 +83,11 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                         children: _selectedLabels
                             .map((v) => TextButton(
                                   style: ButtonStyle(
-                                    padding: MaterialStateProperty.all(
-                                        EdgeInsets.all(1)),
-                                    minimumSize:
-                                        MaterialStateProperty.all(Size(1, 1)),
-                                  ),
+                                      padding: MaterialStateProperty.all(
+                                          EdgeInsets.all(1)),
+                                      minimumSize: MaterialStateProperty.all(
+                                          Size(1, 20)),
+                                      visualDensity: VisualDensity.compact),
                                   child: Text(v),
                                   onPressed: () => _deselectLabel(v),
                                 ))
@@ -116,7 +116,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                                     padding: MaterialStateProperty.all(
                                         EdgeInsets.all(1)),
                                     minimumSize:
-                                        MaterialStateProperty.all(Size(1, 27)),
+                                        MaterialStateProperty.all(Size(1, 20)),
                                     visualDensity: VisualDensity.compact),
                                 child: Text(v),
                                 onPressed: () => _selectLabel(v),
@@ -177,7 +177,9 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
     if (_form.currentState.validate() &&
         _title.text.length > 0 &&
         _selectedLabels.length > 0) {
-      setState(() => _isSaving = true);
+      setState(() {
+        _isSaving = true;
+      });
       try {
         var place = Place(
           title: _title.text,
@@ -194,7 +196,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
       }
     } else {
       Scaffold.of(newContext).showSnackBar(
-          SnackBar(content: Text('Хотя бы одна метка и непустое название!')));
+          SnackBar(content: Text('Хотя бы одна метка и название!')));
     }
   }
 }
