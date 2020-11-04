@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase/firebase.dart' as fb;
 
 import '../dao/Database.dart';
 import '../model/Place.dart';
@@ -86,7 +85,7 @@ class PlacesDao {
     return place;
   }
 
-  static Future<void> delete(String id) async {
+  static Future<void> del(String id) async {
     await FirebaseFirestore.instance.collection('Places').doc(id).delete();
   }
 }

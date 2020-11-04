@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 
 import 'statics.dart';
 import 'dao/Database.dart';
-import 'model/PlaceProvider.dart';
-import 'model/LabelProvider.dart';
-import 'model/CameraProvider.dart';
+import 'model/PlacesModel.dart';
+import 'model/LabelsModel.dart';
+import 'model/CameraModelWeb.dart';
 import 'view/commonWidgets.dart';
 import 'view/PlaceList.dart';
 
@@ -15,9 +15,9 @@ class App extends StatelessWidget {
   @override
   build(context) => MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => PlaceProvider()),
-          ChangeNotifierProvider(create: (context) => LabelProvider()),
-          ChangeNotifierProvider(create: (context) => CameraProvider()),
+          ChangeNotifierProvider(create: (context) => PlacesModel()),
+          ChangeNotifierProvider(create: (context) => LabelsModel()),
+          ChangeNotifierProvider(create: (context) => CameraModelWeb()),
         ],
         child: MaterialApp(
           title: APP_TITLE,
@@ -46,7 +46,7 @@ class _StartApp extends StatelessWidget {
               body: ListView(
                   children: snapshot.hasError
                       ? [Errors(snapshot.error)]
-                      : [Waiting()]));
+                      : [Working()]));
         }
       });
 }

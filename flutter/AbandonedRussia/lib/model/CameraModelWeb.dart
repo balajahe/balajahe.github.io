@@ -4,12 +4,14 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:html' as html;
 
-class CameraProvider extends ChangeNotifier {
+import 'ICameraModel.dart';
+
+class CameraModelWeb extends ChangeNotifier implements ICameraModel {
   html.VideoElement _htmlVideoElement;
   html.MediaStream _videoStream;
   html.ImageCapture _imageCapture;
 
-  CameraProvider() {
+  CameraModelWeb() {
     _htmlVideoElement = html.VideoElement();
 
     ui.platformViewRegistry.registerViewFactory(

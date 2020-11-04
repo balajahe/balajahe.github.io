@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../statics.dart';
-import '../model/PlaceProvider.dart';
+import '../model/PlacesModel.dart';
 import '../view/commonWidgets.dart';
 import '../view/PlaceAdd.dart';
 import '../view/PlaceView.dart';
@@ -19,7 +19,7 @@ class _PlaceListState extends State<PlaceList> {
 
   @override
   build(context) {
-    var places = context.watch<PlaceProvider>();
+    var places = context.watch<PlacesModel>();
     return Scaffold(
       appBar: AppBar(
         title: Text(places.onlyMine ? ONLY_MINE_TITLE : APP_TITLE),
@@ -67,11 +67,11 @@ class _PlaceListState extends State<PlaceList> {
               ),
             );
           } else if (places.isError) {
-            return Errors(places.error);
+            return Errors(places.errors);
           } else if (places.noMoreData) {
             return null;
           } else {
-            return Waiting();
+            return Working();
           }
         },
       ),

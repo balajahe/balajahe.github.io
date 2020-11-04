@@ -1,22 +1,13 @@
-import 'package:flutter/foundation.dart';
-
 import '../statics.dart';
+import '../model/AbstractModel.dart';
 import '../model/Place.dart';
 import '../dao/PlacesDao.dart';
 
-class PlaceProvider with ChangeNotifier {
-  bool _isLoading = false;
-  bool _noMoreData = false;
-  dynamic _error;
-  bool _onlyMine = false;
+class PlacesModel extends AbstractModel {
+  bool onlyMine = false;
+  bool noMoreData = false;
+
   final List<Place> _places = [];
-
-  bool get isLoading => _isLoading;
-  bool get noMoreData => _noMoreData;
-  bool get isError => _error != null;
-  dynamic get error => _error;
-  bool get onlyMine => _onlyMine;
-
   int get length => _places.length;
   Place getByNum(int i) => _places[i];
 
@@ -30,56 +21,56 @@ class PlaceProvider with ChangeNotifier {
   }
 
   Future<void> _loadNextPart(int from) async {
-    if (!_isLoading && !_noMoreData) {
-      _isLoading = true;
-      _error = null;
+    if (!isWorking && !noMoreData) {
+      startWorking();
       try {
         var newPlaces = await PlacesDao.getNextPart(
           after: _places.length > 0 ? _places.last.created : null,
           count: LOADING_PART_SIZE,
-          onlyMine: _onlyMine,
+          onlyMine: onlyMine,
         );
         newPlaces.forEach((v) => _places.add(v));
         if (newPlaces.length < LOADING_PART_SIZE) {
-          _noMoreData = true;
+          noMoreData = true;
         }
       } catch (e) {
         print(e.toString());
-        _error = e;
-        _noMoreData = true;
+        errors = e;
+        noMoreData = true;
       }
-      _isLoading = false;
-      notifyListeners();
+      stopWorking();
     }
   }
 
   Future<void> add(Place place) async {
+    startWorking();
     try {
       var newPlace = await PlacesDao.add(place);
       _places.insert(0, newPlace);
-      _noMoreData = false;
-      notifyListeners();
+      noMoreData = false;
     } catch (e) {
       print(e.toString());
-      throw e.toString();
+      errors = e;
     }
+    stopWorking();
   }
 
-  Future<void> delete(String id) async {
+  Future<void> del(String id) async {
+    startWorking();
     try {
-      await PlacesDao.delete(id);
+      await PlacesDao.del(id);
       _places.removeWhere((v) => v.id == id);
-      notifyListeners();
     } catch (e) {
       print(e.toString());
-      throw e.toString();
+      errors = e;
     }
+    stopWorking();
   }
 
   void refresh({bool onlyMine = false}) {
     _places.clear();
-    _onlyMine = onlyMine;
-    _noMoreData = false;
+    onlyMine = onlyMine;
+    noMoreData = false;
     notifyListeners();
   }
 }

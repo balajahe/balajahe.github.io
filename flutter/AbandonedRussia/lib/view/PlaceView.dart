@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../model/Place.dart';
-import '../model/PlaceProvider.dart';
+import '../model/PlacesModel.dart';
 
 class PlaceView extends StatelessWidget {
   final Place place;
@@ -18,7 +18,7 @@ class PlaceView extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () async {
-              await context.read<PlaceProvider>().delete(place.id);
+              await context.read<PlacesModel>().del(place.id);
               Navigator.pop(context);
             },
           ),

@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'dart:typed_data';
 
 import '../model/Place.dart';
-import '../model/PlaceProvider.dart';
-import '../model/LabelProvider.dart';
+import '../model/PlacesModel.dart';
+import '../model/LabelsModel.dart';
 import '../view/commonWidgets.dart';
 import '../view/PhotoTake.dart';
 
@@ -13,7 +13,7 @@ const TITLE = Text('Новое место');
 class PlaceAdd extends StatelessWidget {
   @override
   build(context) => FutureBuilder(
-      future: context.watch<LabelProvider>().getAll(),
+      future: context.watch<LabelsModel>().getAll(),
       builder: (context, snapshot) {
         if (!snapshot.hasError &&
             snapshot.connectionState == ConnectionState.done) {
@@ -21,7 +21,7 @@ class PlaceAdd extends StatelessWidget {
         } else {
           return Scaffold(
             appBar: AppBar(title: TITLE),
-            body: snapshot.hasError ? Errors(snapshot.error) : Waiting(),
+            body: snapshot.hasError ? Errors(snapshot.error) : Working(),
           );
         }
       });
@@ -81,13 +81,10 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                       child: Wrap(
                         spacing: 10,
                         children: _selectedLabels
-                            .map((v) => TextButton(
-                                  style: ButtonStyle(
-                                      padding: MaterialStateProperty.all(
-                                          EdgeInsets.all(1)),
-                                      minimumSize: MaterialStateProperty.all(
-                                          Size(1, 20)),
-                                      visualDensity: VisualDensity.compact),
+                            .map((v) => FlatButton(
+                                  height: 15,
+                                  minWidth: 0,
+                                  padding: EdgeInsets.all(2),
                                   child: Text(v),
                                   onPressed: () => _deselectLabel(v),
                                 ))
@@ -111,13 +108,10 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     Wrap(
                       spacing: 10,
                       children: _allLabels
-                          .map((v) => TextButton(
-                                style: ButtonStyle(
-                                    padding: MaterialStateProperty.all(
-                                        EdgeInsets.all(1)),
-                                    minimumSize:
-                                        MaterialStateProperty.all(Size(1, 20)),
-                                    visualDensity: VisualDensity.compact),
+                          .map((v) => FlatButton(
+                                height: 15,
+                                minWidth: 0,
+                                padding: EdgeInsets.all(2),
                                 child: Text(v),
                                 onPressed: () => _selectLabel(v),
                               ))
@@ -155,7 +149,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
               },
             ),
           ),
-          _isSaving ? WaitingTransparent() : Container(),
+          _isSaving ? WorkingTransparent() : Container(),
         ],
       );
 
@@ -187,7 +181,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
           labels: _selectedLabels,
           photos: _photos,
         );
-        await context.read<PlaceProvider>().add(place);
+        await context.read<PlacesModel>().add(place);
         Navigator.pop(context, true);
       } catch (e) {
         print(e);

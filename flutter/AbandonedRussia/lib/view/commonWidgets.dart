@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class Waiting extends StatelessWidget {
+class Working extends StatelessWidget {
   @override
   build(_) => Container(
       padding: EdgeInsets.only(top: 15),
       child: Center(child: CircularProgressIndicator()));
 }
 
-class WaitingTransparent extends StatelessWidget {
+class WorkingTransparent extends StatelessWidget {
   @override
   build(_) => Container(
       padding: EdgeInsets.only(top: 15),
