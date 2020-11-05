@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 
 class PhotoAccept extends StatelessWidget {
   final Uint8List _photoData;

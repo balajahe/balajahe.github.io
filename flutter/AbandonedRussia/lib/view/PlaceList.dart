@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../statics.dart';
+import '../settings.dart';
 import '../model/Places.dart';
 import '../view/commonWidgets.dart';
 import '../view/PlaceAdd.dart';

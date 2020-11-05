@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'statics.dart';
+import 'settings.dart';
 import 'dao/Database.dart';
 import 'model/Places.dart';
 import 'model/Labels.dart';
 import 'view/commonWidgets.dart';
 import 'view/PlaceList.dart';
-import 'model/CameraWeb.dart';
-import 'model/CameraFlutter.dart';
 
 void main() {
   ErrorWidget.builder = (e) => WaitingOrErrors(error: e);
@@ -21,8 +19,7 @@ class App extends StatelessWidget {
         providers: [
           ChangeNotifierProvider(create: (context) => Places()),
           ChangeNotifierProvider(create: (context) => Labels()),
-          ChangeNotifierProvider(create: (context) => CameraWeb()),
-          ChangeNotifierProvider(create: (context) => CameraFlutter()),
+          ChangeNotifierProvider(create: (context) => Camera()),
         ],
         child: MaterialApp(
           title: APP_TITLE,

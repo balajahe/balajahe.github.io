@@ -1,7 +1,6 @@
-import '../statics.dart';
-import 'AbstractModel.dart';
-import 'Place.dart';
-import '../dao/PlacesDao.dart';
+import '../settings.dart';
+import '../model/AbstractModel.dart';
+import '../model/Place.dart';
 
 class Places extends AbstractModel {
   bool onlyMine = false;

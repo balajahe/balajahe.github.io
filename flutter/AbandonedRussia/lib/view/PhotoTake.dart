@@ -2,9 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../settings.dart';
 import '../model/CameraAbstract.dart';
-import '../model/CameraWeb.dart';
-import '../model/CameraFlutter.dart';
 import '../view/commonWidgets.dart';
 import '../view/PhotoAccept.dart';
 
@@ -19,11 +18,7 @@ class _PhotoTakeState extends State<PhotoTake> {
 
   @override
   build(context) {
-    if (kIsWeb)
-      _camera = context.watch<CameraWeb>();
-    else
-      _camera = context.watch<CameraFlutter>();
-
+    _camera = context.watch<Camera>();
     return Scaffold(
       appBar: AppBar(title: Text('Добавить фото')),
       body: FutureBuilder(

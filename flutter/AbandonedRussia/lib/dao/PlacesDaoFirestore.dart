@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../dao/Database.dart';
+import 'Database.dart';
 import 'PlacesDaoAbstract.dart';
 import '../model/Place.dart';
 import '../model/AppUser.dart';
 
-class PlacesDao implements PlacesDaoAbstract {
+class PlacesDaoFirestore implements PlacesDaoAbstract {
   Place _fromMap(String id, Map<String, dynamic> data) => Place(
         id: id,
         creator: AppUser(

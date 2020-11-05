@@ -79,6 +79,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                         spacing: 10,
                         children: _place.labels
                             .map((v) => TextButton(
+                                  //style: ButtonStyle(minimumSize: MaterialStateProperty<Size>.all(),
                                   child: Text(v),
                                   onPressed: () => _deselectLabel(v),
                                 ))

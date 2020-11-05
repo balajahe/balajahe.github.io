@@ -23,10 +23,11 @@ class CameraFlutter extends ChangeNotifier implements CameraAbstract {
   }
 
   Future<Uint8List> takePhoto() async {
-    var path = (await getTemporaryDirectory()).path + '${DateTime.now()}.png';
+    var path = (await getTemporaryDirectory()).path + '/${DateTime.now()}.png';
+    print(path);
     await _camera.takePicture(path);
     var file = File(path);
-    var data = file.readAsBytes();
+    var data = await file.readAsBytes();
     await file.delete();
     return data;
   }
