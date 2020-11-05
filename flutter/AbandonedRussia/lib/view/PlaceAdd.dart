@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'dart:typed_data';
 
 import '../model/Place.dart';
-import '../model/PlacesModel.dart';
-import '../model/LabelsModel.dart';
+import '../model/Places.dart';
+import '../model/Labels.dart';
 import '../view/commonWidgets.dart';
 import '../view/PhotoTake.dart';
 
@@ -13,10 +12,9 @@ const TITLE = Text('Новое место');
 class PlaceAdd extends StatelessWidget {
   @override
   build(context) => FutureBuilder(
-      future: context.watch<LabelsModel>().getAll(),
+      future: context.watch<Labels>().getAll(),
       builder: (context, snapshot) {
-        if (!snapshot.hasError &&
-            snapshot.connectionState == ConnectionState.done) {
+        if (snapshot.hasData) {
           return _PlaceAddForm(snapshot.data);
         } else {
           return Scaffold(
@@ -36,12 +34,11 @@ class _PlaceAddForm extends StatefulWidget {
 }
 
 class _PlaceAddFormState extends State<_PlaceAddForm> {
+  final Place _place = Place();
   final List<String> _allLabels;
   final _form = GlobalKey<FormState>();
   final _title = TextEditingController();
   final _desctiption = TextEditingController();
-  final List<String> _selectedLabels = [];
-  final List<Uint8List> _photos = [];
   bool _isSaving = false;
 
   _PlaceAddFormState(this._allLabels);
@@ -80,11 +77,8 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                       constraints: BoxConstraints(minHeight: 30),
                       child: Wrap(
                         spacing: 10,
-                        children: _selectedLabels
-                            .map((v) => FlatButton(
-                                  height: 15,
-                                  minWidth: 0,
-                                  padding: EdgeInsets.all(2),
+                        children: _place.labels
+                            .map((v) => TextButton(
                                   child: Text(v),
                                   onPressed: () => _deselectLabel(v),
                                 ))
@@ -108,10 +102,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     Wrap(
                       spacing: 10,
                       children: _allLabels
-                          .map((v) => FlatButton(
-                                height: 15,
-                                minWidth: 0,
-                                padding: EdgeInsets.all(2),
+                          .map((v) => TextButton(
                                 child: Text(v),
                                 onPressed: () => _selectLabel(v),
                               ))
@@ -122,11 +113,8 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                       child: Wrap(
                         spacing: 5,
                         runSpacing: 5,
-                        children: _photos
-                            .map((data) => Image.memory(
-                                  data,
-                                  width: 100,
-                                ))
+                        children: _place.photos
+                            .map<Widget>((v) => Image.memory(v.thumbnail))
                             .toList(),
                       ),
                     ),
@@ -143,8 +131,8 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                   MaterialPageRoute(builder: (_) => PhotoTake()),
                 );
                 if (photoData != null) {
-                  print(MediaQuery.of(context).orientation);
-                  setState(() => _photos.add(photoData));
+                  setState(() => _place.addPhoto(
+                      photoData, MediaQuery.of(context).orientation));
                 }
               },
             ),
@@ -156,21 +144,21 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
   void _selectLabel(String label) {
     setState(() {
       _allLabels.remove(label);
-      _selectedLabels.add(label);
+      _place.labels.add(label);
     });
   }
 
   void _deselectLabel(String label) {
     setState(() {
       _allLabels.add(label);
-      _selectedLabels.remove(label);
+      _place.labels.remove(label);
     });
   }
 
   Future<void> _save(newContext) async {
     if (_form.currentState.validate() &&
         _title.text.length > 0 &&
-        _selectedLabels.length > 0) {
+        _place.labels.length > 0) {
       setState(() {
         _isSaving = true;
       });
@@ -178,10 +166,10 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
         var place = Place(
           title: _title.text,
           description: _desctiption.text,
-          labels: _selectedLabels,
-          photos: _photos,
+          labels: _place.labels,
+          photos: _place.photos,
         );
-        await context.read<PlacesModel>().add(place);
+        await context.read<Places>().add(place);
         Navigator.pop(context, true);
       } catch (e) {
         print(e);

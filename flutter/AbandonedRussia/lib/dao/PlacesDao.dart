@@ -3,11 +3,12 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../dao/Database.dart';
+import 'PlacesDaoInterface.dart';
 import '../model/Place.dart';
 import '../model/AppUser.dart';
 
-class PlacesDao {
-  static Place _fromMap(String id, Map<String, dynamic> data) => Place(
+class PlacesDao implements PlacesDaoInterface {
+  Place _fromMap(String id, Map<String, dynamic> data) => Place(
         id: id,
         creator: AppUser(
           uid: data['creator']['uid'],
@@ -17,14 +18,14 @@ class PlacesDao {
         title: data['title'],
         description: data['description'],
         labels: data['labels'] is List ? List<String>.from(data['labels']) : [],
-        thumbnails: data['thumbnails'] is List
-            ? List<Uint8List>.from(
-                data['thumbnails'].map((t) => base64Decode(t)))
+        photos: data['thumbnails'] is List
+            ? data['thumbnails']
+                .map<Photo>((v) => Photo(thumbnail: base64Decode(v)))
+                .toList()
             : [],
       );
 
-  static Map<String, dynamic> _toMap(Place v) {
-    v.generateThumbnails();
+  Map<String, dynamic> _toMap(Place v) {
     return {
       'creator': {
         'uid': v.creator.uid,
@@ -34,11 +35,12 @@ class PlacesDao {
       'title': v.title,
       'description': v.description,
       'labels': List<String>.from(v.labels),
-      'thumbnails': List<String>.from(v.thumbnails.map((t) => base64Encode(t))),
+      'thumbnails':
+          v.photos.map<String>((v) => base64Encode(v.thumbnail)).toList(),
     };
   }
 
-  static Future<List<Place>> getNextPart({
+  Future<List<Place>> getNextPart({
     DateTime after,
     int count,
     bool onlyMine = false,
@@ -65,7 +67,7 @@ class PlacesDao {
     return data.docs.map((v) => _fromMap(v.id, v.data())).toList();
   }
 
-  static Future<Place> add(Place place) async {
+  Future<Place> add(Place place) async {
     place.creator = Database.currentUser;
     place.created = Timestamp.now().toDate();
     // print(fb.app().storage());
@@ -85,7 +87,7 @@ class PlacesDao {
     return place;
   }
 
-  static Future<void> del(String id) async {
+  Future<void> del(String id) async {
     await FirebaseFirestore.instance.collection('Places').doc(id).delete();
   }
 }

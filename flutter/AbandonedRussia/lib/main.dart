@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 
 import 'statics.dart';
 import 'dao/Database.dart';
-import 'model/PlacesModel.dart';
-import 'model/LabelsModel.dart';
-import 'model/CameraModelWeb.dart';
+import 'model/Places.dart';
+import 'model/Labels.dart';
+import 'model/CameraWeb.dart';
 import 'view/commonWidgets.dart';
 import 'view/PlaceList.dart';
 
@@ -15,9 +15,9 @@ class App extends StatelessWidget {
   @override
   build(context) => MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => PlacesModel()),
-          ChangeNotifierProvider(create: (context) => LabelsModel()),
-          ChangeNotifierProvider(create: (context) => CameraModelWeb()),
+          ChangeNotifierProvider(create: (context) => Places()),
+          ChangeNotifierProvider(create: (context) => Labels()),
+          ChangeNotifierProvider(create: (context) => CameraWeb()),
         ],
         child: MaterialApp(
           title: APP_TITLE,

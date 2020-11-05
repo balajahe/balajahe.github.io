@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 
-abstract class ICameraModel {
-  ICameraModel();
-
+abstract class CameraInterface {
   Future<Widget> initCamera();
 
   void disposeCamera();

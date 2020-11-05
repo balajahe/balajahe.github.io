@@ -2,18 +2,13 @@ import 'package:flutter/foundation.dart';
 
 import '../dao/LabelsDao.dart';
 
-class LabelsModel with ChangeNotifier {
+class Labels with ChangeNotifier {
   List<String> _labels;
 
   Future<List<String>> getAll() async {
     if (_labels == null) {
-      await _loadAll();
+      _labels = await LabelsDao().getAll();
     }
     return _labels;
-  }
-
-  Future<void> _loadAll() async {
-    _labels = await LabelsDao.getAll();
-    notifyListeners();
   }
 }

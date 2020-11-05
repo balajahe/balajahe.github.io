@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../statics.dart';
-import '../model/PlacesModel.dart';
+import '../model/Places.dart';
 import '../view/commonWidgets.dart';
 import '../view/PlaceAdd.dart';
 import '../view/PlaceView.dart';
@@ -19,7 +19,7 @@ class _PlaceListState extends State<PlaceList> {
 
   @override
   build(context) {
-    var places = context.watch<PlacesModel>();
+    var places = context.watch<Places>();
     return Scaffold(
       appBar: AppBar(
         title: Text(places.onlyMine ? ONLY_MINE_TITLE : APP_TITLE),
@@ -59,7 +59,7 @@ class _PlaceListState extends State<PlaceList> {
                 spacing: 5,
                 runSpacing: 5,
                 children: List<Widget>.from(
-                    place.thumbnails.map((t) => Image.memory(t))),
+                    place.photos.map((v) => Image.memory(v.thumbnail))),
               ),
               onTap: () => Navigator.push(
                 context,

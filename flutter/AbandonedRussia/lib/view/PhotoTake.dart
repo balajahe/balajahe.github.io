@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../model/CameraModelWeb.dart';
+import '../model/CameraInterface.dart';
+import '../model/CameraWeb.dart';
 import '../view/commonWidgets.dart';
 import '../view/PhotoAccept.dart';
 
@@ -11,16 +12,16 @@ class PhotoTake extends StatefulWidget {
 }
 
 class _PhotoTakeState extends State<PhotoTake> {
-  CameraModelWeb _cameraProvider;
+  CameraInterface _camera;
   bool _isCapturing = false;
 
   @override
   build(context) {
-    _cameraProvider = context.watch<CameraModelWeb>();
+    _camera = context.watch<CameraWeb>();
     return Scaffold(
       appBar: AppBar(title: Text('Добавить фото')),
       body: FutureBuilder(
-          future: _cameraProvider.initCamera(),
+          future: _camera.initCamera(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done &&
                 !_isCapturing) {
@@ -39,7 +40,7 @@ class _PhotoTakeState extends State<PhotoTake> {
 
   Future<void> _takePhoto() async {
     setState(() => _isCapturing = true);
-    var photoData = await _cameraProvider.takePhoto();
+    var photoData = await _camera.takePhoto();
     var accepted = await Navigator.push(context,
         MaterialPageRoute(builder: (context) => PhotoAccept(photoData)));
     if (accepted != null) {
@@ -51,7 +52,7 @@ class _PhotoTakeState extends State<PhotoTake> {
 
   @override
   void dispose() {
-    _cameraProvider.disposeCamera();
+    _camera.disposeCamera();
     super.dispose();
   }
 }

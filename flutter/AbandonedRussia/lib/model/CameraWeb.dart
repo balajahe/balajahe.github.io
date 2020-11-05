@@ -4,14 +4,14 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:html' as html;
 
-import 'ICameraModel.dart';
+import 'CameraInterface.dart';
 
-class CameraModelWeb extends ChangeNotifier implements ICameraModel {
+class CameraWeb extends ChangeNotifier implements CameraInterface {
   html.VideoElement _htmlVideoElement;
   html.MediaStream _videoStream;
   html.ImageCapture _imageCapture;
 
-  CameraModelWeb() {
+  CameraWeb() {
     _htmlVideoElement = html.VideoElement();
 
     ui.platformViewRegistry.registerViewFactory(
@@ -21,7 +21,7 @@ class CameraModelWeb extends ChangeNotifier implements ICameraModel {
   Future<Widget> initCamera() async {
     _videoStream = await html.window.navigator.mediaDevices.getUserMedia({
       'video': {
-        'facingMode': {'exact': 'environment'}
+        'facingmode': {'exact': 'environment'}
       }
     });
 

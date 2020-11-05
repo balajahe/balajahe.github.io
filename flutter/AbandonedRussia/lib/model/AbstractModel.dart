@@ -1,19 +1,20 @@
 import 'package:flutter/foundation.dart';
 
 abstract class AbstractModel with ChangeNotifier {
-  bool isWorking = false;
+  bool _isWorking = false;
   dynamic errors;
 
+  bool get isWorking => _isWorking;
   bool get isError => errors != null;
 
   void startWorking() {
-    isWorking = true;
+    _isWorking = true;
     errors = null;
     notifyListeners();
   }
 
   void stopWorking() {
-    isWorking = false;
+    _isWorking = false;
     notifyListeners();
   }
 }

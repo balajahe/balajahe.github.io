@@ -1,17 +1,26 @@
 import 'dart:typed_data';
 import 'package:image/image.dart';
+import 'package:flutter/material.dart';
 
+import '../model/AbstractModel.dart';
 import '../model/AppUser.dart';
 
-class Place {
+class Photo {
+  Uint8List thumbnail;
+  Uint8List origin;
+  String originUrl;
+
+  Photo({this.thumbnail, this.origin, this.originUrl});
+}
+
+class Place extends AbstractModel {
   String id;
   AppUser creator;
   DateTime created;
   String title;
   String description;
   List<String> labels;
-  List<Uint8List> photos;
-  List<Uint8List> thumbnails;
+  List<Photo> photos;
 
   Place(
       {this.id,
@@ -20,15 +29,24 @@ class Place {
       this.title,
       this.description,
       this.labels,
-      this.photos,
-      this.thumbnails});
+      this.photos}) {
+    if (labels == null) {
+      labels = [];
+    }
+    if (photos == null) {
+      photos = [];
+    }
+  }
 
   String get labelsAsString => labels.toString();
 
   String get fullDescription => labels.toString() + '\n' + description;
 
-  void generateThumbnails() {
-    thumbnails = List<Uint8List>.from(
-        photos.map((v) => encodePng(copyResize(decodeImage(v), width: 45))));
+  addPhoto(Uint8List origin, [Orientation orientation]) {
+    startWorking();
+    Uint8List thumbnail = encodePng(copyResize(decodeImage(origin), width: 60));
+    photos.add(Photo(origin: origin, thumbnail: thumbnail));
+    stopWorking();
+    return thumbnail;
   }
 }
