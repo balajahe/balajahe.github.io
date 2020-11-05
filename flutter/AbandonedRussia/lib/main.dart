@@ -10,7 +10,10 @@ import 'model/CameraFlutter.dart';
 import 'view/commonWidgets.dart';
 import 'view/PlaceList.dart';
 
-void main() => runApp(App());
+void main() {
+  ErrorWidget.builder = (e) => WaitingOrErrors(error: e);
+  runApp(App());
+}
 
 class App extends StatelessWidget {
   @override
@@ -46,7 +49,7 @@ class _StartApp extends StatelessWidget {
           return Scaffold(
               appBar: AppBar(title: Text(APP_TITLE)),
               body: SingleChildScrollView(
-                  child: WaitingOrError(error: snapshot.error)));
+                  child: WaitingOrErrors(error: snapshot.error)));
         }
       });
 }

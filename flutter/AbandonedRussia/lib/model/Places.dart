@@ -71,7 +71,7 @@ class Places extends AbstractModel {
 
   void refresh({bool onlyMine = false}) {
     _places.clear();
-    onlyMine = onlyMine;
+    this.onlyMine = onlyMine;
     noMoreData = false;
     notifyListeners();
   }

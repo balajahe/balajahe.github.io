@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class WaitingOrError extends StatelessWidget {
+class WaitingOrErrors extends StatelessWidget {
   final dynamic error;
   final bool transparent;
 
-  WaitingOrError({this.error, this.transparent = false});
+  WaitingOrErrors({this.error, this.transparent = false});
 
   @override
   build(context) {
     if (error == null) {
       return transparent ? _WaitingTransparent() : _Waiting();
     } else {
-      return _Error(error);
+      return Errors(error);
     }
   }
 }
@@ -31,10 +31,10 @@ class _WaitingTransparent extends StatelessWidget {
       child: Center(child: CircularProgressIndicator()));
 }
 
-class _Error extends StatelessWidget {
+class Errors extends StatelessWidget {
   final dynamic error;
 
-  _Error(this.error);
+  Errors(this.error);
 
   @override
   build(_) {

@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import '../model/Place.dart';
 
 abstract class PlacesDaoAbstract {

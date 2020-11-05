@@ -20,9 +20,7 @@ class CameraWeb extends ChangeNotifier implements CameraAbstract {
 
   Future<Widget> initCamera() async {
     _videoStream = await html.window.navigator.mediaDevices.getUserMedia({
-      'video': {
-        'facingmode': {'exact': 'environment'}
-      }
+      'video': {'facingMode': 'environment'}
     });
 
     _htmlVideoElement
