@@ -5,10 +5,10 @@ import 'statics.dart';
 import 'dao/Database.dart';
 import 'model/Places.dart';
 import 'model/Labels.dart';
-import 'model/CameraWeb.dart';
-import 'model/CameraFlutter.dart';
 import 'view/commonWidgets.dart';
 import 'view/PlaceList.dart';
+import 'model/CameraWeb.dart';
+import 'model/CameraFlutter.dart';
 
 void main() {
   ErrorWidget.builder = (e) => WaitingOrErrors(error: e);
