@@ -1,13 +1,29 @@
 import 'package:flutter/material.dart';
 
-class Working extends StatelessWidget {
+class WaitingOrError extends StatelessWidget {
+  final dynamic error;
+  final bool transparent;
+
+  WaitingOrError({this.error, this.transparent = false});
+
+  @override
+  build(context) {
+    if (error == null) {
+      return transparent ? _WaitingTransparent() : _Waiting();
+    } else {
+      return _Error(error);
+    }
+  }
+}
+
+class _Waiting extends StatelessWidget {
   @override
   build(_) => Container(
       padding: EdgeInsets.only(top: 15),
       child: Center(child: CircularProgressIndicator()));
 }
 
-class WorkingTransparent extends StatelessWidget {
+class _WaitingTransparent extends StatelessWidget {
   @override
   build(_) => Container(
       padding: EdgeInsets.only(top: 15),
@@ -15,20 +31,20 @@ class WorkingTransparent extends StatelessWidget {
       child: Center(child: CircularProgressIndicator()));
 }
 
-class Errors extends StatelessWidget {
-  final dynamic _error;
+class _Error extends StatelessWidget {
+  final dynamic error;
 
-  Errors(this._error);
+  _Error(this.error);
 
   @override
   build(_) {
     var stackTrace = '';
     try {
-      stackTrace = _error.stackTrace.toString();
+      stackTrace = error.stackTrace.toString();
     } catch (_) {}
     return SingleChildScrollView(
         padding: EdgeInsets.only(top: 15),
         child: Center(
-            child: SelectableText('ERROR: ${_error.toString()}\n$stackTrace')));
+            child: SelectableText('ERROR: ${error.toString()}\n$stackTrace')));
   }
 }

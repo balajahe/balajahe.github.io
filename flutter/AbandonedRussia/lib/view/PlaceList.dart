@@ -67,11 +67,11 @@ class _PlaceListState extends State<PlaceList> {
               ),
             );
           } else if (places.isError) {
-            return Errors(places.errors);
+            return WaitingOrError(error: places.errors);
           } else if (places.noMoreData) {
             return null;
           } else {
-            return Working();
+            return WaitingOrError();
           }
         },
       ),

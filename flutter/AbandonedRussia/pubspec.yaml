@@ -24,6 +24,8 @@ dependencies:
   flutter:
     sdk: flutter
   provider:
+  camera:
+  path_provider:
   image:
   firebase_core:
   firebase_auth:

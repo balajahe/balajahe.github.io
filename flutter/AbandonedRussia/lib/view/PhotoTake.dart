@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../model/CameraInterface.dart';
+import '../model/CameraAbstract.dart';
 import '../model/CameraWeb.dart';
+import '../model/CameraFlutter.dart';
 import '../view/commonWidgets.dart';
 import '../view/PhotoAccept.dart';
 
@@ -12,22 +14,25 @@ class PhotoTake extends StatefulWidget {
 }
 
 class _PhotoTakeState extends State<PhotoTake> {
-  CameraInterface _camera;
+  CameraAbstract _camera;
   bool _isCapturing = false;
 
   @override
   build(context) {
-    _camera = context.watch<CameraWeb>();
+    if (kIsWeb)
+      _camera = context.watch<CameraWeb>();
+    else
+      _camera = context.watch<CameraFlutter>();
+
     return Scaffold(
       appBar: AppBar(title: Text('Добавить фото')),
       body: FutureBuilder(
           future: _camera.initCamera(),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done &&
-                !_isCapturing) {
+            if (snapshot.hasData && !_isCapturing) {
               return snapshot.data;
             } else {
-              return Working();
+              return WaitingOrError(error: snapshot.error);
             }
           }),
       floatingActionButton: FloatingActionButton(

@@ -37,6 +37,12 @@ class PlaceView extends StatelessWidget {
           ListTile(
             title: SelectableText(place.description),
           ),
+          Wrap(
+            spacing: 5,
+            runSpacing: 5,
+            children: List<Widget>.from(
+                place.photos.map((v) => Image.memory(v.thumbnail))),
+          ),
           ListTile(
               subtitle: SelectableText('добавлено ' +
                   place.created.toString() +

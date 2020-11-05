@@ -6,6 +6,7 @@ import 'dao/Database.dart';
 import 'model/Places.dart';
 import 'model/Labels.dart';
 import 'model/CameraWeb.dart';
+import 'model/CameraFlutter.dart';
 import 'view/commonWidgets.dart';
 import 'view/PlaceList.dart';
 
@@ -18,6 +19,7 @@ class App extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => Places()),
           ChangeNotifierProvider(create: (context) => Labels()),
           ChangeNotifierProvider(create: (context) => CameraWeb()),
+          ChangeNotifierProvider(create: (context) => CameraFlutter()),
         ],
         child: MaterialApp(
           title: APP_TITLE,
@@ -43,10 +45,8 @@ class _StartApp extends StatelessWidget {
         } else {
           return Scaffold(
               appBar: AppBar(title: Text(APP_TITLE)),
-              body: ListView(
-                  children: snapshot.hasError
-                      ? [Errors(snapshot.error)]
-                      : [Working()]));
+              body: SingleChildScrollView(
+                  child: WaitingOrError(error: snapshot.error)));
         }
       });
 }

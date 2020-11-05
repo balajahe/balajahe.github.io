@@ -4,9 +4,9 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:html' as html;
 
-import 'CameraInterface.dart';
+import 'CameraAbstract.dart';
 
-class CameraWeb extends ChangeNotifier implements CameraInterface {
+class CameraWeb extends ChangeNotifier implements CameraAbstract {
   html.VideoElement _htmlVideoElement;
   html.MediaStream _videoStream;
   html.ImageCapture _imageCapture;

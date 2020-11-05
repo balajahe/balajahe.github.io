@@ -19,7 +19,7 @@ class PlaceAdd extends StatelessWidget {
         } else {
           return Scaffold(
             appBar: AppBar(title: TITLE),
-            body: snapshot.hasError ? Errors(snapshot.error) : Working(),
+            body: WaitingOrError(error: snapshot.error),
           );
         }
       });
@@ -137,7 +137,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
               },
             ),
           ),
-          _isSaving ? WorkingTransparent() : Container(),
+          _isSaving ? WaitingOrError(transparent: true) : Container(),
         ],
       );
 
