@@ -7,7 +7,7 @@ import '../view/commonWidgets.dart';
 import '../view/PlaceAdd.dart';
 import '../view/PlaceView.dart';
 
-const ONLY_MINE_TITLE = 'Добавлены мной';
+const _ONLY_MINE_TITLE = 'Добавлены мной';
 
 class PlaceList extends StatefulWidget {
   @override
@@ -22,11 +22,11 @@ class _PlaceListState extends State<PlaceList> {
     var places = context.watch<Places>();
     return Scaffold(
       appBar: AppBar(
-        title: Text(places.onlyMine ? ONLY_MINE_TITLE : APP_TITLE),
+        title: Text(places.onlyMine ? _ONLY_MINE_TITLE : APP_TITLE),
         actions: [
           IconButton(
               icon: Icon(Icons.library_books),
-              tooltip: ONLY_MINE_TITLE,
+              tooltip: _ONLY_MINE_TITLE,
               onPressed: () => places.refresh(onlyMine: true)),
           IconButton(
               icon: Icon(Icons.refresh),
@@ -39,7 +39,7 @@ class _PlaceListState extends State<PlaceList> {
         child: Icon(Icons.add),
         onPressed: () async {
           var added = await Navigator.push(
-              context, MaterialPageRoute(builder: (context) => PlaceAdd()));
+              context, MaterialPageRoute(builder: (_) => PlaceAdd()));
           if (added) {
             _scrollController.animateTo(0,
                 duration: Duration(milliseconds: 1000), curve: Curves.ease);
@@ -63,15 +63,15 @@ class _PlaceListState extends State<PlaceList> {
               ),
               onTap: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => PlaceView(place)),
+                MaterialPageRoute(builder: (_) => PlaceView(place)),
               ),
             );
           } else if (places.isError) {
-            return WaitingOrErrors(error: places.errors);
+            return WaitingOrError(error: places.error);
           } else if (places.noMoreData) {
             return null;
           } else {
-            return WaitingOrErrors();
+            return WaitingOrError();
           }
         },
       ),

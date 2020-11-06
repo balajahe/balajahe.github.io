@@ -23,8 +23,8 @@ class Places extends AbstractModel {
 
   Future<void> _loadNextPart(int from) async {
     if (!isWorking && !noMoreData) {
-      startWorking();
       try {
+        startWorking();
         var newPlaces = await PlacesDao().getNextPart(
           after: _places.length > 0 ? _places.last.created : null,
           count: LOADING_PART_SIZE,
@@ -34,38 +34,38 @@ class Places extends AbstractModel {
         if (newPlaces.length < LOADING_PART_SIZE) {
           noMoreData = true;
         }
+        stopWorking();
       } catch (e) {
         print(e.toString());
-        errors = e;
+        error = e;
         noMoreData = true;
       }
-      stopWorking();
     }
   }
 
   Future<void> add(Place place) async {
-    startWorking();
     try {
+      startWorking();
       var newPlace = await PlacesDao().add(place);
       _places.insert(0, newPlace);
       noMoreData = false;
+      stopWorking();
     } catch (e) {
       print(e.toString());
-      errors = e;
+      error = e;
     }
-    stopWorking();
   }
 
   Future<void> del(String id) async {
-    startWorking();
     try {
+      startWorking();
       await PlacesDao().del(id);
       _places.removeWhere((v) => v.id == id);
+      stopWorking();
     } catch (e) {
       print(e.toString());
-      errors = e;
+      error = e;
     }
-    stopWorking();
   }
 
   void refresh({bool onlyMine = false}) {

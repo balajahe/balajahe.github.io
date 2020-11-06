@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class WaitingOrErrors extends StatelessWidget {
+class WaitingOrError extends StatelessWidget {
   final dynamic error;
   final bool transparent;
 
-  WaitingOrErrors({this.error, this.transparent = false});
+  WaitingOrError({this.error, this.transparent = false});
 
   @override
   build(context) {

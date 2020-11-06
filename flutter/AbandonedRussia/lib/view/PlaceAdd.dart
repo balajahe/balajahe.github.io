@@ -7,7 +7,8 @@ import '../model/Labels.dart';
 import '../view/commonWidgets.dart';
 import '../view/PhotoTake.dart';
 
-const TITLE = Text('Новое место');
+const _TITLE = Text('Новое место');
+final _LABEL_BUTTON_STYLE = TextButton.styleFrom(minimumSize: Size(0, 30));
 
 class PlaceAdd extends StatelessWidget {
   @override
@@ -18,8 +19,8 @@ class PlaceAdd extends StatelessWidget {
           return _PlaceAddForm(snapshot.data);
         } else {
           return Scaffold(
-            appBar: AppBar(title: TITLE),
-            body: WaitingOrErrors(error: snapshot.error),
+            appBar: AppBar(title: _TITLE),
+            body: WaitingOrError(error: snapshot.error),
           );
         }
       });
@@ -39,108 +40,115 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
   final _form = GlobalKey<FormState>();
   final _title = TextEditingController();
   final _desctiption = TextEditingController();
-  bool _isSaving = false;
 
   _PlaceAddFormState(this._allLabels);
 
   @override
-  build(context) => Stack(
-        children: [
-          Scaffold(
-            appBar: AppBar(title: TITLE, actions: [
-              Builder(
-                builder: (context) => IconButton(
-                    icon: Icon(Icons.save),
-                    tooltip: 'Сохранить',
-                    iconSize: 40,
-                    onPressed: () => _save(context)),
-              )
-            ]),
-            body: SingleChildScrollView(
-              child: Form(
-                key: _form,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    TextFormField(
-                      controller: _title,
-                      decoration:
-                          InputDecoration(labelText: 'Краткое название'),
-                    ),
-                    TextFormField(
-                      controller: _desctiption,
-                      decoration: InputDecoration(labelText: 'Описание'),
-                      minLines: 3,
-                      maxLines: 7,
-                    ),
-                    Container(
-                      constraints: BoxConstraints(minHeight: 30),
-                      child: Wrap(
-                        spacing: 10,
-                        children: _place.labels
-                            .map((v) => TextButton(
-                                  //style: ButtonStyle(minimumSize: MaterialStateProperty<Size>.all(),
-                                  child: Text(v),
-                                  onPressed: () => _deselectLabel(v),
-                                ))
-                            .toList(),
-                      ),
-                    ),
-                    Container(
-                      height: 15,
-                      margin: EdgeInsets.only(top: 5),
-                      child: Row(children: [
-                        Text('Добавить метку: ',
-                            style: TextStyle(fontStyle: FontStyle.italic)),
-                        Expanded(
-                          child: Container(
-                              height: 1,
-                              margin: EdgeInsets.only(top: 10),
-                              color: Colors.grey[400]),
-                        ),
-                      ]),
-                    ),
-                    Wrap(
+  build(context) {
+    var places = context.watch<Places>();
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(title: _TITLE, actions: [
+            Builder(
+              builder: (context) => IconButton(
+                  icon: Icon(Icons.save),
+                  tooltip: 'Сохранить',
+                  iconSize: 40,
+                  onPressed: () => _save(context)),
+            )
+          ]),
+          body: SingleChildScrollView(
+            child: Form(
+              key: _form,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  TextFormField(
+                    controller: _title,
+                    decoration: InputDecoration(labelText: 'Краткое название'),
+                  ),
+                  TextFormField(
+                    controller: _desctiption,
+                    decoration: InputDecoration(labelText: 'Описание'),
+                    minLines: 3,
+                    maxLines: 7,
+                  ),
+                  Container(
+                    constraints: BoxConstraints(minHeight: 30),
+                    child: Wrap(
                       spacing: 10,
-                      children: _allLabels
+                      children: _place.labels
                           .map((v) => TextButton(
+                                style: _LABEL_BUTTON_STYLE,
                                 child: Text(v),
-                                onPressed: () => _selectLabel(v),
+                                onPressed: () => _deselectLabel(v),
                               ))
                           .toList(),
                     ),
-                    Container(
-                      padding: EdgeInsets.only(top: 10),
-                      child: Wrap(
-                        spacing: 5,
-                        runSpacing: 5,
-                        children: _place.photos
-                            .map<Widget>((v) => Image.memory(v.thumbnail))
-                            .toList(),
+                  ),
+                  Container(
+                    height: 20,
+                    margin: EdgeInsets.only(top: 5),
+                    child: Row(children: [
+                      Text('Добавить метку: ',
+                          style: TextStyle(fontStyle: FontStyle.italic)),
+                      Expanded(
+                        child: Container(
+                            height: 1,
+                            margin: EdgeInsets.only(top: 10),
+                            color: Colors.grey[400]),
                       ),
+                    ]),
+                  ),
+                  Wrap(
+                    spacing: 10,
+                    children: _allLabels
+                        .map((v) => TextButton(
+                              style: _LABEL_BUTTON_STYLE,
+                              child: Text(v),
+                              onPressed: () => _selectLabel(v),
+                            ))
+                        .toList(),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(top: 10),
+                    child: Wrap(
+                      spacing: 5,
+                      runSpacing: 5,
+                      children: _place.photos
+                          .map<Widget>((v) => Image.memory(v.thumbnail))
+                          .toList(),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            floatingActionButton: FloatingActionButton(
-              tooltip: 'Добавить фото',
-              child: Icon(Icons.photo_camera),
-              onPressed: () async {
-                var photoData = await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => PhotoTake()),
-                );
-                if (photoData != null) {
-                  setState(() => _place.addPhoto(
-                      photoData, MediaQuery.of(context).orientation));
-                }
-              },
-            ),
           ),
-          _isSaving ? WaitingOrErrors(transparent: true) : Container(),
-        ],
-      );
+          floatingActionButton: FloatingActionButton(
+            tooltip: 'Добавить фото',
+            child: Icon(Icons.photo_camera),
+            onPressed: () async {
+              var photoData = await Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => PhotoTake()),
+              );
+              if (photoData != null) {
+                setState(() => _place.addPhoto(
+                    photoData, MediaQuery.of(context).orientation));
+              }
+            },
+          ),
+        ),
+        _place.isWorking
+            ? WaitingOrError(error: _place.error, transparent: true)
+            : Container(),
+        places.isWorking
+            ? WaitingOrError(error: _place.error, transparent: true)
+            : Container(),
+      ],
+    );
+  }
 
   void _selectLabel(String label) {
     setState(() {
@@ -160,9 +168,6 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
     if (_form.currentState.validate() &&
         _title.text.length > 0 &&
         _place.labels.length > 0) {
-      setState(() {
-        _isSaving = true;
-      });
       try {
         var place = Place(
           title: _title.text,

@@ -9,7 +9,7 @@ import 'view/commonWidgets.dart';
 import 'view/PlaceList.dart';
 
 void main() {
-  ErrorWidget.builder = (e) => WaitingOrErrors(error: e);
+  ErrorWidget.builder = (e) => WaitingOrError(error: e);
   runApp(App());
 }
 
@@ -46,7 +46,7 @@ class _StartApp extends StatelessWidget {
           return Scaffold(
               appBar: AppBar(title: Text(APP_TITLE)),
               body: SingleChildScrollView(
-                  child: WaitingOrErrors(error: snapshot.error)));
+                  child: WaitingOrError(error: snapshot.error)));
         }
       });
 }

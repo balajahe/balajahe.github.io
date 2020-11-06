@@ -27,7 +27,7 @@ class _PhotoTakeState extends State<PhotoTake> {
             if (snapshot.hasData && !_isCapturing) {
               return snapshot.data;
             } else {
-              return WaitingOrErrors(error: snapshot.error);
+              return WaitingOrError(error: snapshot.error);
             }
           }),
       floatingActionButton: FloatingActionButton(

@@ -1,9 +1,10 @@
-//import 'model/CameraWeb.dart';
 import 'model/CameraFlutter.dart';
+import 'model/CameraWeb.dart';
+
 import 'dao/PlacesDaoFirestore.dart';
 
-//class Camera extends CameraWeb {}
-class Camera extends CameraFlutter {}
+class Camera extends CameraWeb {}
+//class Camera extends CameraFlutter {}
 
 class PlacesDao extends PlacesDaoFirestore {}
 
