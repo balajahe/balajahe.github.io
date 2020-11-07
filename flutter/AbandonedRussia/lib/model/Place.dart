@@ -1,9 +1,12 @@
 import 'dart:typed_data';
 import 'package:image/image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
-import '../model/AbstractModel.dart';
 import '../model/AppUser.dart';
+
+Uint8List _generateThumbnail(Uint8List origin) =>
+    encodePng(copyResize(decodeImage(origin), width: 60));
 
 class Photo {
   Uint8List thumbnail;
@@ -11,9 +14,17 @@ class Photo {
   String originUrl;
 
   Photo({this.thumbnail, this.origin, this.originUrl});
+
+  Future<void> generateThumbnail(Orientation orientation) async {
+    thumbnail = await compute(_generateThumbnail, origin);
+  }
+
+  void generateThumbnailSync(Orientation orientation) async {
+    thumbnail = _generateThumbnail(origin);
+  }
 }
 
-class Place extends AbstractModel {
+class Place {
   String id;
   AppUser creator;
   DateTime created;
@@ -41,12 +52,4 @@ class Place extends AbstractModel {
   String get labelsAsString => labels.toString();
 
   String get fullDescription => labels.toString() + '\n' + description;
-
-  addPhoto(Uint8List origin, [Orientation orientation]) {
-    startWorking();
-    Uint8List thumbnail = encodePng(copyResize(decodeImage(origin), width: 60));
-    photos.add(Photo(origin: origin, thumbnail: thumbnail));
-    stopWorking();
-    return thumbnail;
-  }
 }

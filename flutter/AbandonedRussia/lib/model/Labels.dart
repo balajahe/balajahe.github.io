@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../dao/LabelsDao.dart';
 
-class Labels with ChangeNotifier {
+class Labels {
   List<String> _labels;
 
   Future<List<String>> getAll() async {

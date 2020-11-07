@@ -5,11 +5,12 @@ import 'settings.dart';
 import 'dao/Database.dart';
 import 'model/Places.dart';
 import 'model/Labels.dart';
+import 'model/CameraAbstract.dart';
 import 'view/commonWidgets.dart';
 import 'view/PlaceList.dart';
 
 void main() {
-  ErrorWidget.builder = (e) => WaitingOrError(error: e);
+  ErrorWidget.builder = (e) => Scaffold(body: WaitingOrError(error: e));
   runApp(App());
 }
 
@@ -17,9 +18,9 @@ class App extends StatelessWidget {
   @override
   build(context) => MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (context) => Places()),
-          ChangeNotifierProvider(create: (context) => Labels()),
-          ChangeNotifierProvider(create: (context) => Camera()),
+          ChangeNotifierProvider<Places>(create: (context) => Places()),
+          Provider<Labels>(create: (context) => Labels()),
+          Provider<CameraAbstract>(create: (context) => getCamera()),
         ],
         child: MaterialApp(
           title: APP_TITLE,

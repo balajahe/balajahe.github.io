@@ -1,14 +1,16 @@
-import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:html' as html;
+import 'package:flutter/material.dart';
 
-import 'CameraAbstract.dart';
+import '../model/CameraAbstract.dart';
 
-class CameraWeb extends ChangeNotifier implements CameraAbstract {
+class CameraWeb implements CameraAbstract {
   html.VideoElement _htmlVideoElement;
   html.MediaStream _videoStream;
   html.ImageCapture _imageCapture;
+  HtmlElementView _preview;
+  bool _initiated = false;
 
   CameraWeb() {
     _htmlVideoElement = html.VideoElement();
@@ -18,22 +20,31 @@ class CameraWeb extends ChangeNotifier implements CameraAbstract {
   }
 
   Future<Widget> initCamera() async {
-    _videoStream = await html.window.navigator.mediaDevices.getUserMedia({
-      'video': {
-        'facingMode': {'exact': 'environment'}
-      }
-    });
+    if (!_initiated) {
+      _initiated = true;
 
-    _htmlVideoElement
-      ..srcObject = _videoStream
-      ..play();
+      _videoStream = await html.window.navigator.mediaDevices.getUserMedia({
+        'video': {
+          'facingMode': {'exact': 'environment'}
+        }
+      });
 
-    _imageCapture = html.ImageCapture(_videoStream.getVideoTracks()[0]);
+      _htmlVideoElement
+        ..srcObject = _videoStream
+        ..play();
 
-    return HtmlElementView(key: UniqueKey(), viewType: 'htmlVideoElement');
+      _imageCapture = html.ImageCapture(_videoStream.getVideoTracks()[0]);
+
+      _preview =
+          HtmlElementView(key: UniqueKey(), viewType: 'htmlVideoElement');
+    }
+    _htmlVideoElement.play();
+    return _preview;
   }
 
   void disposeCamera() {
+    _initiated = false;
+
     _htmlVideoElement
       ..pause()
       ..srcObject = null;
@@ -42,8 +53,6 @@ class CameraWeb extends ChangeNotifier implements CameraAbstract {
       track.stop();
       _videoStream.removeTrack(track);
     });
-
-    print('dispose camera');
   }
 
   Future<Uint8List> takePhoto() async {

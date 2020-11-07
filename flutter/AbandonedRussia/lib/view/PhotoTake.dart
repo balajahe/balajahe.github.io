@@ -1,11 +1,11 @@
-import 'package:flutter/foundation.dart';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../settings.dart';
 import '../model/CameraAbstract.dart';
 import '../view/commonWidgets.dart';
-import '../view/PhotoAccept.dart';
 
 class PhotoTake extends StatefulWidget {
   @override
@@ -14,20 +14,21 @@ class PhotoTake extends StatefulWidget {
 
 class _PhotoTakeState extends State<PhotoTake> {
   CameraAbstract _camera;
-  bool _isCapturing = false;
+  Uint8List _photo;
+  bool isWorking = false;
 
   @override
   build(context) {
-    _camera = context.watch<Camera>();
+    _camera = context.watch<CameraAbstract>();
     return Scaffold(
       appBar: AppBar(title: Text('Добавить фото')),
       body: FutureBuilder(
           future: _camera.initCamera(),
           builder: (context, snapshot) {
-            if (snapshot.hasData && !_isCapturing) {
+            if (snapshot.hasData && !isWorking) {
               return snapshot.data;
             } else {
-              return WaitingOrError(error: snapshot.error);
+              return WaitingOrError(error: snapshot.error, transparent: true);
             }
           }),
       floatingActionButton: FloatingActionButton(
@@ -39,15 +40,34 @@ class _PhotoTakeState extends State<PhotoTake> {
   }
 
   Future<void> _takePhoto() async {
-    setState(() => _isCapturing = true);
-    var photoData = await _camera.takePhoto();
-    var accepted = await Navigator.push(context,
-        MaterialPageRoute(builder: (context) => PhotoAccept(photoData)));
-    if (accepted != null) {
-      Navigator.pop(context, photoData);
-    } else {
-      setState(() => _isCapturing = false);
-    }
+    setState(() => isWorking = true);
+    _photo = await _camera.takePhoto();
+    setState(() => isWorking = false);
+
+    showDialog<void>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text('Одобрить фото'),
+        content: Image.memory(_photo),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.cancel),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.save),
+            onPressed: () {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.pop(context);
+                Navigator.pop(context, _photo);
+              });
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   @override

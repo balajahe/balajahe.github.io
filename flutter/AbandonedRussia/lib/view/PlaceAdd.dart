@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../model/Place.dart';
 import '../model/Places.dart';
@@ -8,56 +9,67 @@ import '../view/commonWidgets.dart';
 import '../view/PhotoTake.dart';
 
 const _TITLE = Text('Новое место');
-final _LABEL_BUTTON_STYLE = TextButton.styleFrom(minimumSize: Size(0, 30));
+final _labelButtonStyle = TextButton.styleFrom(minimumSize: Size(0, 25));
 
 class PlaceAdd extends StatelessWidget {
   @override
-  build(context) => FutureBuilder(
-      future: context.watch<Labels>().getAll(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return _PlaceAddForm(snapshot.data);
-        } else {
-          return Scaffold(
-            appBar: AppBar(title: _TITLE),
-            body: WaitingOrError(error: snapshot.error),
-          );
-        }
-      });
+  build(context) => Provider<Place>(
+      create: (context) => Place(),
+      child: FutureBuilder(
+          future: context.watch<Labels>().getAll(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return PlaceAddForm(snapshot.data);
+            } else {
+              return Scaffold(
+                appBar: AppBar(title: _TITLE),
+                body: WaitingOrError(error: snapshot.error),
+              );
+            }
+          }));
 }
 
-class _PlaceAddForm extends StatefulWidget {
+class PlaceAddForm extends StatefulWidget {
   final List<String> _allLabels;
-  _PlaceAddForm(this._allLabels);
+
+  PlaceAddForm(this._allLabels);
 
   @override
-  createState() => _PlaceAddFormState(_allLabels.map((v) => v).toList());
+  createState() => PlaceAddFormState(_allLabels.map((v) => v).toList());
 }
 
-class _PlaceAddFormState extends State<_PlaceAddForm> {
-  final Place _place = Place();
+class PlaceAddFormState extends State<PlaceAddForm> {
+  Place _place;
   final List<String> _allLabels;
   final _form = GlobalKey<FormState>();
   final _title = TextEditingController();
   final _desctiption = TextEditingController();
+  bool isWorking = false;
 
-  _PlaceAddFormState(this._allLabels);
+  PlaceAddFormState(this._allLabels);
 
   @override
   build(context) {
-    var places = context.watch<Places>();
+    _place = context.watch<Place>();
     return Stack(
       children: [
         Scaffold(
-          appBar: AppBar(title: _TITLE, actions: [
-            Builder(
+          appBar: AppBar(
+            title: _TITLE,
+            leading: Builder(
               builder: (context) => IconButton(
-                  icon: Icon(Icons.save),
-                  tooltip: 'Сохранить',
-                  iconSize: 40,
-                  onPressed: () => _save(context)),
-            )
-          ]),
+                  icon: Icon(Icons.arrow_back),
+                  onPressed: () => _onExit(context)),
+            ),
+            actions: [
+              Builder(
+                builder: (context) => IconButton(
+                    icon: Icon(Icons.save),
+                    tooltip: 'Сохранить',
+                    onPressed: () => _save(context)),
+              )
+            ],
+          ),
           body: SingleChildScrollView(
             child: Form(
               key: _form,
@@ -80,7 +92,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                       spacing: 10,
                       children: _place.labels
                           .map((v) => TextButton(
-                                style: _LABEL_BUTTON_STYLE,
+                                style: _labelButtonStyle,
                                 child: Text(v),
                                 onPressed: () => _deselectLabel(v),
                               ))
@@ -105,7 +117,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     spacing: 10,
                     children: _allLabels
                         .map((v) => TextButton(
-                              style: _LABEL_BUTTON_STYLE,
+                              style: _labelButtonStyle,
                               child: Text(v),
                               onPressed: () => _selectLabel(v),
                             ))
@@ -117,7 +129,9 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                       spacing: 5,
                       runSpacing: 5,
                       children: _place.photos
-                          .map<Widget>((v) => Image.memory(v.thumbnail))
+                          .map<Widget>((v) => v.thumbnail == null
+                              ? Image.memory(v.origin)
+                              : Image.memory(v.thumbnail))
                           .toList(),
                     ),
                   ),
@@ -128,26 +142,24 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
           floatingActionButton: FloatingActionButton(
             tooltip: 'Добавить фото',
             child: Icon(Icons.photo_camera),
-            onPressed: () async {
-              var photoData = await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => PhotoTake()),
-              );
-              if (photoData != null) {
-                setState(() => _place.addPhoto(
-                    photoData, MediaQuery.of(context).orientation));
-              }
-            },
+            onPressed: _addPhoto,
           ),
         ),
-        _place.isWorking
-            ? WaitingOrError(error: _place.error, transparent: true)
-            : Container(),
-        places.isWorking
-            ? WaitingOrError(error: _place.error, transparent: true)
-            : Container(),
+        isWorking ? WaitingOrError(transparent: true) : Container(),
       ],
     );
+  }
+
+  Future<void> _addPhoto() async {
+    var origin = await Navigator.push(
+        context, MaterialPageRoute(builder: (_) => PhotoTake()));
+    if (origin != null) {
+      var photo = Photo(origin: origin);
+      _place.photos.add(photo);
+      //await photo.generateThumbnail(MediaQuery.of(context).orientation);
+      photo.generateThumbnailSync(MediaQuery.of(context).orientation);
+      setState(() {});
+    }
   }
 
   void _selectLabel(String label) {
@@ -164,6 +176,35 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
     });
   }
 
+  void _onExit(newContext) {
+    if (_place.photos.length > 0 || _place.labels.length > 0) {
+      showDialog<void>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text('Сохранить изменения?'),
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.cancel),
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context);
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.save),
+              onPressed: () async {
+                Navigator.pop(context);
+                _save(newContext);
+              },
+            ),
+          ],
+        ),
+      );
+    } else {
+      Navigator.pop(newContext);
+    }
+  }
+
   Future<void> _save(newContext) async {
     if (_form.currentState.validate() &&
         _title.text.length > 0 &&
@@ -175,6 +216,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
           labels: _place.labels,
           photos: _place.photos,
         );
+        setState(() => isWorking = true);
         await context.read<Places>().add(place);
         Navigator.pop(context, true);
       } catch (e) {
@@ -183,8 +225,8 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
             .showSnackBar(SnackBar(content: Text(e.toString())));
       }
     } else {
-      Scaffold.of(newContext).showSnackBar(
-          SnackBar(content: Text('Хотя бы одна метка и название!')));
+      Scaffold.of(newContext).showSnackBar(SnackBar(
+          content: Text('Выберите хотя бы одну метку и заполните название!')));
     }
   }
 }

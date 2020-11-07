@@ -1,10 +1,12 @@
+import 'package:flutter/foundation.dart';
+
+import 'model/CameraAbstract.dart';
 import 'model/CameraFlutter.dart';
 import 'model/CameraWeb.dart';
 
 import 'dao/PlacesDaoFirestore.dart';
 
-class Camera extends CameraWeb {}
-//class Camera extends CameraFlutter {}
+CameraAbstract getCamera() => kIsWeb ? CameraWeb() : CameraFlutter();
 
 class PlacesDao extends PlacesDaoFirestore {}
 

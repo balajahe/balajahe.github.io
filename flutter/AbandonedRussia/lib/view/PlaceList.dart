@@ -49,31 +49,34 @@ class _PlaceListState extends State<PlaceList> {
       body: ListView.builder(
         controller: _scrollController,
         itemCount: places.length + 1,
-        itemBuilder: (context, i) {
-          if (places.testByNum(i)) {
-            var place = places.getByNum(i);
-            return ListTile(
-              title: Text(place.title),
-              subtitle: Text(place.fullDescription),
-              leading: Wrap(
-                spacing: 5,
-                runSpacing: 5,
-                children: List<Widget>.from(
-                    place.photos.map((v) => Image.memory(v.thumbnail))),
-              ),
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => PlaceView(place)),
-              ),
-            );
-          } else if (places.isError) {
-            return WaitingOrError(error: places.error);
-          } else if (places.noMoreData) {
-            return null;
-          } else {
-            return WaitingOrError();
-          }
-        },
+        itemBuilder: (context, i) => FutureBuilder(
+            future: places.getByNum(i),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done &&
+                  snapshot.hasData) {
+                var place = snapshot.data;
+                return ListTile(
+                  title: Text(place.title),
+                  subtitle: Text(place.fullDescription),
+                  leading: Wrap(
+                    spacing: 5,
+                    runSpacing: 5,
+                    children: List<Widget>.from(
+                        place.photos.map((v) => Image.memory(v.thumbnail))),
+                  ),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => PlaceView(place)),
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return WaitingOrError(error: snapshot.error);
+              } else if (places.noMoreData) {
+                return Container();
+              } else {
+                return WaitingOrError();
+              }
+            }),
       ),
     );
   }
