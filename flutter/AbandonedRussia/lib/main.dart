@@ -20,7 +20,7 @@ class App extends StatelessWidget {
         providers: [
           ChangeNotifierProvider<Places>(create: (context) => Places()),
           Provider<Labels>(create: (context) => Labels()),
-          Provider<CameraAbstract>(create: (context) => getCamera()),
+          Provider<CameraAbstract>(create: (context) => cameraFactory()),
         ],
         child: MaterialApp(
           title: APP_TITLE,
@@ -36,18 +36,14 @@ class App extends StatelessWidget {
 class _StartApp extends StatelessWidget {
   @override
   build(context) => FutureBuilder(
-      future: Database.connect(),
-      builder: (context, snapshot) {
-        print(snapshot.connectionState);
-        print(snapshot.hasError);
-        if (!snapshot.hasError &&
-            snapshot.connectionState == ConnectionState.done) {
-          return PlaceList();
-        } else {
-          return Scaffold(
-              appBar: AppBar(title: Text(APP_TITLE)),
-              body: SingleChildScrollView(
-                  child: WaitingOrError(error: snapshot.error)));
-        }
-      });
+        future: Database.connect(),
+        builder: (context, snapshot) =>
+            (snapshot.connectionState == ConnectionState.done &&
+                    !snapshot.hasError)
+                ? PlaceList()
+                : Scaffold(
+                    appBar: AppBar(title: Text(APP_TITLE)),
+                    body: WaitingOrError(error: snapshot.error),
+                  ),
+      );
 }

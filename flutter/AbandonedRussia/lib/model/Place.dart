@@ -5,9 +5,6 @@ import 'package:flutter/foundation.dart';
 
 import '../model/AppUser.dart';
 
-Uint8List _generateThumbnail(Uint8List origin) =>
-    encodePng(copyResize(decodeImage(origin), width: 60));
-
 class Photo {
   Uint8List thumbnail;
   Uint8List origin;
@@ -53,3 +50,6 @@ class Place {
 
   String get fullDescription => labels.toString() + '\n' + description;
 }
+
+Uint8List _generateThumbnail(Uint8List origin) =>
+    encodePng(copyResize(decodeImage(origin), width: 60));

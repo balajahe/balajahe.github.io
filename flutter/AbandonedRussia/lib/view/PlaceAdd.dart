@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/scheduler.dart';
 
 import '../model/Place.dart';
 import '../model/Places.dart';
@@ -8,25 +7,19 @@ import '../model/Labels.dart';
 import '../view/commonWidgets.dart';
 import '../view/PhotoTake.dart';
 
-const _TITLE = Text('Новое место');
 final _labelButtonStyle = TextButton.styleFrom(minimumSize: Size(0, 25));
 
 class PlaceAdd extends StatelessWidget {
   @override
   build(context) => Provider<Place>(
-      create: (context) => Place(),
-      child: FutureBuilder(
+        create: (context) => Place(),
+        child: FutureBuilder(
           future: context.watch<Labels>().getAll(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return PlaceAddForm(snapshot.data);
-            } else {
-              return Scaffold(
-                appBar: AppBar(title: _TITLE),
-                body: WaitingOrError(error: snapshot.error),
-              );
-            }
-          }));
+          builder: (context, snapshot) => snapshot.hasData
+              ? PlaceAddForm(snapshot.data)
+              : WaitingOrError(error: snapshot.error),
+        ),
+      );
 }
 
 class PlaceAddForm extends StatefulWidget {
@@ -55,7 +48,7 @@ class PlaceAddFormState extends State<PlaceAddForm> {
       children: [
         Scaffold(
           appBar: AppBar(
-            title: _TITLE,
+            title: Text('Новое место'),
             leading: Builder(
               builder: (context) => IconButton(
                   icon: Icon(Icons.arrow_back),
@@ -156,9 +149,9 @@ class PlaceAddFormState extends State<PlaceAddForm> {
     if (origin != null) {
       var photo = Photo(origin: origin);
       _place.photos.add(photo);
-      //await photo.generateThumbnail(MediaQuery.of(context).orientation);
-      photo.generateThumbnailSync(MediaQuery.of(context).orientation);
-      setState(() {});
+      setState(() => isWorking = true);
+      await photo.generateThumbnail(MediaQuery.of(context).orientation);
+      setState(() => isWorking = false);
     }
   }
 
