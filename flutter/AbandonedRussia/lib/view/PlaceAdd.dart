@@ -16,22 +16,22 @@ class PlaceAdd extends StatelessWidget {
         child: FutureBuilder(
           future: context.watch<Labels>().getAll(),
           builder: (context, snapshot) => snapshot.hasData
-              ? PlaceAddForm(snapshot.data)
+              ? _PlaceAddForm(snapshot.data)
               : WaitingOrError(error: snapshot.error),
         ),
       );
 }
 
-class PlaceAddForm extends StatefulWidget {
+class _PlaceAddForm extends StatefulWidget {
   final List<String> _allLabels;
 
-  PlaceAddForm(this._allLabels);
+  _PlaceAddForm(this._allLabels);
 
   @override
-  createState() => PlaceAddFormState(_allLabels.map((v) => v).toList());
+  createState() => _PlaceAddFormState(_allLabels.map((v) => v).toList());
 }
 
-class PlaceAddFormState extends State<PlaceAddForm> {
+class _PlaceAddFormState extends State<_PlaceAddForm> {
   Place _place;
   final List<String> _allLabels;
   final _form = GlobalKey<FormState>();
@@ -39,7 +39,7 @@ class PlaceAddFormState extends State<PlaceAddForm> {
   final _desctiption = TextEditingController();
   bool isWorking = false;
 
-  PlaceAddFormState(this._allLabels);
+  _PlaceAddFormState(this._allLabels);
 
   @override
   build(context) {
@@ -117,7 +117,7 @@ class PlaceAddFormState extends State<PlaceAddForm> {
                         .toList(),
                   ),
                   Container(
-                    padding: EdgeInsets.only(top: 10),
+                    padding: EdgeInsets.all(5),
                     child: Wrap(
                       spacing: 5,
                       runSpacing: 5,
@@ -144,15 +144,15 @@ class PlaceAddFormState extends State<PlaceAddForm> {
   }
 
   Future<void> _addPhoto() async {
-    var origin = await Navigator.push(
-        context, MaterialPageRoute(builder: (_) => PhotoTake()));
-    if (origin != null) {
-      var photo = Photo(origin: origin);
-      _place.photos.add(photo);
-      setState(() => isWorking = true);
-      await photo.generateThumbnail(MediaQuery.of(context).orientation);
-      setState(() => isWorking = false);
-    }
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => Provider.value(
+            value: _place,
+            child: PhotoTake(),
+          ),
+        ));
+    setState(() {});
   }
 
   void _selectLabel(String label) {

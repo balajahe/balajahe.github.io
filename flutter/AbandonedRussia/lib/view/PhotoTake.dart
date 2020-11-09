@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../model/CameraAbstract.dart';
+import '../model/Place.dart';
 import '../view/commonWidgets.dart';
 
 class PhotoTake extends StatelessWidget {
@@ -12,33 +13,49 @@ class PhotoTake extends StatelessWidget {
     var camera = context.watch<CameraAbstract>();
     return FutureBuilder(
       future: camera.initCamera(),
-      builder: (context, snapshot) => snapshot.hasData
-          ? PhotoTakeForm(camera, snapshot.data)
-          : WaitingOrError(error: snapshot.error),
+      builder: (context, snapshot) =>
+          snapshot.connectionState == ConnectionState.done && !snapshot.hasError
+              ? _PhotoTakeForm(camera)
+              : WaitingOrError(error: snapshot.error),
     );
   }
 }
 
-class PhotoTakeForm extends StatefulWidget {
+class _PhotoTakeForm extends StatefulWidget {
   final CameraAbstract _camera;
-  final Widget _cameraPreview;
 
-  PhotoTakeForm(this._camera, this._cameraPreview);
+  _PhotoTakeForm(this._camera);
 
   @override
   createState() => _PhotoTakeFormState();
 }
 
-class _PhotoTakeFormState extends State<PhotoTakeForm> {
+class _PhotoTakeFormState extends State<_PhotoTakeForm> {
+  Place _place;
   Uint8List _photo;
   bool isWorking = false;
 
   @override
   build(context) {
+    _place = context.watch<Place>();
     return Stack(children: [
       Scaffold(
         appBar: AppBar(title: Text('Добавить фото')),
-        body: widget._cameraPreview,
+        body: Stack(children: [
+          widget._camera.previewWidget,
+          Container(
+            padding: EdgeInsets.all(5),
+            child: Wrap(
+              spacing: 5,
+              runSpacing: 5,
+              children: _place.photos
+                  .map<Widget>((v) => v.thumbnail == null
+                      ? Image.memory(v.origin)
+                      : Image.memory(v.thumbnail))
+                  .toList(),
+            ),
+          ),
+        ]),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.camera_sharp),
           tooltip: 'Снимок!',
@@ -56,6 +73,7 @@ class _PhotoTakeFormState extends State<PhotoTakeForm> {
 
     showDialog<void>(
       context: context,
+      barrierDismissible: false,
       builder: (BuildContext context) => AlertDialog(
         title: Text('Одобрить фото'),
         content: Image.memory(_photo),
@@ -68,16 +86,22 @@ class _PhotoTakeFormState extends State<PhotoTakeForm> {
           ),
           IconButton(
             icon: Icon(Icons.save),
-            onPressed: () {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.pop(context);
-                Navigator.pop(context, _photo);
-              });
+            onPressed: () async {
+              await approvePhoto();
+              Navigator.pop(context, true);
             },
           ),
         ],
       ),
     );
+  }
+
+  Future<void> approvePhoto() async {
+    var photo = Photo(origin: _photo);
+    _place.photos.add(photo);
+    setState(() => isWorking = true);
+    await photo.generateThumbnail(MediaQuery.of(context).orientation);
+    setState(() => isWorking = false);
   }
 
   @override

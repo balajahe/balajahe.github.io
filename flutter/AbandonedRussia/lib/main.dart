@@ -43,7 +43,9 @@ class _StartApp extends StatelessWidget {
                 ? PlaceList()
                 : Scaffold(
                     appBar: AppBar(title: Text(APP_TITLE)),
-                    body: WaitingOrError(error: snapshot.error),
+                    body: ListView(
+                      children: [WaitingOrError(error: snapshot.error)],
+                    ),
                   ),
       );
 }

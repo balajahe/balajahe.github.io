@@ -19,7 +19,7 @@ class CameraWeb implements CameraAbstract {
         'htmlVideoElement', (int viewId) => _htmlVideoElement);
   }
 
-  Future<Widget> initCamera() async {
+  Future<void> initCamera() async {
     if (!_initiated) {
       _initiated = true;
 
@@ -29,9 +29,7 @@ class CameraWeb implements CameraAbstract {
         }
       });
 
-      _htmlVideoElement
-        ..srcObject = _videoStream
-        ..play();
+      _htmlVideoElement.srcObject = _videoStream;
 
       _imageCapture = html.ImageCapture(_videoStream.getVideoTracks()[0]);
 
@@ -39,7 +37,7 @@ class CameraWeb implements CameraAbstract {
           HtmlElementView(key: UniqueKey(), viewType: 'htmlVideoElement');
     }
     _htmlVideoElement.play();
-    return _preview;
+    print(_htmlVideoElement.width);
   }
 
   void disposeCamera() {
@@ -54,6 +52,8 @@ class CameraWeb implements CameraAbstract {
       _videoStream.removeTrack(track);
     });
   }
+
+  Widget get previewWidget => _preview;
 
   Future<Uint8List> takePhoto() async {
     var photoBlob = await _imageCapture.takePhoto();

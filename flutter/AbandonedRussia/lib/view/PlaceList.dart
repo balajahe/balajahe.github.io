@@ -40,7 +40,7 @@ class _PlaceListState extends State<PlaceList> {
         onPressed: () async {
           var added = await Navigator.push(
               context, MaterialPageRoute(builder: (_) => PlaceAdd()));
-          if (added) {
+          if (added != null) {
             _scrollController.animateTo(0,
                 duration: Duration(milliseconds: 1000), curve: Curves.ease);
           }

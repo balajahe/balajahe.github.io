@@ -9,18 +9,19 @@ import 'CameraAbstract.dart';
 class CameraFlutter implements CameraAbstract {
   CameraController _camera;
 
-  Future<Widget> initCamera() async {
+  Future<void> initCamera() async {
     WidgetsFlutterBinding.ensureInitialized();
     _camera =
         CameraController((await availableCameras())[0], ResolutionPreset.high);
     await _camera.initialize();
-    return AspectRatio(
-        aspectRatio: _camera.value.aspectRatio, child: CameraPreview(_camera));
   }
 
   void disposeCamera() {
     _camera.dispose();
   }
+
+  Widget get previewWidget => AspectRatio(
+      aspectRatio: _camera.value.aspectRatio, child: CameraPreview(_camera));
 
   Future<Uint8List> takePhoto() async {
     var path = (await getTemporaryDirectory()).path + '/${DateTime.now()}.png';

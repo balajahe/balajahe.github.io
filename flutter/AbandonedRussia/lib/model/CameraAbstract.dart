@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'dart:typed_data';
 
 abstract class CameraAbstract {
-  Future<Widget> initCamera();
+  Future<void> initCamera();
 
   void disposeCamera();
+
+  Widget get previewWidget;
 
   Future<Uint8List> takePhoto();
 }

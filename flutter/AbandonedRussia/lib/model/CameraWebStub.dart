@@ -4,9 +4,11 @@ import 'dart:typed_data';
 import '../model/CameraAbstract.dart';
 
 class CameraWeb implements CameraAbstract {
-  Future<Widget> initCamera() => Future(() => Container());
+  Future<void> initCamera() => Future(() {});
 
   void disposeCamera() {}
+
+  Widget get previewWidget => Container();
 
   Future<Uint8List> takePhoto() => Future(() => Uint8List(0));
 }

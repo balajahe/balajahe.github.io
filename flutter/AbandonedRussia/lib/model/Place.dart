@@ -52,4 +52,4 @@ class Place {
 }
 
 Uint8List _generateThumbnail(Uint8List origin) =>
-    encodePng(copyResize(decodeImage(origin), width: 60));
+    encodePng(copyResize(decodeImage(origin), width: 70));
