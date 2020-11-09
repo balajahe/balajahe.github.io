@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../settings.dart';
 import '../model/Places.dart';
 import '../view/commonWidgets.dart';
+import '../view/PhotoContainer.dart';
 import '../view/PlaceAdd.dart';
 import '../view/PlaceView.dart';
 
@@ -55,19 +56,18 @@ class _PlaceListState extends State<PlaceList> {
               if (snapshot.connectionState == ConnectionState.done &&
                   snapshot.hasData) {
                 var place = snapshot.data;
-                return ListTile(
-                  title: Text(place.title),
-                  subtitle: Text(place.fullDescription),
-                  leading: Wrap(
-                    spacing: 5,
-                    runSpacing: 5,
-                    children: List<Widget>.from(
-                        place.photos.map((v) => Image.memory(v.thumbnail))),
-                  ),
-                  onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => PlaceView(place)),
-                  ),
+                return Wrap(
+                  children: [
+                    PhotoContainer(place),
+                    ListTile(
+                      title: Text(place.title),
+                      subtitle: Text(place.fullDescription),
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => PlaceView(place)),
+                      ),
+                    ),
+                  ],
                 );
               } else if (snapshot.hasError) {
                 return WaitingOrError(error: snapshot.error);

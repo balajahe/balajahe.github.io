@@ -5,6 +5,7 @@ import '../model/Place.dart';
 import '../model/Places.dart';
 import '../model/Labels.dart';
 import '../view/commonWidgets.dart';
+import '../view/PhotoContainer.dart';
 import '../view/PhotoTake.dart';
 
 final _labelButtonStyle = TextButton.styleFrom(minimumSize: Size(0, 25));
@@ -24,7 +25,6 @@ class PlaceAdd extends StatelessWidget {
 
 class _PlaceAddForm extends StatefulWidget {
   final List<String> _allLabels;
-
   _PlaceAddForm(this._allLabels);
 
   @override
@@ -116,18 +116,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                             ))
                         .toList(),
                   ),
-                  Container(
-                    padding: EdgeInsets.all(5),
-                    child: Wrap(
-                      spacing: 5,
-                      runSpacing: 5,
-                      children: _place.photos
-                          .map<Widget>((v) => v.thumbnail == null
-                              ? Image.memory(v.origin)
-                              : Image.memory(v.thumbnail))
-                          .toList(),
-                    ),
-                  ),
+                  PhotoContainer(_place),
                 ],
               ),
             ),

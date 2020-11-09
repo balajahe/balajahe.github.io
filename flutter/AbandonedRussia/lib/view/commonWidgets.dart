@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class WaitingOrError extends StatelessWidget {
   final dynamic error;
   final bool transparent;
-
   WaitingOrError({this.error, this.transparent = false});
 
   @override
@@ -33,7 +32,6 @@ class _WaitingTransparent extends StatelessWidget {
 
 class Errors extends StatelessWidget {
   final dynamic error;
-
   Errors(this.error);
 
   @override

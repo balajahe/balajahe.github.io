@@ -9,7 +9,6 @@ class Photo {
   Uint8List thumbnail;
   Uint8List origin;
   String originUrl;
-
   Photo({this.thumbnail, this.origin, this.originUrl});
 
   Future<void> generateThumbnail(Orientation orientation) async {

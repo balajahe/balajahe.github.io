@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../model/CameraAbstract.dart';
 import '../model/Place.dart';
 import '../view/commonWidgets.dart';
+import '../view/PhotoContainer.dart';
 
 class PhotoTake extends StatelessWidget {
   @override
@@ -23,7 +24,6 @@ class PhotoTake extends StatelessWidget {
 
 class _PhotoTakeForm extends StatefulWidget {
   final CameraAbstract _camera;
-
   _PhotoTakeForm(this._camera);
 
   @override
@@ -43,18 +43,7 @@ class _PhotoTakeFormState extends State<_PhotoTakeForm> {
         appBar: AppBar(title: Text('Добавить фото')),
         body: Stack(children: [
           widget._camera.previewWidget,
-          Container(
-            padding: EdgeInsets.all(5),
-            child: Wrap(
-              spacing: 5,
-              runSpacing: 5,
-              children: _place.photos
-                  .map<Widget>((v) => v.thumbnail == null
-                      ? Image.memory(v.origin)
-                      : Image.memory(v.thumbnail))
-                  .toList(),
-            ),
-          ),
+          PhotoContainer(_place),
         ]),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.camera_sharp),
@@ -75,17 +64,19 @@ class _PhotoTakeFormState extends State<_PhotoTakeForm> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) => AlertDialog(
-        title: Text('Одобрить фото'),
+        title: Text('Одобрить фото ?'),
         content: Image.memory(_photo),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.cancel),
+            icon: Icon(Icons.clear),
+            tooltip: 'Удалить',
             onPressed: () {
               Navigator.pop(context);
             },
           ),
           IconButton(
-            icon: Icon(Icons.save),
+            icon: Icon(Icons.done),
+            tooltip: 'Одобрить',
             onPressed: () async {
               await approvePhoto();
               Navigator.pop(context, true);

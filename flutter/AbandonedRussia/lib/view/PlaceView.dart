@@ -3,10 +3,10 @@ import 'package:provider/provider.dart';
 
 import '../model/Place.dart';
 import '../model/Places.dart';
+import '../view/PhotoContainer.dart';
 
 class PlaceView extends StatelessWidget {
   final Place place;
-
   PlaceView(this.place);
 
   @override
@@ -30,18 +30,13 @@ class PlaceView extends StatelessWidget {
       ),
       body: ListView(
         children: [
+          PhotoContainer(place),
           ListTile(
             title: SelectableText(place.title),
             subtitle: SelectableText(place.labelsAsString),
           ),
           ListTile(
             title: SelectableText(place.description),
-          ),
-          Wrap(
-            spacing: 5,
-            runSpacing: 5,
-            children: List<Widget>.from(
-                place.photos.map((v) => Image.memory(v.thumbnail))),
           ),
           ListTile(
               subtitle: SelectableText('добавлено ' +
