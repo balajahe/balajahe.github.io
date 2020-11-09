@@ -1,3 +1,4 @@
+import 'package:AbandonedRussia/view/commonWidgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,13 +19,15 @@ class PlaceView extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () async {
+              waitStart(context);
               await context.read<Places>().del(place.id);
+              waitStop(context);
               Navigator.pop(context);
             },
           ),
           IconButton(
             icon: Icon(Icons.edit),
-            onPressed: () async {},
+            onPressed: () {},
           ),
         ],
       ),

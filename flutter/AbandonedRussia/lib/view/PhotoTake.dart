@@ -77,18 +77,15 @@ class _PhotoTakeFormState extends State<_PhotoTakeForm> {
           IconButton(
             icon: Icon(Icons.done),
             tooltip: 'Одобрить',
-            onPressed: approvePhoto,
+            onPressed: () {
+              Navigator.pop(context);
+              _place.addPhoto(
+                  Photo(origin: _photo), MediaQuery.of(context).orientation);
+            },
           ),
         ],
       ),
     );
-  }
-
-  Future<void> approvePhoto() async {
-    Navigator.pop(context);
-    var photo = Photo(origin: _photo);
-    _place.photos.add(photo);
-    photo.generateThumbnail(MediaQuery.of(context).orientation);
   }
 
   @override

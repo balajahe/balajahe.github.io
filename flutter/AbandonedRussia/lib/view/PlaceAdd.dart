@@ -12,7 +12,7 @@ final _labelButtonStyle = TextButton.styleFrom(minimumSize: Size(0, 25));
 
 class PlaceAdd extends StatelessWidget {
   @override
-  build(context) => Provider<Place>(
+  build(context) => ChangeNotifierProvider<Place>(
         create: (context) => Place(),
         child: FutureBuilder(
           future: context.watch<Labels>().getAll(),
@@ -136,7 +136,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => Provider.value(
+          builder: (_) => ChangeNotifierProvider.value(
             value: _place,
             child: PhotoTake(),
           ),
@@ -187,10 +187,10 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
   }
 
   Future<void> _save(newContext) async {
-    if (_form.currentState.validate() &&
-        _title.text.length > 0 &&
-        _place.labels.length > 0 &&
-        _place.photos.length > 0) {
+    if (_form.currentState.validate() && _title.text.length > 0
+        // _place.labels.length > 0 &&
+        // _place.photos.length > 0
+        ) {
       try {
         var place = Place(
           title: _title.text,

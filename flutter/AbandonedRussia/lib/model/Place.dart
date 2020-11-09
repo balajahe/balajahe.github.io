@@ -20,7 +20,7 @@ class Photo {
   // }
 }
 
-class Place {
+class Place with ChangeNotifier {
   String id;
   AppUser creator;
   DateTime created;
@@ -49,6 +49,12 @@ class Place {
 
   String get fullDescription =>
       labelsAsString + (description.length > 0 ? '\n' + description : '');
+
+  Future<void> addPhoto(Photo photo, Orientation orientation) async {
+    photos.add(photo);
+    await photo.generateThumbnail(orientation);
+    notifyListeners();
+  }
 }
 
 Uint8List _generateThumbnail(Uint8List origin) =>

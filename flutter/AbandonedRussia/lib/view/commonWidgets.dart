@@ -46,3 +46,13 @@ class Errors extends StatelessWidget {
             child: SelectableText('ERROR: ${error.toString()}\n$stackTrace')));
   }
 }
+
+void waitStart(context) => Navigator.of(context).push(
+      PageRouteBuilder(
+        fullscreenDialog: true,
+        opaque: false,
+        pageBuilder: (_, __, ___) => WaitingOrError(transparent: true),
+      ),
+    );
+
+void waitStop(context) => Navigator.of(context).pop();
