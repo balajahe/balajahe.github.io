@@ -15,9 +15,9 @@ class Photo {
     thumbnail = await compute(_generateThumbnail, origin);
   }
 
-  void generateThumbnailSync(Orientation orientation) async {
-    thumbnail = _generateThumbnail(origin);
-  }
+  // void generateThumbnailSync(Orientation orientation) async {
+  //   thumbnail = _generateThumbnail(origin);
+  // }
 }
 
 class Place {
@@ -47,7 +47,8 @@ class Place {
 
   String get labelsAsString => labels.toString();
 
-  String get fullDescription => labels.toString() + '\n' + description;
+  String get fullDescription =>
+      labelsAsString + (description.length > 0 ? '\n' + description : '');
 }
 
 Uint8List _generateThumbnail(Uint8List origin) =>

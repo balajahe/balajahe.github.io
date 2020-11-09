@@ -133,7 +133,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
   }
 
   Future<void> _addPhoto() async {
-    await Navigator.push(
+    Navigator.push(
         context,
         MaterialPageRoute(
           builder: (_) => Provider.value(
@@ -141,7 +141,6 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
             child: PhotoTake(),
           ),
         ));
-    setState(() {});
   }
 
   void _selectLabel(String label) {
@@ -190,7 +189,8 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
   Future<void> _save(newContext) async {
     if (_form.currentState.validate() &&
         _title.text.length > 0 &&
-        _place.labels.length > 0) {
+        _place.labels.length > 0 &&
+        _place.photos.length > 0) {
       try {
         var place = Place(
           title: _title.text,
@@ -208,7 +208,8 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
       }
     } else {
       Scaffold.of(newContext).showSnackBar(SnackBar(
-          content: Text('Выберите хотя бы одну метку и заполните название!')));
+          content: Text(
+              'Хотя бы одно фото, хотя бы одна метка, и краткое название!')));
     }
   }
 }
