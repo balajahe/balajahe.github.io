@@ -64,5 +64,5 @@ abstract class PlacesDao {
 
   Future<void> put(Place place);
 
-  Future<void> del(String id);
+  Future<void> del(Place place);
 }

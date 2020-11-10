@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,6 +6,7 @@ import '../model/CameraAbstract.dart';
 import '../model/Place.dart';
 import '../view/commonWidgets.dart';
 import '../view/PhotoContainer.dart';
+import '../view/PhotoApprove.dart';
 
 class PhotoTake extends StatelessWidget {
   @override
@@ -41,15 +41,15 @@ class _PhotoTakeFormState extends State<_PhotoTakeForm> {
     return Stack(children: [
       Scaffold(
         appBar: AppBar(title: Text('Добавить фото')),
-        body: Stack(children: [
-          widget._camera.previewWidget,
-          PhotoContainer(_place),
-        ]),
         floatingActionButton: FloatingActionButton(
           child: Icon(Icons.camera_sharp),
           tooltip: 'Снимок!',
           onPressed: _takePhoto,
         ),
+        body: Stack(children: [
+          widget._camera.previewWidget,
+          PhotoContainer(_place),
+        ]),
       ),
       isWorking ? WaitingOrError(transparent: true) : Container()
     ]);
@@ -60,32 +60,12 @@ class _PhotoTakeFormState extends State<_PhotoTakeForm> {
     _photo = await widget._camera.takePhoto();
     setState(() => isWorking = false);
 
-    showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) => AlertDialog(
-        title: Text('Одобрить фото ?'),
-        content: Image.memory(_photo),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.clear),
-            tooltip: 'Удалить',
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.done),
-            tooltip: 'Одобрить',
-            onPressed: () {
-              Navigator.pop(context);
-              _place.addPhoto(
-                  Photo(origin: _photo), MediaQuery.of(context).orientation);
-            },
-          ),
-        ],
-      ),
-    );
+    var approved = await Navigator.push(
+        context, MaterialPageRoute(builder: (_) => PhotoApprove(_photo)));
+    if (approved != null) {
+      _place.addPhoto(
+          Photo(origin: _photo), MediaQuery.of(context).orientation);
+    }
   }
 
   @override

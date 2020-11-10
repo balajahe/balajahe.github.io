@@ -47,9 +47,9 @@ class Places with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> del(String id) async {
-    await PlacesDao.instance.del(id);
-    _places.removeWhere((v) => v.id == id);
+  Future<void> del(Place place) async {
+    await PlacesDao.instance.del(place);
+    _places.removeWhere((v) => v.id == place.id);
     notifyListeners();
   }
 

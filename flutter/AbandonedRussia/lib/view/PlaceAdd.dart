@@ -9,6 +9,7 @@ import '../view/PhotoContainer.dart';
 import '../view/PhotoTake.dart';
 
 final _labelButtonStyle = TextButton.styleFrom(minimumSize: Size(10, 25));
+final double _labelButtonHeight = 32;
 
 class PlaceAdd extends StatelessWidget {
   @override
@@ -48,7 +49,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
       children: [
         Scaffold(
           appBar: AppBar(
-            title: Text('Новое место'),
+            title: Text('Новый объект'),
             leading: Builder(
               builder: (context) => IconButton(
                   icon: Icon(Icons.arrow_back),
@@ -62,6 +63,11 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     onPressed: () => _save(context)),
               )
             ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            tooltip: 'Добавить фото',
+            child: Icon(Icons.photo_camera),
+            onPressed: _addPhoto,
           ),
           body: SingleChildScrollView(
             child: Form(
@@ -80,11 +86,11 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     maxLines: 7,
                   ),
                   Container(
-                    constraints: BoxConstraints(minHeight: 31),
+                    constraints: BoxConstraints(minHeight: _labelButtonHeight),
                     child: Wrap(
                       children: _place.labels
                           .map((v) => Container(
-                              height: 31,
+                              height: _labelButtonHeight,
                               child: TextButton(
                                 style: _labelButtonStyle,
                                 child: Text(v),
@@ -108,7 +114,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                   Wrap(
                     children: _allLabels
                         .map((v) => Container(
-                            height: 31,
+                            height: _labelButtonHeight,
                             child: TextButton(
                               style: _labelButtonStyle,
                               child: Text(v),
@@ -120,11 +126,6 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                 ],
               ),
             ),
-          ),
-          floatingActionButton: FloatingActionButton(
-            tooltip: 'Добавить фото',
-            child: Icon(Icons.photo_camera),
-            onPressed: _addPhoto,
           ),
         ),
         isWorking ? WaitingOrError(transparent: true) : Container(),

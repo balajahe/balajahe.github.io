@@ -19,10 +19,28 @@ class PlaceView extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.delete),
             onPressed: () async {
-              waitStart(context);
-              await context.read<Places>().del(place.id);
-              waitStop(context);
-              Navigator.pop(context);
+              showDialog<void>(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: Text('Удалить объект?'),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('Нет'),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    TextButton(
+                      child: Text('Да'),
+                      onPressed: () async {
+                        waitStart(context);
+                        await context.read<Places>().del(place);
+                        waitStop(context);
+                        Navigator.pop(context);
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ],
+                ),
+              );
             },
           ),
           IconButton(

@@ -8,7 +8,7 @@ import '../view/PhotoContainer.dart';
 import '../view/PlaceAdd.dart';
 import '../view/PlaceView.dart';
 
-const _ONLY_MINE_TITLE = 'Добавленные мной';
+const _ONLY_MINE_TITLE = 'Добавлены мной';
 
 class PlaceList extends StatefulWidget {
   @override
@@ -36,7 +36,7 @@ class _PlaceListState extends State<PlaceList> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Новое место',
+        tooltip: 'Новый объект',
         child: Icon(Icons.add),
         onPressed: () async {
           var added = await Navigator.push(
@@ -56,11 +56,11 @@ class _PlaceListState extends State<PlaceList> {
               if (snapshot.connectionState == ConnectionState.done &&
                   snapshot.hasData) {
                 var place = snapshot.data;
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    InkWell(
-                      child: Padding(
+                return InkWell(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
                         padding: EdgeInsets.only(top: 5),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,25 +72,22 @@ class _PlaceListState extends State<PlaceList> {
                           ],
                         ),
                       ),
-                      onTap: () => Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => PlaceView(place))),
-                    ),
-                    Wrap(
-                      children: [
-                        PhotoContainer(place),
-                        InkWell(
-                          child: Expanded(
-                              child: Padding(
-                                  padding: EdgeInsets.all(3),
-                                  child: Text(place.description))),
-                          onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => PlaceView(place))),
-                        ),
-                      ],
-                    ),
-                  ],
+                      Wrap(
+                        children: [
+                          PhotoContainer(place),
+                          Expanded(
+                            child: Padding(
+                                padding: EdgeInsets.all(3),
+                                child: Text(place.description)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => PlaceView(place)),
+                  ),
                 );
               } else if (snapshot.hasError) {
                 return WaitingOrError(error: snapshot.error);

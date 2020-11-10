@@ -12,6 +12,8 @@ class PhotoContainer extends StatelessWidget {
   build(context) => Container(
         padding: EdgeInsets.all(2),
         child: Wrap(
+          spacing: 1,
+          runSpacing: 1,
           children: _place.photos
               .map<Widget>(
                 (photo) => InkWell(
@@ -19,11 +21,12 @@ class PhotoContainer extends StatelessWidget {
                     width: 0.0 + THUMBNAIL_WIDTH,
                     height: 0.0 + THUMBNAIL_WIDTH,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white, width: 2),
+                      border: Border.all(color: Colors.white, width: 1),
+                      color: Colors.grey,
                     ),
                     child: photo.thumbnail != null
                         ? Image.memory(photo.thumbnail, fit: BoxFit.cover)
-                        : WaitingOrError(),
+                        : Center(child: CircularProgressIndicator()),
                   ),
                   onTap: () => Navigator.push(
                     context,

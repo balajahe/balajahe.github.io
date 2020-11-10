@@ -62,7 +62,14 @@ class PlacesDaoMobile extends PlacesDao {
 
   Future<void> put(Place place) => Future(() {});
 
-  Future<void> del(String id) async {
-    await FirebaseFirestore.instance.collection('Places').doc(id).delete();
+  Future<void> del(Place place) async {
+    place.photos.forEach((photo) async {
+      await FirebaseStorage.instance.ref().child(photo.originUrl).delete();
+    });
+
+    await FirebaseFirestore.instance
+        .collection('Places')
+        .doc(place.id)
+        .delete();
   }
 }
