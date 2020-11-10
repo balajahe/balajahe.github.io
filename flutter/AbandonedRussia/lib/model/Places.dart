@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import '../settings.dart';
 import '../model/Place.dart';
+import '../dao/PlacesDao.dart';
 
 class Places with ChangeNotifier {
   bool onlyMine = false;
@@ -24,7 +25,7 @@ class Places with ChangeNotifier {
 
   Future<void> _loadNextPart(int from) async {
     try {
-      var newPlaces = await PlacesDao().getNextPart(
+      var newPlaces = await PlacesDao.instance.getNextPart(
         after: _places.length > 0 ? _places.last.created : null,
         count: LOADING_PART_SIZE,
         onlyMine: onlyMine,
@@ -41,13 +42,13 @@ class Places with ChangeNotifier {
   }
 
   Future<void> add(Place place) async {
-    var newPlace = await PlacesDao().add(place);
+    var newPlace = await PlacesDao.instance.add(place);
     _places.insert(0, newPlace);
     notifyListeners();
   }
 
   Future<void> del(String id) async {
-    await PlacesDao().del(id);
+    await PlacesDao.instance.del(id);
     _places.removeWhere((v) => v.id == id);
     notifyListeners();
   }

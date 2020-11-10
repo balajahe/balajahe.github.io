@@ -56,16 +56,35 @@ class _PlaceListState extends State<PlaceList> {
               if (snapshot.connectionState == ConnectionState.done &&
                   snapshot.hasData) {
                 var place = snapshot.data;
-                return Wrap(
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    PhotoContainer(place),
-                    ListTile(
-                      title: Text(place.title),
-                      subtitle: Text(place.fullDescription),
-                      onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => PlaceView(place)),
-                      ),
+                    Wrap(
+                      spacing: 7,
+                      children: [
+                        PhotoContainer(place),
+                        InkWell(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(place.title,
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
+                              Text(place.labelsAsString,
+                                  style: TextStyle(fontSize: 12)),
+                            ],
+                          ),
+                          onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => PlaceView(place))),
+                        ),
+                      ],
+                    ),
+                    InkWell(
+                      child: Text(place.description),
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => PlaceView(place))),
                     ),
                   ],
                 );

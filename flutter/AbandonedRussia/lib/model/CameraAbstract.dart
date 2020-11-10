@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'dart:typed_data';
+import 'package:flutter/material.dart';
 
 abstract class CameraAbstract {
   Future<void> initCamera();

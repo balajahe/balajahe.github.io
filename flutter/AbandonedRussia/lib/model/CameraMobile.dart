@@ -6,7 +6,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'CameraAbstract.dart';
 
-class CameraFlutter implements CameraAbstract {
+class CameraMobile implements CameraAbstract {
   CameraController _camera;
 
   Future<void> initCamera() async {
@@ -24,9 +24,10 @@ class CameraFlutter implements CameraAbstract {
       aspectRatio: _camera.value.aspectRatio, child: CameraPreview(_camera));
 
   Future<Uint8List> takePhoto() async {
+    print('takephoto');
     var path = (await getTemporaryDirectory()).path + '/${DateTime.now()}.png';
     print(path);
-    //await _camera.takePicture(path);
+    await _camera.takePicture(path);
     var file = File(path);
     var data = await file.readAsBytes();
     await file.delete();

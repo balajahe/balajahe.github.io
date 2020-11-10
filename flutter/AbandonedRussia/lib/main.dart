@@ -1,3 +1,4 @@
+import 'package:camera/new/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +21,7 @@ class App extends StatelessWidget {
         providers: [
           ChangeNotifierProvider<Places>(create: (context) => Places()),
           Provider<Labels>(create: (context) => Labels()),
-          Provider<CameraAbstract>(create: (context) => cameraFactory()),
+          Provider<CameraAbstract>(create: (context) => CameraFactory()),
         ],
         child: MaterialApp(
           title: APP_TITLE,

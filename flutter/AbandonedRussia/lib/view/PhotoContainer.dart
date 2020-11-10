@@ -1,5 +1,7 @@
+import 'package:AbandonedRussia/view/commonWidgets.dart';
 import 'package:flutter/material.dart';
 
+import '../settings.dart';
 import '../model/Place.dart';
 
 class PhotoContainer extends StatelessWidget {
@@ -15,7 +17,11 @@ class PhotoContainer extends StatelessWidget {
           children: _place.photos
               .map<Widget>(
                 (photo) => InkWell(
-                  child: Image.memory(photo.thumbnail),
+                  child: photo.thumbnail != null
+                      ? Image.memory(photo.thumbnail)
+                      : Container(
+                          width: 0.0 + THUMBNAIL_WIDTH,
+                          child: WaitingOrError()),
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -27,9 +33,18 @@ class PhotoContainer extends StatelessWidget {
                               : 'Новое фото'),
                         ),
                         body: Center(
-                            child: Image.memory(photo.origin != null
-                                ? photo.origin
-                                : photo.thumbnail)),
+                          child: FutureBuilder(
+                            future: _place.getPhotoOrigin(photo),
+                            builder: (context, snapshot) =>
+                                snapshot.connectionState ==
+                                            ConnectionState.done &&
+                                        !snapshot.hasError
+                                    ? Image.memory(photo.origin != null
+                                        ? photo.origin
+                                        : photo.thumbnail)
+                                    : WaitingOrError(error: snapshot.error),
+                          ),
+                        ),
                       ),
                     ),
                   ),

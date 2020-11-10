@@ -1,44 +1,12 @@
-import 'dart:convert';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
-import 'Database.dart';
-import 'PlacesDaoAbstract.dart';
+import '../dao/Database.dart';
+import '../dao/PlacesDao.dart';
 import '../model/Place.dart';
-import '../model/AppUser.dart';
 
-class PlacesDaoFirestore implements PlacesDaoAbstract {
-  Place _fromMap(String id, Map<String, dynamic> data) => Place(
-        id: id,
-        creator: AppUser(
-          uid: data['creator']['uid'],
-          created: data['creator']['created'].toDate(),
-        ),
-        created: data['created'].toDate(),
-        title: data['title'],
-        description: data['description'],
-        labels: data['labels'] is List ? List<String>.from(data['labels']) : [],
-        photos: data['thumbnails'] is List
-            ? data['thumbnails']
-                .map<Photo>((v) => Photo(thumbnail: base64Decode(v)))
-                .toList()
-            : [],
-      );
-
-  Map<String, dynamic> _toMap(Place v) {
-    return {
-      'creator': {
-        'uid': v.creator.uid,
-        'created': Timestamp.fromDate(v.creator.created),
-      },
-      'created': Timestamp.fromDate(v.created),
-      'title': v.title,
-      'description': v.description,
-      'labels': List<String>.from(v.labels),
-      'thumbnails':
-          v.photos.map<String>((v) => base64Encode(v.thumbnail)).toList(),
-    };
-  }
-
+class PlacesDaoMobile extends PlacesDao {
   Future<List<Place>> getNextPart({
     DateTime after,
     int count,
@@ -63,12 +31,31 @@ class PlacesDaoFirestore implements PlacesDaoAbstract {
           .limit(count)
           .get();
     }
-    return data.docs.map((v) => _fromMap(v.id, v.data())).toList();
+    return data.docs.map((v) => fromMap(v.id, v.data())).toList();
   }
+
+  Future<Uint8List> getPhotoOrigin(Photo photo) =>
+      FirebaseStorage.instance.ref().child(photo.originUrl).getData(100000);
 
   Future<Place> add(Place place) async {
     place.creator = Database.currentUser;
     place.created = Timestamp.now().toDate();
+    place.photos.forEach((photo) {
+      if (photo.originUrl == null)
+        photo.originUrl = 'photos/${place.created}.png';
+    });
+
+    var addedPlace =
+        await FirebaseFirestore.instance.collection('Places').add(toMap(place));
+
+    place.id = addedPlace.id;
+
+    place.photos.forEach((photo) async {
+      await FirebaseStorage.instance
+          .ref()
+          .child(photo.originUrl)
+          .putData(photo.origin);
+    });
     // print(fb.app().storage());
     // for (var photoData in place.photos) {
     //   var storageRef = fb
@@ -79,10 +66,6 @@ class PlacesDaoFirestore implements PlacesDaoAbstract {
     //   var url = await snapshot.ref.getDownloadURL();
     //   print(url);
     // }
-    var addedPlace = await FirebaseFirestore.instance
-        .collection('Places')
-        .add(_toMap(place));
-    place.id = addedPlace.id;
     return place;
   }
 

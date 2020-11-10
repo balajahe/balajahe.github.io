@@ -1,14 +1,11 @@
 import 'package:flutter/foundation.dart';
 
 import 'model/CameraAbstract.dart';
-import 'model/CameraFlutter.dart';
+import 'model/CameraMobile.dart';
 import 'model/CameraWebStub.dart' if (dart.library.html) 'model/CameraWeb.dart';
 
-import 'dao/PlacesDaoFirestore.dart';
+CameraAbstract CameraFactory() => kIsWeb ? CameraWeb() : CameraMobile();
 
-CameraAbstract cameraFactory() => kIsWeb ? CameraWeb() : CameraFlutter();
-
-class PlacesDao extends PlacesDaoFirestore {}
-
-const APP_TITLE = 'Заброшенные места';
-const LOADING_PART_SIZE = 20;
+const String APP_TITLE = 'Заброшенные места';
+const int LOADING_PART_SIZE = 20;
+const int THUMBNAIL_WIDTH = 70;
