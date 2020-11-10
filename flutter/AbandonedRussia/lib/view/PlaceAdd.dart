@@ -8,7 +8,7 @@ import '../view/commonWidgets.dart';
 import '../view/PhotoContainer.dart';
 import '../view/PhotoTake.dart';
 
-final _labelButtonStyle = TextButton.styleFrom(minimumSize: Size(0, 25));
+final _labelButtonStyle = TextButton.styleFrom(minimumSize: Size(10, 25));
 
 class PlaceAdd extends StatelessWidget {
   @override
@@ -80,21 +80,20 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     maxLines: 7,
                   ),
                   Container(
-                    constraints: BoxConstraints(minHeight: 30),
+                    constraints: BoxConstraints(minHeight: 31),
                     child: Wrap(
-                      spacing: 10,
                       children: _place.labels
-                          .map((v) => TextButton(
+                          .map((v) => Container(
+                              height: 31,
+                              child: TextButton(
                                 style: _labelButtonStyle,
                                 child: Text(v),
                                 onPressed: () => _deselectLabel(v),
-                              ))
+                              )))
                           .toList(),
                     ),
                   ),
                   Container(
-                    height: 20,
-                    margin: EdgeInsets.only(top: 5),
                     child: Row(children: [
                       Text('Добавить метку: ',
                           style: TextStyle(fontStyle: FontStyle.italic)),
@@ -107,13 +106,14 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     ]),
                   ),
                   Wrap(
-                    spacing: 10,
                     children: _allLabels
-                        .map((v) => TextButton(
+                        .map((v) => Container(
+                            height: 31,
+                            child: TextButton(
                               style: _labelButtonStyle,
                               child: Text(v),
                               onPressed: () => _selectLabel(v),
-                            ))
+                            )))
                         .toList(),
                   ),
                   PhotoContainer(_place),

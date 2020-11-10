@@ -10,18 +10,21 @@ class PhotoContainer extends StatelessWidget {
 
   @override
   build(context) => Container(
-        padding: EdgeInsets.all(5),
+        padding: EdgeInsets.all(2),
         child: Wrap(
-          spacing: 5,
-          runSpacing: 5,
           children: _place.photos
               .map<Widget>(
                 (photo) => InkWell(
-                  child: photo.thumbnail != null
-                      ? Image.memory(photo.thumbnail)
-                      : Container(
-                          width: 0.0 + THUMBNAIL_WIDTH,
-                          child: WaitingOrError()),
+                  child: Container(
+                    width: 0.0 + THUMBNAIL_WIDTH,
+                    height: 0.0 + THUMBNAIL_WIDTH,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+                    child: photo.thumbnail != null
+                        ? Image.memory(photo.thumbnail, fit: BoxFit.cover)
+                        : WaitingOrError(),
+                  ),
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -34,7 +37,7 @@ class PhotoContainer extends StatelessWidget {
                         ),
                         body: Center(
                           child: FutureBuilder(
-                            future: _place.getPhotoOrigin(photo),
+                            future: photo.loadPhotoOrigin(),
                             builder: (context, snapshot) =>
                                 snapshot.connectionState ==
                                             ConnectionState.done &&

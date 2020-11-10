@@ -33,7 +33,8 @@ class PlacesDaoWeb extends PlacesDao {
     return data.docs.map((v) => fromMap(v.id, v.data())).toList();
   }
 
-  Future<Uint8List> getPhotoOrigin(Photo photo) => Future(() => Uint8List(0));
+  Future<Uint8List> getPhotoOrigin(String url, int size) =>
+      Future(() => Uint8List(0));
 
   Future<Place> add(Place place) async {
     place.creator = Database.currentUser;
@@ -53,6 +54,8 @@ class PlacesDaoWeb extends PlacesDao {
     place.id = addedPlace.id;
     return place;
   }
+
+  Future<void> put(Place place) => Future(() {});
 
   Future<void> del(String id) async {
     await FirebaseFirestore.instance.collection('Places').doc(id).delete();

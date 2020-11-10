@@ -17,6 +17,12 @@ class Photo {
   Future<void> generateThumbnail(Orientation orientation) async {
     thumbnail = await compute(_generateThumbnail, origin);
   }
+
+  Future<void> loadPhotoOrigin() async {
+    if (origin == null && originUrl != null) {
+      origin = await PlacesDao.instance.getPhotoOrigin(originUrl, originSize);
+    }
+  }
 }
 
 class Place with ChangeNotifier {
@@ -45,9 +51,6 @@ class Place with ChangeNotifier {
   }
 
   String get labelsAsString => labels.toString();
-
-  Future<Uint8List> getPhotoOrigin(Photo photo) =>
-      PlacesDao.instance.getPhotoOrigin(photo);
 
   Future<void> addPhoto(Photo photo, Orientation orientation) async {
     photos.add(photo);

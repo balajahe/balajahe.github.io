@@ -18,14 +18,14 @@ class WaitingOrError extends StatelessWidget {
 class _Waiting extends StatelessWidget {
   @override
   build(_) => Container(
-      padding: EdgeInsets.only(top: 15),
+      padding: EdgeInsets.only(top: 10),
       child: Center(child: CircularProgressIndicator()));
 }
 
 class _WaitingTransparent extends StatelessWidget {
   @override
   build(_) => Container(
-      padding: EdgeInsets.only(top: 15),
+      padding: EdgeInsets.only(top: 10),
       color: Color(0xAAAAAAAA),
       child: Center(child: CircularProgressIndicator()));
 }
@@ -41,7 +41,7 @@ class Errors extends StatelessWidget {
       stackTrace = error.stackTrace.toString();
     } catch (_) {}
     return SingleChildScrollView(
-        padding: EdgeInsets.only(top: 15),
+        padding: EdgeInsets.only(top: 10),
         child: Center(
             child: SelectableText('ERROR: ${error.toString()}\n$stackTrace')));
   }

@@ -31,21 +31,35 @@ class PlaceView extends StatelessWidget {
           ),
         ],
       ),
-      body: ListView(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Padding(
+            padding: EdgeInsets.only(top: 5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SelectableText(
+                  place.title,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SelectableText(
+                  place.labelsAsString,
+                  style: TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+          ),
           PhotoContainer(place),
-          ListTile(
-            title: SelectableText(place.title),
-            subtitle: SelectableText(place.labelsAsString),
+          SelectableText(place.description),
+          Container(height: 5),
+          SelectableText(
+            'добавлено ' +
+                place.created.toString() +
+                '\nпользователем ' +
+                place.creator.created.toString(),
+            style: TextStyle(fontSize: 12),
           ),
-          ListTile(
-            title: SelectableText(place.description),
-          ),
-          ListTile(
-              subtitle: SelectableText('добавлено ' +
-                  place.created.toString() +
-                  '\nпользователем ' +
-                  place.creator.created.toString())),
         ],
       ),
     );

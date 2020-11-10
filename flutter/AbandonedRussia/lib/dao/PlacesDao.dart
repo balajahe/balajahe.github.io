@@ -24,9 +24,9 @@ abstract class PlacesDao {
         photos: data['photos'] is List
             ? data['photos']
                 .map<Photo>((photo) => Photo(
-                      thumbnail: base64Decode(photo.thumbnail),
-                      originUrl: photo.originUrl,
-                      originSize: photo.originSize,
+                      thumbnail: base64Decode(photo['thumbnail']),
+                      originUrl: photo['originUrl'],
+                      originSize: photo['originSize'],
                     ))
                 .toList()
             : [],
@@ -58,11 +58,11 @@ abstract class PlacesDao {
     bool onlyMine = false,
   });
 
-  Future<Uint8List> getPhotoOrigin(Photo photo);
+  Future<Uint8List> getPhotoOrigin(String url, int size);
 
   Future<Place> add(Place place);
 
-//  Future<void> put(Place place);
+  Future<void> put(Place place);
 
   Future<void> del(String id);
 }

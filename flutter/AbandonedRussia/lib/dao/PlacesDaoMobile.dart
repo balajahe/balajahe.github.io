@@ -34,15 +34,16 @@ class PlacesDaoMobile extends PlacesDao {
     return data.docs.map((v) => fromMap(v.id, v.data())).toList();
   }
 
-  Future<Uint8List> getPhotoOrigin(Photo photo) =>
-      FirebaseStorage.instance.ref().child(photo.originUrl).getData(100000);
+  Future<Uint8List> getPhotoOrigin(String url, int size) async {
+    return await FirebaseStorage.instance.ref().child(url).getData(size);
+  }
 
   Future<Place> add(Place place) async {
     place.creator = Database.currentUser;
     place.created = Timestamp.now().toDate();
     place.photos.forEach((photo) {
       if (photo.originUrl == null)
-        photo.originUrl = 'photos/${place.created}.png';
+        photo.originUrl = 'photos/${Timestamp.now()}.png';
     });
 
     var addedPlace =
@@ -56,18 +57,10 @@ class PlacesDaoMobile extends PlacesDao {
           .child(photo.originUrl)
           .putData(photo.origin);
     });
-    // print(fb.app().storage());
-    // for (var photoData in place.photos) {
-    //   var storageRef = fb
-    //       .app()
-    //       .storage()
-    //       .ref('photos/${DateTime.now().millisecondsSinceEpoch}');
-    //   var snapshot = await storageRef.put(photoData).future;
-    //   var url = await snapshot.ref.getDownloadURL();
-    //   print(url);
-    // }
     return place;
   }
+
+  Future<void> put(Place place) => Future(() {});
 
   Future<void> del(String id) async {
     await FirebaseFirestore.instance.collection('Places').doc(id).delete();

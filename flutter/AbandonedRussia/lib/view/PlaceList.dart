@@ -8,7 +8,7 @@ import '../view/PhotoContainer.dart';
 import '../view/PlaceAdd.dart';
 import '../view/PlaceView.dart';
 
-const _ONLY_MINE_TITLE = 'Добавлены мной';
+const _ONLY_MINE_TITLE = 'Добавленные мной';
 
 class PlaceList extends StatefulWidget {
   @override
@@ -31,7 +31,7 @@ class _PlaceListState extends State<PlaceList> {
               onPressed: () => places.refresh(onlyMine: true)),
           IconButton(
               icon: Icon(Icons.refresh),
-              tooltip: 'Обновить все',
+              tooltip: 'Обновить всё',
               onPressed: () => places.refresh()),
         ],
       ),
@@ -59,32 +59,36 @@ class _PlaceListState extends State<PlaceList> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    InkWell(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 5),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(place.title,
+                                style: TextStyle(fontWeight: FontWeight.bold)),
+                            Text(place.labelsAsString,
+                                style: TextStyle(fontSize: 12)),
+                          ],
+                        ),
+                      ),
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => PlaceView(place))),
+                    ),
                     Wrap(
-                      spacing: 7,
                       children: [
                         PhotoContainer(place),
                         InkWell(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(place.title,
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              Text(place.labelsAsString,
-                                  style: TextStyle(fontSize: 12)),
-                            ],
-                          ),
+                          child: Expanded(
+                              child: Padding(
+                                  padding: EdgeInsets.all(3),
+                                  child: Text(place.description))),
                           onTap: () => Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (_) => PlaceView(place))),
                         ),
                       ],
-                    ),
-                    InkWell(
-                      child: Text(place.description),
-                      onTap: () => Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => PlaceView(place))),
                     ),
                   ],
                 );

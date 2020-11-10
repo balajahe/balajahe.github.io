@@ -1,16 +1,15 @@
 # AbandonedRussia
 
-A new Flutter project.
+Мобильное демо-приложение, написанное на Flutter.
 
 ## Getting Started
+Публичная пополняемая пользователями база данных объектов недвижимости с фотографиями и геометками.
+Хранение данных в firestore firebase / firestore cloud с анонимной авторизацией.
 
-This project is a starting point for a Flutter application.
+Доступна работающая WEB версия: https://balajahe.github.io/flutter/AbandonedRussia/build/web/
 
-A few resources to get you started if this is your first Flutter project:
+Ограничения WEB-версии:
+- На телефоне невозможно выбрать тыловую камеру (ошибка в пакете dart.html).
+- Не сохраняет оригиналы фотографий (отсутствует flutter-web-плагин для firebase cloud)
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
