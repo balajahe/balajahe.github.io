@@ -2,7 +2,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../model/CameraAbstract.dart';
+import '../model/Camera.dart';
 import '../model/Place.dart';
 import '../view/commonWidgets.dart';
 import '../view/PhotoContainer.dart';
@@ -11,7 +11,7 @@ import '../view/PhotoApprove.dart';
 class PhotoTake extends StatelessWidget {
   @override
   build(context) {
-    var camera = context.watch<CameraAbstract>();
+    var camera = context.watch<Camera>();
     return FutureBuilder(
       future: camera.initCamera(),
       builder: (context, snapshot) =>
@@ -23,7 +23,7 @@ class PhotoTake extends StatelessWidget {
 }
 
 class _PhotoTakeForm extends StatefulWidget {
-  final CameraAbstract _camera;
+  final Camera _camera;
   _PhotoTakeForm(this._camera);
 
   @override

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../model/Place.dart';
 import '../model/Places.dart';
 import '../view/PhotoContainer.dart';
+import '../view/PlaceEdit.dart';
 
 class PlaceView extends StatelessWidget {
   final Place place;
@@ -18,17 +19,15 @@ class PlaceView extends StatelessWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.delete),
-            onPressed: () async {
-              showDialog<void>(
-                context: context,
-                builder: (BuildContext context) => AlertDialog(
-                  title: Text('Удалить объект?'),
-                  actions: <Widget>[
-                    TextButton(
+            onPressed: () => showDialog<void>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: Text('Удалить объект?'),
+                actions: <Widget>[
+                  TextButton(
                       child: Text('Нет'),
-                      onPressed: () => Navigator.pop(context),
-                    ),
-                    TextButton(
+                      onPressed: () => Navigator.pop(context)),
+                  TextButton(
                       child: Text('Да'),
                       onPressed: () async {
                         waitStart(context);
@@ -36,17 +35,15 @@ class PlaceView extends StatelessWidget {
                         waitStop(context);
                         Navigator.pop(context);
                         Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                ),
-              );
-            },
+                      }),
+                ],
+              ),
+            ),
           ),
           IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () {},
-          ),
+              icon: Icon(Icons.edit),
+              onPressed: () => Navigator.push(context,
+                  MaterialPageRoute(builder: (_) => PlaceEdit(place)))),
         ],
       ),
       body: Column(

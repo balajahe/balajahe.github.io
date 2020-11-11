@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'CameraAbstract.dart';
+import 'Camera.dart';
 
-class CameraMobile implements CameraAbstract {
+class CameraMobile implements Camera {
   CameraController _camera;
 
   Future<void> initCamera() async {
@@ -24,9 +24,7 @@ class CameraMobile implements CameraAbstract {
       aspectRatio: _camera.value.aspectRatio, child: CameraPreview(_camera));
 
   Future<Uint8List> takePhoto() async {
-    print('takephoto');
     var path = (await getTemporaryDirectory()).path + '/${DateTime.now()}.png';
-    print(path);
     await _camera.takePicture(path);
     var file = File(path);
     var data = await file.readAsBytes();

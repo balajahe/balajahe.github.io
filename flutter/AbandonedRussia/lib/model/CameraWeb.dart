@@ -3,9 +3,9 @@ import 'dart:ui' as ui;
 import 'dart:html' as html;
 import 'package:flutter/material.dart';
 
-import '../model/CameraAbstract.dart';
+import 'Camera.dart';
 
-class CameraWeb implements CameraAbstract {
+class CameraWeb implements Camera {
   html.VideoElement _htmlVideoElement;
   html.MediaStream _videoStream;
   html.ImageCapture _imageCapture;

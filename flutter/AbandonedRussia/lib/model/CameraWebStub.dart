@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 
-import '../model/CameraAbstract.dart';
+import 'Camera.dart';
 
-class CameraWeb implements CameraAbstract {
+class CameraWeb implements Camera {
   Future<void> initCamera() => Future(() {});
 
   void disposeCamera() {}

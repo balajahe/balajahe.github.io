@@ -23,30 +23,28 @@ class _PlaceListState extends State<PlaceList> {
     var places = context.watch<Places>();
     return Scaffold(
       appBar: AppBar(
-        title: Text(places.onlyMine ? _ONLY_MINE_TITLE : APP_TITLE),
-        actions: [
-          IconButton(
-              icon: Icon(Icons.library_books),
-              tooltip: _ONLY_MINE_TITLE,
-              onPressed: () => places.refresh(onlyMine: true)),
-          IconButton(
-              icon: Icon(Icons.refresh),
-              tooltip: 'Обновить всё',
-              onPressed: () => places.refresh()),
-        ],
-      ),
+          title: Text(places.onlyMine ? _ONLY_MINE_TITLE : APP_TITLE),
+          actions: [
+            IconButton(
+                tooltip: _ONLY_MINE_TITLE,
+                icon: Icon(Icons.library_books),
+                onPressed: () => places.refresh(onlyMine: true)),
+            IconButton(
+                tooltip: 'Обновить всё',
+                icon: Icon(Icons.refresh),
+                onPressed: () => places.refresh()),
+          ]),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Новый объект',
-        child: Icon(Icons.add),
-        onPressed: () async {
-          var added = await Navigator.push(
-              context, MaterialPageRoute(builder: (_) => PlaceAdd()));
-          if (added != null) {
-            _scrollController.animateTo(0,
-                duration: Duration(milliseconds: 1000), curve: Curves.ease);
-          }
-        },
-      ),
+          tooltip: 'Новый объект',
+          child: Icon(Icons.add),
+          onPressed: () async {
+            var added = await Navigator.push(
+                context, MaterialPageRoute(builder: (_) => PlaceAdd()));
+            if (added != null) {
+              _scrollController.animateTo(0,
+                  duration: Duration(milliseconds: 1000), curve: Curves.ease);
+            }
+          }),
       body: ListView.builder(
         controller: _scrollController,
         itemCount: places.length + 1,
@@ -75,10 +73,9 @@ class _PlaceListState extends State<PlaceList> {
                       Wrap(
                         children: [
                           PhotoContainer(place),
-                          Expanded(
-                            child: Padding(
-                                padding: EdgeInsets.all(3),
-                                child: Text(place.description)),
+                          Padding(
+                            padding: EdgeInsets.all(3),
+                            child: Text(place.description),
                           ),
                         ],
                       ),

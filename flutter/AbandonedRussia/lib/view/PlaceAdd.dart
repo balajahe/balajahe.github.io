@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,20 +9,19 @@ import '../view/commonWidgets.dart';
 import '../view/PhotoContainer.dart';
 import '../view/PhotoTake.dart';
 
-final _labelButtonStyle = TextButton.styleFrom(minimumSize: Size(10, 25));
-final double _labelButtonHeight = 32;
+final _labelButtonStyle = TextButton.styleFrom(minimumSize: Size(20, 20));
+final double _labelButtonHeight = kIsWeb ? 25 : 32;
+final double _labelButtonSpace = kIsWeb ? 10 : 0;
 
 class PlaceAdd extends StatelessWidget {
   @override
   build(context) => ChangeNotifierProvider<Place>(
-        create: (context) => Place(),
-        child: FutureBuilder(
+      create: (context) => Place(),
+      child: FutureBuilder(
           future: context.watch<Labels>().getAll(),
           builder: (context, snapshot) => snapshot.hasData
               ? _PlaceAddForm(snapshot.data)
-              : WaitingOrError(error: snapshot.error),
-        ),
-      );
+              : WaitingOrError(error: snapshot.error)));
 }
 
 class _PlaceAddForm extends StatefulWidget {
@@ -47,83 +47,89 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
     _place = context.watch<Place>();
     return Stack(
       children: [
-        Scaffold(
-          appBar: AppBar(
-            title: Text('Новый объект'),
-            leading: Builder(
-              builder: (context) => IconButton(
-                  icon: Icon(Icons.arrow_back),
-                  onPressed: () => _onExit(context)),
-            ),
-            actions: [
-              Builder(
+        WillPopScope(
+          onWillPop: () => _onExit(context),
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text('Новый объект'),
+              leading: Builder(
                 builder: (context) => IconButton(
-                    icon: Icon(Icons.save),
-                    tooltip: 'Сохранить',
-                    onPressed: () => _save(context)),
-              )
-            ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            tooltip: 'Добавить фото',
-            child: Icon(Icons.photo_camera),
-            onPressed: _addPhoto,
-          ),
-          body: SingleChildScrollView(
-            child: Form(
-              key: _form,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  TextFormField(
-                    controller: _title,
-                    decoration: InputDecoration(labelText: 'Краткое название'),
-                  ),
-                  TextFormField(
-                    controller: _desctiption,
-                    decoration: InputDecoration(labelText: 'Описание'),
-                    minLines: 3,
-                    maxLines: 7,
-                  ),
-                  Container(
-                    constraints: BoxConstraints(minHeight: _labelButtonHeight),
-                    child: Wrap(
-                      children: _place.labels
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () => _onExit(context)),
+              ),
+              actions: [
+                Builder(
+                  builder: (context) => IconButton(
+                      icon: Icon(Icons.save),
+                      tooltip: 'Сохранить',
+                      onPressed: () => _save(context)),
+                )
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+                tooltip: 'Добавить фото',
+                child: Icon(Icons.photo_camera),
+                onPressed: _addPhoto),
+            body: SingleChildScrollView(
+              child: Form(
+                key: _form,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    TextFormField(
+                      controller: _title,
+                      decoration:
+                          InputDecoration(labelText: 'Краткое название'),
+                    ),
+                    TextFormField(
+                      controller: _desctiption,
+                      decoration: InputDecoration(labelText: 'Описание'),
+                      minLines: 3,
+                      maxLines: 7,
+                    ),
+                    Container(
+                      constraints:
+                          BoxConstraints(minHeight: _labelButtonHeight),
+                      child: Wrap(
+                        spacing: _labelButtonSpace,
+                        children: _place.labels
+                            .map((v) => Container(
+                                height: _labelButtonHeight,
+                                child: TextButton(
+                                  style: _labelButtonStyle,
+                                  child: Text(v),
+                                  onPressed: () => _deselectLabel(v),
+                                )))
+                            .toList(),
+                      ),
+                    ),
+                    Container(
+                      child: Row(children: [
+                        Text('Добавить метку: ',
+                            style: TextStyle(fontStyle: FontStyle.italic)),
+                        Expanded(
+                          child: Container(
+                              height: 1,
+                              margin: EdgeInsets.only(top: 10),
+                              color: Colors.grey[400]),
+                        ),
+                      ]),
+                    ),
+                    Wrap(
+                      spacing: _labelButtonSpace,
+                      children: _allLabels
                           .map((v) => Container(
                               height: _labelButtonHeight,
                               child: TextButton(
                                 style: _labelButtonStyle,
                                 child: Text(v),
-                                onPressed: () => _deselectLabel(v),
+                                onPressed: () => _selectLabel(v),
                               )))
                           .toList(),
                     ),
-                  ),
-                  Container(
-                    child: Row(children: [
-                      Text('Добавить метку: ',
-                          style: TextStyle(fontStyle: FontStyle.italic)),
-                      Expanded(
-                        child: Container(
-                            height: 1,
-                            margin: EdgeInsets.only(top: 10),
-                            color: Colors.grey[400]),
-                      ),
-                    ]),
-                  ),
-                  Wrap(
-                    children: _allLabels
-                        .map((v) => Container(
-                            height: _labelButtonHeight,
-                            child: TextButton(
-                              style: _labelButtonStyle,
-                              child: Text(v),
-                              onPressed: () => _selectLabel(v),
-                            )))
-                        .toList(),
-                  ),
-                  PhotoContainer(_place),
-                ],
+                    PhotoContainer(_place),
+                  ],
+                ),
               ),
             ),
           ),
@@ -135,13 +141,14 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
 
   Future<void> _addPhoto() async {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => ChangeNotifierProvider.value(
-            value: _place,
-            child: PhotoTake(),
-          ),
-        ));
+      context,
+      MaterialPageRoute(
+        builder: (_) => ChangeNotifierProvider.value(
+          value: _place,
+          child: PhotoTake(),
+        ),
+      ),
+    );
   }
 
   void _selectLabel(String label) {
@@ -158,40 +165,39 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
     });
   }
 
-  void _onExit(newContext) {
-    if (_place.photos.length > 0 || _place.labels.length > 0) {
-      showDialog<void>(
+  Future<bool> _onExit(newContext) async {
+    if (_title.text.length > 0 ||
+        _desctiption.text.length > 0 ||
+        _place.labels.length > 0 ||
+        _place.photos.length > 0) {
+      var res = await showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
           title: Text('Сохранить изменения?'),
           actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.cancel),
-              onPressed: () {
-                Navigator.pop(context);
-                Navigator.pop(context);
-              },
-            ),
-            IconButton(
-              icon: Icon(Icons.save),
-              onPressed: () async {
-                Navigator.pop(context);
-                _save(newContext);
-              },
-            ),
+            TextButton(
+                child: Text('Нет'), onPressed: () => Navigator.pop(context)),
+            TextButton(
+                child: Text('Да'),
+                onPressed: () => Navigator.pop(context, true)),
           ],
         ),
       );
-    } else {
-      Navigator.pop(newContext);
+      if (res != null) {
+        _save(newContext);
+        return false;
+      }
     }
+    Navigator.pop(context);
+    return false;
   }
 
   Future<void> _save(newContext) async {
-    if (_form.currentState.validate() && _title.text.length > 0
-        // _place.labels.length > 0 &&
-        // _place.photos.length > 0
-        ) {
+    if (_form.currentState.validate() &&
+        _title.text.length > 0 &&
+        _desctiption.text.length > 0 &&
+        _place.labels.length > 0 &&
+        _place.photos.length > 0) {
       try {
         var place = Place(
           title: _title.text,
@@ -203,14 +209,13 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
         await context.read<Places>().add(place);
         Navigator.pop(context, true);
       } catch (e) {
-        print(e);
         Scaffold.of(newContext)
-            .showSnackBar(SnackBar(content: Text(e.toString())));
+            .showSnackBar(SnackBar(content: SelectableText(e.toString())));
       }
     } else {
       Scaffold.of(newContext).showSnackBar(SnackBar(
           content: Text(
-              'Хотя бы одно фото, хотя бы одна метка, и краткое название!')));
+              'Заполните все поля, минимум одно фото, минимум одна метка!')));
     }
   }
 }

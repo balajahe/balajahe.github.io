@@ -1,40 +1,12 @@
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../model/Place.dart';
 import '../dao/Database.dart';
 import '../dao/PlacesDao.dart';
-import '../model/Place.dart';
 
 class PlacesDaoWeb extends PlacesDao {
-  Future<List<Place>> getNextPart({
-    DateTime after,
-    int count,
-    bool onlyMine = false,
-  }) async {
-    QuerySnapshot data;
-    if (onlyMine) {
-      data = await FirebaseFirestore.instance
-          .collection('Places')
-          .where('creator.uid', isEqualTo: Database.currentUser.uid)
-          .orderBy('created', descending: true)
-          .startAfter(
-              [after != null ? Timestamp.fromDate(after) : Timestamp.now()])
-          .limit(count)
-          .get();
-    } else {
-      data = await FirebaseFirestore.instance
-          .collection('Places')
-          .orderBy('created', descending: true)
-          .startAfter(
-              [after != null ? Timestamp.fromDate(after) : Timestamp.now()])
-          .limit(count)
-          .get();
-    }
-    return data.docs.map((v) => fromMap(v.id, v.data())).toList();
-  }
-
-  Future<Uint8List> getPhotoOrigin(String url, int size) =>
-      Future(() => Uint8List(0));
+  Future<Uint8List> getPhotoOrigin(String url, int size) => Future(() => null);
 
   Future<Place> add(Place place) async {
     place.creator = Database.currentUser;
