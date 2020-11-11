@@ -31,6 +31,9 @@ abstract class PlacesDao {
                     ))
                 .toList()
             : [],
+        location: data['location'] is List
+            ? data['location'].map<double>((v) => 0.0 + v).toList()
+            : null,
       );
 
   Map<String, dynamic> toMap(Place v) {
@@ -50,6 +53,7 @@ abstract class PlacesDao {
                 'originSize': photo.origin.length,
               })
           .toList(),
+      'location': v.location != null ? List<double>.from(v.location) : null,
     };
   }
 

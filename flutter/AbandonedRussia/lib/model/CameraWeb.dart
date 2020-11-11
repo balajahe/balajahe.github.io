@@ -19,7 +19,7 @@ class CameraWeb implements Camera {
         'htmlVideoElement', (int viewId) => _htmlVideoElement);
   }
 
-  Future<void> initCamera() async {
+  Future<void> init() async {
     if (!_initiated) {
       _initiated = true;
 
@@ -40,7 +40,7 @@ class CameraWeb implements Camera {
     print(_htmlVideoElement.width);
   }
 
-  void disposeCamera() {
+  void dispose() {
     _initiated = false;
 
     _htmlVideoElement

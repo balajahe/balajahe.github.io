@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'Camera.dart';
 
 class CameraWeb implements Camera {
-  Future<void> initCamera() => Future(() {});
+  Future<void> init() => Future(() {});
 
-  void disposeCamera() {}
+  void dispose() {}
 
   Widget get previewWidget => Container();
 

@@ -13,7 +13,7 @@ class PhotoTake extends StatelessWidget {
   build(context) {
     var camera = context.watch<Camera>();
     return FutureBuilder(
-      future: camera.initCamera(),
+      future: camera.init(),
       builder: (context, snapshot) =>
           snapshot.connectionState == ConnectionState.done && !snapshot.hasError
               ? _PhotoTakeForm(camera)
@@ -47,7 +47,7 @@ class _PhotoTakeFormState extends State<_PhotoTakeForm> {
           onPressed: _takePhoto,
         ),
         body: Stack(children: [
-          widget._camera.previewWidget,
+          Center(child: widget._camera.previewWidget),
           PhotoContainer(_place),
         ]),
       ),
@@ -70,7 +70,7 @@ class _PhotoTakeFormState extends State<_PhotoTakeForm> {
 
   @override
   void dispose() {
-    widget._camera.disposeCamera();
+    widget._camera.dispose();
     super.dispose();
   }
 }

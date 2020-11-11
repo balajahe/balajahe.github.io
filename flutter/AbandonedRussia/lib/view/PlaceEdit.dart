@@ -19,7 +19,7 @@ class PlaceEdit extends StatelessWidget {
   build(context) => ChangeNotifierProvider<Place>(
       create: (context) => Place(),
       child: FutureBuilder(
-          future: context.watch<Labels>().getAll(),
+          future: context.watch<Labels>().init(),
           builder: (context, snapshot) => snapshot.hasData
               ? _PlaceEditForm(snapshot.data)
               : WaitingOrError(error: snapshot.error)));

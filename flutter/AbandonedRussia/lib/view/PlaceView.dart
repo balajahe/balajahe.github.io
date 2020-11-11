@@ -69,6 +69,11 @@ class PlaceView extends StatelessWidget {
           SelectableText(place.description),
           Container(height: 5),
           SelectableText(
+            'Координаты: ${place.location.toString()}',
+            style: TextStyle(fontSize: 12),
+          ),
+          Container(height: 5),
+          SelectableText(
             'добавлено ' +
                 place.created.toString() +
                 '\nпользователем ' +

@@ -33,15 +33,18 @@ class Place with ChangeNotifier {
   String description;
   List<String> labels;
   List<Photo> photos;
+  List<double> location;
 
-  Place(
-      {this.id,
-      this.creator,
-      this.created,
-      this.title,
-      this.description,
-      this.labels,
-      this.photos}) {
+  Place({
+    this.id,
+    this.creator,
+    this.created,
+    this.title,
+    this.description,
+    this.labels,
+    this.photos,
+    this.location,
+  }) {
     if (labels == null) {
       labels = [];
     }

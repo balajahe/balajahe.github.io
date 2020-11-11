@@ -9,9 +9,9 @@ import '../model/CameraWebStub.dart'
 abstract class Camera {
   static Camera get instance => kIsWeb ? CameraWeb() : CameraMobile();
 
-  Future<void> initCamera();
+  Future<void> init();
 
-  void disposeCamera();
+  void dispose();
 
   Widget get previewWidget;
 

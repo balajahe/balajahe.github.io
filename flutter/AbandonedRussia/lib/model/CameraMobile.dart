@@ -9,14 +9,14 @@ import 'Camera.dart';
 class CameraMobile implements Camera {
   CameraController _camera;
 
-  Future<void> initCamera() async {
+  Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
     _camera =
         CameraController((await availableCameras())[0], ResolutionPreset.high);
     await _camera.initialize();
   }
 
-  void disposeCamera() {
+  void dispose() {
     _camera.dispose();
   }
 

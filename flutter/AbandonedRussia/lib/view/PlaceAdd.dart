@@ -5,46 +5,54 @@ import 'package:provider/provider.dart';
 import '../model/Place.dart';
 import '../model/Places.dart';
 import '../model/Labels.dart';
+import '../model/Location.dart';
 import '../view/commonWidgets.dart';
 import '../view/PhotoContainer.dart';
 import '../view/PhotoTake.dart';
 
-final _labelButtonStyle = TextButton.styleFrom(minimumSize: Size(20, 20));
-final double _labelButtonHeight = kIsWeb ? 25 : 32;
+final _labelButtonStyle = TextButton.styleFrom(minimumSize: Size(25, 25));
+final double _labelButtonHeight = 32;
 final double _labelButtonSpace = kIsWeb ? 10 : 0;
 
 class PlaceAdd extends StatelessWidget {
   @override
   build(context) => ChangeNotifierProvider<Place>(
-      create: (context) => Place(),
-      child: FutureBuilder(
-          future: context.watch<Labels>().getAll(),
-          builder: (context, snapshot) => snapshot.hasData
-              ? _PlaceAddForm(snapshot.data)
-              : WaitingOrError(error: snapshot.error)));
+        create: (context) => Place(),
+        child: FutureBuilder(
+          future: context.watch<Labels>().init(),
+          builder: (context, snapshot) =>
+              snapshot.connectionState != ConnectionState.done
+                  ? WaitingOrError(error: snapshot.error)
+                  : FutureBuilder(
+                      future: context.watch<Location>().init(),
+                      builder: (context, snapshot) =>
+                          snapshot.connectionState != ConnectionState.done
+                              ? WaitingOrError(error: snapshot.error)
+                              : _PlaceAddForm(),
+                    ),
+        ),
+      );
 }
 
 class _PlaceAddForm extends StatefulWidget {
-  final List<String> _allLabels;
-  _PlaceAddForm(this._allLabels);
-
   @override
-  createState() => _PlaceAddFormState(_allLabels.map((v) => v).toList());
+  createState() => _PlaceAddFormState();
 }
 
 class _PlaceAddFormState extends State<_PlaceAddForm> {
   Place _place;
-  final List<String> _allLabels;
+  List<String> _allLabels;
+  Location _location;
   final _form = GlobalKey<FormState>();
   final _title = TextEditingController();
-  final _desctiption = TextEditingController();
+  final _description = TextEditingController();
   bool isWorking = false;
-
-  _PlaceAddFormState(this._allLabels);
 
   @override
   build(context) {
     _place = context.watch<Place>();
+    _allLabels = context.watch<Labels>().getAll();
+    _location = context.watch<Location>();
     return Stack(
       children: [
         WillPopScope(
@@ -52,18 +60,11 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
           child: Scaffold(
             appBar: AppBar(
               title: Text('Новый объект'),
-              leading: Builder(
-                builder: (context) => IconButton(
-                    icon: Icon(Icons.arrow_back),
-                    onPressed: () => _onExit(context)),
-              ),
               actions: [
-                Builder(
-                  builder: (context) => IconButton(
-                      icon: Icon(Icons.save),
-                      tooltip: 'Сохранить',
-                      onPressed: () => _save(context)),
-                )
+                IconButton(
+                    icon: Icon(Icons.save),
+                    tooltip: 'Сохранить',
+                    onPressed: _save),
               ],
             ),
             floatingActionButton: FloatingActionButton(
@@ -82,7 +83,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                           InputDecoration(labelText: 'Краткое название'),
                     ),
                     TextFormField(
-                      controller: _desctiption,
+                      controller: _description,
                       decoration: InputDecoration(labelText: 'Описание'),
                       minLines: 3,
                       maxLines: 7,
@@ -128,6 +129,12 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                           .toList(),
                     ),
                     PhotoContainer(_place),
+                    StreamBuilder(
+                      stream: _location.locationChanges(),
+                      builder: (context, snapshot) => Text(
+                        'Координаты: ${snapshot.data.toString()}',
+                      ),
+                    )
                   ],
                 ),
               ),
@@ -167,10 +174,10 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
 
   Future<bool> _onExit(newContext) async {
     if (_title.text.length > 0 ||
-        _desctiption.text.length > 0 ||
+        _description.text.length > 0 ||
         _place.labels.length > 0 ||
         _place.photos.length > 0) {
-      var res = await showDialog(
+      var isSave = await showDialog(
         context: context,
         builder: (BuildContext context) => AlertDialog(
           title: Text('Сохранить изменения?'),
@@ -183,8 +190,8 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
           ],
         ),
       );
-      if (res != null) {
-        _save(newContext);
+      if (isSave != null) {
+        _save();
         return false;
       }
     }
@@ -192,30 +199,47 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
     return false;
   }
 
-  Future<void> _save(newContext) async {
+  Future<void> _save() async {
     if (_form.currentState.validate() &&
         _title.text.length > 0 &&
-        _desctiption.text.length > 0 &&
+        _description.text.length > 0 &&
         _place.labels.length > 0 &&
         _place.photos.length > 0) {
       try {
+        setState(() => isWorking = true);
         var place = Place(
           title: _title.text,
-          description: _desctiption.text,
+          description: _description.text,
           labels: _place.labels,
           photos: _place.photos,
+          location: await _location.getLocation(),
         );
-        setState(() => isWorking = true);
         await context.read<Places>().add(place);
         Navigator.pop(context, true);
       } catch (e) {
-        Scaffold.of(newContext)
-            .showSnackBar(SnackBar(content: SelectableText(e.toString())));
+        showDialog(
+          context: context,
+          builder: (BuildContext context) => AlertDialog(
+            title: Text(e.toString()),
+            actions: <Widget>[
+              TextButton(
+                  child: Text('OK'), onPressed: () => Navigator.pop(context)),
+            ],
+          ),
+        );
       }
     } else {
-      Scaffold.of(newContext).showSnackBar(SnackBar(
-          content: Text(
-              'Заполните все поля, минимум одно фото, минимум одна метка!')));
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title: Text(
+              'Заполните все поля,\nминимум одно фото,\nминимум одна метка!'),
+          actions: <Widget>[
+            TextButton(
+                child: Text('OK'), onPressed: () => Navigator.pop(context)),
+          ],
+        ),
+      );
     }
   }
 }
