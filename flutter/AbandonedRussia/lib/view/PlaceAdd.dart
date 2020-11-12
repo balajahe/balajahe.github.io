@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-//import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 
@@ -13,26 +12,23 @@ import '../view/commonWidgets.dart';
 import '../view/PhotoContainer.dart';
 import '../view/PhotoTake.dart';
 
-final _labelButtonStyle = TextButton.styleFrom(minimumSize: Size(25, 25));
 final double _labelButtonHeight = 32;
 final double _labelButtonSpace = kIsWeb ? 10 : 0;
+final _labelButtonStyle = TextButton.styleFrom(minimumSize: Size(25, 25));
 
 class PlaceAdd extends StatelessWidget {
   @override
   build(context) => ChangeNotifierProvider<Place>(
         create: (context) => Place(),
         child: FutureBuilder(
-          future: context.watch<Labels>().init(),
+          future: Future.wait([
+            context.watch<Labels>().init(),
+            context.watch<Location>().init(),
+          ]),
           builder: (context, snapshot) =>
               snapshot.connectionState != ConnectionState.done
                   ? WaitingOrError(error: snapshot.error)
-                  : FutureBuilder(
-                      future: context.watch<Location>().init(),
-                      builder: (context, snapshot) =>
-                          snapshot.connectionState != ConnectionState.done
-                              ? WaitingOrError(error: snapshot.error)
-                              : _PlaceAddForm(),
-                    ),
+                  : _PlaceAddForm(),
         ),
       );
 }
@@ -49,7 +45,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
   final _form = GlobalKey<FormState>();
   final _title = TextEditingController();
   final _description = TextEditingController();
-  //final _osm = GlobalKey<OSMFlutterState>();
+  BuildContext _scaffoldContext;
   bool isWorking = false;
 
   @override
@@ -65,10 +61,14 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
             appBar: AppBar(
               title: Text('Новый объект'),
               actions: [
-                IconButton(
+                Builder(builder: (context) {
+                  _scaffoldContext = context;
+                  return IconButton(
                     icon: Icon(Icons.save),
                     tooltip: 'Сохранить',
-                    onPressed: _save),
+                    onPressed: _save,
+                  );
+                }),
               ],
             ),
             floatingActionButton: FloatingActionButton(
@@ -179,26 +179,6 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                         );
                       },
                     ),
-
-                    // Container(
-                    //   height: 300,
-                    //   child: OSMFlutter(
-                    //       //key: osmKey,
-                    //       showZoomController: true,
-                    //       currentLocation: false,
-                    //       road: Road(
-                    //         startIcon: MarkerIcon(
-                    //             icon: Icon(Icons.person,
-                    //                 size: 64, color: Colors.brown)),
-                    //         roadColor: Colors.yellowAccent,
-                    //       ),
-                    //       markerIcon: MarkerIcon(
-                    //           icon: Icon(Icons.person_pin_circle,
-                    //               color: Colors.blue, size: 56)),
-                    //       initPosition: GeoPoint(
-                    //           latitude: snapshot.data[0],
-                    //           longitude: snapshot.data[1])),
-                    // ),
                   ],
                 ),
               ),
@@ -242,25 +222,28 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
         _place.labels.length > 0 ||
         _place.photos.length > 0) {
       var isSave = await showDialog(
+        barrierDismissible: false,
         context: context,
         builder: (BuildContext context) => AlertDialog(
           title: Text('Сохранить изменения?'),
           actions: <Widget>[
             TextButton(
-                child: Text('Нет'), onPressed: () => Navigator.pop(context)),
+                child: Text('Нет'),
+                onPressed: () => Navigator.pop(context, false)),
             TextButton(
                 child: Text('Да'),
                 onPressed: () => Navigator.pop(context, true)),
           ],
         ),
       );
-      if (isSave != null) {
+      if (isSave is bool && isSave) {
         _save();
         return false;
+      } else if (isSave is bool) {
+        Navigator.pop(context);
       }
     }
-    Navigator.pop(context);
-    return false;
+    return true;
   }
 
   Future<void> _save() async {
@@ -291,17 +274,9 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
         );
       }
     } else {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) => AlertDialog(
-          title: Text(
-              'Заполните все поля,\nминимум одно фото,\nминимум одна метка!'),
-          actions: <Widget>[
-            TextButton(
-                child: Text('OK'), onPressed: () => Navigator.pop(context)),
-          ],
-        ),
-      );
+      Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(
+          content: Text(
+              'Заполните все поля, минимум одно фото, минимум одна метка!')));
     }
   }
 }

@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:image/image.dart';
 
 import '../settings.dart';
-import 'User.dart';
+import '../model/App.dart';
 import '../dao/PlacesDao.dart';
 
 class PlacePhoto {
@@ -33,7 +33,7 @@ class PlaceLocation {
 
 class Place with ChangeNotifier {
   String id;
-  User creator;
+  AppUser creator;
   DateTime created;
   String title;
   String description;

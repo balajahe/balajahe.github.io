@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'settings.dart';
-import 'dao/Database.dart';
+import 'model/App.dart';
 import 'model/Places.dart';
 import 'model/Labels.dart';
 import 'model/Camera.dart';
@@ -12,10 +12,10 @@ import 'view/PlaceList.dart';
 
 void main() {
   ErrorWidget.builder = (e) => Scaffold(body: WaitingOrError(error: e));
-  runApp(App());
+  runApp(AppWidget());
 }
 
-class App extends StatelessWidget {
+class AppWidget extends StatelessWidget {
   @override
   build(context) => MultiProvider(
         providers: [
@@ -38,7 +38,7 @@ class App extends StatelessWidget {
 class _StartApp extends StatelessWidget {
   @override
   build(context) => FutureBuilder(
-        future: Database.connect(),
+        future: App.init(),
         builder: (context, snapshot) =>
             (snapshot.connectionState == ConnectionState.done &&
                     !snapshot.hasError)

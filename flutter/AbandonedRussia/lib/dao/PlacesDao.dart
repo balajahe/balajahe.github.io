@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../model/User.dart';
+import '../model/App.dart';
 import '../model/Place.dart';
 import '../dao/Database.dart';
 import '../dao/PlacesDaoWeb.dart';
@@ -14,7 +14,7 @@ abstract class PlacesDao {
 
   Place fromMap(String id, Map<String, dynamic> data) => Place(
         id: id,
-        creator: User(
+        creator: AppUser(
           uid: data['creator']['uid'],
           created: data['creator']['created'].toDate(),
         ),
@@ -33,9 +33,9 @@ abstract class PlacesDao {
             : [],
         location: data['location'] != null
             ? PlaceLocation(
-                data['location']['latitude'],
-                data['location']['longitude'],
-                data['location']['accuracy'],
+                0.0 + data['location']['latitude'],
+                0.0 + data['location']['longitude'],
+                0.0 + data['location']['accuracy'],
               )
             : null,
       );
