@@ -33,11 +33,10 @@ class PhotoContainer extends StatelessWidget {
                     MaterialPageRoute(
                       fullscreenDialog: true,
                       builder: (_) => Scaffold(
-                        appBar: AppBar(
-                          title: Text(_place.title != null
-                              ? _place.title
-                              : 'Новое фото'),
-                        ),
+                        // appBar: AppBar(
+                        //     title: Text(_place.title != null
+                        //         ? _place.title
+                        //         : 'Новое фото')),
                         body: Center(
                           child: FutureBuilder(
                             future: photo.loadPhotoOrigin(),

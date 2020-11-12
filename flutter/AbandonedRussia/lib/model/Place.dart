@@ -1,20 +1,19 @@
 import 'dart:typed_data';
-import 'package:image/image.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:image/image.dart';
 
 import '../settings.dart';
-import '../model/AppUser.dart';
+import 'User.dart';
 import '../dao/PlacesDao.dart';
 
-class Photo {
+class PlacePhoto {
   Uint8List thumbnail;
   Uint8List origin;
   String originUrl;
   int originSize;
-  Photo({this.thumbnail, this.origin, this.originUrl, this.originSize});
+  PlacePhoto({this.thumbnail, this.origin, this.originUrl, this.originSize});
 
-  Future<void> generateThumbnail(Orientation orientation) async {
+  Future<void> generateThumbnail() async {
     thumbnail = await compute(_generateThumbnail, origin);
   }
 
@@ -25,15 +24,22 @@ class Photo {
   }
 }
 
+class PlaceLocation {
+  final double latitude;
+  final double longitude;
+  final double accuracy;
+  PlaceLocation(this.latitude, this.longitude, [this.accuracy]);
+}
+
 class Place with ChangeNotifier {
   String id;
-  AppUser creator;
+  User creator;
   DateTime created;
   String title;
   String description;
   List<String> labels;
-  List<Photo> photos;
-  List<double> location;
+  List<PlacePhoto> photos;
+  PlaceLocation location;
 
   Place({
     this.id,
@@ -55,10 +61,10 @@ class Place with ChangeNotifier {
 
   String get labelsAsString => labels.toString();
 
-  Future<void> addPhoto(Photo photo, Orientation orientation) async {
+  Future<void> addPhoto(PlacePhoto photo) async {
     photos.add(photo);
     notifyListeners();
-    await photo.generateThumbnail(orientation);
+    await photo.generateThumbnail();
     notifyListeners();
   }
 }

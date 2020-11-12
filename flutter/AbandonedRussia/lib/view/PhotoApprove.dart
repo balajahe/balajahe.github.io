@@ -8,7 +8,6 @@ class PhotoApprove extends StatelessWidget {
   @override
   build(context) => Scaffold(
         appBar: AppBar(title: Text('Одобрить фото')),
-        //floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [

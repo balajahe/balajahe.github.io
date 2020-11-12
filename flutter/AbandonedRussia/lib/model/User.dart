@@ -1,6 +1,6 @@
-class AppUser {
+class User {
   String uid;
   String name = 'Anonymous';
   DateTime created;
-  AppUser({this.uid, this.created});
+  User({this.uid, this.created});
 }

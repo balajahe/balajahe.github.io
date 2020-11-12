@@ -1,19 +1,19 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fba;
 
-import '../model/AppUser.dart';
+import '../model/User.dart';
 
 class Database {
-  static AppUser _currentUser;
+  static User _currentUser;
 
   static Future<dynamic> connect() async {
     await Firebase.initializeApp();
-    await FirebaseAuth.instance.signInAnonymously();
-    _currentUser = AppUser(
-      uid: FirebaseAuth.instance.currentUser.uid,
-      created: FirebaseAuth.instance.currentUser.metadata.creationTime,
+    await fba.FirebaseAuth.instance.signInAnonymously();
+    _currentUser = User(
+      uid: fba.FirebaseAuth.instance.currentUser.uid,
+      created: fba.FirebaseAuth.instance.currentUser.metadata.creationTime,
     );
   }
 
-  static AppUser get currentUser => _currentUser;
+  static User get currentUser => _currentUser;
 }

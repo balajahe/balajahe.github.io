@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../model/AppUser.dart';
+import '../model/User.dart';
 import '../model/Place.dart';
 import '../dao/Database.dart';
 import '../dao/PlacesDaoWeb.dart';
@@ -14,7 +14,7 @@ abstract class PlacesDao {
 
   Place fromMap(String id, Map<String, dynamic> data) => Place(
         id: id,
-        creator: AppUser(
+        creator: User(
           uid: data['creator']['uid'],
           created: data['creator']['created'].toDate(),
         ),
@@ -24,15 +24,19 @@ abstract class PlacesDao {
         labels: data['labels'] is List ? List<String>.from(data['labels']) : [],
         photos: data['photos'] is List
             ? data['photos']
-                .map<Photo>((photo) => Photo(
+                .map<PlacePhoto>((photo) => PlacePhoto(
                       thumbnail: base64Decode(photo['thumbnail']),
                       originUrl: photo['originUrl'],
                       originSize: photo['originSize'],
                     ))
                 .toList()
             : [],
-        location: data['location'] is List
-            ? data['location'].map<double>((v) => 0.0 + v).toList()
+        location: data['location'] != null
+            ? PlaceLocation(
+                data['location']['latitude'],
+                data['location']['longitude'],
+                data['location']['accuracy'],
+              )
             : null,
       );
 
@@ -53,7 +57,13 @@ abstract class PlacesDao {
                 'originSize': photo.origin.length,
               })
           .toList(),
-      'location': v.location != null ? List<double>.from(v.location) : null,
+      'location': v.location != null
+          ? {
+              'latitude': v.location.latitude,
+              'longitude': v.location.longitude,
+              'accuracy': v.location.accuracy,
+            }
+          : null,
     };
   }
 

@@ -1,7 +1,9 @@
-import 'package:location/location.dart' as sys;
+import 'package:location/location.dart' as loc;
+
+import '../model/Place.dart' show PlaceLocation;
 
 class Location {
-  final sys.Location _location = new sys.Location();
+  final loc.Location _location = loc.Location();
   bool enabled = false;
 
   Future<void> init() async {
@@ -9,16 +11,16 @@ class Location {
         (await _location.serviceEnabled() || await _location.requestService());
     if (enabled) {
       enabled = (await _location.hasPermission() ==
-              sys.PermissionStatus.granted ||
-          await _location.requestPermission() == sys.PermissionStatus.granted);
+              loc.PermissionStatus.granted ||
+          await _location.requestPermission() == loc.PermissionStatus.granted);
     }
   }
 
-  Future<List<double>> getLocation() async {
+  Future<PlaceLocation> getLocation() async {
     var loc = await _location.getLocation();
-    return [loc.latitude, loc.longitude, loc.accuracy];
+    return PlaceLocation(loc.latitude, loc.longitude, loc.accuracy);
   }
 
-  Stream<List<double>> locationChanges() => _location.onLocationChanged
-      .map((v) => [v.latitude, v.longitude, v.accuracy]);
+  Stream<PlaceLocation> get locationChanges => _location.onLocationChanged
+      .map((v) => PlaceLocation(v.latitude, v.longitude, v.accuracy));
 }

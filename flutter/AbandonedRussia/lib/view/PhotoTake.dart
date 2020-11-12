@@ -63,8 +63,7 @@ class _PhotoTakeFormState extends State<_PhotoTakeForm> {
     var approved = await Navigator.push(
         context, MaterialPageRoute(builder: (_) => PhotoApprove(_photo)));
     if (approved != null) {
-      _place.addPhoto(
-          Photo(origin: _photo), MediaQuery.of(context).orientation);
+      _place.addPhoto(PlacePhoto(origin: _photo));
     }
   }
 

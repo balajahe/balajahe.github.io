@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+//import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong/latlong.dart';
 
 import '../model/Place.dart';
 import '../model/Places.dart';
@@ -46,6 +49,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
   final _form = GlobalKey<FormState>();
   final _title = TextEditingController();
   final _description = TextEditingController();
+  //final _osm = GlobalKey<OSMFlutterState>();
   bool isWorking = false;
 
   @override
@@ -130,11 +134,71 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     ),
                     PhotoContainer(_place),
                     StreamBuilder(
-                      stream: _location.locationChanges(),
-                      builder: (context, snapshot) => Text(
-                        'Координаты: ${snapshot.data.toString()}',
-                      ),
-                    )
+                      stream: _location.locationChanges,
+                      builder: (context, snapshot) {
+                        _place.location = PlaceLocation(
+                          snapshot.data.latitude,
+                          snapshot.data.longitude,
+                          snapshot.data.accuracy,
+                        );
+                        return Container(
+                          height: 200,
+                          padding: EdgeInsets.only(left: 3, right: 3),
+                          child: FlutterMap(
+                            options: new MapOptions(
+                              center: new LatLng(
+                                snapshot.data.latitude,
+                                snapshot.data.longitude,
+                              ),
+                              zoom: 15.0,
+                            ),
+                            layers: [
+                              new TileLayerOptions(
+                                  urlTemplate:
+                                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                  subdomains: ['a', 'b', 'c']),
+                              new MarkerLayerOptions(
+                                markers: [
+                                  new Marker(
+                                    width: 80.0,
+                                    height: 80.0,
+                                    point: new LatLng(
+                                      snapshot.data.latitude,
+                                      snapshot.data.longitude,
+                                    ),
+                                    builder: (_) => Icon(
+                                      Icons.person_pin_circle,
+                                      color: Colors.red,
+                                      size: 30,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+
+                    // Container(
+                    //   height: 300,
+                    //   child: OSMFlutter(
+                    //       //key: osmKey,
+                    //       showZoomController: true,
+                    //       currentLocation: false,
+                    //       road: Road(
+                    //         startIcon: MarkerIcon(
+                    //             icon: Icon(Icons.person,
+                    //                 size: 64, color: Colors.brown)),
+                    //         roadColor: Colors.yellowAccent,
+                    //       ),
+                    //       markerIcon: MarkerIcon(
+                    //           icon: Icon(Icons.person_pin_circle,
+                    //               color: Colors.blue, size: 56)),
+                    //       initPosition: GeoPoint(
+                    //           latitude: snapshot.data[0],
+                    //           longitude: snapshot.data[1])),
+                    // ),
                   ],
                 ),
               ),
@@ -207,16 +271,14 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
         _place.photos.length > 0) {
       try {
         setState(() => isWorking = true);
-        var place = Place(
-          title: _title.text,
-          description: _description.text,
-          labels: _place.labels,
-          photos: _place.photos,
-          location: await _location.getLocation(),
-        );
-        await context.read<Places>().add(place);
+        _place
+          ..title = _title.text
+          ..description = _description.text;
+
+        await context.read<Places>().add(_place);
         Navigator.pop(context, true);
       } catch (e) {
+        print(e);
         showDialog(
           context: context,
           builder: (BuildContext context) => AlertDialog(
