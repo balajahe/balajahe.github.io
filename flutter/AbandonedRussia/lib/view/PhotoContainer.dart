@@ -1,12 +1,15 @@
-import 'package:AbandonedRussia/view/commonWidgets.dart';
 import 'package:flutter/material.dart';
 
 import '../settings.dart';
 import '../model/Place.dart';
+import '../view/commonWidgets.dart';
+
+enum PhotoContainerMode { list, view, edit }
 
 class PhotoContainer extends StatelessWidget {
   final Place _place;
-  PhotoContainer(this._place);
+  final PhotoContainerMode _mode;
+  PhotoContainer(this._place, [this._mode = PhotoContainerMode.view]);
 
   @override
   build(context) => Container(
@@ -15,6 +18,9 @@ class PhotoContainer extends StatelessWidget {
           spacing: 1,
           runSpacing: 1,
           children: _place.photos
+              .take(_mode == PhotoContainerMode.list
+                  ? THUMBNAIL_COUNT_IN_LIST
+                  : _place.photos.length)
               .map<Widget>(
                 (photo) => InkWell(
                   child: Container(
@@ -33,10 +39,6 @@ class PhotoContainer extends StatelessWidget {
                     MaterialPageRoute(
                       fullscreenDialog: true,
                       builder: (_) => Scaffold(
-                        // appBar: AppBar(
-                        //     title: Text(_place.title != null
-                        //         ? _place.title
-                        //         : 'Новое фото')),
                         body: Center(
                           child: FutureBuilder(
                             future: photo.loadPhotoOrigin(),

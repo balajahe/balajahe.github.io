@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../model/App.dart';
+import '../model/App.dart' show AppUser;
 
 class Database {
   static AppUser _currentUser;

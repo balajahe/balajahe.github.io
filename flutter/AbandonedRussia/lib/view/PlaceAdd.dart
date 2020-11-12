@@ -1,8 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_map/flutter_map.dart';
-import 'package:latlong/latlong.dart';
 
 import '../model/Place.dart';
 import '../model/Places.dart';
@@ -10,6 +8,7 @@ import '../model/Labels.dart';
 import '../model/Location.dart';
 import '../view/commonWidgets.dart';
 import '../view/PhotoContainer.dart';
+import '../view/LocationMap.dart';
 import '../view/PhotoTake.dart';
 
 final double _labelButtonHeight = 32;
@@ -142,42 +141,7 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                             snapshot.data.longitude,
                             snapshot.data.accuracy,
                           );
-                          return Container(
-                            height: 200,
-                            padding: EdgeInsets.only(left: 3, right: 3),
-                            child: FlutterMap(
-                              options: new MapOptions(
-                                center: new LatLng(
-                                  snapshot.data.latitude,
-                                  snapshot.data.longitude,
-                                ),
-                                zoom: 15.0,
-                              ),
-                              layers: [
-                                new TileLayerOptions(
-                                    urlTemplate:
-                                        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                                    subdomains: ['a', 'b', 'c']),
-                                new MarkerLayerOptions(
-                                  markers: [
-                                    new Marker(
-                                      width: 80.0,
-                                      height: 80.0,
-                                      point: new LatLng(
-                                        snapshot.data.latitude,
-                                        snapshot.data.longitude,
-                                      ),
-                                      builder: (_) => Icon(
-                                        Icons.person_pin_circle,
-                                        color: Colors.red,
-                                        size: 30,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          );
+                          return LocationMap(_place.location);
                         } else {
                           return Container();
                         }

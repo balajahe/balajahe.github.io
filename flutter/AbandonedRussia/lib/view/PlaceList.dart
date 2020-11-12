@@ -56,29 +56,17 @@ class _PlaceListState extends State<PlaceList> {
                 var place = snapshot.data;
                 return InkWell(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text(place.title,
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                      Text(place.labelsAsString,
+                          style: TextStyle(fontSize: 12)),
                       Padding(
-                        padding: EdgeInsets.only(top: 5),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(place.title,
-                                style: TextStyle(fontWeight: FontWeight.bold)),
-                            Text(place.labelsAsString,
-                                style: TextStyle(fontSize: 12)),
-                          ],
-                        ),
+                        padding: EdgeInsets.only(top: 3, bottom: 3),
+                        child: Text(place.description),
                       ),
-                      Wrap(
-                        children: [
-                          PhotoContainer(place),
-                          Padding(
-                            padding: EdgeInsets.all(3),
-                            child: Text(place.description),
-                          ),
-                        ],
-                      ),
+                      PhotoContainer(place, PhotoContainerMode.list),
                     ],
                   ),
                   onTap: () => Navigator.push(

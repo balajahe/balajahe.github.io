@@ -19,14 +19,10 @@ class Location {
   //   return PlaceLocation(loc.latitude, loc.longitude, loc.accuracy);
   // }
 
-  Stream<PlaceLocation> get locationChanges {
-    if (_enabled) {
-      return _location.onLocationChanged
-          .map((v) => PlaceLocation(v.latitude, v.longitude, v.accuracy));
-    } else {
-      return Stream<PlaceLocation>.empty();
-    }
-  }
+  Stream<PlaceLocation> get locationChanges => _enabled
+      ? _location.onLocationChanged
+          .map((v) => PlaceLocation(v.latitude, v.longitude, v.accuracy))
+      : Stream<PlaceLocation>.empty();
 
   bool get enabled => _enabled;
 }
