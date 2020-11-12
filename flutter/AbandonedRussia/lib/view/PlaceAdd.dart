@@ -136,47 +136,51 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
                     StreamBuilder(
                       stream: _location.locationChanges,
                       builder: (context, snapshot) {
-                        _place.location = PlaceLocation(
-                          snapshot.data.latitude,
-                          snapshot.data.longitude,
-                          snapshot.data.accuracy,
-                        );
-                        return Container(
-                          height: 200,
-                          padding: EdgeInsets.only(left: 3, right: 3),
-                          child: FlutterMap(
-                            options: new MapOptions(
-                              center: new LatLng(
-                                snapshot.data.latitude,
-                                snapshot.data.longitude,
+                        if (snapshot.hasData) {
+                          _place.location = PlaceLocation(
+                            snapshot.data.latitude,
+                            snapshot.data.longitude,
+                            snapshot.data.accuracy,
+                          );
+                          return Container(
+                            height: 200,
+                            padding: EdgeInsets.only(left: 3, right: 3),
+                            child: FlutterMap(
+                              options: new MapOptions(
+                                center: new LatLng(
+                                  snapshot.data.latitude,
+                                  snapshot.data.longitude,
+                                ),
+                                zoom: 15.0,
                               ),
-                              zoom: 15.0,
+                              layers: [
+                                new TileLayerOptions(
+                                    urlTemplate:
+                                        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+                                    subdomains: ['a', 'b', 'c']),
+                                new MarkerLayerOptions(
+                                  markers: [
+                                    new Marker(
+                                      width: 80.0,
+                                      height: 80.0,
+                                      point: new LatLng(
+                                        snapshot.data.latitude,
+                                        snapshot.data.longitude,
+                                      ),
+                                      builder: (_) => Icon(
+                                        Icons.person_pin_circle,
+                                        color: Colors.red,
+                                        size: 30,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                            layers: [
-                              new TileLayerOptions(
-                                  urlTemplate:
-                                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                                  subdomains: ['a', 'b', 'c']),
-                              new MarkerLayerOptions(
-                                markers: [
-                                  new Marker(
-                                    width: 80.0,
-                                    height: 80.0,
-                                    point: new LatLng(
-                                      snapshot.data.latitude,
-                                      snapshot.data.longitude,
-                                    ),
-                                    builder: (_) => Icon(
-                                      Icons.person_pin_circle,
-                                      color: Colors.red,
-                                      size: 30,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
+                          );
+                        } else {
+                          return Container();
+                        }
                       },
                     ),
                   ],

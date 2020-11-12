@@ -7,9 +7,8 @@ import '../dao/Database.dart';
 import '../dao/PlacesDao.dart';
 
 class PlacesDaoMobile extends PlacesDao {
-  Future<Uint8List> getPhotoOrigin(String url, int size) async {
-    return await FirebaseStorage.instance.ref().child(url).getData(size);
-  }
+  Future<Uint8List> getPhotoOrigin(String url, int size) =>
+      FirebaseStorage.instance.ref().child(url).getData(size);
 
   Future<Place> add(Place place) async {
     place.creator = Database.currentUser;
@@ -29,6 +28,7 @@ class PlacesDaoMobile extends PlacesDao {
           .child(photo.originUrl)
           .putData(photo.origin);
     });
+
     return place;
   }
 

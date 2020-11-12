@@ -11,6 +11,11 @@ class PlacesDaoWeb extends PlacesDao {
   Future<Place> add(Place place) async {
     place.creator = Database.currentUser;
     place.created = Timestamp.now().toDate();
+
+    var addedPlace =
+        await FirebaseFirestore.instance.collection('Places').add(toMap(place));
+    place.id = addedPlace.id;
+
     // print(fb.app().storage());
     // for (var photoData in place.photos) {
     //   var storageRef = fb
@@ -21,9 +26,7 @@ class PlacesDaoWeb extends PlacesDao {
     //   var url = await snapshot.ref.getDownloadURL();
     //   print(url);
     // }
-    var addedPlace =
-        await FirebaseFirestore.instance.collection('Places').add(toMap(place));
-    place.id = addedPlace.id;
+
     return place;
   }
 
