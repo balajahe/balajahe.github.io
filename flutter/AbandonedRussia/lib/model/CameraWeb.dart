@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 import 'dart:html' as html;
 import 'package:flutter/material.dart';
 
-import 'Camera.dart';
+import '../model/Camera.dart';
 
 class CameraWeb implements Camera {
   html.VideoElement _htmlVideoElement;

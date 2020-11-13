@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'Camera.dart';
+import '../model/Camera.dart';
 
 class CameraMobile implements Camera {
   CameraController _camera;

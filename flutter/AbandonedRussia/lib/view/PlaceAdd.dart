@@ -6,6 +6,7 @@ import '../model/Place.dart';
 import '../model/Places.dart';
 import '../model/Labels.dart';
 import '../model/Location.dart';
+
 import '../view/commonWidgets.dart';
 import '../view/PhotoContainer.dart';
 import '../view/LocationMap.dart';
@@ -45,116 +46,110 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
   final _title = TextEditingController();
   final _description = TextEditingController();
   BuildContext _scaffoldContext;
-  bool isWorking = false;
 
   @override
   build(context) {
     _place = context.watch<Place>();
     _allLabels = context.watch<Labels>().getAll();
     _location = context.watch<Location>();
-    return Stack(
-      children: [
-        WillPopScope(
-          onWillPop: () => _onExit(context),
-          child: Scaffold(
-            appBar: AppBar(
-              title: Text('Новый объект'),
-              actions: [
-                Builder(builder: (context) {
-                  _scaffoldContext = context;
-                  return IconButton(
+    return WillPopScope(
+      onWillPop: () => _onExit(context),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Новый объект'),
+          actions: [
+            Builder(
+              builder: (context) {
+                _scaffoldContext = context;
+                return IconButton(
                     icon: Icon(Icons.save),
                     tooltip: 'Сохранить',
-                    onPressed: _save,
-                  );
-                }),
-              ],
+                    onPressed: _save);
+              },
             ),
-            floatingActionButton: FloatingActionButton(
-                tooltip: 'Добавить фото',
-                child: Icon(Icons.photo_camera),
-                onPressed: _addPhoto),
-            body: SingleChildScrollView(
-              child: Form(
-                key: _form,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    TextFormField(
-                      controller: _title,
-                      decoration:
-                          InputDecoration(labelText: 'Краткое название'),
-                    ),
-                    TextFormField(
-                      controller: _description,
-                      decoration: InputDecoration(labelText: 'Описание'),
-                      minLines: 3,
-                      maxLines: 7,
-                    ),
-                    Container(
-                      constraints:
-                          BoxConstraints(minHeight: _labelButtonHeight),
-                      child: Wrap(
-                        spacing: _labelButtonSpace,
-                        children: _place.labels
-                            .map((v) => Container(
-                                height: _labelButtonHeight,
-                                child: TextButton(
-                                  style: _labelButtonStyle,
-                                  child: Text(v),
-                                  onPressed: () => _deselectLabel(v),
-                                )))
-                            .toList(),
-                      ),
-                    ),
-                    Container(
-                      child: Row(children: [
-                        Text('Добавить метку: ',
-                            style: TextStyle(fontStyle: FontStyle.italic)),
-                        Expanded(
-                          child: Container(
-                              height: 1,
-                              margin: EdgeInsets.only(top: 10),
-                              color: Colors.grey[400]),
-                        ),
-                      ]),
-                    ),
-                    Wrap(
-                      spacing: _labelButtonSpace,
-                      children: _allLabels
-                          .map((v) => Container(
-                              height: _labelButtonHeight,
-                              child: TextButton(
-                                style: _labelButtonStyle,
-                                child: Text(v),
-                                onPressed: () => _selectLabel(v),
-                              )))
-                          .toList(),
-                    ),
-                    PhotoContainer(_place),
-                    StreamBuilder(
-                      stream: _location.locationChanges,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          _place.location = PlaceLocation(
-                            snapshot.data.latitude,
-                            snapshot.data.longitude,
-                            snapshot.data.accuracy,
-                          );
-                          return LocationMap(_place.location);
-                        } else {
-                          return Container();
-                        }
-                      },
-                    ),
-                  ],
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          tooltip: 'Добавить фото',
+          child: Icon(Icons.photo_camera),
+          onPressed: _addPhoto,
+        ),
+        body: SingleChildScrollView(
+          child: Form(
+            key: _form,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                TextFormField(
+                  controller: _title,
+                  decoration: InputDecoration(labelText: 'Краткое название'),
                 ),
-              ),
+                TextFormField(
+                  controller: _description,
+                  decoration: InputDecoration(labelText: 'Описание'),
+                  minLines: 3,
+                  maxLines: 7,
+                ),
+                Container(
+                  constraints: BoxConstraints(minHeight: _labelButtonHeight),
+                  child: Wrap(
+                    spacing: _labelButtonSpace,
+                    children: _place.labels
+                        .map((v) => Container(
+                            height: _labelButtonHeight,
+                            child: TextButton(
+                              style: _labelButtonStyle,
+                              child: Text(v),
+                              onPressed: () => _deselectLabel(v),
+                            )))
+                        .toList(),
+                  ),
+                ),
+                Container(
+                  child: Row(children: [
+                    Text('Добавить метку: ',
+                        style: TextStyle(fontStyle: FontStyle.italic)),
+                    Expanded(
+                      child: Container(
+                          height: 1,
+                          margin: EdgeInsets.only(top: 10),
+                          color: Colors.grey[400]),
+                    ),
+                  ]),
+                ),
+                Wrap(
+                  spacing: _labelButtonSpace,
+                  children: _allLabels
+                      .map((v) => Container(
+                          height: _labelButtonHeight,
+                          child: TextButton(
+                            style: _labelButtonStyle,
+                            child: Text(v),
+                            onPressed: () => _selectLabel(v),
+                          )))
+                      .toList(),
+                ),
+                PhotoContainer(_place),
+                StreamBuilder(
+                  stream: _location.locationChanges,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      _place.location = PlaceLocation(
+                        snapshot.data.latitude,
+                        snapshot.data.longitude,
+                        snapshot.data.accuracy,
+                      );
+                      return LocationMap(_place.location);
+                    } else {
+                      return Container();
+                    }
+                  },
+                ),
+              ],
             ),
           ),
         ),
-        isWorking ? WaitingOrError(transparent: true) : Container(),
-      ],
+      ),
     );
   }
 
@@ -221,25 +216,15 @@ class _PlaceAddFormState extends State<_PlaceAddForm> {
         _place.labels.length > 0 &&
         _place.photos.length > 0) {
       try {
-        setState(() => isWorking = true);
+        startWaiting(context);
         _place
           ..title = _title.text
           ..description = _description.text;
-
         await context.read<Places>().add(_place);
+        stopWaiting(context);
         Navigator.pop(context, true);
       } catch (e) {
-        print(e);
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => AlertDialog(
-            title: Text(e.toString()),
-            actions: <Widget>[
-              TextButton(
-                  child: Text('OK'), onPressed: () => Navigator.pop(context)),
-            ],
-          ),
-        );
+        showError(context, e);
       }
     } else {
       Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(

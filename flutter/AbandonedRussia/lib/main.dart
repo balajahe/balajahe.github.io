@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'settings.dart';
 import 'model/App.dart';
 import 'model/Places.dart';
 import 'model/Labels.dart';
@@ -9,6 +8,8 @@ import 'model/Camera.dart';
 import 'model/Location.dart';
 import 'view/commonWidgets.dart';
 import 'view/PlaceList.dart';
+
+const _TITLE = 'Заброшенные места';
 
 void main() {
   ErrorWidget.builder = (e) => Scaffold(body: WaitingOrError(error: e));
@@ -25,7 +26,7 @@ class AppWidget extends StatelessWidget {
           Provider<Location>(create: (context) => Location()),
         ],
         child: MaterialApp(
-          title: APP_TITLE,
+          title: _TITLE,
           theme: ThemeData(
             primarySwatch: Colors.blue,
             visualDensity: VisualDensity.adaptivePlatformDensity,
@@ -44,7 +45,7 @@ class _StartApp extends StatelessWidget {
                     !snapshot.hasError)
                 ? PlaceList()
                 : Scaffold(
-                    appBar: AppBar(title: Text(APP_TITLE)),
+                    appBar: AppBar(title: Text(_TITLE)),
                     body: ListView(
                       children: [WaitingOrError(error: snapshot.error)],
                     ),

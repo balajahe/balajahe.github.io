@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../settings.dart';
 import '../model/Places.dart';
 import '../view/commonWidgets.dart';
 import '../view/PhotoContainer.dart';
 import '../view/PlaceAdd.dart';
 import '../view/PlaceView.dart';
+import '../view/LabelsEdit.dart';
 
-const _ONLY_MINE_TITLE = 'Добавлены мной';
+const _TITLE_ALL = 'Все объекты';
+const _TITLE_ONLY_MINE = 'Добавлены мной';
 
 class PlaceList extends StatefulWidget {
   @override
@@ -23,28 +24,45 @@ class _PlaceListState extends State<PlaceList> {
     var places = context.watch<Places>();
     return Scaffold(
       appBar: AppBar(
-          title: Text(places.onlyMine ? _ONLY_MINE_TITLE : APP_TITLE),
-          actions: [
-            IconButton(
-                tooltip: _ONLY_MINE_TITLE,
-                icon: Icon(Icons.library_books),
-                onPressed: () => places.refresh(onlyMine: true)),
-            IconButton(
-                tooltip: 'Обновить всё',
-                icon: Icon(Icons.refresh),
-                onPressed: () => places.refresh()),
-          ]),
+        title: Text(places.onlyMine ? _TITLE_ONLY_MINE : _TITLE_ALL),
+        actions: [
+          IconButton(
+              tooltip: _TITLE_ONLY_MINE,
+              icon: Icon(Icons.library_books),
+              onPressed: () => places.refresh(onlyMine: true)),
+          IconButton(
+              tooltip: 'Обновить всё',
+              icon: Icon(Icons.refresh),
+              onPressed: () => places.refresh()),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
-          tooltip: 'Новый объект',
-          child: Icon(Icons.add),
-          onPressed: () async {
-            var added = await Navigator.push(
-                context, MaterialPageRoute(builder: (_) => PlaceAdd()));
-            if (added != null) {
-              _scrollController.animateTo(0,
-                  duration: Duration(milliseconds: 1000), curve: Curves.ease);
-            }
-          }),
+        tooltip: 'Новый объект',
+        child: Icon(Icons.add),
+        onPressed: () async {
+          var added = await Navigator.push(
+              context, MaterialPageRoute(builder: (_) => PlaceAdd()));
+          if (added != null) {
+            _scrollController.animateTo(0,
+                duration: Duration(milliseconds: 1000), curve: Curves.ease);
+          }
+        },
+      ),
+      drawer: Drawer(
+        child: ListView(
+          children: [
+            ListTile(
+              title: Text('Редактировать метки'),
+              onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => LabelsEdit(),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
       body: ListView.builder(
         controller: _scrollController,
         itemCount: places.length + 1,

@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:math';
 import 'package:flutter/material.dart';
 
 class PhotoApprove extends StatelessWidget {
@@ -27,7 +28,13 @@ class PhotoApprove extends StatelessWidget {
           ],
         ),
         body: Center(
-          child: Image.memory(photoData),
+          child: 1 == 1
+              ? Image.memory(photoData)
+              : Transform(
+                  transform: Matrix4.rotationX(pi / 2),
+                  alignment: Alignment.center,
+                  child: Image.memory(photoData),
+                ),
         ),
       );
 }

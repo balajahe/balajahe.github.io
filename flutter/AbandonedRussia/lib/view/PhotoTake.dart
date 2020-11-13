@@ -33,32 +33,28 @@ class _PhotoTakeForm extends StatefulWidget {
 class _PhotoTakeFormState extends State<_PhotoTakeForm> {
   Place _place;
   Uint8List _photo;
-  bool isWorking = false;
 
   @override
   build(context) {
     _place = context.watch<Place>();
-    return Stack(children: [
-      Scaffold(
-        appBar: AppBar(title: Text('Добавить фото')),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.camera_sharp),
-          tooltip: 'Снимок!',
-          onPressed: _takePhoto,
-        ),
-        body: Stack(children: [
-          Center(child: widget._camera.previewWidget),
-          PhotoContainer(_place),
-        ]),
+    return Scaffold(
+      appBar: AppBar(title: Text('Добавить фото')),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.camera_sharp),
+        tooltip: 'Снимок!',
+        onPressed: _takePhoto,
       ),
-      isWorking ? WaitingOrError(transparent: true) : Container()
-    ]);
+      body: Stack(children: [
+        Center(child: widget._camera.previewWidget),
+        PhotoContainer(_place),
+      ]),
+    );
   }
 
   Future<void> _takePhoto() async {
-    setState(() => isWorking = true);
+    startWaiting(context);
     _photo = await widget._camera.takePhoto();
-    setState(() => isWorking = false);
+    stopWaiting(context);
 
     var approved = await Navigator.push(
         context, MaterialPageRoute(builder: (_) => PhotoApprove(_photo)));

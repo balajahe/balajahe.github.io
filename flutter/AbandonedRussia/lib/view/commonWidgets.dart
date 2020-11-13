@@ -47,7 +47,7 @@ class Errors extends StatelessWidget {
   }
 }
 
-void waitStart(context) => Navigator.of(context).push(
+void startWaiting(context) => Navigator.of(context).push(
       PageRouteBuilder(
         fullscreenDialog: true,
         opaque: false,
@@ -55,4 +55,12 @@ void waitStart(context) => Navigator.of(context).push(
       ),
     );
 
-void waitStop(context) => Navigator.of(context).pop();
+void stopWaiting(context) => Navigator.of(context).pop();
+
+void showError(context, dynamic error) => Navigator.push(
+      context,
+      MaterialPageRoute(
+        fullscreenDialog: true,
+        builder: (_) => Errors(error),
+      ),
+    );

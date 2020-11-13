@@ -5,6 +5,7 @@ import '../settings.dart';
 import '../model/App.dart';
 import '../model/Place.dart';
 import '../model/Places.dart';
+
 import '../view/commonWidgets.dart';
 import '../view/PhotoContainer.dart';
 import '../view/LocationMap.dart';
@@ -84,9 +85,9 @@ class PlaceView extends StatelessWidget {
             TextButton(
                 child: Text('Да'),
                 onPressed: () async {
-                  waitStart(context);
+                  startWaiting(context);
                   await context.read<Places>().del(place);
-                  waitStop(context);
+                  stopWaiting(context);
                   Navigator.pop(context);
                   Navigator.pop(context);
                 }),
