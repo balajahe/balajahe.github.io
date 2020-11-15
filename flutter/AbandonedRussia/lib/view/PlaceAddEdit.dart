@@ -41,13 +41,18 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
   BuildContext _scaffoldContext;
 
   @override
+  initState() {
+    _place = context.read<Place>();
+    _title = TextEditingController(text: _place.title);
+    _description = TextEditingController(text: _place.description);
+    super.initState();
+  }
+
+  @override
   build(context) {
     _place = context.watch<Place>();
     _allLabels = context.watch<Labels>().getAll();
     _location = context.watch<Location>();
-
-    _title = TextEditingController(text: _place.title);
-    _description = TextEditingController(text: _place.description);
 
     return WillPopScope(
       onWillPop: () => _onExit(context),
@@ -127,27 +132,35 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
                       .toList(),
                 ),
                 PhotoContainer(_place),
-                StreamBuilder(
-                  stream: _location.locationChanges,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      _place.location = PlaceLocation(
-                        snapshot.data.latitude,
-                        snapshot.data.longitude,
-                        snapshot.data.accuracy,
-                      );
-                      return LocationMap(_place.location);
-                    } else {
-                      return Container();
-                    }
-                  },
-                ),
+                _showMap(),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget _showMap() {
+    if (_place.location == null) {
+      return StreamBuilder(
+        stream: _location.locationChanges,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            _place.location = PlaceLocation(
+              snapshot.data.latitude,
+              snapshot.data.longitude,
+              snapshot.data.accuracy,
+            );
+            return LocationMap(_place.location);
+          } else {
+            return Container();
+          }
+        },
+      );
+    } else {
+      return LocationMap(_place.location);
+    }
   }
 
   Future<void> _addPhoto() async {

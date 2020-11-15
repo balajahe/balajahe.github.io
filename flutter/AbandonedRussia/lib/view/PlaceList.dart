@@ -41,30 +41,10 @@ class _PlaceListState extends State<PlaceList> {
       floatingActionButton: FloatingActionButton(
         tooltip: 'Добавить объект',
         child: Icon(Icons.add),
-        onPressed: () async {
-          var added = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => ChangeNotifierProvider<Place>(
-                        create: (_) => Place(),
-                        child: PlaceAddEdit(),
-                      )));
-          if (added != null) {
-            _scrollController.animateTo(0,
-                duration: Duration(milliseconds: 1000), curve: Curves.ease);
-          }
-        },
+        onPressed: _add,
       ),
       drawer: Drawer(
-        child: ListView(
-          children: [
-            ListTile(
-              title: Text('Редактировать метки'),
-              onTap: () => Navigator.push(
-                  context, MaterialPageRoute(builder: (_) => LabelsEdit())),
-            ),
-          ],
-        ),
+        child: _Menu(),
       ),
       body: ListView.builder(
         controller: _scrollController,
@@ -89,14 +69,7 @@ class _PlaceListState extends State<PlaceList> {
                       PhotoContainer(place, PhotoContainerMode.list),
                     ],
                   ),
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ChangeNotifierProvider<Place>.value(
-                          value: place,
-                          child: PlaceView(place),
-                        ),
-                      )),
+                  onTap: () => _edit(place),
                 );
               } else if (snapshot.hasError) {
                 return WaitingOrError(error: snapshot.error);
@@ -109,4 +82,42 @@ class _PlaceListState extends State<PlaceList> {
       ),
     );
   }
+
+  void _add() async {
+    var added = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => ChangeNotifierProvider<Place>(
+                  create: (_) => Place(),
+                  child: PlaceAddEdit(),
+                )));
+    if (added != null) {
+      _scrollController.animateTo(0,
+          duration: Duration(milliseconds: 1000), curve: Curves.ease);
+    }
+  }
+
+  void _edit(Place place) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ChangeNotifierProvider<Place>.value(
+            value: place,
+            child: PlaceView(place),
+          ),
+        ));
+  }
+}
+
+class _Menu extends StatelessWidget {
+  @override
+  build(context) => ListView(
+        children: [
+          ListTile(
+            title: Text('Редактировать метки'),
+            onTap: () => Navigator.push(
+                context, MaterialPageRoute(builder: (_) => LabelsEdit())),
+          ),
+        ],
+      );
 }

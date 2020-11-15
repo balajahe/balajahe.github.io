@@ -63,7 +63,7 @@ class PhotoContainer extends StatelessWidget {
 
   List<PlacePhoto> _photosToShow() {
     if (_mode == PhotoContainerMode.list)
-      return _place.photos.sublist(0, THUMBNAIL_COUNT_IN_LIST);
+      return _place.photos.take(THUMBNAIL_COUNT_IN_LIST).toList();
     else if (_fromIndex != 0)
       return _place.photos.sublist(_fromIndex);
     else
