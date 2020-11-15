@@ -102,10 +102,9 @@ class PlaceView extends StatelessWidget {
   Future<void> _edit(context) async {
     if (ALLOW_EDIT_ALL || place.creator.uid == App.currentUser.uid) {
       await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => PlaceAddEdit(PlaceEditMode.edit, place)),
-      );
+          context,
+          MaterialPageRoute(
+              builder: (_) => PlaceAddEdit(PlaceEditMode.edit, place)));
       Navigator.pop(context);
     } else {
       _denied(context);

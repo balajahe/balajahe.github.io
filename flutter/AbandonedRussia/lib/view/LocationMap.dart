@@ -9,7 +9,7 @@ class LocationMap extends StatelessWidget {
   LocationMap(this._location);
 
   @override
-  build(context) => _location != null
+  build(context) => (_location != null)
       ? Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

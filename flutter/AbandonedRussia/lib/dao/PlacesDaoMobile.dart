@@ -28,12 +28,6 @@ class PlacesDaoMobile extends PlacesDao {
   }
 
   Future<void> put(Place place) async {
-    try {
-      await _delOrigins(place);
-    } catch (e) {
-      print(e);
-    }
-
     await FirebaseFirestore.instance
         .collection('Places')
         .doc(place.id)
@@ -43,11 +37,7 @@ class PlacesDaoMobile extends PlacesDao {
   }
 
   Future<void> del(Place place) async {
-    try {
-      await _delOrigins(place);
-    } catch (e) {
-      print(e);
-    }
+    await _delOrigins(place);
 
     await FirebaseFirestore.instance
         .collection('Places')
@@ -55,14 +45,26 @@ class PlacesDaoMobile extends PlacesDao {
         .delete();
   }
 
-  Future<void> _addOrigins(Place place) =>
-      Future.wait(place.photos.map((photo) => FirebaseStorage.instance
+  Future<void> _addOrigins(Place place) => Future.wait(place.photos
+      .where((photo) => photo.origin != null)
+      .map((photo) => FirebaseStorage.instance
           .ref()
           .child(photo.originUrl)
           .putData(photo.origin)
           .onComplete));
 
-  Future<void> _delOrigins(Place place) =>
-      Future.wait(place.photos.map((photo) =>
+  Future<void> _delOrigins(Place place) => Future.wait(place.photos
+      .where((photo) => photo.originUrl != null)
+      .map((photo) =>
           FirebaseStorage.instance.ref().child(photo.originUrl).delete()));
+
+  // Future<void> _delOrigins(Place place) async {
+  //   for (var photo in place.photos) {
+  //     try {
+  //       await FirebaseStorage.instance.ref().child(photo.originUrl).delete();
+  //     } catch (e) {
+  //       print(e);
+  //     }
+  //   }
+  // }
 }

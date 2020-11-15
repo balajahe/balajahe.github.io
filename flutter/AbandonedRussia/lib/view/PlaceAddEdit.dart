@@ -1,16 +1,16 @@
-import 'package:AbandonedRussia/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../settings.dart';
 import '../model/Place.dart';
 import '../model/Places.dart';
 import '../model/Labels.dart';
 import '../model/Location.dart';
 
-import 'commonWidgets.dart';
-import 'PhotoContainer.dart';
-import 'LocationMap.dart';
-import 'PhotoTake.dart';
+import '../view/commonWidgets.dart';
+import '../view/PhotoContainer.dart';
+import '../view/LocationMap.dart';
+import '../view/PhotoTake.dart';
 
 enum PlaceEditMode { add, edit }
 
@@ -20,25 +20,30 @@ class PlaceAddEdit extends StatelessWidget {
   PlaceAddEdit(this._mode, [this._place]);
 
   @override
-  build(context) => FutureBuilder(
+  build(context) {
+    var newPlace = (_mode == PlaceEditMode.add) ? Place() : _place.clone();
+    return ChangeNotifierProvider<Place>.value(
+      value: newPlace,
+      child: FutureBuilder(
         future: Future.wait([
           context.watch<Labels>().init(),
           (_place == null) ? context.watch<Location>().init() : Future(() {}),
         ]),
         builder: (context, snapshot) =>
             snapshot.connectionState == DONE && !snapshot.hasError
-                ? _PlaceAddEditForm(_mode, _place)
+                ? _PlaceAddEditForm(_mode)
                 : WaitingOrError(error: snapshot.error),
-      );
+      ),
+    );
+  }
 }
 
 class _PlaceAddEditForm extends StatefulWidget {
   final PlaceEditMode _mode;
-  final Place _place;
-  _PlaceAddEditForm(this._mode, this._place);
+  _PlaceAddEditForm(this._mode);
 
   @override
-  createState() => _PlaceAddEditFormState(_place);
+  createState() => _PlaceAddEditFormState();
 }
 
 class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
@@ -50,11 +55,9 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
   TextEditingController _description;
   BuildContext _scaffoldContext;
 
-  _PlaceAddEditFormState(this._place);
-
   @override
   initState() {
-    _place = (widget._mode == PlaceEditMode.add) ? Place() : _place.clone();
+    _place = context.read<Place>();
     _title = TextEditingController(text: _place.title);
     _description = TextEditingController(text: _place.description);
     _allLabels = context
@@ -67,6 +70,7 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
 
   @override
   build(context) {
+    _place = context.watch<Place>();
     _location = context.watch<Location>();
 
     return WillPopScope(

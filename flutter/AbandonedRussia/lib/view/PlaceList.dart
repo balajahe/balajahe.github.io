@@ -93,11 +93,8 @@ class _PlaceListState extends State<PlaceList> {
     }
   }
 
-  Future<void> _edit(Place place) async {
-    var newPlace = await Navigator.push(
-        context, MaterialPageRoute(builder: (_) => PlaceView(place)));
-    if (newPlace != null) {}
-  }
+  void _edit(Place place) => Navigator.push(
+      context, MaterialPageRoute(builder: (_) => PlaceView(place)));
 }
 
 class _Menu extends StatelessWidget {
