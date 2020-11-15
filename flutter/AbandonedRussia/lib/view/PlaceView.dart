@@ -104,7 +104,7 @@ class PlaceView extends StatelessWidget {
       await Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (_) => PlaceAddEdit(PlaceAddEditMode.edit, place)),
+            builder: (_) => PlaceAddEdit(PlaceEditMode.edit, place)),
       );
       Navigator.pop(context);
     } else {

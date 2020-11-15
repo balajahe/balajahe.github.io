@@ -61,7 +61,7 @@ class Place with ChangeNotifier {
   }
 
   Place clone() =>
-      PlacesDao.instance.fromMap(null, PlacesDao.instance.toMap(this));
+      PlacesDao.instance.fromMap(id, PlacesDao.instance.toMap(this));
 
   String get labelsAsString => labels.toString();
 

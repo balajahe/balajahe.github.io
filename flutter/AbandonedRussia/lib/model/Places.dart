@@ -48,6 +48,12 @@ class Places with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> put(Place place) async {
+    await PlacesDao.instance.put(place);
+    _places[_places.indexWhere((v) => v.id == place.id)] = place;
+    notifyListeners();
+  }
+
   Future<void> del(Place place) async {
     await PlacesDao.instance.del(place);
     _places.removeWhere((v) => v.id == place.id);

@@ -30,7 +30,12 @@ class PlacesDaoWeb extends PlacesDao {
     return place;
   }
 
-  Future<void> put(Place place) => Future(() {});
+  Future<void> put(Place place) async {
+    await FirebaseFirestore.instance
+        .collection('Places')
+        .doc(place.id)
+        .set(toMap(place));
+  }
 
   Future<void> del(Place place) async {
     await FirebaseFirestore.instance

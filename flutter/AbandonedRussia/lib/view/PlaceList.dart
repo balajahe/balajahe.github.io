@@ -86,7 +86,7 @@ class _PlaceListState extends State<PlaceList> {
 
   Future<void> _add() async {
     var newPlace = await Navigator.push(context,
-        MaterialPageRoute(builder: (_) => PlaceAddEdit(PlaceAddEditMode.add)));
+        MaterialPageRoute(builder: (_) => PlaceAddEdit(PlaceEditMode.add)));
     if (newPlace != null) {
       _scrollController.animateTo(0,
           duration: Duration(milliseconds: 1000), curve: Curves.ease);

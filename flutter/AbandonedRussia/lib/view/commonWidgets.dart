@@ -42,7 +42,7 @@ class Errors extends StatelessWidget {
     } catch (_) {}
     return Scaffold(
         body: SingleChildScrollView(
-            padding: EdgeInsets.only(top: 15),
+            padding: EdgeInsets.only(top: 30),
             child: Center(
                 child: SelectableText(
                     'ERROR: ${error.toString()}\n$stackTrace'))));

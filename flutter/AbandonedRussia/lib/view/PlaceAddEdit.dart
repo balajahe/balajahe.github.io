@@ -12,10 +12,10 @@ import 'PhotoContainer.dart';
 import 'LocationMap.dart';
 import 'PhotoTake.dart';
 
-enum PlaceAddEditMode { add, edit }
+enum PlaceEditMode { add, edit }
 
 class PlaceAddEdit extends StatelessWidget {
-  final PlaceAddEditMode _mode;
+  final PlaceEditMode _mode;
   final Place _place;
   PlaceAddEdit(this._mode, [this._place]);
 
@@ -33,7 +33,7 @@ class PlaceAddEdit extends StatelessWidget {
 }
 
 class _PlaceAddEditForm extends StatefulWidget {
-  final PlaceAddEditMode _mode;
+  final PlaceEditMode _mode;
   final Place _place;
   _PlaceAddEditForm(this._mode, this._place);
 
@@ -54,7 +54,7 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
 
   @override
   initState() {
-    _place = (widget._mode == PlaceAddEditMode.add) ? Place() : _place.clone();
+    _place = (widget._mode == PlaceEditMode.add) ? Place() : _place.clone();
     _title = TextEditingController(text: _place.title);
     _description = TextEditingController(text: _place.description);
     _allLabels = context
@@ -246,7 +246,11 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
         _place
           ..title = _title.text
           ..description = _description.text;
-        await context.read<Places>().add(_place);
+        if (widget._mode == PlaceEditMode.add) {
+          await context.read<Places>().add(_place);
+        } else {
+          await context.read<Places>().put(_place);
+        }
         stopWaiting(context);
         Navigator.pop(context, true);
       } catch (e) {

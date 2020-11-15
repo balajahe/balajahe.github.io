@@ -22,26 +22,47 @@ class PlacesDaoMobile extends PlacesDao {
         await FirebaseFirestore.instance.collection('Places').add(toMap(place));
     place.id = addedPlace.id;
 
-    place.photos.forEach((photo) async {
-      await FirebaseStorage.instance
-          .ref()
-          .child(photo.originUrl)
-          .putData(photo.origin);
-    });
+    await _addOrigins(place);
 
     return place;
   }
 
-  Future<void> put(Place place) => Future(() {});
+  Future<void> put(Place place) async {
+    try {
+      await _delOrigins(place);
+    } catch (e) {
+      print(e);
+    }
+
+    await FirebaseFirestore.instance
+        .collection('Places')
+        .doc(place.id)
+        .set(toMap(place));
+
+    await _addOrigins(place);
+  }
 
   Future<void> del(Place place) async {
-    place.photos.forEach((photo) async {
-      await FirebaseStorage.instance.ref().child(photo.originUrl).delete();
-    });
+    try {
+      await _delOrigins(place);
+    } catch (e) {
+      print(e);
+    }
 
     await FirebaseFirestore.instance
         .collection('Places')
         .doc(place.id)
         .delete();
   }
+
+  Future<void> _addOrigins(Place place) =>
+      Future.wait(place.photos.map((photo) => FirebaseStorage.instance
+          .ref()
+          .child(photo.originUrl)
+          .putData(photo.origin)
+          .onComplete));
+
+  Future<void> _delOrigins(Place place) =>
+      Future.wait(place.photos.map((photo) =>
+          FirebaseStorage.instance.ref().child(photo.originUrl).delete()));
 }
