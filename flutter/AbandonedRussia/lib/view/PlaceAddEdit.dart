@@ -12,23 +12,33 @@ import 'PhotoContainer.dart';
 import 'LocationMap.dart';
 import 'PhotoTake.dart';
 
+enum PlaceAddEditMode { add, edit }
+
 class PlaceAddEdit extends StatelessWidget {
+  final PlaceAddEditMode _mode;
+  final Place _place;
+  PlaceAddEdit(this._mode, [this._place]);
+
   @override
   build(context) => FutureBuilder(
         future: Future.wait([
           context.watch<Labels>().init(),
-          context.watch<Location>().init(),
+          (_place == null) ? context.watch<Location>().init() : Future(() {}),
         ]),
         builder: (context, snapshot) =>
             snapshot.connectionState == DONE && !snapshot.hasError
-                ? _PlaceAddEditForm()
+                ? _PlaceAddEditForm(_mode, _place)
                 : WaitingOrError(error: snapshot.error),
       );
 }
 
 class _PlaceAddEditForm extends StatefulWidget {
+  final PlaceAddEditMode _mode;
+  final Place _place;
+  _PlaceAddEditForm(this._mode, this._place);
+
   @override
-  createState() => _PlaceAddEditFormState();
+  createState() => _PlaceAddEditFormState(_place);
 }
 
 class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
@@ -40,18 +50,23 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
   TextEditingController _description;
   BuildContext _scaffoldContext;
 
+  _PlaceAddEditFormState(this._place);
+
   @override
   initState() {
-    _place = context.read<Place>();
+    _place = (widget._mode == PlaceAddEditMode.add) ? Place() : _place.clone();
     _title = TextEditingController(text: _place.title);
     _description = TextEditingController(text: _place.description);
+    _allLabels = context
+        .read<Labels>()
+        .getAll()
+        .where((v) => !_place.labels.contains(v))
+        .toList();
     super.initState();
   }
 
   @override
   build(context) {
-    _place = context.watch<Place>();
-    _allLabels = context.watch<Labels>().getAll();
     _location = context.watch<Location>();
 
     return WillPopScope(
@@ -164,7 +179,7 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
   }
 
   Future<void> _addPhoto() async {
-    Navigator.push(
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => ChangeNotifierProvider.value(
@@ -173,6 +188,7 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
         ),
       ),
     );
+    setState(() {});
   }
 
   void _selectLabel(String label) {

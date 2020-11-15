@@ -60,6 +60,9 @@ class Place with ChangeNotifier {
     if (photos == null) photos = [];
   }
 
+  Place clone() =>
+      PlacesDao.instance.fromMap(null, PlacesDao.instance.toMap(this));
+
   String get labelsAsString => labels.toString();
 
   Future<void> addPhoto(PlacePhoto photo) async {

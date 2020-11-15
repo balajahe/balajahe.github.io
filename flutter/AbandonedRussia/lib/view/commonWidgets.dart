@@ -40,10 +40,12 @@ class Errors extends StatelessWidget {
     try {
       stackTrace = error.stackTrace.toString();
     } catch (_) {}
-    return SingleChildScrollView(
-        padding: EdgeInsets.only(top: 10),
-        child: Center(
-            child: SelectableText('ERROR: ${error.toString()}\n$stackTrace')));
+    return Scaffold(
+        body: SingleChildScrollView(
+            padding: EdgeInsets.only(top: 15),
+            child: Center(
+                child: SelectableText(
+                    'ERROR: ${error.toString()}\n$stackTrace'))));
   }
 }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../settings.dart';
 import '../model/Place.dart';
 import '../model/Places.dart';
 
@@ -52,7 +53,7 @@ class _PlaceListState extends State<PlaceList> {
         itemBuilder: (context, i) => FutureBuilder(
             future: places.getByNum(i),
             builder: (context, snapshot) {
-              if (snapshot.hasData) {
+              if (snapshot.connectionState == DONE && snapshot.hasData) {
                 var place = snapshot.data;
                 return InkWell(
                   child: Column(
@@ -83,29 +84,19 @@ class _PlaceListState extends State<PlaceList> {
     );
   }
 
-  void _add() async {
-    var added = await Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (_) => ChangeNotifierProvider<Place>(
-                  create: (_) => Place(),
-                  child: PlaceAddEdit(),
-                )));
-    if (added != null) {
+  Future<void> _add() async {
+    var newPlace = await Navigator.push(context,
+        MaterialPageRoute(builder: (_) => PlaceAddEdit(PlaceAddEditMode.add)));
+    if (newPlace != null) {
       _scrollController.animateTo(0,
           duration: Duration(milliseconds: 1000), curve: Curves.ease);
     }
   }
 
-  void _edit(Place place) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => ChangeNotifierProvider<Place>.value(
-            value: place,
-            child: PlaceView(place),
-          ),
-        ));
+  Future<void> _edit(Place place) async {
+    var newPlace = await Navigator.push(
+        context, MaterialPageRoute(builder: (_) => PlaceView(place)));
+    if (newPlace != null) {}
   }
 }
 

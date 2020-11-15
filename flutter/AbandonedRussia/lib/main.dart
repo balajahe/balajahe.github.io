@@ -12,7 +12,7 @@ import 'view/PlaceList.dart';
 const _TITLE = 'Заброшенные места';
 
 void main() {
-  ErrorWidget.builder = (e) => Scaffold(body: WaitingOrError(error: e));
+  ErrorWidget.builder = (e) => WaitingOrError(error: e);
   runApp(AppWidget());
 }
 
@@ -22,7 +22,7 @@ class AppWidget extends StatelessWidget {
         providers: [
           ChangeNotifierProvider<Places>(create: (context) => Places()),
           Provider<Labels>(create: (context) => Labels()),
-          Provider<Camera>(create: (context) => Camera.factory()),
+          Provider<Camera>(create: (context) => Camera.instance),
           Provider<Location>(create: (context) => Location()),
         ],
         child: MaterialApp(

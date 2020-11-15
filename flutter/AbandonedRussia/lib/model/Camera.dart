@@ -7,7 +7,7 @@ import '../model/CameraWebStub.dart'
     if (dart.library.html) '../model/CameraWeb.dart';
 
 abstract class Camera {
-  static Camera factory() => kIsWeb ? CameraWeb() : CameraMobile();
+  static Camera get instance => kIsWeb ? CameraWeb() : CameraMobile();
 
   Future<void> init();
 
