@@ -1,11 +1,13 @@
 import '../dao/LabelsDao.dart';
 
 class Labels {
-  List<String> _labels;
+  List<String> _all;
 
   Future<void> init() async {
-    _labels = await LabelsDao().getAll();
+    if (_all == null) _all = await LabelsDao().getAll();
   }
 
-  List<String> getAll() => _labels.map<String>((v) => v).toList();
+  List<String> getAll() => _all.map<String>((v) => v).toList();
+
+  void setAll(List<String> all) => _all = all;
 }

@@ -4,12 +4,15 @@ import '../settings.dart';
 import '../model/Place.dart';
 import '../view/commonWidgets.dart';
 
-enum PhotoContainerMode { list, view, edit }
+enum PhotoContainerMode { list, view, add, edit }
 
 class PhotoContainer extends StatelessWidget {
   final Place _place;
   final PhotoContainerMode _mode;
-  PhotoContainer(this._place, [this._mode = PhotoContainerMode.view]);
+  final int _fromIndex;
+
+  PhotoContainer(this._place,
+      [this._mode = PhotoContainerMode.view, this._fromIndex = 0]);
 
   @override
   build(context) => Container(
@@ -17,15 +20,12 @@ class PhotoContainer extends StatelessWidget {
         child: Wrap(
           spacing: 1,
           runSpacing: 1,
-          children: _place.photos
-              .take(_mode == PhotoContainerMode.list
-                  ? THUMBNAIL_COUNT_IN_LIST
-                  : _place.photos.length)
+          children: _photosToShow()
               .map<Widget>(
                 (photo) => InkWell(
                   child: Container(
-                    width: 0.0 + THUMBNAIL_WIDTH,
-                    height: 0.0 + THUMBNAIL_WIDTH,
+                    width: 0.0 + THUMBNAIL_DISPLAY_WIDTH,
+                    height: 0.0 + THUMBNAIL_DISPLAY_WIDTH,
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.white, width: 1),
                       color: Colors.grey,
@@ -60,4 +60,13 @@ class PhotoContainer extends StatelessWidget {
               .toList(),
         ),
       );
+
+  List<PlacePhoto> _photosToShow() {
+    if (_mode == PhotoContainerMode.list)
+      return _place.photos.sublist(0, THUMBNAIL_COUNT_IN_LIST);
+    else if (_fromIndex != 0)
+      return _place.photos.sublist(_fromIndex);
+    else
+      return _place.photos;
+  }
 }

@@ -37,6 +37,7 @@ class Places with ChangeNotifier {
       notifyListeners();
     } catch (e) {
       noMoreData = true;
+      print(e);
       throw e;
     }
   }

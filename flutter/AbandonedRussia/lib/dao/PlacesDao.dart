@@ -26,8 +26,8 @@ abstract class PlacesDao {
             ? data['photos']
                 .map<PlacePhoto>((photo) => PlacePhoto(
                       thumbnail: base64Decode(photo['thumbnail']),
-                      originUrl: photo['originUrl'],
                       originSize: photo['originSize'],
+                      originUrl: photo['originUrl'],
                     ))
                 .toList()
             : [],
@@ -53,8 +53,8 @@ abstract class PlacesDao {
       'photos': v.photos
           .map<Map<String, dynamic>>((photo) => {
                 'thumbnail': base64Encode(photo.thumbnail),
+                'originSize': photo.originSize,
                 'originUrl': photo.originUrl,
-                'originSize': photo.origin.length,
               })
           .toList(),
       'location': v.location != null

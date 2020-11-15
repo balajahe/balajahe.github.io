@@ -7,11 +7,16 @@ import '../model/App.dart';
 import '../dao/PlacesDao.dart';
 
 class PlacePhoto {
-  Uint8List thumbnail;
   Uint8List origin;
-  String originUrl;
   int originSize;
-  PlacePhoto({this.thumbnail, this.origin, this.originUrl, this.originSize});
+  String originUrl;
+  Uint8List thumbnail;
+
+  PlacePhoto({this.origin, this.originSize, this.originUrl, this.thumbnail}) {
+    if (origin != null) {
+      originSize = origin.length;
+    }
+  }
 
   Future<void> generateThumbnail() async {
     thumbnail = await compute(_generateThumbnail, origin);
@@ -51,12 +56,8 @@ class Place with ChangeNotifier {
     this.photos,
     this.location,
   }) {
-    if (labels == null) {
-      labels = [];
-    }
-    if (photos == null) {
-      photos = [];
-    }
+    if (labels == null) labels = [];
+    if (photos == null) photos = [];
   }
 
   String get labelsAsString => labels.toString();
@@ -70,4 +71,4 @@ class Place with ChangeNotifier {
 }
 
 Uint8List _generateThumbnail(Uint8List origin) =>
-    encodePng(copyResize(decodeImage(origin), width: THUMBNAIL_WIDTH));
+    encodePng(copyResize(decodeImage(origin), width: THUMBNAIL_GENERATE_WIDTH));

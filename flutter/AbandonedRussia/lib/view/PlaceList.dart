@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../model/Place.dart';
 import '../model/Places.dart';
+
 import '../view/commonWidgets.dart';
 import '../view/PhotoContainer.dart';
-import '../view/PlaceAdd.dart';
+import '../view/PlaceAddEdit.dart';
 import '../view/PlaceView.dart';
 import '../view/LabelsEdit.dart';
 
@@ -37,11 +39,16 @@ class _PlaceListState extends State<PlaceList> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: 'Новый объект',
+        tooltip: 'Добавить объект',
         child: Icon(Icons.add),
         onPressed: () async {
           var added = await Navigator.push(
-              context, MaterialPageRoute(builder: (_) => PlaceAdd()));
+              context,
+              MaterialPageRoute(
+                  builder: (_) => ChangeNotifierProvider<Place>(
+                        create: (_) => Place(),
+                        child: PlaceAddEdit(),
+                      )));
           if (added != null) {
             _scrollController.animateTo(0,
                 duration: Duration(milliseconds: 1000), curve: Curves.ease);
@@ -54,11 +61,7 @@ class _PlaceListState extends State<PlaceList> {
             ListTile(
               title: Text('Редактировать метки'),
               onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => LabelsEdit(),
-                ),
-              ),
+                  context, MaterialPageRoute(builder: (_) => LabelsEdit())),
             ),
           ],
         ),
@@ -69,8 +72,7 @@ class _PlaceListState extends State<PlaceList> {
         itemBuilder: (context, i) => FutureBuilder(
             future: places.getByNum(i),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done &&
-                  snapshot.hasData) {
+              if (snapshot.hasData) {
                 var place = snapshot.data;
                 return InkWell(
                   child: Column(
@@ -88,9 +90,13 @@ class _PlaceListState extends State<PlaceList> {
                     ],
                   ),
                   onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => PlaceView(place)),
-                  ),
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ChangeNotifierProvider<Place>.value(
+                          value: place,
+                          child: PlaceView(place),
+                        ),
+                      )),
                 );
               } else if (snapshot.hasError) {
                 return WaitingOrError(error: snapshot.error);

@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:AbandonedRussia/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,42 +12,32 @@ import 'PhotoContainer.dart';
 import 'LocationMap.dart';
 import 'PhotoTake.dart';
 
-final double _labelButtonHeight = 32;
-final double _labelButtonSpace = kIsWeb ? 10 : 0;
-final _labelButtonStyle = TextButton.styleFrom(minimumSize: Size(25, 25));
-
-class PlaceEdit extends StatelessWidget {
-  Place _place;
-  PlaceEdit(this._place);
-
+class PlaceAddEdit extends StatelessWidget {
   @override
-  build(context) => ChangeNotifierProvider<Place>(
-        create: (context) => Place(),
-        child: FutureBuilder(
-          future: Future.wait([
-            context.watch<Labels>().init(),
-            context.watch<Location>().init(),
-          ]),
-          builder: (context, snapshot) =>
-              snapshot.connectionState != ConnectionState.done
-                  ? WaitingOrError(error: snapshot.error)
-                  : _PlaceEditForm(),
-        ),
+  build(context) => FutureBuilder(
+        future: Future.wait([
+          context.watch<Labels>().init(),
+          context.watch<Location>().init(),
+        ]),
+        builder: (context, snapshot) =>
+            snapshot.connectionState == DONE && !snapshot.hasError
+                ? _PlaceAddEditForm()
+                : WaitingOrError(error: snapshot.error),
       );
 }
 
-class _PlaceEditForm extends StatefulWidget {
+class _PlaceAddEditForm extends StatefulWidget {
   @override
-  createState() => _PlaceEditFormState();
+  createState() => _PlaceAddEditFormState();
 }
 
-class _PlaceEditFormState extends State<_PlaceEditForm> {
+class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
   Place _place;
   List<String> _allLabels;
   Location _location;
   final _form = GlobalKey<FormState>();
-  final _title = TextEditingController();
-  final _description = TextEditingController();
+  TextEditingController _title;
+  TextEditingController _description;
   BuildContext _scaffoldContext;
 
   @override
@@ -55,6 +45,10 @@ class _PlaceEditFormState extends State<_PlaceEditForm> {
     _place = context.watch<Place>();
     _allLabels = context.watch<Labels>().getAll();
     _location = context.watch<Location>();
+
+    _title = TextEditingController(text: _place.title);
+    _description = TextEditingController(text: _place.description);
+
     return WillPopScope(
       onWillPop: () => _onExit(context),
       child: Scaffold(
@@ -94,14 +88,14 @@ class _PlaceEditFormState extends State<_PlaceEditForm> {
                   maxLines: 7,
                 ),
                 Container(
-                  constraints: BoxConstraints(minHeight: _labelButtonHeight),
+                  constraints: BoxConstraints(minHeight: LABEL_BUTTON_HEIGHT),
                   child: Wrap(
-                    spacing: _labelButtonSpace,
+                    spacing: LABEL_BUTTON_SPACE,
                     children: _place.labels
                         .map((v) => Container(
-                            height: _labelButtonHeight,
+                            height: LABEL_BUTTON_HEIGHT,
                             child: TextButton(
-                              style: _labelButtonStyle,
+                              style: LABEL_BUTTON_STYLE,
                               child: Text(v),
                               onPressed: () => _deselectLabel(v),
                             )))
@@ -121,12 +115,12 @@ class _PlaceEditFormState extends State<_PlaceEditForm> {
                   ]),
                 ),
                 Wrap(
-                  spacing: _labelButtonSpace,
+                  spacing: LABEL_BUTTON_SPACE,
                   children: _allLabels
                       .map((v) => Container(
-                          height: _labelButtonHeight,
+                          height: LABEL_BUTTON_HEIGHT,
                           child: TextButton(
-                            style: _labelButtonStyle,
+                            style: LABEL_BUTTON_STYLE,
                             child: Text(v),
                             onPressed: () => _selectLabel(v),
                           )))

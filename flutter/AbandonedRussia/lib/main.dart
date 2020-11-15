@@ -22,14 +22,14 @@ class AppWidget extends StatelessWidget {
         providers: [
           ChangeNotifierProvider<Places>(create: (context) => Places()),
           Provider<Labels>(create: (context) => Labels()),
-          Provider<Camera>(create: (context) => Camera.instance),
+          Provider<Camera>(create: (context) => Camera.factory()),
           Provider<Location>(create: (context) => Location()),
         ],
         child: MaterialApp(
           title: _TITLE,
           theme: ThemeData(
             primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
+            visualDensity: VisualDensity.compact,
           ),
           home: _StartApp(),
         ),

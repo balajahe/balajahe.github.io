@@ -9,7 +9,7 @@ import '../model/Places.dart';
 import '../view/commonWidgets.dart';
 import '../view/PhotoContainer.dart';
 import '../view/LocationMap.dart';
-import '../view/PlaceEdit.dart';
+import '../view/PlaceAddEdit.dart';
 
 class PlaceView extends StatelessWidget {
   final Place place;
@@ -102,7 +102,12 @@ class PlaceView extends StatelessWidget {
   void _edit(context) {
     if (ALLOW_EDIT_ALL || place.creator.uid == App.currentUser.uid) {
       Navigator.push(
-          context, MaterialPageRoute(builder: (_) => PlaceEdit(place)));
+          context,
+          MaterialPageRoute(
+              builder: (_) => ChangeNotifierProvider<Place>.value(
+                    value: place,
+                    child: PlaceAddEdit(),
+                  )));
     } else {
       _denied(context);
     }
