@@ -74,5 +74,5 @@ class Place with ChangeNotifier {
   }
 }
 
-Uint8List _generateThumbnail(Uint8List origin) =>
-    encodePng(copyResize(decodeImage(origin), width: THUMBNAIL_GENERATE_WIDTH));
+Uint8List _generateThumbnail(Uint8List origin) => encodePng(
+    copyResize(decodeImage(origin), height: THUMBNAIL_GENERATE_HEIGHT));
