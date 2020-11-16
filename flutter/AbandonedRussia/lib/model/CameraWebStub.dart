@@ -6,6 +6,8 @@ import 'Camera.dart';
 class CameraWeb implements Camera {
   Future<void> init() => Future(() {});
 
+  void play() {}
+
   void dispose() {}
 
   Widget get previewWidget => Container();

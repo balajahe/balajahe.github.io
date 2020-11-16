@@ -11,6 +11,8 @@ abstract class Camera {
 
   Future<void> init();
 
+  void play();
+
   void dispose();
 
   Widget get previewWidget;

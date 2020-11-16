@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:image/image.dart';
 
@@ -60,9 +61,12 @@ class Place with ChangeNotifier {
     if (photos == null) photos = [];
   }
 
-  Place clone() {
-    return PlacesDao.instance.fromMap(id, PlacesDao.instance.toMap(this));
-  }
+  Place clone() =>
+      PlacesDao.instance.fromMap(id, PlacesDao.instance.toMap(this));
+
+  bool equals(Place another) =>
+      PlacesDao.instance.toMap(this).toString() ==
+      PlacesDao.instance.toMap(another).toString();
 
   String get labelsAsString => labels.toString();
 

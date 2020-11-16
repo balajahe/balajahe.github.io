@@ -21,7 +21,8 @@ class PlaceAddEdit extends StatelessWidget {
 
   @override
   build(context) {
-    var newPlace = (_mode == PlaceEditMode.add) ? Place() : _place.clone();
+    var oldPlace = (_place == null) ? Place() : _place;
+    var newPlace = (_mode == PlaceEditMode.add) ? Place() : oldPlace.clone();
     return ChangeNotifierProvider<Place>.value(
       value: newPlace,
       child: FutureBuilder(
@@ -31,7 +32,7 @@ class PlaceAddEdit extends StatelessWidget {
         ]),
         builder: (context, snapshot) =>
             snapshot.connectionState == DONE && !snapshot.hasError
-                ? _PlaceAddEditForm(_mode)
+                ? _PlaceAddEditForm(_mode, oldPlace)
                 : WaitingOrError(error: snapshot.error),
       ),
     );
@@ -40,7 +41,8 @@ class PlaceAddEdit extends StatelessWidget {
 
 class _PlaceAddEditForm extends StatefulWidget {
   final PlaceEditMode _mode;
-  _PlaceAddEditForm(this._mode);
+  final Place _oldPlace;
+  _PlaceAddEditForm(this._mode, this._oldPlace);
 
   @override
   createState() => _PlaceAddEditFormState();
@@ -209,11 +211,41 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
     });
   }
 
-  Future<bool> _onExit(newContext) async {
-    if (_title.text.length > 0 ||
-        _description.text.length > 0 ||
-        _place.labels.length > 0 ||
+  void _updatePlace() {
+    _place
+      ..title = _title.text
+      ..description = _description.text;
+  }
+
+  Future<void> _save() async {
+    _updatePlace();
+    if (_form.currentState.validate() &&
+        _place.title.length > 0 &&
+        _place.description.length > 0 &&
+        _place.labels.length > 0 &&
         _place.photos.length > 0) {
+      try {
+        startWaiting(context);
+        if (widget._mode == PlaceEditMode.add) {
+          await context.read<Places>().add(_place);
+        } else {
+          await context.read<Places>().put(_place);
+        }
+        stopWaiting(context);
+        Navigator.pop(context, true);
+      } catch (e) {
+        showError(context, e);
+      }
+    } else {
+      Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(
+          content: Text(
+              'Заполните все поля, минимум одно фото, минимум одна метка!')));
+    }
+  }
+
+  Future<bool> _onExit(newContext) async {
+    _updatePlace();
+    if (!_place.equals(widget._oldPlace)) {
       var isSave = await showDialog(
         barrierDismissible: false,
         context: context,
@@ -237,33 +269,5 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
       }
     }
     return true;
-  }
-
-  Future<void> _save() async {
-    if (_form.currentState.validate() &&
-        _title.text.length > 0 &&
-        _description.text.length > 0 &&
-        _place.labels.length > 0 &&
-        _place.photos.length > 0) {
-      try {
-        startWaiting(context);
-        _place
-          ..title = _title.text
-          ..description = _description.text;
-        if (widget._mode == PlaceEditMode.add) {
-          await context.read<Places>().add(_place);
-        } else {
-          await context.read<Places>().put(_place);
-        }
-        stopWaiting(context);
-        Navigator.pop(context, true);
-      } catch (e) {
-        showError(context, e);
-      }
-    } else {
-      Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(
-          content: Text(
-              'Заполните все поля, минимум одно фото, минимум одна метка!')));
-    }
   }
 }

@@ -20,13 +20,15 @@ class CameraWeb implements Camera {
           HtmlElementView(key: UniqueKey(), viewType: 'htmlVideoElement');
     }
 
-    _videoStream =
-        await html.window.navigator.getUserMedia(video: true, audio: false);
+    _videoStream = await html.window.navigator.mediaDevices
+        .getUserMedia({'video': true, 'audio': false});
 
     _htmlVideoElement.srcObject = _videoStream;
 
     _imageCapture = html.ImageCapture(_videoStream.getVideoTracks()[0]);
+  }
 
+  void play() {
     _htmlVideoElement.play();
   }
 

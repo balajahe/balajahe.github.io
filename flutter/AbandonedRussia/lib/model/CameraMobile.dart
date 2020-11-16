@@ -16,6 +16,8 @@ class CameraMobile implements Camera {
     await _camera.initialize();
   }
 
+  void play() {}
+
   void dispose() {
     _camera.dispose();
   }

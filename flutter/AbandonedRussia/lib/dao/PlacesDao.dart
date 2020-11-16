@@ -44,13 +44,15 @@ abstract class PlacesDao {
 
   Map<String, dynamic> toMap(Place v) {
     return {
-      'creator': {
-        'uid': v.creator.uid,
-        'registered': Timestamp.fromDate(v.creator.registered),
-      },
-      'created': Timestamp.fromDate(v.created),
-      'title': v.title,
-      'description': v.description,
+      'creator': (v.creator != null)
+          ? {
+              'uid': v.creator.uid,
+              'registered': Timestamp.fromDate(v.creator.registered),
+            }
+          : null,
+      'created': (v.created != null) ? Timestamp.fromDate(v.created) : null,
+      'title': (v.title != null) ? v.title : '',
+      'description': (v.description != null) ? v.description : '',
       'labels': List<String>.from(v.labels),
       'photos': v.photos
           .map<Map<String, dynamic>>((photo) => {

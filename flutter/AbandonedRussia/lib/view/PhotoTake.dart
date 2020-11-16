@@ -39,6 +39,7 @@ class _PhotoTakeFormState extends State<_PhotoTakeForm> {
   build(context) {
     _place = context.watch<Place>();
     _camera = context.watch<Camera>();
+    _camera.play();
 
     return Scaffold(
       appBar: AppBar(title: Text('Добавить фото')),
