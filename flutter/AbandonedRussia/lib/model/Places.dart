@@ -16,11 +16,7 @@ class Places with ChangeNotifier {
     if (i >= _places.length && !noMoreData) {
       await _loadNextPart(i);
     }
-    if (i < _places.length) {
-      return _places[i];
-    } else {
-      return null;
-    }
+    return (i < _places.length) ? _places[i] : null;
   }
 
   Future<void> _loadNextPart(int from) async {

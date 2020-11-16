@@ -7,27 +7,31 @@ import '../dao/Database.dart';
 import '../dao/PlacesDao.dart';
 
 class PlacesDaoMobile extends PlacesDao {
-  Future<Uint8List> getPhotoOrigin(String url, int size) =>
-      FirebaseStorage.instance.ref().child(url).getData(size);
+  Future<Uint8List> getPhotoOrigin(String url, int size) {
+    return FirebaseStorage.instance.ref().child(url).getData(size);
+  }
 
   Future<Place> add(Place place) async {
     place.creator = Database.currentUser;
     place.created = Timestamp.now().toDate();
-    place.photos.forEach((photo) {
-      if (photo.originUrl == null)
-        photo.originUrl = 'photos/${Timestamp.now()}.png';
-    });
 
-    var addedPlace =
-        await FirebaseFirestore.instance.collection('Places').add(toMap(place));
-    place.id = addedPlace.id;
+    var id = FirebaseFirestore.instance.collection('Places').doc().id;
+    _setOriginUrls(place, id);
+
+    await FirebaseFirestore.instance
+        .collection('Places')
+        .doc(id)
+        .set(toMap(place));
 
     await _addOrigins(place);
 
+    place.id = id;
     return place;
   }
 
   Future<void> put(Place place) async {
+    _setOriginUrls(place, place.id);
+
     await FirebaseFirestore.instance
         .collection('Places')
         .doc(place.id)
@@ -45,26 +49,25 @@ class PlacesDaoMobile extends PlacesDao {
         .delete();
   }
 
-  Future<void> _addOrigins(Place place) => Future.wait(place.photos
-      .where((photo) => photo.origin != null)
-      .map((photo) => FirebaseStorage.instance
-          .ref()
-          .child(photo.originUrl)
-          .putData(photo.origin)
-          .onComplete));
+  void _setOriginUrls(Place place, String id) {
+    place.photos.where((photo) => photo.originUrl == null).forEach((photo) =>
+        photo.originUrl =
+            'photos/$id/${Timestamp.now().microsecondsSinceEpoch}.png');
+  }
 
-  Future<void> _delOrigins(Place place) => Future.wait(place.photos
-      .where((photo) => photo.originUrl != null)
-      .map((photo) =>
-          FirebaseStorage.instance.ref().child(photo.originUrl).delete()));
+  Future<void> _addOrigins(Place place) {
+    return Future.wait(place.photos.where((photo) => photo.origin != null).map(
+        (photo) => FirebaseStorage.instance
+            .ref()
+            .child(photo.originUrl)
+            .putData(photo.origin)
+            .onComplete));
+  }
 
-  // Future<void> _delOrigins(Place place) async {
-  //   for (var photo in place.photos) {
-  //     try {
-  //       await FirebaseStorage.instance.ref().child(photo.originUrl).delete();
-  //     } catch (e) {
-  //       print(e);
-  //     }
-  //   }
-  // }
+  Future<void> _delOrigins(Place place) {
+    return Future.wait(place.photos
+        .where((photo) => photo.originUrl != null)
+        .map((photo) =>
+            FirebaseStorage.instance.ref().child(photo.originUrl).delete()));
+  }
 }

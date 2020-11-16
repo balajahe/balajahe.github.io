@@ -10,19 +10,21 @@ import '../dao/PlacesDaoWeb.dart';
 import '../dao/PlacesDaoMobile.dart';
 
 abstract class PlacesDao {
-  static PlacesDao get instance => kIsWeb ? PlacesDaoWeb() : PlacesDaoMobile();
+  static PlacesDao get instance =>
+      (kIsWeb) ? PlacesDaoWeb() : PlacesDaoMobile();
 
   Place fromMap(String id, Map<String, dynamic> data) => Place(
         id: id,
         creator: AppUser(
           uid: data['creator']['uid'],
-          created: data['creator']['created'].toDate(),
+          registered: data['creator']['registered'].toDate(),
         ),
         created: data['created'].toDate(),
         title: data['title'],
         description: data['description'],
-        labels: data['labels'] is List ? List<String>.from(data['labels']) : [],
-        photos: data['photos'] is List
+        labels:
+            (data['labels'] is List) ? List<String>.from(data['labels']) : [],
+        photos: (data['photos'] is List)
             ? data['photos']
                 .map<PlacePhoto>((photo) => PlacePhoto(
                       thumbnail: base64Decode(photo['thumbnail']),
@@ -31,7 +33,7 @@ abstract class PlacesDao {
                     ))
                 .toList()
             : [],
-        location: data['location'] != null
+        location: (data['location'] != null)
             ? PlaceLocation(
                 0.0 + data['location']['latitude'],
                 0.0 + data['location']['longitude'],
@@ -44,7 +46,7 @@ abstract class PlacesDao {
     return {
       'creator': {
         'uid': v.creator.uid,
-        'created': Timestamp.fromDate(v.creator.created),
+        'registered': Timestamp.fromDate(v.creator.registered),
       },
       'created': Timestamp.fromDate(v.created),
       'title': v.title,
@@ -57,7 +59,7 @@ abstract class PlacesDao {
                 'originUrl': photo.originUrl,
               })
           .toList(),
-      'location': v.location != null
+      'location': (v.location != null)
           ? {
               'latitude': v.location.latitude,
               'longitude': v.location.longitude,
@@ -79,7 +81,7 @@ abstract class PlacesDao {
           .where('creator.uid', isEqualTo: Database.currentUser.uid)
           .orderBy('created', descending: true)
           .startAfter(
-              [after != null ? Timestamp.fromDate(after) : Timestamp.now()])
+              [(after != null) ? Timestamp.fromDate(after) : Timestamp.now()])
           .limit(count)
           .get();
     } else {
@@ -87,7 +89,7 @@ abstract class PlacesDao {
           .collection('Places')
           .orderBy('created', descending: true)
           .startAfter(
-              [after != null ? Timestamp.fromDate(after) : Timestamp.now()])
+              [(after != null) ? Timestamp.fromDate(after) : Timestamp.now()])
           .limit(count)
           .get();
     }

@@ -3,8 +3,8 @@ import '../dao/Database.dart';
 class AppUser {
   String uid;
   String name = 'Anonymous';
-  DateTime created;
-  AppUser({this.uid, this.created});
+  DateTime registered;
+  AppUser({this.uid, this.registered});
 }
 
 class App {

@@ -6,15 +6,16 @@ import '../dao/Database.dart';
 import '../dao/PlacesDao.dart';
 
 class PlacesDaoWeb extends PlacesDao {
-  Future<Uint8List> getPhotoOrigin(String url, int size) => Future(() => null);
+  Future<Uint8List> getPhotoOrigin(String url, int size) {
+    return Future(() => null);
+  }
 
   Future<Place> add(Place place) async {
     place.creator = Database.currentUser;
     place.created = Timestamp.now().toDate();
 
-    var addedPlace =
+    var ref =
         await FirebaseFirestore.instance.collection('Places').add(toMap(place));
-    place.id = addedPlace.id;
 
     // print(fb.app().storage());
     // for (var photoData in place.photos) {
@@ -27,6 +28,7 @@ class PlacesDaoWeb extends PlacesDao {
     //   print(url);
     // }
 
+    place.id = ref.id;
     return place;
   }
 

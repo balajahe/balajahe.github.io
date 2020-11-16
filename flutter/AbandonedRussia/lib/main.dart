@@ -29,7 +29,7 @@ class AppWidget extends StatelessWidget {
           title: _TITLE,
           theme: ThemeData(
             primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.compact,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
           ),
           home: _StartApp(),
         ),

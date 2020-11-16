@@ -64,7 +64,7 @@ class PlaceView extends StatelessWidget {
               'добавлено ' +
                   place.created.toString() +
                   '\nпользователем ' +
-                  place.creator.created.toString(),
+                  place.creator.registered.toString(),
               style: TextStyle(fontSize: 12),
             ),
           ],
