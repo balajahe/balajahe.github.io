@@ -13,7 +13,7 @@ class PhotoTake extends StatelessWidget {
   build(context) => FutureBuilder(
         future: context.watch<Camera>().init(),
         builder: (context, snapshot) =>
-            snapshot.connectionState == DONE && !snapshot.hasError
+            (snapshot.connectionState == DONE && !snapshot.hasError)
                 ? _PhotoTakeForm()
                 : WaitingOrError(error: snapshot.error),
       );

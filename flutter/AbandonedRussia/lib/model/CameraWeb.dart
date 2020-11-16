@@ -6,46 +6,32 @@ import 'package:flutter/material.dart';
 import '../model/Camera.dart';
 
 class CameraWeb implements Camera {
-  html.VideoElement _htmlVideoElement;
+  static html.VideoElement _htmlVideoElement;
+  static HtmlElementView _previewWidget;
   html.MediaStream _videoStream;
   html.ImageCapture _imageCapture;
-  HtmlElementView _preview;
-  bool _initiated = false;
-
-  CameraWeb() {
-    _htmlVideoElement = html.VideoElement();
-
-    ui.platformViewRegistry.registerViewFactory(
-        'htmlVideoElement', (int viewId) => _htmlVideoElement);
-  }
 
   Future<void> init() async {
-    if (!_initiated) {
-      _initiated = true;
-
-      _videoStream = await html.window.navigator.mediaDevices.getUserMedia({
-        'video': {
-          'facingMode': {'exact': 'environment'}
-        }
-      });
-
-      _htmlVideoElement.srcObject = _videoStream;
-
-      _imageCapture = html.ImageCapture(_videoStream.getVideoTracks()[0]);
-
-      _preview =
+    if (_htmlVideoElement == null) {
+      _htmlVideoElement = html.VideoElement();
+      ui.platformViewRegistry.registerViewFactory(
+          'htmlVideoElement', (int viewId) => _htmlVideoElement);
+      _previewWidget =
           HtmlElementView(key: UniqueKey(), viewType: 'htmlVideoElement');
     }
+
+    _videoStream =
+        await html.window.navigator.getUserMedia(video: true, audio: false);
+
+    _htmlVideoElement.srcObject = _videoStream;
+
+    _imageCapture = html.ImageCapture(_videoStream.getVideoTracks()[0]);
+
     _htmlVideoElement.play();
-    print(_htmlVideoElement.width);
   }
 
   void dispose() {
-    _initiated = false;
-
-    _htmlVideoElement
-      ..pause()
-      ..srcObject = null;
+    _htmlVideoElement.srcObject = null;
 
     _videoStream.getTracks().forEach((track) {
       track.stop();
@@ -53,7 +39,7 @@ class CameraWeb implements Camera {
     });
   }
 
-  Widget get previewWidget => _preview;
+  Widget get previewWidget => _previewWidget;
 
   Future<Uint8List> takePhoto() async {
     var photoBlob = await _imageCapture.takePhoto();

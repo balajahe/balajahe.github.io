@@ -28,7 +28,7 @@ class CameraMobile implements Camera {
     await _camera.takePicture(path);
     var file = File(path);
     var data = await file.readAsBytes();
-    await file.delete();
+    file.delete();
     return data;
   }
 }

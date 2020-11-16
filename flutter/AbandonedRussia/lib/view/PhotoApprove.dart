@@ -28,14 +28,14 @@ class PhotoApprove extends StatelessWidget {
           ],
         ),
         body: Center(
-          child:
-              1 == 1 // если телефон повернут, желательно и превью поворачивать
-                  ? Image.memory(photoData)
-                  : Transform(
-                      transform: Matrix4.rotationX(pi / 2),
-                      alignment: Alignment.center,
-                      child: Image.memory(photoData),
-                    ),
+          // если телефон повернут, желательно и превью поворачивать, доделать
+          child: (1 == 1)
+              ? Image.memory(photoData)
+              : Transform(
+                  transform: Matrix4.rotationX(pi / 2),
+                  alignment: Alignment.center,
+                  child: Image.memory(photoData),
+                ),
         ),
       );
 }
