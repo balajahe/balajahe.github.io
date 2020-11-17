@@ -12,14 +12,14 @@ import '../view/LocationMap.dart';
 import '../view/PlaceAddEdit.dart';
 
 class PlaceView extends StatelessWidget {
-  final Place place;
-  PlaceView(this.place);
+  final Place _place;
+  PlaceView(this._place);
 
   @override
   build(context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(place.title),
+        title: Text(_place.title),
         actions: [
           Builder(
               builder: (context) => IconButton(
@@ -37,34 +37,22 @@ class PlaceView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.only(top: 5),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SelectableText(
-                    place.title,
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  SelectableText(
-                    place.labelsAsString,
-                    style: TextStyle(fontSize: 12),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 3, bottom: 3),
-              child: SelectableText(place.description),
-            ),
-            PhotoContainer(place),
-            LocationMap(place.location),
-            Container(height: 5),
+            Separator(),
+            SelectableText(_place.title,
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            Separator(),
+            SelectableText(_place.labelsAsString,
+                style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic)),
+            Separator(),
+            SelectableText(_place.description),
+            PhotoContainer(_place, PhotoContainerMode.view),
+            LocationMap(_place.location),
+            Separator(),
             SelectableText(
               'добавлено ' +
-                  place.created.toString() +
+                  _place.created.toString() +
                   '\nпользователем ' +
-                  place.creator.registered.toString(),
+                  _place.creator.registered.toString(),
               style: TextStyle(fontSize: 12),
             ),
           ],
@@ -74,7 +62,7 @@ class PlaceView extends StatelessWidget {
   }
 
   void _del(context) {
-    if (ALLOW_EDIT_ALL || place.creator.uid == App.currentUser.uid) {
+    if (ALLOW_EDIT_ALL || _place.creator.uid == App.currentUser.uid) {
       showDialog<void>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
@@ -86,7 +74,7 @@ class PlaceView extends StatelessWidget {
                 child: Text('Да'),
                 onPressed: () async {
                   startWaiting(context);
-                  await context.read<Places>().del(place);
+                  await context.read<Places>().del(_place);
                   stopWaiting(context);
                   Navigator.pop(context);
                   Navigator.pop(context);
@@ -100,11 +88,11 @@ class PlaceView extends StatelessWidget {
   }
 
   Future<void> _edit(context) async {
-    if (ALLOW_EDIT_ALL || place.creator.uid == App.currentUser.uid) {
+    if (ALLOW_EDIT_ALL || _place.creator.uid == App.currentUser.uid) {
       await Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (_) => PlaceAddEdit(PlaceEditMode.edit, place)));
+              builder: (_) => PlaceAddEdit(PlaceEditMode.edit, _place)));
       Navigator.pop(context);
     } else {
       _denied(context);

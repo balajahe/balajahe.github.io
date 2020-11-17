@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../model/Labels.dart';
+import '../view/commonWidgets.dart';
 
 class LabelsEdit extends StatefulWidget {
   @override
@@ -8,10 +10,50 @@ class LabelsEdit extends StatefulWidget {
 }
 
 class _LabelsEditState extends State<LabelsEdit> {
+  var _labels = TextEditingController();
+  bool _done = false;
+  dynamic _error;
+
   @override
-  build(context) => Scaffold(
-      appBar: AppBar(
-        title: Text("Все метки"),
-      ),
-      body: TextField());
+  initState() {
+    var labelsModel = context.read<Labels>();
+    labelsModel
+        .init()
+        .then((_) => setState(() {
+              _labels.text = labelsModel.getAll().join(', ') + ',\n';
+              _done = true;
+            }))
+        .catchError((e) => setState(() => _error = e));
+    super.initState();
+  }
+
+  @override
+  build(context) => (_done)
+      ? Scaffold(
+          appBar: AppBar(
+            title: Text("Все метки"),
+            actions: [
+              IconButton(
+                tooltip: 'Сохранить',
+                icon: Icon(Icons.save),
+                onPressed: () async {
+                  startWaiting(context);
+                  await context.read<Labels>().setAll(_labels.text
+                      .split(',')
+                      .map((v) => v.trim())
+                      .where((v) => v.length > 0)
+                      .toList());
+                  stopWaiting(context);
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
+          body: TextField(
+            controller: _labels,
+            minLines: 7,
+            maxLines: 20,
+          ),
+        )
+      : WaitingOrError(error: _error);
 }

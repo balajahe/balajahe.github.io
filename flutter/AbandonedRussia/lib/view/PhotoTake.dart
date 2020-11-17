@@ -50,7 +50,7 @@ class _PhotoTakeFormState extends State<_PhotoTakeForm> {
       ),
       body: Stack(children: [
         Center(child: _camera.previewWidget),
-        PhotoContainer(_place, PhotoContainerMode.add, _fromIndex),
+        PhotoContainer(_place, PhotoContainerMode.edit, _fromIndex),
       ]),
     );
   }

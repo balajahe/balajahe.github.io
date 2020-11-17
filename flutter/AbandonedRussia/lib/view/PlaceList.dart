@@ -59,14 +59,15 @@ class _PlaceListState extends State<PlaceList> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Separator(),
                       Text(place.title,
                           style: TextStyle(fontWeight: FontWeight.bold)),
+                      Separator(),
                       Text(place.labelsAsString,
-                          style: TextStyle(fontSize: 12)),
-                      Padding(
-                        padding: EdgeInsets.only(top: 3, bottom: 3),
-                        child: Text(place.description),
-                      ),
+                          style: TextStyle(
+                              fontSize: 12, fontStyle: FontStyle.italic)),
+                      Separator(),
+                      Text(place.description),
                       PhotoContainer(place, PhotoContainerMode.list),
                     ],
                   ),
@@ -98,14 +99,31 @@ class _PlaceListState extends State<PlaceList> {
 }
 
 class _Menu extends StatelessWidget {
+  final _itemTextStyle = TextStyle(fontSize: 16);
+
   @override
   build(context) => ListView(
         children: [
           ListTile(
-            title: Text('Редактировать метки'),
-            onTap: () => Navigator.push(
-                context, MaterialPageRoute(builder: (_) => LabelsEdit())),
-          ),
+              title: Text('О программе', style: _itemTextStyle),
+              onTap: () async {
+                await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => Scaffold(
+                        appBar: AppBar(title: Text('О программе')),
+                        body: Center(child: Text('О программе')),
+                      ),
+                    ));
+                Navigator.pop(context);
+              }),
+          ListTile(
+              title: Text('Редактировать метки', style: _itemTextStyle),
+              onTap: () async {
+                await Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => LabelsEdit()));
+                Navigator.pop(context);
+              }),
         ],
       );
 }

@@ -14,7 +14,7 @@ class LocationMap extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              height: 200,
+              height: 250,
               padding: EdgeInsets.only(left: 3, right: 3),
               child: FlutterMap(
                 options: new MapOptions(
@@ -49,10 +49,8 @@ class LocationMap extends StatelessWidget {
                 ],
               ),
             ),
-            SelectableText(
-              '${_location.latitude}, ${_location.longitude}',
-              style: TextStyle(fontSize: 12),
-            ),
+            SelectableText('${_location.latitude}, ${_location.longitude}',
+                style: TextStyle(fontSize: 12)),
           ],
         )
       : Container();

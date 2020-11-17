@@ -109,10 +109,12 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
                 ),
                 TextFormField(
                   controller: _description,
-                  decoration: InputDecoration(labelText: 'Описание'),
+                  decoration: InputDecoration(
+                      labelText: 'Описание', border: InputBorder.none),
                   minLines: 3,
                   maxLines: 7,
                 ),
+                GroupSeparator('Метки'),
                 Container(
                   constraints: BoxConstraints(minHeight: LABEL_BUTTON_HEIGHT),
                   child: Wrap(
@@ -128,18 +130,7 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
                         .toList(),
                   ),
                 ),
-                Container(
-                  child: Row(children: [
-                    Text('Добавить метку: ',
-                        style: TextStyle(fontStyle: FontStyle.italic)),
-                    Expanded(
-                      child: Container(
-                          height: 1,
-                          margin: EdgeInsets.only(top: 10),
-                          color: Colors.grey[400]),
-                    ),
-                  ]),
-                ),
+                GroupSeparator('Добавить метку'),
                 Wrap(
                   spacing: LABEL_BUTTON_SPACE,
                   children: _allLabels
@@ -152,7 +143,7 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
                           )))
                       .toList(),
                 ),
-                PhotoContainer(_place),
+                PhotoContainer(_place, PhotoContainerMode.edit),
                 _showMap(),
               ],
             ),

@@ -1,30 +1,55 @@
 import 'package:flutter/material.dart';
 
+class Separator extends StatelessWidget {
+  @override
+  build(context) => Container(height: 3);
+}
+
+class GroupSeparator extends StatelessWidget {
+  final String _text;
+  GroupSeparator(this._text);
+
+  @override
+  build(context) => Container(
+        child: Row(children: [
+          Text('$_text: ',
+              style: TextStyle(
+                  fontSize: 12,
+                  fontStyle: FontStyle.normal,
+                  color: Colors.grey[600])),
+          Expanded(
+            child: Container(
+                height: 1,
+                margin: EdgeInsets.only(top: 10),
+                color: Colors.grey[400]),
+          ),
+        ]),
+      );
+}
+
 class WaitingOrError extends StatelessWidget {
   final dynamic error;
   final bool transparent;
   WaitingOrError({this.error, this.transparent = false});
 
   @override
-  build(context) {
-    if (error == null) {
-      return transparent ? _WaitingTransparent() : _Waiting();
-    } else {
-      return Errors(error);
-    }
-  }
+  build(context) => (error == null)
+      ? transparent
+          ? _WaitingTransparent()
+          : _Waiting()
+      : Errors(error);
 }
 
 class _Waiting extends StatelessWidget {
   @override
-  build(_) => Container(
+  build(context) => Container(
       padding: EdgeInsets.only(top: 10),
       child: Center(child: CircularProgressIndicator()));
 }
 
 class _WaitingTransparent extends StatelessWidget {
   @override
-  build(_) => Container(
+  build(context) => Container(
       padding: EdgeInsets.only(top: 10),
       color: Color(0xAAAAAAAA),
       child: Center(child: CircularProgressIndicator()));
@@ -35,7 +60,7 @@ class Errors extends StatelessWidget {
   Errors(this.error);
 
   @override
-  build(_) {
+  build(context) {
     var stackTrace = '';
     try {
       stackTrace = error.stackTrace.toString();

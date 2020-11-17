@@ -9,5 +9,8 @@ class Labels {
 
   List<String> getAll() => _all.map<String>((v) => v).toList();
 
-  void setAll(List<String> all) => _all = all;
+  Future<void> setAll(List<String> all) async {
+    _all = all;
+    await LabelsDao().setAll(_all);
+  }
 }
