@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+//import 'package:file_picker/file_picker.dart';
 
 import '../settings.dart';
 import '../model/Place.dart';
@@ -11,6 +13,7 @@ import '../view/commonWidgets.dart';
 import '../view/PhotoContainer.dart';
 import '../view/LocationMap.dart';
 import '../view/PhotoTake.dart';
+import '../view/PhotoApprove.dart';
 
 enum PlaceEditMode { add, edit }
 
@@ -81,21 +84,24 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
         appBar: AppBar(
           title: Text('Новый объект'),
           actions: [
-            Builder(
-              builder: (context) {
-                _scaffoldContext = context;
-                return IconButton(
-                    icon: Icon(Icons.save),
-                    tooltip: 'Сохранить',
-                    onPressed: _save);
-              },
+            IconButton(
+              tooltip: 'Фото из файла',
+              icon: Icon(Icons.add_a_photo),
+              onPressed: _addPhotoFromFile,
             ),
+            Builder(builder: (context) {
+              _scaffoldContext = context;
+              return IconButton(
+                  tooltip: 'Сохранить',
+                  icon: Icon(Icons.save),
+                  onPressed: _save);
+            }),
           ],
         ),
         floatingActionButton: FloatingActionButton(
-          tooltip: 'Добавить фото',
+          tooltip: 'Сфотографировать',
           child: Icon(Icons.photo_camera),
-          onPressed: _addPhoto,
+          onPressed: _addPhotoFromCamera,
         ),
         body: SingleChildScrollView(
           child: Form(
@@ -175,7 +181,7 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
     }
   }
 
-  Future<void> _addPhoto() async {
+  Future<void> _addPhotoFromCamera() async {
     await Navigator.push(
       context,
       MaterialPageRoute(
@@ -186,6 +192,20 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
       ),
     );
     setState(() {});
+  }
+
+  Future<void> _addPhotoFromFile() async {
+    // var paths =
+    //     (await FilePicker.platform.pickFiles(type: FileType.image)).paths;
+    // if (paths.length > 0) {
+    //   var file = File(paths[0]);
+    //   var photoData = await file.readAsBytes();
+    //   var approved = await Navigator.push(
+    //       context, MaterialPageRoute(builder: (_) => PhotoApprove(photoData)));
+    //   if (approved != null) {
+    //     _place.addPhoto(PlacePhoto(origin: photoData));
+    //   }
+    // }
   }
 
   void _selectLabel(String label) {

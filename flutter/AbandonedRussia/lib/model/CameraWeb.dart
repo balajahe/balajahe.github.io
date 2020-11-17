@@ -12,6 +12,7 @@ class CameraWeb implements Camera {
   html.ImageCapture _imageCapture;
 
   Future<void> init() async {
+    // это нужно делать только один раз, иначе будут глюки
     if (_htmlVideoElement == null) {
       _htmlVideoElement = html.VideoElement();
       ui.platformViewRegistry.registerViewFactory(
@@ -20,8 +21,9 @@ class CameraWeb implements Camera {
           HtmlElementView(key: UniqueKey(), viewType: 'htmlVideoElement');
     }
 
-    _videoStream = await html.window.navigator.mediaDevices
-        .getUserMedia({'video': true, 'audio': false});
+    _videoStream = await html.window.navigator.getUserMedia(video: {
+      'facingMode': {'exact': "environment"}
+    }, audio: false);
 
     _htmlVideoElement.srcObject = _videoStream;
 

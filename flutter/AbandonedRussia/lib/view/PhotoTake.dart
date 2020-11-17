@@ -57,13 +57,13 @@ class _PhotoTakeFormState extends State<_PhotoTakeForm> {
 
   Future<void> _takePhoto() async {
     startWaiting(context);
-    var photo = await _camera.takePhoto();
+    var photoData = await _camera.takePhoto();
     stopWaiting(context);
 
     var approved = await Navigator.push(
-        context, MaterialPageRoute(builder: (_) => PhotoApprove(photo)));
+        context, MaterialPageRoute(builder: (_) => PhotoApprove(photoData)));
     if (approved != null) {
-      _place.addPhoto(PlacePhoto(origin: photo));
+      _place.addPhoto(PlacePhoto(origin: photoData));
     }
   }
 

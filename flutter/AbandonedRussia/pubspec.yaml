@@ -30,6 +30,7 @@ dependencies:
   firebase_storage:
   camera:
   path_provider:
+  #file_picker:
   image:
   location:
   flutter_map:

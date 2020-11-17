@@ -61,7 +61,8 @@ class PlacesDaoMobile extends PlacesDao {
             .ref()
             .child(photo.originUrl)
             .putData(photo.origin)
-            .onComplete));
+            .asStream()
+            .first));
   }
 
   Future<void> _delOrigins(Place place) {
