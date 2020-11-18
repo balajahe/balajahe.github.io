@@ -5,11 +5,11 @@ import '../settings.dart';
 import '../model/Place.dart';
 import '../model/Places.dart';
 
-import '../view/commonWidgets.dart';
-import '../view/PhotoContainer.dart';
-import '../view/PlaceAddEdit.dart';
-import '../view/PlaceView.dart';
-import '../view/AppMenu.dart';
+import 'commonWidgets.dart';
+import 'PhotoContainer.dart';
+import 'PlaceAddEdit.dart';
+import 'PlaceView.dart';
+import 'AppMenu.dart';
 
 const _TITLE_ALL = 'Все объекты';
 const _TITLE_ONLY_MINE = 'Добавлены мной';

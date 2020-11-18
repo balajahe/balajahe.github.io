@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../view/LabelsEdit.dart';
+import 'LabelsEdit.dart';
 
 class AppMenu extends StatelessWidget {
   final _itemTextStyle = TextStyle(fontSize: 16);

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../model/Labels.dart';
-import '../view/commonWidgets.dart';
+import 'commonWidgets.dart';
 
 class LabelsEdit extends StatefulWidget {
   @override

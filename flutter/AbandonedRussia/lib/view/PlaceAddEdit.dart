@@ -9,11 +9,12 @@ import '../model/Places.dart';
 import '../model/Labels.dart';
 import '../model/Location.dart';
 
-import '../view/commonWidgets.dart';
-import '../view/PhotoContainer.dart';
-import '../view/LocationMap.dart';
-import '../view/PhotoTake.dart';
-import '../view/PhotoApprove.dart';
+import 'commonWidgets.dart';
+import 'PhotoContainer.dart';
+import 'PhotoContainerEdit.dart';
+import 'LocationMap.dart';
+import 'PhotoTake.dart';
+import 'PhotoApprove.dart';
 
 enum PlaceEditMode { add, edit }
 

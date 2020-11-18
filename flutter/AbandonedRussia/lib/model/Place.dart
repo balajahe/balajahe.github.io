@@ -75,6 +75,11 @@ class Place with ChangeNotifier {
     await photo.generateThumbnail();
     notifyListeners();
   }
+
+  Future<void> removePhoto(PlacePhoto photo) async {
+    photos.remove(photo);
+    notifyListeners();
+  }
 }
 
 Uint8List _generateThumbnail(Uint8List origin) => encodePng(

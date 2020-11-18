@@ -14,15 +14,17 @@ class PhotoApprove extends StatelessWidget {
           children: [
             FloatingActionButton(
               tooltip: 'Удалить фото',
-              child: Icon(Icons.clear),
               heroTag: 'delete',
+              child: Icon(Icons.clear),
+              mini: true,
               onPressed: () => Navigator.pop(context),
             ),
             Container(width: 10, height: 0),
             FloatingActionButton(
               tooltip: 'Одобрить фото',
-              child: Icon(Icons.done),
               heroTag: 'save',
+              child: Icon(Icons.done),
+              mini: true,
               onPressed: () => Navigator.pop(context, true),
             ),
           ],

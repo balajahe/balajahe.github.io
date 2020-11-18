@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../settings.dart';
 import '../model/Place.dart';
-import '../view/commonWidgets.dart';
-import '../view/PhotoContainer.dart';
+import 'commonWidgets.dart';
+import 'PhotoContainer.dart';
 
 class PhotoView extends StatefulWidget {
   final Place _place;
@@ -45,7 +45,8 @@ class _PhotoViewState extends State<PhotoView> {
                       tooltip: 'Удалить',
                       child: Icon(Icons.delete),
                       heroTag: 'delete',
-                      onPressed: null,
+                      mini: true,
+                      onPressed: _del,
                     )
                   : Container(height: 0),
               Expanded(child: Container(height: 0)),
@@ -53,6 +54,7 @@ class _PhotoViewState extends State<PhotoView> {
                 tooltip: 'Предыдущее фото',
                 child: Icon(Icons.arrow_back),
                 heroTag: 'prev',
+                mini: true,
                 onPressed: _prev,
               ),
               Container(width: 10, height: 0),
@@ -60,6 +62,7 @@ class _PhotoViewState extends State<PhotoView> {
                 tooltip: 'Следующее фото',
                 child: Icon(Icons.arrow_forward),
                 heroTag: 'next',
+                mini: true,
                 onPressed: _next,
               ),
             ],
@@ -93,5 +96,10 @@ class _PhotoViewState extends State<PhotoView> {
 
   void _next() {
     if (_photoIndex < _photos.length - 1) setState(() => _photoIndex++);
+  }
+
+  void _del() {
+    widget._place.removePhoto(_photos[_photoIndex]);
+    Navigator.pop(context);
   }
 }

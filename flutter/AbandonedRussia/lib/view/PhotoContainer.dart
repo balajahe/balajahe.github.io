@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../settings.dart';
 import '../model/Place.dart';
-import '../view/PhotoView.dart';
+import 'PhotoView.dart';
 
 enum PhotoContainerMode { list, view, edit }
 
@@ -11,23 +11,20 @@ class PhotoContainer extends StatelessWidget {
   final Place _place;
   final PhotoContainerMode _mode;
   final int _fromIndex;
-  int _toIndex;
-
-  PhotoContainer(this._place, this._mode, [this._fromIndex = 0]) {
-    _toIndex = (_mode == PhotoContainerMode.list)
-        ? min(THUMBNAIL_COUNT_IN_LIST, _place.photos.length)
-        : _place.photos.length;
-  }
+  PhotoContainer(this._place, this._mode, [this._fromIndex = 0]);
 
   @override
   build(context) {
     var photos = _place.photos;
+    var toIndex = (_mode == PhotoContainerMode.list)
+        ? min(THUMBNAIL_COUNT_IN_LIST, _place.photos.length)
+        : _place.photos.length;
     return Container(
       padding: EdgeInsets.all(2),
       child: Wrap(
         spacing: 1,
         runSpacing: 1,
-        children: [for (var i = _fromIndex; i < _toIndex; i += 1) i]
+        children: [for (var i = _fromIndex; i < toIndex; i += 1) i]
             .map<Widget>(
               (photoIndex) => InkWell(
                 child: Container(

@@ -6,10 +6,10 @@ import '../model/App.dart';
 import '../model/Place.dart';
 import '../model/Places.dart';
 
-import '../view/commonWidgets.dart';
-import '../view/PhotoContainer.dart';
-import '../view/LocationMap.dart';
-import '../view/PlaceAddEdit.dart';
+import 'commonWidgets.dart';
+import 'PhotoContainer.dart';
+import 'LocationMap.dart';
+import 'PlaceAddEdit.dart';
 
 class PlaceView extends StatelessWidget {
   final Place _place;

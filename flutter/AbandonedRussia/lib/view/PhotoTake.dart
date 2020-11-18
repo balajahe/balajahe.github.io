@@ -3,9 +3,9 @@ import 'package:provider/provider.dart';
 
 import '../model/Camera.dart';
 import '../model/Place.dart';
-import '../view/commonWidgets.dart';
-import '../view/PhotoContainer.dart';
-import '../view/PhotoApprove.dart';
+import 'commonWidgets.dart';
+import 'PhotoContainer.dart';
+import 'PhotoApprove.dart';
 
 class PhotoTake extends StatefulWidget {
   @override
