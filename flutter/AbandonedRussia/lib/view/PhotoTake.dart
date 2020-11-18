@@ -1,36 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../settings.dart';
 import '../model/Camera.dart';
 import '../model/Place.dart';
 import '../view/commonWidgets.dart';
 import '../view/PhotoContainer.dart';
 import '../view/PhotoApprove.dart';
 
-class PhotoTake extends StatelessWidget {
+class PhotoTake extends StatefulWidget {
   @override
-  build(context) => FutureBuilder(
-        future: context.watch<Camera>().init(),
-        builder: (context, snapshot) =>
-            (snapshot.connectionState == DONE && !snapshot.hasError)
-                ? _PhotoTakeForm()
-                : WaitingOrError(error: snapshot.error),
-      );
+  createState() => _PhotoTakeState();
 }
 
-class _PhotoTakeForm extends StatefulWidget {
-  @override
-  createState() => _PhotoTakeFormState();
-}
-
-class _PhotoTakeFormState extends State<_PhotoTakeForm> {
+class _PhotoTakeState extends State<PhotoTake> {
   Place _place;
   Camera _camera;
   int _fromIndex;
+  bool _done = false;
+  dynamic _error;
 
   @override
   initState() {
+    _camera = Camera.instance;
+    _camera
+        .init()
+        .then((_) => setState(() => _done = true))
+        .catchError((e) => setState(() => _error = e));
     _fromIndex = context.read<Place>().photos.length;
     super.initState();
   }
@@ -38,21 +33,22 @@ class _PhotoTakeFormState extends State<_PhotoTakeForm> {
   @override
   build(context) {
     _place = context.watch<Place>();
-    _camera = context.watch<Camera>();
     _camera.play();
 
-    return Scaffold(
-      appBar: AppBar(title: Text('Добавить фото')),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.camera_sharp),
-        tooltip: 'Снимок!',
-        onPressed: _takePhoto,
-      ),
-      body: Stack(children: [
-        Center(child: _camera.previewWidget),
-        PhotoContainer(_place, PhotoContainerMode.edit, _fromIndex),
-      ]),
-    );
+    return (_done)
+        ? Scaffold(
+            appBar: AppBar(title: Text('Добавить фото')),
+            floatingActionButton: FloatingActionButton(
+              child: Icon(Icons.camera_sharp),
+              tooltip: 'Снимок!',
+              onPressed: _takePhoto,
+            ),
+            body: Stack(children: [
+              Center(child: _camera.previewWidget),
+              PhotoContainer(_place, PhotoContainerMode.edit, _fromIndex),
+            ]),
+          )
+        : WaitingOrError(error: _error);
   }
 
   Future<void> _takePhoto() async {

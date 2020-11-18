@@ -11,8 +11,11 @@ class CameraMobile implements Camera {
 
   Future<void> init() async {
     WidgetsFlutterBinding.ensureInitialized();
-    _camera =
-        CameraController((await availableCameras())[0], ResolutionPreset.high);
+    _camera = CameraController(
+      (await availableCameras())[0],
+      ResolutionPreset.high,
+      enableAudio: false,
+    );
     await _camera.initialize();
   }
 

@@ -4,8 +4,6 @@ import 'package:provider/provider.dart';
 import 'model/App.dart';
 import 'model/Places.dart';
 import 'model/Labels.dart';
-import 'model/Camera.dart';
-import 'model/Location.dart';
 import 'view/commonWidgets.dart';
 import 'view/PlaceList.dart';
 
@@ -22,8 +20,6 @@ class AppWidget extends StatelessWidget {
         providers: [
           ChangeNotifierProvider<Places>(create: (context) => Places()),
           Provider<Labels>(create: (context) => Labels()),
-          Provider<Camera>(create: (context) => Camera.instance),
-          Provider<Location>(create: (context) => Location()),
         ],
         child: MaterialApp(
           title: _TITLE,

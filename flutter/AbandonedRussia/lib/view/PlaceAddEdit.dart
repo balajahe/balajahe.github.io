@@ -17,147 +17,144 @@ import '../view/PhotoApprove.dart';
 
 enum PlaceEditMode { add, edit }
 
-class PlaceAddEdit extends StatelessWidget {
+class PlaceAddEdit extends StatefulWidget {
   final PlaceEditMode _mode;
   final Place _place;
   PlaceAddEdit(this._mode, [this._place]);
 
   @override
-  build(context) {
-    var oldPlace = (_place == null) ? Place() : _place;
-    var newPlace = (_mode == PlaceEditMode.add) ? Place() : oldPlace.clone();
-    return ChangeNotifierProvider<Place>.value(
-      value: newPlace,
-      child: FutureBuilder(
-        future: Future.wait([
-          context.watch<Labels>().init(),
-          (_place == null) ? context.watch<Location>().init() : Future(() {}),
-        ]),
-        builder: (context, snapshot) =>
-            snapshot.connectionState == DONE && !snapshot.hasError
-                ? _PlaceAddEditForm(_mode, oldPlace)
-                : WaitingOrError(error: snapshot.error),
-      ),
-    );
-  }
+  createState() => _PlaceAddEditState();
 }
 
-class _PlaceAddEditForm extends StatefulWidget {
-  final PlaceEditMode _mode;
-  final Place _oldPlace;
-  _PlaceAddEditForm(this._mode, this._oldPlace);
-
-  @override
-  createState() => _PlaceAddEditFormState();
-}
-
-class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
+class _PlaceAddEditState extends State<PlaceAddEdit> {
   Place _place;
+  Place _oldPlace;
   List<String> _allLabels;
   Location _location;
   final _form = GlobalKey<FormState>();
   TextEditingController _title;
   TextEditingController _description;
   BuildContext _scaffoldContext;
+  bool _done = false;
+  dynamic _error;
 
   @override
   initState() {
-    _place = context.read<Place>();
+    _oldPlace = (widget._place == null) ? Place() : widget._place;
+    _place = (widget._mode == PlaceEditMode.add) ? Place() : _oldPlace.clone();
+
     _title = TextEditingController(text: _place.title);
     _description = TextEditingController(text: _place.description);
-    _allLabels = context
-        .read<Labels>()
-        .getAll()
-        .where((v) => !_place.labels.contains(v))
-        .toList();
+
+    var labels = context.read<Labels>();
+    var labelsFuture = labels.init();
+
+    _location = Location();
+    var locationFuture =
+        (_place.location == null) ? _location.init() : Future<void>(() {});
+
+    Future.wait([labelsFuture, locationFuture])
+        .then((_) => setState(() {
+              _allLabels = labels
+                  .getAll()
+                  .where((v) => !_place.labels.contains(v))
+                  .toList();
+              _done = true;
+            }))
+        .catchError((e) => setState(() => _error = e));
     super.initState();
   }
 
   @override
-  build(context) {
-    _place = context.watch<Place>();
-    _location = context.watch<Location>();
-
-    return WillPopScope(
-      onWillPop: () => _onExit(context),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text('Новый объект'),
-          actions: [
-            IconButton(
-              tooltip: 'Фото из файла',
-              icon: Icon(Icons.add_a_photo),
-              onPressed: _addPhotoFromFile,
-            ),
-            Builder(builder: (context) {
-              _scaffoldContext = context;
-              return IconButton(
-                  tooltip: 'Сохранить',
-                  icon: Icon(Icons.save),
-                  onPressed: _save);
-            }),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          tooltip: 'Сфотографировать',
-          child: Icon(Icons.photo_camera),
-          onPressed: _addPhotoFromCamera,
-        ),
-        body: SingleChildScrollView(
-          child: Form(
-            key: _form,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                TextFormField(
-                  controller: _title,
-                  decoration: InputDecoration(labelText: 'Краткое название'),
+  build(context) => (_done)
+      ? ChangeNotifierProvider.value(
+          value: _place,
+          child: Builder(builder: (context) {
+            _place = context.watch<Place>();
+            return WillPopScope(
+              onWillPop: () => _onExit(context),
+              child: Scaffold(
+                appBar: AppBar(
+                  title: Text('Новый объект'),
+                  actions: [
+                    IconButton(
+                      tooltip: 'Фото из файла',
+                      icon: Icon(Icons.add_a_photo),
+                      onPressed: _addPhotoFromFile,
+                    ),
+                    Builder(builder: (context) {
+                      _scaffoldContext = context;
+                      return IconButton(
+                          tooltip: 'Сохранить',
+                          icon: Icon(Icons.save),
+                          onPressed: _save);
+                    }),
+                  ],
                 ),
-                TextFormField(
-                  controller: _description,
-                  decoration: InputDecoration(
-                      labelText: 'Описание', border: InputBorder.none),
-                  minLines: 3,
-                  maxLines: 7,
+                floatingActionButton: FloatingActionButton(
+                  tooltip: 'Сфотографировать',
+                  child: Icon(Icons.photo_camera),
+                  onPressed: _addPhotoFromCamera,
                 ),
-                GroupSeparator('Метки'),
-                Container(
-                  constraints: BoxConstraints(minHeight: LABEL_BUTTON_HEIGHT),
-                  child: Wrap(
-                    spacing: LABEL_BUTTON_SPACE,
-                    children: _place.labels
-                        .map((v) => Container(
-                            height: LABEL_BUTTON_HEIGHT,
-                            child: TextButton(
-                              style: LABEL_BUTTON_STYLE,
-                              child: Text(v),
-                              onPressed: () => _deselectLabel(v),
-                            )))
-                        .toList(),
+                body: SingleChildScrollView(
+                  child: Form(
+                    key: _form,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        TextFormField(
+                          controller: _title,
+                          decoration:
+                              InputDecoration(labelText: 'Краткое название'),
+                        ),
+                        TextFormField(
+                          controller: _description,
+                          decoration: InputDecoration(
+                              labelText: 'Описание', border: InputBorder.none),
+                          minLines: 3,
+                          maxLines: 7,
+                        ),
+                        GroupSeparator('Метки'),
+                        Container(
+                          constraints:
+                              BoxConstraints(minHeight: LABEL_BUTTON_HEIGHT),
+                          child: Wrap(
+                            spacing: LABEL_BUTTON_SPACE,
+                            children: _place.labels
+                                .map((v) => Container(
+                                    height: LABEL_BUTTON_HEIGHT,
+                                    child: TextButton(
+                                      style: LABEL_BUTTON_STYLE,
+                                      child: Text(v),
+                                      onPressed: () => _deselectLabel(v),
+                                    )))
+                                .toList(),
+                          ),
+                        ),
+                        GroupSeparator('Добавить метку'),
+                        Wrap(
+                          spacing: LABEL_BUTTON_SPACE,
+                          children: _allLabels
+                              .map((v) => Container(
+                                  height: LABEL_BUTTON_HEIGHT,
+                                  child: TextButton(
+                                    style: LABEL_BUTTON_STYLE,
+                                    child: Text(v),
+                                    onPressed: () => _selectLabel(v),
+                                  )))
+                              .toList(),
+                        ),
+                        PhotoContainer(_place, PhotoContainerMode.edit),
+                        _showMap(),
+                      ],
+                    ),
                   ),
                 ),
-                GroupSeparator('Добавить метку'),
-                Wrap(
-                  spacing: LABEL_BUTTON_SPACE,
-                  children: _allLabels
-                      .map((v) => Container(
-                          height: LABEL_BUTTON_HEIGHT,
-                          child: TextButton(
-                            style: LABEL_BUTTON_STYLE,
-                            child: Text(v),
-                            onPressed: () => _selectLabel(v),
-                          )))
-                      .toList(),
-                ),
-                PhotoContainer(_place, PhotoContainerMode.edit),
-                _showMap(),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+              ),
+            );
+          }),
+        )
+      : WaitingOrError(error: _error);
 
   Widget _showMap() {
     if (_place.location == null) {
@@ -230,11 +227,18 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
 
   Future<void> _save() async {
     _updatePlace();
-    if (_form.currentState.validate() &&
-        _place.title.length > 0 &&
-        _place.description.length > 0 &&
-        _place.labels.length > 0 &&
-        _place.photos.length > 0) {
+    if (_place.photos.any((v) => v.thumbnail == null)) {
+      Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(
+          content: Text('Подождите, пока все фотографии обработаются!')));
+    } else if (!_form.currentState.validate() ||
+        _place.title.length == 0 ||
+        _place.description.length == 0 ||
+        _place.labels.length == 0 ||
+        _place.photos.length == 0) {
+      Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(
+          content: Text(
+              'Заполните все поля, минимум одно фото, минимум одна метка!')));
+    } else {
       try {
         startWaiting(context);
         if (widget._mode == PlaceEditMode.add) {
@@ -247,16 +251,12 @@ class _PlaceAddEditFormState extends State<_PlaceAddEditForm> {
       } catch (e) {
         showError(context, e);
       }
-    } else {
-      Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(
-          content: Text(
-              'Заполните все поля, минимум одно фото, минимум одна метка!')));
     }
   }
 
   Future<bool> _onExit(newContext) async {
     _updatePlace();
-    if (!_place.equals(widget._oldPlace)) {
+    if (!_place.equals(_oldPlace)) {
       var isSave = await showDialog(
         barrierDismissible: false,
         context: context,

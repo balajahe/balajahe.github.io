@@ -9,7 +9,7 @@ import '../view/commonWidgets.dart';
 import '../view/PhotoContainer.dart';
 import '../view/PlaceAddEdit.dart';
 import '../view/PlaceView.dart';
-import '../view/LabelsEdit.dart';
+import '../view/AppMenu.dart';
 
 const _TITLE_ALL = 'Все объекты';
 const _TITLE_ONLY_MINE = 'Добавлены мной';
@@ -45,7 +45,7 @@ class _PlaceListState extends State<PlaceList> {
         onPressed: _add,
       ),
       drawer: Drawer(
-        child: _Menu(),
+        child: AppMenu(),
       ),
       body: ListView.builder(
         controller: _scrollController,
@@ -96,34 +96,4 @@ class _PlaceListState extends State<PlaceList> {
 
   void _edit(Place place) => Navigator.push(
       context, MaterialPageRoute(builder: (_) => PlaceView(place)));
-}
-
-class _Menu extends StatelessWidget {
-  final _itemTextStyle = TextStyle(fontSize: 16);
-
-  @override
-  build(context) => ListView(
-        children: [
-          ListTile(
-              title: Text('О программе', style: _itemTextStyle),
-              onTap: () async {
-                await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => Scaffold(
-                        appBar: AppBar(title: Text('О программе')),
-                        body: Center(child: Text('О программе')),
-                      ),
-                    ));
-                Navigator.pop(context);
-              }),
-          ListTile(
-              title: Text('Редактировать метки', style: _itemTextStyle),
-              onTap: () async {
-                await Navigator.push(
-                    context, MaterialPageRoute(builder: (_) => LabelsEdit()));
-                Navigator.pop(context);
-              }),
-        ],
-      );
 }

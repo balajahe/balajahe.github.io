@@ -65,10 +65,12 @@ class PlacesDaoMobile extends PlacesDao {
             .first));
   }
 
-  Future<void> _delOrigins(Place place) {
-    return Future.wait(place.photos
-        .where((photo) => photo.originUrl != null)
-        .map((photo) =>
-            FirebaseStorage.instance.ref().child(photo.originUrl).delete()));
+  Future<void> _delOrigins(Place place) async {
+    try {
+      await Future.wait(place.photos
+          .where((photo) => photo.originUrl != null)
+          .map((photo) =>
+              FirebaseStorage.instance.ref().child(photo.originUrl).delete()));
+    } catch (_) {}
   }
 }

@@ -22,7 +22,7 @@ class CameraWeb implements Camera {
     }
 
     _videoStream = await html.window.navigator.getUserMedia(video: {
-      'facingMode': {'exact': "environment"}
+      'facingMode': {'ideal': "environment"}
     }, audio: false);
 
     _htmlVideoElement.srcObject = _videoStream;

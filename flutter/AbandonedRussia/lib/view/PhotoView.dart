@@ -67,13 +67,22 @@ class _PhotoViewState extends State<PhotoView> {
           body: FutureBuilder(
             future: photo.loadPhotoOrigin(),
             builder: (context, snapshot) =>
-                snapshot.connectionState == DONE && !snapshot.hasError
+                (snapshot.connectionState == DONE && !snapshot.hasError)
                     ? Center(
                         child: Image.memory((photo.origin != null)
                             ? photo.origin
                             : photo.thumbnail),
                       )
-                    : WaitingOrError(error: snapshot.error),
+                    : (snapshot.hasError)
+                        ? Stack(
+                            children: [
+                              Center(child: Image.memory(photo.thumbnail)),
+                              Padding(
+                                  padding: EdgeInsets.all(30),
+                                  child: Text(snapshot.error.toString())),
+                            ],
+                          )
+                        : WaitingOrError(),
           )),
     );
   }
