@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-//import 'package:file_picker/file_picker.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 
 import '../settings.dart';
 import '../model/Place.dart';
@@ -193,6 +193,15 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
   }
 
   Future<void> _addPhotoFromFile() async {
+    var path = await await FlutterFileDialog.pickFile(
+        params: OpenFileDialogParams(
+      dialogType: OpenFileDialogType.image,
+      sourceType: SourceType.photoLibrary,
+    ));
+    print(path);
+    // var path =
+    //     await FilePickerCross.importFromStorage(type: FileTypeCross.image);
+
     // var paths =
     //     (await FilePicker.platform.pickFiles(type: FileType.image)).paths;
     // if (paths.length > 0) {

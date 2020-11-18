@@ -16,7 +16,8 @@ class PlacesDaoMobile extends PlacesDao {
     place.created = Timestamp.now().toDate();
 
     var id = FirebaseFirestore.instance.collection('Places').doc().id;
-    _setOriginUrls(place, id);
+    place.id = id;
+    setOriginUrls(place, id);
 
     await FirebaseFirestore.instance
         .collection('Places')
@@ -25,12 +26,11 @@ class PlacesDaoMobile extends PlacesDao {
 
     await _addOrigins(place);
 
-    place.id = id;
     return place;
   }
 
   Future<void> put(Place place) async {
-    _setOriginUrls(place, place.id);
+    setOriginUrls(place, place.id);
 
     await FirebaseFirestore.instance
         .collection('Places')
@@ -47,12 +47,6 @@ class PlacesDaoMobile extends PlacesDao {
         .collection('Places')
         .doc(place.id)
         .delete();
-  }
-
-  void _setOriginUrls(Place place, String id) {
-    place.photos.where((photo) => photo.originUrl == null).forEach((photo) =>
-        photo.originUrl =
-            'photos/$id/${Timestamp.now().microsecondsSinceEpoch}.png');
   }
 
   Future<void> _addOrigins(Place place) {

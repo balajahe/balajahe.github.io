@@ -98,6 +98,12 @@ abstract class PlacesDao {
     return data.docs.map((v) => fromMap(v.id, v.data())).toList();
   }
 
+  void setOriginUrls(Place place, String id) {
+    place.photos.where((photo) => photo.originUrl == null).forEach((photo) =>
+        photo.originUrl =
+            'photos/$id/${Timestamp.now().microsecondsSinceEpoch}.png');
+  }
+
   Future<Uint8List> getPhotoOrigin(String url, int size);
 
   Future<Place> add(Place place);
