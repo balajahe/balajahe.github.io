@@ -7,7 +7,7 @@ import 'model/Labels.dart';
 import 'view/commonWidgets.dart';
 import 'view/PlaceList.dart';
 
-const _TITLE = 'Заброшенные места';
+const _TITLE = 'Заброшенная Россия';
 
 void main() {
   ErrorWidget.builder = (e) => WaitingOrError(error: e);
