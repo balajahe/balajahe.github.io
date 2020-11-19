@@ -19,7 +19,7 @@ class PlaceView extends StatelessWidget {
   build(context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_place.title),
+        title: Text('Просмотр'),
         actions: [
           Builder(
               builder: (context) => IconButton(
@@ -51,7 +51,9 @@ class PlaceView extends StatelessWidget {
                 'добавлено ' +
                     _place.created.toString() +
                     '\nпользователем ' +
-                    _place.creator.registered.toString(),
+                    _place.creator.registered.toString() +
+                    '\nID: ' +
+                    _place.id,
                 style: TextStyle(fontSize: 12),
                 selectable: true),
           ],

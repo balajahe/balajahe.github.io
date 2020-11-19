@@ -40,7 +40,7 @@ class PlaceLocation {
   final double latitude;
   final double longitude;
   final double accuracy;
-  PlaceLocation(this.latitude, this.longitude, [this.accuracy]);
+  PlaceLocation(this.latitude, this.longitude, [this.accuracy = 0]);
 }
 
 class Place with ChangeNotifier {

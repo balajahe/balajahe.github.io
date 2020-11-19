@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_file_dialog/flutter_file_dialog.dart';
+import 'package:simple_location_picker/simple_location_picker_screen.dart';
 
 import '../settings.dart';
 import '../model/Place.dart';
@@ -76,8 +77,14 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
               onWillPop: () => _onExit(context),
               child: Scaffold(
                 appBar: AppBar(
-                  title: Text('Новый объект'),
+                  title: Text((widget._mode == PlaceEditMode.add)
+                      ? 'Новый объект'
+                      : 'Редактирование'),
                   actions: [
+                    IconButton(
+                        tooltip: 'Уточнить место на карте',
+                        icon: Icon(Icons.location_pin),
+                        onPressed: _pickLocation),
                     Builder(builder: (context) {
                       _scaffoldContext = context;
                       return IconButton(
@@ -155,7 +162,7 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
                               .toList(),
                         ),
                         PhotoContainer(_place, PhotoContainerMode.edit),
-                        _showMap(),
+                        _mapBuilder(),
                       ],
                     ),
                   ),
@@ -166,7 +173,7 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
         )
       : WaitingOrError(error: _error);
 
-  Widget _showMap() {
+  Widget _mapBuilder() {
     if (_place.location == null) {
       return StreamBuilder(
         stream: _location.locationChanges,
@@ -177,14 +184,37 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
               snapshot.data.longitude,
               snapshot.data.accuracy,
             );
-            return LocationMap(_place.location);
+            return _showMap();
           } else {
             return Container();
           }
         },
       );
     } else {
-      return LocationMap(_place.location);
+      return _showMap();
+    }
+  }
+
+  Widget _showMap() => GestureDetector(
+        onDoubleTap: _pickLocation,
+        child: LocationMap(
+          _place.location,
+          onDoubleTap: _pickLocation,
+        ),
+      );
+
+  Future<void> _pickLocation() async {
+    var newLocation = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SimpleLocationPicker(
+                  initialLatitude: _place.location.latitude,
+                  initialLongitude: _place.location.longitude,
+                  appBarTitle: 'Уточнить место',
+                )));
+    if (newLocation != null) {
+      setState(() => _place.location =
+          PlaceLocation(newLocation.latitude, newLocation.longitude));
     }
   }
 
