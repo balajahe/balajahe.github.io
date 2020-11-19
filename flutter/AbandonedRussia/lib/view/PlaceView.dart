@@ -17,6 +17,11 @@ class PlaceView extends StatelessWidget {
 
   @override
   build(context) {
+    // WidgetsBinding.instance.addPostFrameCallback((_) => Scaffold.of(context)
+    //     .showSnackBar(SnackBar(
+    //         content: Text(
+    //             'Заполните все поля, минимум одно фото, минимум одна метка!'))));
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Просмотр'),
@@ -51,11 +56,11 @@ class PlaceView extends StatelessWidget {
                 'добавлено ' +
                     _place.created.toString() +
                     '\nпользователем ' +
-                    _place.creator.registered.toString() +
-                    '\nID: ' +
-                    _place.id,
+                    _place.creator.registered.toString(),
                 style: TextStyle(fontSize: 12),
                 selectable: true),
+            PaddingText('ID: ' + _place.id,
+                style: TextStyle(fontSize: 10), selectable: true),
           ],
         ),
       ),
@@ -91,9 +96,10 @@ class PlaceView extends StatelessWidget {
   Future<void> _edit(context) async {
     if (ALLOW_EDIT_ALL || _place.creator.uid == App.currentUser.uid) {
       await Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (_) => PlaceAddEdit(PlaceEditMode.edit, _place)));
+        context,
+        MaterialPageRoute(
+            builder: (_) => PlaceAddEdit(PlaceEditMode.edit, _place)),
+      );
       Navigator.pop(context);
     } else {
       _denied(context);

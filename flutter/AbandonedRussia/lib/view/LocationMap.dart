@@ -7,8 +7,8 @@ import '../model/Place.dart' show PlaceLocation;
 
 class LocationMap extends StatelessWidget {
   final PlaceLocation _location;
-  final Function onDoubleTap;
-  LocationMap(this._location, {this.onDoubleTap});
+  final Function onTap;
+  LocationMap(this._location, {this.onTap});
 
   @override
   build(context) => (_location != null)
@@ -16,17 +16,16 @@ class LocationMap extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             GestureDetector(
-              onDoubleTap: (onDoubleTap != null)
-                  ? onDoubleTap
-                  : () => _showFullscreen(context),
+              onDoubleTap:
+                  (onTap != null) ? onTap : () => _showFullscreen(context),
               child: Container(
-                height: 300,
+                height: 250,
                 padding: EdgeInsets.only(top: 2, left: 3, right: 3),
                 child: _map(),
               ),
             ),
             PaddingText('${_location.latitude}, ${_location.longitude}',
-                style: TextStyle(fontSize: 12), selectable: true, top: 0),
+                style: TextStyle(fontSize: 10), selectable: true, top: 0),
           ],
         )
       : Container();
@@ -67,6 +66,8 @@ class LocationMap extends StatelessWidget {
     Navigator.push(
         context,
         MaterialPageRoute(
-            fullscreenDialog: true, builder: (_) => Scaffold(body: _map())));
+          fullscreenDialog: true,
+          builder: (_) => Scaffold(body: _map()),
+        ));
   }
 }

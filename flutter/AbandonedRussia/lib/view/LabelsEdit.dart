@@ -31,7 +31,7 @@ class _LabelsEditState extends State<LabelsEdit> {
   build(context) => (_done)
       ? Scaffold(
           appBar: AppBar(
-            title: Text("Все метки"),
+            title: Text("Редактировать метки"),
             actions: [
               IconButton(
                 tooltip: 'Сохранить',

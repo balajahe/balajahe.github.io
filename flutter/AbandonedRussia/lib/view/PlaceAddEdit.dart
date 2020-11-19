@@ -33,7 +33,7 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
   Place _oldPlace;
   List<String> _allLabels;
   Location _location;
-  final _form = GlobalKey<FormState>();
+  //final _form = GlobalKey<FormState>();
   TextEditingController _title;
   TextEditingController _description;
   BuildContext _scaffoldContext;
@@ -81,10 +81,6 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
                       ? 'Новый объект'
                       : 'Редактирование'),
                   actions: [
-                    IconButton(
-                        tooltip: 'Уточнить место на карте',
-                        icon: Icon(Icons.location_pin),
-                        onPressed: _pickLocation),
                     Builder(builder: (context) {
                       _scaffoldContext = context;
                       return IconButton(
@@ -114,57 +110,63 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
                   ],
                 ),
                 body: SingleChildScrollView(
-                  child: Form(
-                    key: _form,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: <Widget>[
-                        TextFormField(
-                          controller: _title,
-                          decoration:
-                              InputDecoration(labelText: 'Краткое название'),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(left: 7),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: <Widget>[
+                            TextFormField(
+                              controller: _title,
+                              decoration: InputDecoration(
+                                  labelText: 'Краткое название'),
+                            ),
+                            TextFormField(
+                              controller: _description,
+                              decoration: InputDecoration(
+                                  labelText: 'Описание',
+                                  border: InputBorder.none),
+                              minLines: 3,
+                              maxLines: 7,
+                            ),
+                            GroupSeparator('Метки'),
+                            Container(
+                              constraints: BoxConstraints(
+                                  minHeight: LABEL_BUTTON_HEIGHT),
+                              child: Wrap(
+                                spacing: LABEL_BUTTON_SPACE,
+                                children: _place.labels
+                                    .map((v) => Container(
+                                        height: LABEL_BUTTON_HEIGHT,
+                                        child: TextButton(
+                                          style: LABEL_BUTTON_STYLE,
+                                          child: Text(v),
+                                          onPressed: () => _deselectLabel(v),
+                                        )))
+                                    .toList(),
+                              ),
+                            ),
+                            GroupSeparator('Добавить метку'),
+                            Wrap(
+                              spacing: LABEL_BUTTON_SPACE,
+                              children: _allLabels
+                                  .map((v) => Container(
+                                      height: LABEL_BUTTON_HEIGHT,
+                                      child: TextButton(
+                                        style: LABEL_BUTTON_STYLE,
+                                        child: Text(v),
+                                        onPressed: () => _selectLabel(v),
+                                      )))
+                                  .toList(),
+                            ),
+                          ],
                         ),
-                        TextFormField(
-                          controller: _description,
-                          decoration: InputDecoration(
-                              labelText: 'Описание', border: InputBorder.none),
-                          minLines: 3,
-                          maxLines: 7,
-                        ),
-                        GroupSeparator('Метки'),
-                        Container(
-                          constraints:
-                              BoxConstraints(minHeight: LABEL_BUTTON_HEIGHT),
-                          child: Wrap(
-                            spacing: LABEL_BUTTON_SPACE,
-                            children: _place.labels
-                                .map((v) => Container(
-                                    height: LABEL_BUTTON_HEIGHT,
-                                    child: TextButton(
-                                      style: LABEL_BUTTON_STYLE,
-                                      child: Text(v),
-                                      onPressed: () => _deselectLabel(v),
-                                    )))
-                                .toList(),
-                          ),
-                        ),
-                        GroupSeparator('Добавить метку'),
-                        Wrap(
-                          spacing: LABEL_BUTTON_SPACE,
-                          children: _allLabels
-                              .map((v) => Container(
-                                  height: LABEL_BUTTON_HEIGHT,
-                                  child: TextButton(
-                                    style: LABEL_BUTTON_STYLE,
-                                    child: Text(v),
-                                    onPressed: () => _selectLabel(v),
-                                  )))
-                              .toList(),
-                        ),
-                        PhotoContainer(_place, PhotoContainerMode.edit),
-                        _mapBuilder(),
-                      ],
-                    ),
+                      ),
+                      PhotoContainer(_place, PhotoContainerMode.edit),
+                      _mapBuilder(),
+                    ],
                   ),
                 ),
               ),
@@ -184,22 +186,22 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
               snapshot.data.longitude,
               snapshot.data.accuracy,
             );
-            return _showMap();
+            return _map();
           } else {
             return Container();
           }
         },
       );
     } else {
-      return _showMap();
+      return _map();
     }
   }
 
-  Widget _showMap() => GestureDetector(
+  Widget _map() => GestureDetector(
         onDoubleTap: _pickLocation,
         child: LocationMap(
           _place.location,
-          onDoubleTap: _pickLocation,
+          onTap: _pickLocation,
         ),
       );
 
@@ -211,6 +213,7 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
                   initialLatitude: _place.location.latitude,
                   initialLongitude: _place.location.longitude,
                   appBarTitle: 'Уточнить место',
+                  zoomLevel: 16,
                 )));
     if (newLocation != null) {
       setState(() => _place.location =
@@ -273,11 +276,11 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
     if (_place.photos.any((v) => v.thumbnail == null)) {
       Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(
           content: Text('Подождите, пока все фотографии обработаются!')));
-    } else if (!_form.currentState.validate() ||
+    } else if ( //!_form.currentState.validate() ||
         _place.title.length == 0 ||
-        _place.description.length == 0 ||
-        _place.labels.length == 0 ||
-        _place.photos.length == 0) {
+            _place.description.length == 0 ||
+            _place.labels.length == 0 ||
+            _place.photos.length == 0) {
       Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(
           content: Text(
               'Заполните все поля, минимум одно фото, минимум одна метка!')));
