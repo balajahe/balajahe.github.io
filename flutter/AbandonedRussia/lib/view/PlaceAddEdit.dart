@@ -11,7 +11,7 @@ import '../model/Location.dart';
 
 import 'commonWidgets.dart';
 import 'PhotoContainer.dart';
-import 'PhotoContainerEdit.dart';
+//import 'PhotoContainerEdit.dart';
 import 'LocationMap.dart';
 import 'PhotoTake.dart';
 import 'PhotoApprove.dart';
@@ -193,26 +193,20 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
   }
 
   Future<void> _addPhotoFromFile() async {
-    var path = await await FlutterFileDialog.pickFile(
+    var path = await FlutterFileDialog.pickFile(
         params: OpenFileDialogParams(
       dialogType: OpenFileDialogType.image,
       sourceType: SourceType.photoLibrary,
     ));
-    print(path);
-    // var path =
-    //     await FilePickerCross.importFromStorage(type: FileTypeCross.image);
-
-    // var paths =
-    //     (await FilePicker.platform.pickFiles(type: FileType.image)).paths;
-    // if (paths.length > 0) {
-    //   var file = File(paths[0]);
-    //   var photoData = await file.readAsBytes();
-    //   var approved = await Navigator.push(
-    //       context, MaterialPageRoute(builder: (_) => PhotoApprove(photoData)));
-    //   if (approved != null) {
-    //     _place.addPhoto(PlacePhoto(origin: photoData));
-    //   }
-    // }
+    if (path.length > 0) {
+      var file = File(path);
+      var photoData = await file.readAsBytes();
+      var approved = await Navigator.push(
+          context, MaterialPageRoute(builder: (_) => PhotoApprove(photoData)));
+      if (approved != null) {
+        _place.addPhoto(PlacePhoto(origin: photoData));
+      }
+    }
   }
 
   void _selectLabel(String label) {

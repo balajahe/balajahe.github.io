@@ -37,24 +37,23 @@ class PlaceView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Separator(),
-            SelectableText(_place.title,
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            Separator(),
-            SelectableText(_place.labelsAsString,
-                style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic)),
-            Separator(),
-            SelectableText(_place.description),
+            PaddingText(_place.title,
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                selectable: true,
+                top: 5),
+            PaddingText(_place.labelsAsString,
+                style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+                selectable: true),
+            PaddingText(_place.description, selectable: true),
             PhotoContainer(_place, PhotoContainerMode.view),
             LocationMap(_place.location),
-            Separator(),
-            SelectableText(
-              'добавлено ' +
-                  _place.created.toString() +
-                  '\nпользователем ' +
-                  _place.creator.registered.toString(),
-              style: TextStyle(fontSize: 12),
-            ),
+            PaddingText(
+                'добавлено ' +
+                    _place.created.toString() +
+                    '\nпользователем ' +
+                    _place.creator.registered.toString(),
+                style: TextStyle(fontSize: 12),
+                selectable: true),
           ],
         ),
       ),

@@ -1,5 +1,22 @@
 import 'package:flutter/material.dart';
 
+class PaddingText extends StatelessWidget {
+  final String text;
+  final TextStyle style;
+  final double top;
+  final double left;
+  final bool selectable;
+  PaddingText(this.text,
+      {this.style, this.top = 2, this.left = 5, this.selectable = false});
+
+  @override
+  build(context) => Padding(
+      padding: EdgeInsets.only(top: top, left: left),
+      child: (selectable)
+          ? SelectableText(text, style: style)
+          : Text(text, style: style));
+}
+
 class Separator extends StatelessWidget {
   @override
   build(context) => Container(height: 3);

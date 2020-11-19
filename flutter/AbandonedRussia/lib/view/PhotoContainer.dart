@@ -20,7 +20,7 @@ class PhotoContainer extends StatelessWidget {
         ? min(THUMBNAIL_COUNT_IN_LIST, _place.photos.length)
         : _place.photos.length;
     return Container(
-      padding: EdgeInsets.all(2),
+      padding: EdgeInsets.only(top: 2, left: 2, right: 2),
       child: Wrap(
         spacing: 1,
         runSpacing: 1,

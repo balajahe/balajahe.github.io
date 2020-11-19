@@ -59,15 +59,16 @@ class _PlaceListState extends State<PlaceList> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Separator(),
-                      Text(place.title,
-                          style: TextStyle(fontWeight: FontWeight.bold)),
-                      Separator(),
-                      Text(place.labelsAsString,
+                      PaddingText(place.title,
+                          style: TextStyle(
+                              fontSize: 15, fontWeight: FontWeight.bold),
+                          top: 5),
+                      //Separator(),
+                      PaddingText(place.labelsAsString,
                           style: TextStyle(
                               fontSize: 12, fontStyle: FontStyle.italic)),
-                      Separator(),
-                      Text(place.description),
+                      //Separator(),
+                      PaddingText(place.description),
                       PhotoContainer(place, PhotoContainerMode.list),
                     ],
                   ),

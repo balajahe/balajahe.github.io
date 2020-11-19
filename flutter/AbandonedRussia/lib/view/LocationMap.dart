@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong/latlong.dart';
 
+import 'commonWidgets.dart';
 import '../model/Place.dart' show PlaceLocation;
 
 class LocationMap extends StatelessWidget {
@@ -14,8 +15,8 @@ class LocationMap extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              height: 250,
-              padding: EdgeInsets.only(left: 3, right: 3),
+              height: 300,
+              padding: EdgeInsets.only(top: 2, left: 3, right: 3),
               child: FlutterMap(
                 options: new MapOptions(
                   center: new LatLng(
@@ -49,8 +50,8 @@ class LocationMap extends StatelessWidget {
                 ],
               ),
             ),
-            SelectableText('${_location.latitude}, ${_location.longitude}',
-                style: TextStyle(fontSize: 12)),
+            PaddingText('${_location.latitude}, ${_location.longitude}',
+                style: TextStyle(fontSize: 12), selectable: true, top: 0),
           ],
         )
       : Container();
