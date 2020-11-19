@@ -16,7 +16,6 @@ class PlacesDaoWeb extends PlacesDao {
 
     var id = FirebaseFirestore.instance.collection('Places').doc().id;
     place.id = id;
-//    setOriginUrls(place, id);
 
     await FirebaseFirestore.instance
         .collection('Places')
@@ -29,8 +28,6 @@ class PlacesDaoWeb extends PlacesDao {
   }
 
   Future<void> put(Place place) async {
-//    setOriginUrls(place, place.id);
-
     await FirebaseFirestore.instance
         .collection('Places')
         .doc(place.id)

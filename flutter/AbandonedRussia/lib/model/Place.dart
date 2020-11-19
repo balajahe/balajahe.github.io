@@ -7,12 +7,18 @@ import '../model/App.dart';
 import '../dao/PlacesDao.dart';
 
 class PlacePhoto {
+  Place place;
   Uint8List origin;
-  int originSize;
   String originUrl;
+  int originSize;
   Uint8List thumbnail;
 
-  PlacePhoto({this.origin, this.originSize, this.originUrl, this.thumbnail}) {
+  PlacePhoto(
+      {@required this.place,
+      this.origin,
+      this.originUrl,
+      this.originSize,
+      this.thumbnail}) {
     if (origin != null) {
       originSize = origin.length;
     }
@@ -24,7 +30,8 @@ class PlacePhoto {
 
   Future<void> loadPhotoOrigin() async {
     if (origin == null && originUrl != null) {
-      origin = await PlacesDao.instance.getPhotoOrigin(originUrl, originSize);
+      origin = await PlacesDao.instance
+          .getPhotoOrigin('${place.id}/$originUrl', originSize);
     }
   }
 }
@@ -69,7 +76,9 @@ class Place with ChangeNotifier {
 
   String get labelsAsString => labels.toString();
 
-  Future<void> addPhoto(PlacePhoto photo) async {
+  Future<void> addPhoto(Uint8List origin) async {
+    var photo = PlacePhoto(place: this, origin: origin);
+    photo.originUrl = '${DateTime.now().microsecondsSinceEpoch}.png';
     photos.add(photo);
     notifyListeners();
     await photo.generateThumbnail();
@@ -82,5 +91,10 @@ class Place with ChangeNotifier {
   }
 }
 
-Uint8List _generateThumbnail(Uint8List origin) => encodePng(
-    copyResize(decodeImage(origin), height: THUMBNAIL_GENERATE_HEIGHT));
+Uint8List _generateThumbnail(Uint8List origin) {
+  var image = decodeImage(origin);
+  var thumbnail = (image.width > image.height)
+      ? copyResize(image, height: THUMBNAIL_SIZE)
+      : copyResize(image, width: THUMBNAIL_SIZE);
+  return encodePng(thumbnail);
+}

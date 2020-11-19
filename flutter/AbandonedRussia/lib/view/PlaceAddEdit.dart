@@ -78,11 +78,6 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
                 appBar: AppBar(
                   title: Text('Новый объект'),
                   actions: [
-                    IconButton(
-                      tooltip: 'Фото из файла',
-                      icon: Icon(Icons.add_a_photo),
-                      onPressed: _addPhotoFromFile,
-                    ),
                     Builder(builder: (context) {
                       _scaffoldContext = context;
                       return IconButton(
@@ -92,10 +87,24 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
                     }),
                   ],
                 ),
-                floatingActionButton: FloatingActionButton(
-                  tooltip: 'Сфотографировать',
-                  child: Icon(Icons.photo_camera),
-                  onPressed: _addPhotoFromCamera,
+                floatingActionButton: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FloatingActionButton(
+                      tooltip: 'Фото из файла',
+                      child: Icon(Icons.add_a_photo),
+                      heroTag: 'fromFile',
+                      mini: true,
+                      onPressed: _addPhotoFromFile,
+                    ),
+                    FloatingActionButton(
+                      tooltip: 'Сфотографировать',
+                      child: Icon(Icons.photo_camera),
+                      heroTag: 'fromCamera',
+                      mini: true,
+                      onPressed: _addPhotoFromCamera,
+                    ),
+                  ],
                 ),
                 body: SingleChildScrollView(
                   child: Form(
@@ -198,13 +207,13 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
       dialogType: OpenFileDialogType.image,
       sourceType: SourceType.photoLibrary,
     ));
-    if (path.length > 0) {
+    if (path != null) {
       var file = File(path);
       var photoData = await file.readAsBytes();
       var approved = await Navigator.push(
           context, MaterialPageRoute(builder: (_) => PhotoApprove(photoData)));
       if (approved != null) {
-        _place.addPhoto(PlacePhoto(origin: photoData));
+        _place.addPhoto(photoData);
       }
     }
   }

@@ -59,7 +59,7 @@ class _PhotoTakeState extends State<PhotoTake> {
     var approved = await Navigator.push(
         context, MaterialPageRoute(builder: (_) => PhotoApprove(photoData)));
     if (approved != null) {
-      _place.addPhoto(PlacePhoto(origin: photoData));
+      _place.addPhoto(photoData);
     }
   }
 

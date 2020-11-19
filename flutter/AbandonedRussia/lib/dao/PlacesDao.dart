@@ -13,34 +13,37 @@ abstract class PlacesDao {
   static PlacesDao get instance =>
       (kIsWeb) ? PlacesDaoWeb() : PlacesDaoMobile();
 
-  Place fromMap(String id, Map<String, dynamic> data) => Place(
-        id: id,
-        creator: AppUser(
-          uid: data['creator']['uid'],
-          registered: data['creator']['registered'].toDate(),
-        ),
-        created: data['created'].toDate(),
-        title: data['title'],
-        description: data['description'],
-        labels:
-            (data['labels'] is List) ? List<String>.from(data['labels']) : [],
-        photos: (data['photos'] is List)
-            ? data['photos']
-                .map<PlacePhoto>((photo) => PlacePhoto(
-                      thumbnail: base64Decode(photo['thumbnail']),
-                      originSize: photo['originSize'],
-                      originUrl: photo['originUrl'],
-                    ))
-                .toList()
-            : [],
-        location: (data['location'] != null)
-            ? PlaceLocation(
-                0.0 + data['location']['latitude'],
-                0.0 + data['location']['longitude'],
-                0.0 + data['location']['accuracy'],
-              )
-            : null,
-      );
+  Place fromMap(String id, Map<String, dynamic> data) {
+    var place = Place(
+      id: id,
+      creator: AppUser(
+        uid: data['creator']['uid'],
+        registered: data['creator']['registered'].toDate(),
+      ),
+      created: data['created'].toDate(),
+      title: data['title'],
+      description: data['description'],
+      labels: (data['labels'] is List) ? List<String>.from(data['labels']) : [],
+      location: (data['location'] != null)
+          ? PlaceLocation(
+              0.0 + data['location']['latitude'],
+              0.0 + data['location']['longitude'],
+              0.0 + data['location']['accuracy'],
+            )
+          : null,
+    );
+    if (data['photos'] is List) {
+      place.photos = data['photos']
+          .map<PlacePhoto>((photo) => PlacePhoto(
+                place: place,
+                thumbnail: base64Decode(photo['thumbnail']),
+                originSize: photo['originSize'],
+                originUrl: photo['originUrl'],
+              ))
+          .toList();
+    }
+    return place;
+  }
 
   Map<String, dynamic> toMap(Place v) {
     return {
@@ -96,12 +99,6 @@ abstract class PlacesDao {
           .get();
     }
     return data.docs.map((v) => fromMap(v.id, v.data())).toList();
-  }
-
-  void setOriginUrls(Place place, String id) {
-    place.photos.where((photo) => photo.originUrl == null).forEach((photo) =>
-        photo.originUrl =
-            'photos/$id/${Timestamp.now().microsecondsSinceEpoch}.png');
   }
 
   Future<Uint8List> getPhotoOrigin(String url, int size);

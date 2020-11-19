@@ -57,7 +57,6 @@ class _PhotoViewState extends State<PhotoView> {
                 mini: true,
                 onPressed: _prev,
               ),
-              Container(width: 10, height: 0),
               FloatingActionButton(
                 tooltip: 'Следующее фото',
                 child: Icon(Icons.arrow_forward),

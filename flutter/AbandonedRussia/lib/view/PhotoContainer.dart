@@ -28,8 +28,8 @@ class PhotoContainer extends StatelessWidget {
             .map<Widget>(
               (photoIndex) => InkWell(
                 child: Container(
-                  width: 0.0 + THUMBNAIL_DISPLAY_HEIGHT,
-                  height: 0.0 + THUMBNAIL_DISPLAY_HEIGHT,
+                  width: 0.0 + THUMBNAIL_SIZE,
+                  height: 0.0 + THUMBNAIL_SIZE,
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.white, width: 1),
                     color: Colors.grey,

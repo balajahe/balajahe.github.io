@@ -8,7 +8,7 @@ import '../dao/PlacesDao.dart';
 
 class PlacesDaoMobile extends PlacesDao {
   Future<Uint8List> getPhotoOrigin(String url, int size) {
-    return FirebaseStorage.instance.ref().child(url).getData(size);
+    return FirebaseStorage.instance.ref().child('photos/$url').getData(size);
   }
 
   Future<Place> add(Place place) async {
@@ -17,7 +17,6 @@ class PlacesDaoMobile extends PlacesDao {
 
     var id = FirebaseFirestore.instance.collection('Places').doc().id;
     place.id = id;
-    setOriginUrls(place, id);
 
     await FirebaseFirestore.instance
         .collection('Places')
@@ -30,8 +29,6 @@ class PlacesDaoMobile extends PlacesDao {
   }
 
   Future<void> put(Place place) async {
-    setOriginUrls(place, place.id);
-
     await FirebaseFirestore.instance
         .collection('Places')
         .doc(place.id)
@@ -49,22 +46,19 @@ class PlacesDaoMobile extends PlacesDao {
         .delete();
   }
 
-  Future<void> _addOrigins(Place place) {
-    return Future.wait(place.photos.where((photo) => photo.origin != null).map(
-        (photo) => FirebaseStorage.instance
-            .ref()
-            .child(photo.originUrl)
-            .putData(photo.origin)
-            .asStream()
-            .first));
-  }
+  Future<void> _addOrigins(Place place) => Future.wait(place.photos
+      .where((photo) => photo.origin != null)
+      .map((photo) => FirebaseStorage.instance
+          .ref()
+          .child('photos/${place.id}/${photo.originUrl}')
+          .putData(photo.origin)
+          .asStream()
+          .first));
 
-  Future<void> _delOrigins(Place place) async {
-    try {
-      await Future.wait(place.photos
-          .where((photo) => photo.originUrl != null)
-          .map((photo) =>
-              FirebaseStorage.instance.ref().child(photo.originUrl).delete()));
-    } catch (_) {}
-  }
+  Future<void> _delOrigins(Place place) => Future.wait(place.photos
+      .where((photo) => photo.originUrl != null)
+      .map((photo) => FirebaseStorage.instance
+          .ref()
+          .child('photos/${place.id}/${photo.originUrl}')
+          .delete()));
 }

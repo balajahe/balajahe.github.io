@@ -19,7 +19,6 @@ class PhotoApprove extends StatelessWidget {
               mini: true,
               onPressed: () => Navigator.pop(context),
             ),
-            Container(width: 10, height: 0),
             FloatingActionButton(
               tooltip: 'Одобрить фото',
               heroTag: 'save',
