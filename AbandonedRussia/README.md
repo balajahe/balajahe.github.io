@@ -3,7 +3,7 @@
 Публичная, пополняемая пользователями база данных заброшенных и разрушенных объектов в России с фотографиями, текстовыми и гео- метками. Данные сохраняются в firestore-firebase / firestore-cloud с анонимной авторизацией. Можно редактировать и удалять только свои объекты. Привязка объекта к пользователю сохраняется до момента смены устройства, переустановки приложения, смены браузера, или удаления куков.
 
 Доступна WEB версия: 
-https://balajahe.github.io/flutter/AbandonedRussia/build/web/
+https://balajahe.github.io/AbandonedRussia/build/web/index.html
 
 WEB-версия находится в стадии разработки и имеет техничские ограничения:
 - Нельзя просмотрить и сохранить оригиналы фотографий (нет web-плагина firebase_cloud).
@@ -13,6 +13,6 @@ WEB-версия находится в стадии разработки и им
 Для полноценной работы установите приложение из магазина.
 
 Исходники:
-https://github.com/balajahe/balajahe.github.io/tree/master/flutter/AbandonedRussia
+https://github.com/balajahe/balajahe.github.io/tree/master/AbandonedRussia/
 
 Связаться с автором: https://t.me/balajahe
