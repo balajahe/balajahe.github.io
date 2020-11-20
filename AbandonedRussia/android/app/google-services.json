@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:271567668146:android:b008127efe706535841aab",
         "android_client_info": {
-          "package_name": "com.example.AbandonedRussia"
+          "package_name": "io.github.balajahe.AbandonedRussia"
         }
       },
       "oauth_client": [
