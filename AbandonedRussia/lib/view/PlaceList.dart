@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../settings.dart';
 import '../model/Place.dart';
 import '../model/Places.dart';
 
@@ -49,39 +48,40 @@ class _PlaceListState extends State<PlaceList> {
       ),
       body: ListView.builder(
         controller: _scrollController,
-        itemCount: places.length + 1,
-        itemBuilder: (context, i) => FutureBuilder(
-            future: places.getByNum(i),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == DONE && snapshot.hasData) {
-                var place = snapshot.data;
-                return InkWell(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      PaddingText(place.title,
-                          style: TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold),
-                          top: 5),
-                      //Separator(),
-                      PaddingText(place.labelsAsString,
-                          style: TextStyle(
-                              fontSize: 12, fontStyle: FontStyle.italic)),
-                      //Separator(),
-                      PaddingText(place.description),
-                      PhotoContainer(place, PhotoContainerMode.list),
-                    ],
+        itemCount: places.length + 1, //добавляем виджет загрузки
+        itemBuilder: (context, i) {
+          // данные загружены, берем из модели
+          if (places.testByNum(i)) {
+            var place = places.getByNum(i);
+            return InkWell(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  PaddingText(
+                    place.title,
+                    top: 5,
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
-                  onTap: () => _edit(place),
-                );
-              } else if (snapshot.hasError) {
-                return WaitingOrError(error: snapshot.error);
-              } else if (places.noMoreData) {
-                return Container();
-              } else {
-                return WaitingOrError();
-              }
-            }),
+                  PaddingText(
+                    place.labelsAsString,
+                    style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+                  ),
+                  PaddingText(place.description),
+                  PhotoContainer(place, PhotoContainerMode.list),
+                ],
+              ),
+              onTap: () => _edit(place),
+            );
+            // загружаем новую порцию данных
+          } else if (places.error != null) {
+            return WaitingOrError(error: places.error);
+          } else if (places.noMoreData) {
+            return Container();
+          } else {
+            places.loadNextPart();
+            return WaitingOrError();
+          }
+        },
       ),
     );
   }

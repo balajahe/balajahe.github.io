@@ -7,34 +7,46 @@ import '../dao/PlacesDao.dart';
 class Places with ChangeNotifier {
   bool onlyMine = false;
   bool noMoreData = false;
+  bool working = false;
+  dynamic error;
 
   final List<Place> _places = [];
 
   int get length => _places.length;
 
-  Future<Place> getByNum(int i) async {
-    if (i >= _places.length && !noMoreData) {
-      await _loadNextPart(i);
+  bool testByNum(int i) {
+    if (i < _places.length) {
+      return true;
+    } else {
+      //_loadNextPart();
+      return false;
     }
-    return (i < _places.length) ? _places[i] : null;
   }
 
-  Future<void> _loadNextPart(int from) async {
-    try {
-      var newPlaces = await PlacesDao.instance.getNextPart(
-        after: _places.length > 0 ? _places.last.created : null,
-        count: LOADING_PART_SIZE,
-        onlyMine: onlyMine,
-      );
-      newPlaces.forEach((v) => _places.add(v));
-      if (newPlaces.length < LOADING_PART_SIZE) {
+  Place getByNum(int i) => _places[i];
+
+  Future<void> loadNextPart() async {
+    if (!working && !noMoreData) {
+      working = true;
+      error = null;
+      notifyListeners();
+      try {
+        var newPlaces = await PlacesDao.instance.getNextPart(
+          after: _places.length > 0 ? _places.last.created : null,
+          count: LOADING_PART_SIZE,
+          onlyMine: onlyMine,
+        );
+        newPlaces.forEach((v) => _places.add(v));
+        if (newPlaces.length < LOADING_PART_SIZE) {
+          noMoreData = true;
+        }
+      } catch (e) {
+        print(e);
+        error = e;
         noMoreData = true;
       }
+      working = false;
       notifyListeners();
-    } catch (e) {
-      noMoreData = true;
-      print(e);
-      throw e;
     }
   }
 
