@@ -14,7 +14,8 @@ class AppMenu extends StatelessWidget {
           ListTile(
             title: Text('О программе', style: _itemTextStyle),
             onTap: () async {
-              launch('https://balajahe.github.io/AbandonedRussia/');
+              await launch('https://balajahe.github.io/AbandonedRussia/');
+              Navigator.pop(context);
               // await Navigator.push(
               //     context,
               //     MaterialPageRoute(
