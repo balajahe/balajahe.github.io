@@ -38,7 +38,11 @@ class PlacesDaoMobile extends PlacesDao {
   }
 
   Future<void> del(Place place) async {
-    await _delOrigins(place);
+    try {
+      await _delOrigins(place);
+    } catch (e) {
+      print(e);
+    }
 
     await FirebaseFirestore.instance
         .collection('Places')

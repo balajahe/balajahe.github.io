@@ -6,12 +6,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../model/App.dart';
 import '../model/Place.dart';
 import '../dao/Database.dart';
-import '../dao/PlacesDaoWeb.dart';
 import '../dao/PlacesDaoMobile.dart';
+import '../dao/PlacesDaoWeb.dart';
 
 abstract class PlacesDao {
-  static PlacesDao get instance =>
-      (kIsWeb) ? PlacesDaoWeb() : PlacesDaoMobile();
+  static PlacesDao get instance => (kIsWeb) ? PlacesDaoWeb : PlacesDaoMobile();
 
   Place fromMap(String id, Map<String, dynamic> data) {
     var place = Place(

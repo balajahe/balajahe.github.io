@@ -19,23 +19,35 @@ class PlaceList extends StatefulWidget {
 }
 
 class _PlaceListState extends State<PlaceList> {
+  Places _places;
   final _scrollController = ScrollController();
+  final _searchString = TextEditingController();
 
   @override
   build(context) {
-    var places = context.watch<Places>();
+    _places = context.watch<Places>();
     return Scaffold(
       appBar: AppBar(
-        title: Text(places.onlyMine ? _TITLE_ONLY_MINE : _TITLE_ALL),
+        title: TextField(
+          controller: _searchString,
+          decoration: InputDecoration(
+            hintText: "Search...",
+            border: InputBorder.none,
+            hintStyle: TextStyle(color: Colors.white60),
+          ),
+          cursorColor: Colors.white,
+          onSubmitted: _search,
+        ),
+        //Text(places.onlyMine ? _TITLE_ONLY_MINE : _TITLE_ALL),
         actions: [
           IconButton(
               tooltip: _TITLE_ONLY_MINE,
-              icon: Icon(Icons.library_books),
-              onPressed: () => places.refresh(onlyMine: true)),
+              icon: Icon(Icons.my_library_books),
+              onPressed: () => _refresh(onlyMine: true)),
           IconButton(
               tooltip: 'Обновить всё',
               icon: Icon(Icons.refresh),
-              onPressed: () => places.refresh()),
+              onPressed: () => _refresh()),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -48,11 +60,11 @@ class _PlaceListState extends State<PlaceList> {
       ),
       body: ListView.builder(
         controller: _scrollController,
-        itemCount: places.length + 1, //добавляем виджет загрузки
+        itemCount: _places.length + 1, //добавляем виджет загрузки
         itemBuilder: (context, i) {
           // данные загружены, берем из модели
-          if (places.testByNum(i)) {
-            var place = places.getByNum(i);
+          if (_places.testByNum(i)) {
+            var place = _places.getByNum(i);
             return InkWell(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,9 +85,9 @@ class _PlaceListState extends State<PlaceList> {
               onTap: () => _edit(place),
             );
             // загружаем новую порцию данных
-          } else if (places.error != null) {
-            return WaitingOrError(error: places.error);
-          } else if (places.noMoreData) {
+          } else if (_places.error != null) {
+            return WaitingOrError(error: _places.error);
+          } else if (_places.noMoreData) {
             return Container();
           } else {
             return WaitingOrError();
@@ -83,6 +95,15 @@ class _PlaceListState extends State<PlaceList> {
         },
       ),
     );
+  }
+
+  void _refresh({bool onlyMine = false}) {
+    _searchString.text = '';
+    _places.refresh(onlyMine: onlyMine);
+  }
+
+  void _search(_) {
+    _places.refresh(searchString: _searchString.text);
   }
 
   Future<void> _add() async {

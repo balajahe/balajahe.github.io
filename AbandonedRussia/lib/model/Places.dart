@@ -67,7 +67,7 @@ class Places with ChangeNotifier {
     notifyListeners();
   }
 
-  void refresh({bool onlyMine = false}) {
+  void refresh({bool onlyMine = false, String searchString}) {
     _places.clear();
     this.onlyMine = onlyMine;
     noMoreData = false;
