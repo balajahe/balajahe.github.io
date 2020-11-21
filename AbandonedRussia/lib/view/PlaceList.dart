@@ -10,9 +10,6 @@ import 'PlaceAddEdit.dart';
 import 'PlaceView.dart';
 import 'AppMenu.dart';
 
-const _TITLE_ALL = 'Все объекты';
-const _TITLE_ONLY_MINE = 'Добавлены мной';
-
 class PlaceList extends StatefulWidget {
   @override
   createState() => _PlaceListState();
@@ -31,7 +28,7 @@ class _PlaceListState extends State<PlaceList> {
         title: TextField(
           controller: _searchString,
           decoration: InputDecoration(
-            hintText: "Search...",
+            hintText: "Найти...",
             border: InputBorder.none,
             hintStyle: TextStyle(color: Colors.white60),
           ),
@@ -41,11 +38,11 @@ class _PlaceListState extends State<PlaceList> {
         //Text(places.onlyMine ? _TITLE_ONLY_MINE : _TITLE_ALL),
         actions: [
           IconButton(
-              tooltip: _TITLE_ONLY_MINE,
+              tooltip: 'Добавленные мной',
               icon: Icon(Icons.my_library_books),
               onPressed: () => _refresh(onlyMine: true)),
           IconButton(
-              tooltip: 'Обновить всё',
+              tooltip: 'Все объекты',
               icon: Icon(Icons.refresh),
               onPressed: () => _refresh()),
         ],
@@ -99,11 +96,11 @@ class _PlaceListState extends State<PlaceList> {
 
   void _refresh({bool onlyMine = false}) {
     _searchString.text = '';
-    _places.refresh(onlyMine: onlyMine);
+    _places.refresh(onlyMine: onlyMine, searchString: null);
   }
 
   void _search(_) {
-    _places.refresh(searchString: _searchString.text);
+    _places.refresh(onlyMine: false, searchString: _searchString.text);
   }
 
   Future<void> _add() async {

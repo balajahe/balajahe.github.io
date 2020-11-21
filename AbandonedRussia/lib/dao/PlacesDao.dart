@@ -100,11 +100,63 @@ abstract class PlacesDao {
     return data.docs.map((v) => fromMap(v.id, v.data())).toList();
   }
 
+  Future<void> _put(Place place) async {
+    await FirebaseFirestore.instance
+        .collection('Places')
+        .doc(place.id)
+        .set(toMap(place));
+
+    await FirebaseFirestore.instance
+        .collection('PlacesIndex')
+        .doc(place.id)
+        .set({
+      'text': place.title +
+          '\n' +
+          place.description +
+          '\n' +
+          place.labelsAsString +
+          '\n' +
+          place.created.toString() +
+          '\n' +
+          place.creator.registered.toString()
+    });
+  }
+
+  Future<Place> add(Place place) async {
+    place.creator = Database.currentUser;
+    place.created = Timestamp.now().toDate();
+
+    var id = FirebaseFirestore.instance.collection('Places').doc().id;
+    place.id = id;
+
+    await _put(place);
+    await addOrigins(place);
+
+    return place;
+  }
+
+  Future<void> put(Place place) async {
+    await _put(place);
+    await addOrigins(place);
+  }
+
+  Future<void> del(Place place) async {
+    await delOrigins(place);
+
+    await FirebaseFirestore.instance
+        .collection('PlacesIndex')
+        .doc(place.id)
+        .delete();
+
+    await FirebaseFirestore.instance
+        .collection('Places')
+        .doc(place.id)
+        .delete();
+  }
+
   Future<Uint8List> getPhotoOrigin(String url, int size);
 
-  Future<Place> add(Place place);
+  Future<void> addOrigins(Place place);
 
-  Future<void> put(Place place);
-
-  Future<void> del(Place place);
+  Future<void> delOrigins(Place place);
 }
