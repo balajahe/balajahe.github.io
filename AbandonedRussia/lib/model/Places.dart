@@ -18,18 +18,17 @@ class Places with ChangeNotifier {
     if (i < _places.length) {
       return true;
     } else {
-      //_loadNextPart();
+      _loadNextPart();
       return false;
     }
   }
 
   Place getByNum(int i) => _places[i];
 
-  Future<void> loadNextPart() async {
+  Future<void> _loadNextPart() async {
     if (!working && !noMoreData) {
       working = true;
       error = null;
-      notifyListeners();
       try {
         var newPlaces = await PlacesDao.instance.getNextPart(
           after: _places.length > 0 ? _places.last.created : null,
@@ -72,6 +71,8 @@ class Places with ChangeNotifier {
     _places.clear();
     this.onlyMine = onlyMine;
     noMoreData = false;
+    error = null;
+    working = false;
     notifyListeners();
   }
 }

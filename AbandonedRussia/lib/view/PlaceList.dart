@@ -78,7 +78,6 @@ class _PlaceListState extends State<PlaceList> {
           } else if (places.noMoreData) {
             return Container();
           } else {
-            places.loadNextPart();
             return WaitingOrError();
           }
         },
