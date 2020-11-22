@@ -47,6 +47,7 @@ abstract class PlacesDao {
 
   Map<String, dynamic> toMap(Place v) {
     return {
+      'id': v.id,
       'creator': (v.creator != null)
           ? {
               'uid': v.creator.uid,
@@ -78,6 +79,7 @@ abstract class PlacesDao {
     DateTime after,
     int count,
     bool onlyMine = false,
+    String searchString,
   }) async {
     QuerySnapshot data;
     if (onlyMine) {
@@ -89,6 +91,33 @@ abstract class PlacesDao {
               [(after != null) ? Timestamp.fromDate(after) : Timestamp.now()])
           .limit(count)
           .get();
+      return data.docs.map((v) => fromMap(v.id, v.data())).toList();
+    } else if (searchString != null && searchString.length > 0) {
+      var ids = List<String>();
+      var search = await FirebaseFirestore.instance
+          .collection('PlacesIndex')
+          .orderBy('created', descending: true)
+          .startAfter(
+              [(after != null) ? Timestamp.fromDate(after) : Timestamp.now()])
+          .limit(count)
+          .get();
+      search.docs.forEach((v) {
+        String text = v['text'];
+        if (text.contains(searchString.toLowerCase())) {
+          ids.add(v.id);
+        }
+      });
+
+      if (ids.length > 0) {
+        data = await FirebaseFirestore.instance
+            .collection('Places')
+            .where('id', whereIn: ids)
+            .orderBy('created', descending: true)
+            .get();
+        return data.docs.map((v) => fromMap(v.id, v.data())).toList();
+      } else {
+        return [];
+      }
     } else {
       data = await FirebaseFirestore.instance
           .collection('Places')
@@ -97,8 +126,8 @@ abstract class PlacesDao {
               [(after != null) ? Timestamp.fromDate(after) : Timestamp.now()])
           .limit(count)
           .get();
+      return data.docs.map((v) => fromMap(v.id, v.data())).toList();
     }
-    return data.docs.map((v) => fromMap(v.id, v.data())).toList();
   }
 
   Future<void> _put(Place place) async {
@@ -110,17 +139,20 @@ abstract class PlacesDao {
     await FirebaseFirestore.instance
         .collection('PlacesIndex')
         .doc(place.id)
-        .set({
-      'text': place.title +
-          '\n' +
-          place.description +
-          '\n' +
-          place.labelsAsString +
-          '\n' +
-          place.created.toString() +
-          '\n' +
-          place.creator.registered.toString()
-    });
+        .set(
+      {
+        'created': place.created,
+        'text': place.title.toLowerCase() +
+            '\n' +
+            place.description.toLowerCase() +
+            '\n' +
+            place.labelsAsString.toLowerCase() +
+            '\n' +
+            place.created.toString() +
+            '\n' +
+            place.creator.registered.toString()
+      },
+    );
   }
 
   Future<Place> add(Place place) async {

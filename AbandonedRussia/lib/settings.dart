@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-const bool ALLOW_EDIT_ALL = false;
+const bool ALLOW_EDIT_ALL = true;
 const int LOADING_PART_SIZE = 2;
 
 const int THUMBNAIL_SIZE = 80;

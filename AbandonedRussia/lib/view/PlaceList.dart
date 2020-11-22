@@ -35,7 +35,6 @@ class _PlaceListState extends State<PlaceList> {
           cursorColor: Colors.white,
           onSubmitted: _search,
         ),
-        //Text(places.onlyMine ? _TITLE_ONLY_MINE : _TITLE_ALL),
         actions: [
           IconButton(
               tooltip: 'Добавленные мной',

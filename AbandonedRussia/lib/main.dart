@@ -10,7 +10,7 @@ import 'view/PlaceList.dart';
 const _TITLE = 'Заброшенная Россия';
 
 void main() {
-  ErrorWidget.builder = (e) => WaitingOrError(error: e);
+  ErrorWidget.builder = (e) => ErrorScreen(e);
   runApp(AppWidget());
 }
 
@@ -18,7 +18,7 @@ class AppWidget extends StatelessWidget {
   @override
   build(context) => MultiProvider(
         providers: [
-          ChangeNotifierProvider<Places>(create: (context) => Places()),
+          Provider<Places>(create: (context) => Places()),
           Provider<Labels>(create: (context) => Labels()),
         ],
         child: MaterialApp(

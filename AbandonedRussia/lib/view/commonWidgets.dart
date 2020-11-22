@@ -88,9 +88,9 @@ class _Error extends StatelessWidget {
   }
 }
 
-class _ErrorScreen extends StatelessWidget {
+class ErrorScreen extends StatelessWidget {
   final dynamic error;
-  _ErrorScreen(this.error);
+  ErrorScreen(this.error);
 
   @override
   build(context) {
@@ -122,6 +122,6 @@ Future<void> showError(context, dynamic error) async => await Navigator.push(
       context,
       MaterialPageRoute(
         fullscreenDialog: true,
-        builder: (_) => _ErrorScreen(error),
+        builder: (_) => ErrorScreen(error),
       ),
     );

@@ -1,9 +1,6 @@
-//import 'package:flutter/foundation.dart';
-
 import '../dao/LabelsDao.dart';
 
 class Labels {
-  //extends ChangeNotifier {
   List<String> _all;
 
   Future<void> init() async {

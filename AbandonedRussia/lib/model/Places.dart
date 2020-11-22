@@ -1,18 +1,15 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-
 import '../settings.dart';
 import '../model/Place.dart';
 import '../dao/PlacesDao.dart';
 
 enum PlacesEvent { load, clear, render }
 
-class Places with ChangeNotifier {
+class Places {
   final List<Place> _places = [];
   bool onlyMine = false;
+  String searchString;
   bool noMoreData = false;
   var _in = StreamController<PlacesEvent>();
   var _out = StreamController<PlacesEvent>();
@@ -54,6 +51,7 @@ class Places with ChangeNotifier {
           after: _places.length > 0 ? _places.last.created : null,
           count: LOADING_PART_SIZE,
           onlyMine: onlyMine,
+          searchString: searchString,
         );
         newPlaces.forEach((v) => _places.add(v));
         if (newPlaces.length < LOADING_PART_SIZE) {
@@ -87,12 +85,7 @@ class Places with ChangeNotifier {
 
   void refresh({bool onlyMine = false, String searchString}) {
     this.onlyMine = onlyMine;
+    this.searchString = searchString;
     _in.add(PlacesEvent.clear);
-  }
-
-  void dispose() {
-    _in.close();
-    _out.close();
-    super.dispose();
   }
 }
