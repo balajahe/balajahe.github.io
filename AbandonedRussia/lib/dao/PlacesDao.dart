@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../settings.dart';
 import '../model/App.dart';
 import '../model/Place.dart';
 import '../dao/Database.dart';
@@ -81,9 +82,9 @@ abstract class PlacesDao {
     bool onlyMine = false,
     String searchString,
   }) async {
-    QuerySnapshot data;
+    // Только свои объекты
     if (onlyMine) {
-      data = await FirebaseFirestore.instance
+      var data = await FirebaseFirestore.instance
           .collection('Places')
           .where('creator.uid', isEqualTo: Database.currentUser.uid)
           .orderBy('created', descending: true)
@@ -92,34 +93,49 @@ abstract class PlacesDao {
           .limit(count)
           .get();
       return data.docs.map((v) => fromMap(v.id, v.data())).toList();
+
+      // Полнотекстовый поиск по индексу
     } else if (searchString != null && searchString.length > 0) {
       var ids = List<String>();
-      var search = await FirebaseFirestore.instance
-          .collection('PlacesIndex')
-          .orderBy('created', descending: true)
-          .startAfter(
-              [(after != null) ? Timestamp.fromDate(after) : Timestamp.now()])
-          .limit(count)
-          .get();
-      search.docs.forEach((v) {
-        String text = v['text'];
-        if (text.contains(searchString.toLowerCase())) {
-          ids.add(v.id);
-        }
-      });
+      var noMoreData = false;
+      var afterCurrent =
+          (after != null) ? Timestamp.fromDate(after) : Timestamp.now();
 
-      if (ids.length > 0) {
-        data = await FirebaseFirestore.instance
+      while (ids.length < count && !noMoreData) {
+        var dataIndex = await FirebaseFirestore.instance
+            .collection('PlacesIndex')
+            .orderBy('created', descending: true)
+            .startAfter([afterCurrent])
+            .limit(LOAD_INDEX_PART_SIZE)
+            .get();
+
+        var docs = dataIndex.docs;
+        if (docs.length == 0) {
+          break;
+        } else if (docs.length < LOAD_INDEX_PART_SIZE) {
+          noMoreData = true;
+        }
+        docs.forEach((v) {
+          afterCurrent = v['created'];
+          if (v['text'].toString().contains(searchString.toLowerCase())) {
+            ids.add(v.id);
+          }
+        });
+      }
+      if (ids.length == 0) {
+        return [];
+      } else {
+        var data = await FirebaseFirestore.instance
             .collection('Places')
             .where('id', whereIn: ids)
             .orderBy('created', descending: true)
             .get();
         return data.docs.map((v) => fromMap(v.id, v.data())).toList();
-      } else {
-        return [];
       }
+
+      // Все объекты
     } else {
-      data = await FirebaseFirestore.instance
+      var data = await FirebaseFirestore.instance
           .collection('Places')
           .orderBy('created', descending: true)
           .startAfter(

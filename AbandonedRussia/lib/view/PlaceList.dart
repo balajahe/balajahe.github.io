@@ -33,7 +33,7 @@ class _PlaceListState extends State<PlaceList> {
             hintStyle: TextStyle(color: Colors.white60),
           ),
           cursorColor: Colors.white,
-          onSubmitted: _search,
+          onEditingComplete: () => _search(),
         ),
         actions: [
           IconButton(
@@ -103,7 +103,7 @@ class _PlaceListState extends State<PlaceList> {
     _places.refresh(onlyMine: onlyMine, searchString: null);
   }
 
-  void _search(_) {
+  void _search() {
     _places.refresh(onlyMine: false, searchString: _searchString.text);
   }
 

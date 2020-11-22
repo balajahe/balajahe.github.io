@@ -49,12 +49,12 @@ class Places {
       try {
         var newPlaces = await PlacesDao.instance.getNextPart(
           after: _places.length > 0 ? _places.last.created : null,
-          count: LOADING_PART_SIZE,
+          count: LOAD_PART_SIZE,
           onlyMine: onlyMine,
           searchString: searchString,
         );
         newPlaces.forEach((v) => _places.add(v));
-        if (newPlaces.length < LOADING_PART_SIZE) {
+        if (newPlaces.length < LOAD_PART_SIZE) {
           noMoreData = true;
         }
         _out.add(PlacesEvent.render);
