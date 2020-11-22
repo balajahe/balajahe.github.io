@@ -80,7 +80,11 @@ class PlaceView extends StatelessWidget {
                 child: Text('Да'),
                 onPressed: () async {
                   startWaiting(context);
-                  await context.read<Places>().del(_place);
+                  try {
+                    await context.read<Places>().del(_place);
+                  } catch (e) {
+                    await showError(context, e);
+                  }
                   stopWaiting(context);
                   Navigator.pop(context);
                   Navigator.pop(context);

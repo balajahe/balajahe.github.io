@@ -54,7 +54,7 @@ class WaitingOrError extends StatelessWidget {
       ? transparent
           ? _WaitingTransparent()
           : _Waiting()
-      : Errors(error);
+      : _Error(error);
 }
 
 class _Waiting extends StatelessWidget {
@@ -72,9 +72,25 @@ class _WaitingTransparent extends StatelessWidget {
       child: Center(child: CircularProgressIndicator()));
 }
 
-class Errors extends StatelessWidget {
+class _Error extends StatelessWidget {
   final dynamic error;
-  Errors(this.error);
+  _Error(this.error);
+
+  @override
+  build(context) {
+    var stackTrace = '';
+    try {
+      stackTrace = error.stackTrace.toString();
+    } catch (_) {}
+    return Padding(
+        padding: EdgeInsets.only(top: 10),
+        child: SelectableText('ERROR: ${error.toString()}\n$stackTrace'));
+  }
+}
+
+class _ErrorScreen extends StatelessWidget {
+  final dynamic error;
+  _ErrorScreen(this.error);
 
   @override
   build(context) {
@@ -83,6 +99,7 @@ class Errors extends StatelessWidget {
       stackTrace = error.stackTrace.toString();
     } catch (_) {}
     return Scaffold(
+        appBar: AppBar(title: Text('ОШИБКА')),
         body: SingleChildScrollView(
             padding: EdgeInsets.only(top: 30),
             child: Center(
@@ -101,10 +118,10 @@ void startWaiting(context) => Navigator.of(context).push(
 
 void stopWaiting(context) => Navigator.of(context).pop();
 
-void showError(context, dynamic error) => Navigator.push(
+Future<void> showError(context, dynamic error) async => await Navigator.push(
       context,
       MaterialPageRoute(
         fullscreenDialog: true,
-        builder: (_) => Errors(error),
+        builder: (_) => _ErrorScreen(error),
       ),
     );

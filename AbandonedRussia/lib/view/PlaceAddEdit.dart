@@ -33,7 +33,6 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
   Place _oldPlace;
   List<String> _allLabels;
   Location _location;
-  //final _form = GlobalKey<FormState>();
   TextEditingController _title;
   TextEditingController _description;
   BuildContext _scaffoldContext;
@@ -285,18 +284,18 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
           content: Text(
               'Заполните все поля, минимум одно фото, минимум одна метка!')));
     } else {
+      startWaiting(context);
       try {
-        startWaiting(context);
         if (widget._mode == PlaceEditMode.add) {
           await context.read<Places>().add(_place);
         } else {
           await context.read<Places>().put(_place);
         }
-        stopWaiting(context);
-        Navigator.pop(context, true);
       } catch (e) {
-        showError(context, e);
+        await showError(context, e);
       }
+      stopWaiting(context);
+      Navigator.pop(context, true);
     }
   }
 

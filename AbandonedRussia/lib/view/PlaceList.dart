@@ -55,41 +55,46 @@ class _PlaceListState extends State<PlaceList> {
       drawer: Drawer(
         child: AppMenu(),
       ),
-      body: ListView.builder(
-        controller: _scrollController,
-        itemCount: _places.length + 1, //добавляем виджет загрузки
-        itemBuilder: (context, i) {
-          // данные загружены, берем из модели
-          if (_places.testByNum(i)) {
-            var place = _places.getByNum(i);
-            return InkWell(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  PaddingText(
-                    place.title,
-                    top: 5,
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                  ),
-                  PaddingText(
-                    place.labelsAsString,
-                    style: TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
-                  ),
-                  PaddingText(place.description),
-                  PhotoContainer(place, PhotoContainerMode.list),
-                ],
-              ),
-              onTap: () => _edit(place),
-            );
-            // загружаем новую порцию данных
-          } else if (_places.error != null) {
-            return WaitingOrError(error: _places.error);
-          } else if (_places.noMoreData) {
-            return Container();
-          } else {
-            return WaitingOrError();
-          }
-        },
+      body: StreamBuilder(
+        stream: _places.stream,
+        builder: (context, snapshot) => ListView.builder(
+          controller: _scrollController,
+          itemCount: _places.length + 1, //добавляем виджет загрузки
+          itemBuilder: (context, i) {
+            // данные загружены, берем из модели
+            if (_places.testByNum(i)) {
+              var place = _places.getByNum(i);
+              return InkWell(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    PaddingText(
+                      place.title,
+                      top: 5,
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                    ),
+                    PaddingText(
+                      place.labelsAsString,
+                      style:
+                          TextStyle(fontSize: 12, fontStyle: FontStyle.italic),
+                    ),
+                    PaddingText(place.description),
+                    PhotoContainer(place, PhotoContainerMode.list),
+                  ],
+                ),
+                onTap: () => _edit(place),
+              );
+              // загружаем новую порцию данных
+            } else if (snapshot.hasError) {
+              return WaitingOrError(error: snapshot.error);
+            } else if (_places.noMoreData) {
+              return Container();
+            } else {
+              return WaitingOrError();
+            }
+          },
+        ),
       ),
     );
   }

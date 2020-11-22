@@ -8,6 +8,16 @@ class PlacesDaoWeb extends PlacesDao {
     return Future(() => null);
   }
 
+  @override
+  Future<Place> add(Place place) async {
+    throw 'WEB-версия не поддерживает добавление фотографий!';
+  }
+
+  @override
+  Future<void> put(Place place) async {
+    throw 'WEB-версия не поддерживает добавление фотографий!';
+  }
+
   Future<void> addOrigins(Place place) async {
     throw 'WEB-версия не поддерживает добавление фотографий!';
   }

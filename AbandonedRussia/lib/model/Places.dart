@@ -1,34 +1,54 @@
+import 'dart:async';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import '../settings.dart';
 import '../model/Place.dart';
 import '../dao/PlacesDao.dart';
 
+enum PlacesEvent { load, clear, render }
+
 class Places with ChangeNotifier {
+  final List<Place> _places = [];
   bool onlyMine = false;
   bool noMoreData = false;
-  bool working = false;
-  dynamic error;
+  var _in = StreamController<PlacesEvent>();
+  var _out = StreamController<PlacesEvent>();
 
-  final List<Place> _places = [];
+  Places() {
+    var inIter = StreamIterator<PlacesEvent>(_in.stream);
+    (() async {
+      while (await inIter.moveNext()) {
+        if (inIter.current == PlacesEvent.clear) {
+          noMoreData = false;
+          _places.clear();
+          _out.add(PlacesEvent.render);
+        } else {
+          await _loadNextPart();
+        }
+      }
+    })();
+  }
+
+  Stream get stream => _out.stream;
 
   int get length => _places.length;
+
+  Place getByNum(int i) => _places[i];
 
   bool testByNum(int i) {
     if (i < _places.length) {
       return true;
     } else {
-      _loadNextPart();
+      _in.add(PlacesEvent.load);
       return false;
     }
   }
 
-  Place getByNum(int i) => _places[i];
-
   Future<void> _loadNextPart() async {
-    if (!working && !noMoreData) {
-      working = true;
-      error = null;
+    if (!noMoreData) {
       try {
         var newPlaces = await PlacesDao.instance.getNextPart(
           after: _places.length > 0 ? _places.last.created : null,
@@ -39,40 +59,40 @@ class Places with ChangeNotifier {
         if (newPlaces.length < LOADING_PART_SIZE) {
           noMoreData = true;
         }
+        _out.add(PlacesEvent.render);
       } catch (e) {
-        print(e);
-        error = e;
+        _out.addError(e);
         noMoreData = true;
       }
-      working = false;
-      notifyListeners();
     }
   }
 
   Future<void> add(Place place) async {
     var newPlace = await PlacesDao.instance.add(place);
     _places.insert(0, newPlace);
-    notifyListeners();
+    _out.add(PlacesEvent.render);
   }
 
   Future<void> put(Place place) async {
     await PlacesDao.instance.put(place);
     _places[_places.indexWhere((v) => v.id == place.id)] = place;
-    notifyListeners();
+    _out.add(PlacesEvent.render);
   }
 
   Future<void> del(Place place) async {
     await PlacesDao.instance.del(place);
     _places.removeWhere((v) => v.id == place.id);
-    notifyListeners();
+    _out.add(PlacesEvent.render);
   }
 
   void refresh({bool onlyMine = false, String searchString}) {
-    _places.clear();
     this.onlyMine = onlyMine;
-    noMoreData = false;
-    error = null;
-    working = false;
-    notifyListeners();
+    _in.add(PlacesEvent.clear);
+  }
+
+  void dispose() {
+    _in.close();
+    _out.close();
+    super.dispose();
   }
 }
