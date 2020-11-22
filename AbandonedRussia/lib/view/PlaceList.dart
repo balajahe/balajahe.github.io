@@ -33,7 +33,7 @@ class _PlaceListState extends State<PlaceList> {
             hintStyle: TextStyle(color: Colors.white60),
           ),
           cursorColor: Colors.white,
-          onEditingComplete: () => _search(),
+          onSubmitted: (_) => _search(),
         ),
         actions: [
           IconButton(

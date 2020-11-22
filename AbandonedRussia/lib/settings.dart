@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-const bool ALLOW_EDIT_ALL = true;
+const bool ALLOW_EDIT_ALL = false;
 const int LOAD_PART_SIZE = 4;
 const int LOAD_INDEX_PART_SIZE = 100;
 
