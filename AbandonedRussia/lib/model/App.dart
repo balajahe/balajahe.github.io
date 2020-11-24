@@ -1,10 +1,13 @@
 import '../dao/Database.dart';
 
 class AppUser {
-  String uid;
-  String name = 'Anonymous';
-  DateTime registered;
-  AppUser({this.uid, this.registered});
+  final String uid;
+  final String name;
+  final DateTime registered;
+  AppUser({this.uid, this.name, this.registered});
+
+  String toString() =>
+      registered.toString() + ((name != null) ? ' <$name>' : '');
 }
 
 class App {
@@ -12,5 +15,8 @@ class App {
     await Database.connect();
   }
 
-  static AppUser get currentUser => Database.currentUser;
+  static AppUser get appUser => Database.dbUser;
+
+  static Future<void> setUserInfo({String name}) =>
+      Database.setUserInfo(name: name);
 }

@@ -19,6 +19,7 @@ abstract class PlacesDao {
       id: id,
       creator: AppUser(
         uid: data['creator']['uid'],
+        name: data['creator']['name'],
         registered: data['creator']['registered'].toDate(),
       ),
       created: data['created'].toDate(),
@@ -52,6 +53,7 @@ abstract class PlacesDao {
       'creator': (v.creator != null)
           ? {
               'uid': v.creator.uid,
+              'name': v.creator.name,
               'registered': Timestamp.fromDate(v.creator.registered),
             }
           : null,
@@ -86,7 +88,7 @@ abstract class PlacesDao {
     if (onlyMine) {
       var data = await FirebaseFirestore.instance
           .collection('Places')
-          .where('creator.uid', isEqualTo: Database.currentUser.uid)
+          .where('creator.uid', isEqualTo: Database.dbUser.uid)
           .orderBy('created', descending: true)
           .startAfter(
               [(after != null) ? Timestamp.fromDate(after) : Timestamp.now()])
@@ -166,13 +168,13 @@ abstract class PlacesDao {
             '\n' +
             place.created.toString() +
             '\n' +
-            place.creator.registered.toString()
+            place.creator.toString()
       },
     );
   }
 
   Future<Place> add(Place place) async {
-    place.creator = Database.currentUser;
+    place.creator = Database.dbUser;
     place.created = Timestamp.now().toDate();
 
     var id = FirebaseFirestore.instance.collection('Places').doc().id;

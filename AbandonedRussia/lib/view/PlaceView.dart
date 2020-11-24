@@ -48,10 +48,10 @@ class PlaceView extends StatelessWidget {
               PhotoContainer(_place, PhotoContainerMode.view),
               LocationMap(_place.location),
               PaddingText(
-                  'добавлено ' +
+                  'добавлено: ' +
                       _place.created.toString() +
-                      '\nпользователем ' +
-                      _place.creator.registered.toString(),
+                      '\nпользователем: ' +
+                      _place.creator.toString(),
                   style: TextStyle(fontSize: 12),
                   selectable: true),
               PaddingText('ID: ' + _place.id,
@@ -62,7 +62,7 @@ class PlaceView extends StatelessWidget {
       );
 
   void _del(context) {
-    if (ALLOW_EDIT_ALL || _place.creator.uid == App.currentUser.uid) {
+    if (ALLOW_EDIT_ALL || _place.creator.uid == App.appUser.uid) {
       showDialog<void>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
@@ -92,7 +92,7 @@ class PlaceView extends StatelessWidget {
   }
 
   Future<void> _edit(context) async {
-    if (ALLOW_EDIT_ALL || _place.creator.uid == App.currentUser.uid) {
+    if (ALLOW_EDIT_ALL || _place.creator.uid == App.appUser.uid) {
       await Navigator.push(
         context,
         MaterialPageRoute(

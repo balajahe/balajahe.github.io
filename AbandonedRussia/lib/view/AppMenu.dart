@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-// import 'package:flutter/services.dart' show rootBundle;
-// import 'package:flutter_linkify/flutter_linkify.dart';
 
 import 'LabelsEdit.dart';
+import 'UserEdit.dart';
 
 class AppMenu extends StatelessWidget {
   final _itemTextStyle = TextStyle(fontSize: 16);
@@ -16,6 +15,13 @@ class AppMenu extends StatelessWidget {
               onTap: () async {
                 await Navigator.push(
                     context, MaterialPageRoute(builder: (_) => LabelsEdit()));
+                Navigator.pop(context);
+              }),
+          ListTile(
+              title: Text('Мой профиль', style: _itemTextStyle),
+              onTap: () async {
+                await Navigator.push(
+                    context, MaterialPageRoute(builder: (_) => UserEdit()));
                 Navigator.pop(context);
               }),
           ListTile(
