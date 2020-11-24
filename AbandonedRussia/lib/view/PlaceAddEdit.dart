@@ -9,13 +9,15 @@ import '../model/Place.dart';
 import '../model/Places.dart';
 import '../model/Labels.dart';
 import '../model/Location.dart';
-
 import 'commonWidgets.dart';
 import 'PhotoContainer.dart';
 //import 'PhotoContainerEdit.dart';
 import 'LocationMap.dart';
 import 'PhotoTake.dart';
 import 'PhotoApprove.dart';
+
+const _DEFAULT_LOCATION_LAT = 55.751654388022395;
+const _DEFAULT_LOCATION_LON = 37.61565246423165;
 
 enum PlaceEditMode { add, edit }
 
@@ -63,6 +65,7 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
               _done = true;
             }))
         .catchError((e) => setState(() => _error = e));
+
     super.initState();
   }
 
@@ -164,7 +167,7 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
                         ),
                       ),
                       PhotoContainer(_place, PhotoContainerMode.edit),
-                      _mapBuilder(),
+                      _map(),
                     ],
                   ),
                 ),
@@ -174,7 +177,7 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
         )
       : WaitingOrError(error: _error);
 
-  Widget _mapBuilder() {
+  Widget _map() {
     if (_place.location == null) {
       return StreamBuilder(
         stream: _location.locationChanges,
@@ -185,32 +188,37 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
               snapshot.data.longitude,
               snapshot.data.accuracy,
             );
-            return _map();
+            return LocationMap(
+              _place.location,
+              onTap: _pickLocation,
+            );
           } else {
-            return Container();
+            return LocationMap(
+              PlaceLocation(_DEFAULT_LOCATION_LAT, _DEFAULT_LOCATION_LON),
+              onTap: _pickLocation,
+            );
           }
         },
       );
     } else {
-      return _map();
+      return LocationMap(
+        _place.location,
+        onTap: _pickLocation,
+      );
     }
   }
-
-  Widget _map() => GestureDetector(
-        onDoubleTap: _pickLocation,
-        child: LocationMap(
-          _place.location,
-          onTap: _pickLocation,
-        ),
-      );
 
   Future<void> _pickLocation() async {
     var newLocation = await Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => SimpleLocationPicker(
-                  initialLatitude: _place.location.latitude,
-                  initialLongitude: _place.location.longitude,
+                  initialLatitude: (_place.location != null)
+                      ? _place.location.latitude
+                      : _DEFAULT_LOCATION_LAT,
+                  initialLongitude: (_place.location != null)
+                      ? _place.location.longitude
+                      : _DEFAULT_LOCATION_LON,
                   appBarTitle: 'Уточнить место',
                   zoomLevel: 16,
                 )));

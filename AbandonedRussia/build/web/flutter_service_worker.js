@@ -12,14 +12,14 @@ const RESOURCES = {
 "assets/assets/icon.png": "76de6736df3624d3ccfa356ef9da6905",
 "assets/assets/article.txt": "f2847e90ab258f0be5aa7bb685fc868a",
 "assets/fonts/MaterialIcons-Regular.otf": "1288c9e28052e028aba623321f7826ac",
-"assets/NOTICES": "d4c564c3291bb39a138a1feba8ef7686",
+"assets/NOTICES": "9ce58fd2d3884407bf7a93f557fea7ff",
 "assets/AssetManifest.json": "7b55a61464a1a4ba6adc2c536f91ff3d",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
-"index.html": "b94a34c8b2fc1dfe1f728b2a923b4234",
-"/": "b94a34c8b2fc1dfe1f728b2a923b4234",
+"index.html": "9053bdbff925a47ac93013cfe43336ca",
+"/": "9053bdbff925a47ac93013cfe43336ca",
 "manifest.json": "55a695e0731fd0a6880113ca498c07cf",
-"main.dart.js": "1bc01d6dd213e31fb365aa295c89d544",
-"version.json": "a1401fb2e21b4c0a5d1ad6142c72cbe9",
+"main.dart.js": "a681e6f447678c90cee740372d565886",
+"version.json": "ef14f1701a3b887a14a735fd71aee3de",
 "privacy.html": "3f9601d6377b8a12616a03751733348e"
 };
 

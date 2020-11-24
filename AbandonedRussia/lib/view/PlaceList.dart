@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 
 import '../model/Place.dart';
 import '../model/Places.dart';
-
 import 'commonWidgets.dart';
 import 'PhotoContainer.dart';
 import 'PlaceAddEdit.dart';
@@ -69,9 +68,9 @@ class _PlaceListState extends State<PlaceList> {
                   children: [
                     PaddingText(
                       place.title,
-                      top: 5,
                       style:
                           TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      top: 3,
                     ),
                     PaddingText(
                       place.labelsAsString,
@@ -80,6 +79,7 @@ class _PlaceListState extends State<PlaceList> {
                     ),
                     PaddingText(place.description),
                     PhotoContainer(place, PhotoContainerMode.list),
+                    Container(height: 4),
                   ],
                 ),
                 onTap: () => _edit(place),

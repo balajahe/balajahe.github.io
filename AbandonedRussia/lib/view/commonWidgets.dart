@@ -84,7 +84,7 @@ class _Error extends StatelessWidget {
     } catch (_) {}
     return Padding(
         padding: EdgeInsets.only(top: 10),
-        child: SelectableText('ERROR: ${error.toString()}\n$stackTrace'));
+        child: SelectableText('ОШИБКА: ${error.toString()}\n$stackTrace'));
   }
 }
 
@@ -99,12 +99,12 @@ class ErrorScreen extends StatelessWidget {
       stackTrace = error.stackTrace.toString();
     } catch (_) {}
     return Scaffold(
-        appBar: AppBar(title: Text('ОШИБКА')),
+        //appBar: AppBar(title: Text('ОШИБКА')),
         body: SingleChildScrollView(
             padding: EdgeInsets.only(top: 30),
             child: Center(
                 child: SelectableText(
-                    'ERROR: ${error.toString()}\n$stackTrace'))));
+                    'ОШИБКА: ${error.toString()}\n$stackTrace'))));
   }
 }
 
