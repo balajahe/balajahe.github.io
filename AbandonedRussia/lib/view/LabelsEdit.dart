@@ -49,10 +49,13 @@ class _LabelsEditState extends State<LabelsEdit> {
               ),
             ],
           ),
-          body: TextField(
-            controller: _labels,
-            minLines: 7,
-            maxLines: 20,
+          body: Padding(
+            padding: EdgeInsets.only(left: 5),
+            child: TextField(
+              controller: _labels,
+              minLines: 7,
+              maxLines: 20,
+            ),
           ),
         )
       : WaitingOrError(error: _error);
