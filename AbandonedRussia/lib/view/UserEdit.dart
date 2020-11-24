@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../model/App.dart';
 import 'commonWidgets.dart';
 
-const _LABEL_STYLE = TextStyle(fontSize: 12, color: Colors.blueAccent);
+final _LABEL_STYLE = TextStyle(fontSize: 12, color: Colors.grey[600]);
 
 class UserEdit extends StatefulWidget {
   @override
