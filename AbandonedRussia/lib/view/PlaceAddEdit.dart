@@ -37,7 +37,6 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
   Location _location;
   TextEditingController _title;
   TextEditingController _description;
-  BuildContext _scaffoldContext;
   bool _done = false;
   dynamic _error;
 
@@ -83,13 +82,10 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
                       ? 'Новый объект'
                       : 'Редактирование'),
                   actions: [
-                    Builder(builder: (context) {
-                      _scaffoldContext = context;
-                      return IconButton(
-                          tooltip: 'Сохранить',
-                          icon: Icon(Icons.save),
-                          onPressed: _save);
-                    }),
+                    IconButton(
+                        tooltip: 'Сохранить',
+                        icon: Icon(Icons.save),
+                        onPressed: _save),
                   ],
                 ),
                 floatingActionButton: Row(
@@ -248,6 +244,7 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
       sourceType: SourceType.photoLibrary,
     ));
     if (path != null) {
+      print(path);
       var file = File(path);
       var photoData = await file.readAsBytes();
       var approved = await Navigator.push(
@@ -281,14 +278,14 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
   Future<void> _save() async {
     _updatePlace();
     if (_place.photos.any((v) => v.thumbnail == null)) {
-      Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Подождите, пока все фотографии обработаются!')));
     } else if ( //!_form.currentState.validate() ||
         _place.title.length == 0 ||
             _place.description.length == 0 ||
             _place.labels.length == 0 ||
             _place.photos.length == 0) {
-      Scaffold.of(_scaffoldContext).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
               'Заполните все поля, минимум одно фото, минимум одна метка!')));
     } else {

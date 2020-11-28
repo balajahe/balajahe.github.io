@@ -38,7 +38,7 @@ class _UserEditState extends State<UserEdit> {
           ],
         ),
         body: Padding(
-          padding: EdgeInsets.only(left: 5),
+          padding: EdgeInsets.only(left: 7),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

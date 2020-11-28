@@ -50,7 +50,7 @@ class _LabelsEditState extends State<LabelsEdit> {
             ],
           ),
           body: Padding(
-            padding: EdgeInsets.only(left: 5),
+            padding: EdgeInsets.only(left: 7),
             child: TextField(
               controller: _labels,
               minLines: 7,

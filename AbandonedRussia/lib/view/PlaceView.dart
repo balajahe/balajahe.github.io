@@ -19,16 +19,14 @@ class PlaceView extends StatelessWidget {
         appBar: AppBar(
           title: Text('Просмотр'),
           actions: [
-            Builder(
-                builder: (context) => IconButton(
-                    tooltip: 'Удалить',
-                    icon: Icon(Icons.delete),
-                    onPressed: () => _del(context))),
-            Builder(
-                builder: (context) => IconButton(
-                    tooltip: 'Редактировать',
-                    icon: Icon(Icons.edit),
-                    onPressed: () => _edit(context))),
+            IconButton(
+                tooltip: 'Удалить',
+                icon: Icon(Icons.delete),
+                onPressed: () => _del(context)),
+            IconButton(
+                tooltip: 'Редактировать',
+                icon: Icon(Icons.edit),
+                onPressed: () => _edit(context)),
           ],
         ),
         body: SingleChildScrollView(
@@ -104,7 +102,7 @@ class PlaceView extends StatelessWidget {
     }
   }
 
-  void _denied(context) => Scaffold.of(context).showSnackBar(SnackBar(
+  void _denied(context) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content:
           Text('Редактировать и удалять можно объекты, добавленные вами!')));
 }
