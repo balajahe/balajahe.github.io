@@ -98,6 +98,7 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
                       mini: true,
                       onPressed: _addPhotoFromFile,
                     ),
+                    Container(height: 0, width: 10),
                     FloatingActionButton(
                       tooltip: 'Сфотографировать',
                       child: Icon(Icons.photo_camera),

@@ -5,7 +5,7 @@ import '../dao/PlacesDao.dart';
 
 class PlacesDaoWeb extends PlacesDao {
   Future<Uint8List> getPhotoOrigin(String url, int size) {
-    return Future(() => null);
+    throw 'WEB-версия не поддерживает просмотр полноразмерных фотографий!';
   }
 
   @override

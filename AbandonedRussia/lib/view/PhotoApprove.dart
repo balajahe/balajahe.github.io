@@ -1,5 +1,5 @@
 import 'dart:typed_data';
-import 'dart:math';
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 class PhotoApprove extends StatelessWidget {
@@ -19,6 +19,7 @@ class PhotoApprove extends StatelessWidget {
               mini: true,
               onPressed: () => Navigator.pop(context),
             ),
+            Container(height: 0, width: 10),
             FloatingActionButton(
               tooltip: 'Одобрить фото',
               heroTag: 'save',
@@ -29,14 +30,34 @@ class PhotoApprove extends StatelessWidget {
           ],
         ),
         body: Center(
-          // если телефон повернут, желательно и превью поворачивать, доделать
-          child: (1 == 1)
-              ? Image.memory(_photoData)
-              : Transform(
-                  transform: Matrix4.rotationX(pi / 2),
-                  alignment: Alignment.center,
-                  child: Image.memory(_photoData),
-                ),
+          child: Builder(builder: (context) {
+            var completer = Completer<bool>();
+            Image.memory(_photoData)
+                .image
+                .resolve(new ImageConfiguration())
+                .addListener(ImageStreamListener(
+              (info, sync) {
+                var image = info.image;
+                var media = MediaQuery.of(context).size;
+                completer.complete(
+                    media.width < media.height && image.width > image.height);
+              },
+            ));
+            return FutureBuilder(
+                future: completer.future,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.data == true) {
+                      return RotatedBox(
+                          quarterTurns: 1, child: Image.memory(_photoData));
+                    } else {
+                      return Image.memory(_photoData);
+                    }
+                  } else {
+                    return Container();
+                  }
+                });
+          }),
         ),
       );
 }

@@ -17,11 +17,6 @@ class PaddingText extends StatelessWidget {
           : Text(text, style: style));
 }
 
-class Separator extends StatelessWidget {
-  @override
-  build(context) => Container(height: 3);
-}
-
 class GroupSeparator extends StatelessWidget {
   final String _text;
   GroupSeparator(this._text);

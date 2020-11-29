@@ -12,7 +12,7 @@ import '../dao/PlacesDaoWeb.dart';
 
 abstract class PlacesDao {
   static PlacesDao get instance =>
-      (kIsWeb) ? PlacesDaoMobile() : PlacesDaoMobile();
+      (kIsWeb) ? PlacesDaoWeb() : PlacesDaoMobile();
 
   Place fromMap(String id, Map<String, dynamic> data) {
     var place = Place(
