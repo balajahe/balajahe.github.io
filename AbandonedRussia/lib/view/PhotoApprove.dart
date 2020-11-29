@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart' as phv;
 
 class PhotoApprove extends StatelessWidget {
   final Uint8List _photoData;
@@ -43,15 +44,15 @@ class PhotoApprove extends StatelessWidget {
                     media.width < media.height && image.width > image.height);
               },
             ));
+            var image = phv.PhotoView(imageProvider: MemoryImage(_photoData));
             return FutureBuilder(
                 future: completer.future,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     if (snapshot.data == true) {
-                      return RotatedBox(
-                          quarterTurns: 1, child: Image.memory(_photoData));
+                      return RotatedBox(quarterTurns: 1, child: image);
                     } else {
-                      return Image.memory(_photoData);
+                      return image;
                     }
                   } else {
                     return Container();
