@@ -103,6 +103,5 @@ class PlaceView extends StatelessWidget {
   }
 
   void _denied(context) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content:
-          Text('Редактировать и удалять можно объекты, добавленные вами!')));
+      content: Text('Редактировать и удалять вы можете только свои объекты!')));
 }

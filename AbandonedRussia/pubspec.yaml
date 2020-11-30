@@ -31,7 +31,7 @@ dependencies:
   camera:
   path_provider:
   flutter_file_dialog:
-  #image_picker:
+  image_picker:
   image:
   location:
   flutter_map:

@@ -83,21 +83,18 @@ class _PhotoViewState extends State<PhotoView> {
                       media.width < media.height && image.width > image.height);
                 },
               ));
-              var image =
-                  phv.PhotoView(imageProvider: MemoryImage(photo.origin));
               return FutureBuilder(
-                  future: completer.future,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      if (snapshot.data == true) {
-                        return RotatedBox(quarterTurns: 1, child: image);
-                      } else {
-                        return image;
-                      }
-                    } else {
-                      return Container();
-                    }
-                  });
+                future: completer.future,
+                builder: (context, snapshot) => (snapshot.hasData)
+                    ? (snapshot.data == true)
+                        ? phv.PhotoView.customChild(
+                            child: RotatedBox(
+                                quarterTurns: 1,
+                                child: Image.memory(photo.origin)))
+                        : phv.PhotoView.customChild(
+                            child: Image.memory(photo.origin))
+                    : Container(),
+              );
             } else {
               return (snapshot.hasError)
                   ? Stack(

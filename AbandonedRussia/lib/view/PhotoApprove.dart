@@ -44,20 +44,17 @@ class PhotoApprove extends StatelessWidget {
                     media.width < media.height && image.width > image.height);
               },
             ));
-            var image = phv.PhotoView(imageProvider: MemoryImage(_photoData));
             return FutureBuilder(
-                future: completer.future,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    if (snapshot.data == true) {
-                      return RotatedBox(quarterTurns: 1, child: image);
-                    } else {
-                      return image;
-                    }
-                  } else {
-                    return Container();
-                  }
-                });
+              future: completer.future,
+              builder: (context, snapshot) => (snapshot.hasData)
+                  ? (snapshot.data == true)
+                      ? phv.PhotoView.customChild(
+                          child: RotatedBox(
+                              quarterTurns: 1, child: Image.memory(_photoData)))
+                      : phv.PhotoView.customChild(
+                          child: Image.memory(_photoData))
+                  : Container(),
+            );
           }),
         ),
       );

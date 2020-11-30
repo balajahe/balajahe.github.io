@@ -36,7 +36,7 @@ class _PlaceListState extends State<PlaceList> {
         ),
         actions: [
           IconButton(
-              tooltip: 'Добавленные мной',
+              tooltip: 'Мои объекты',
               icon: Icon(Icons.my_library_books),
               onPressed: () => _refresh(onlyMine: true)),
           IconButton(
