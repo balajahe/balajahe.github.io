@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
+//import 'package:image_picker/image_picker.dart';
 
 import '../model/Camera.dart';
 
@@ -32,6 +33,8 @@ class CameraMobile implements Camera {
     var path = (await getTemporaryDirectory()).path + '/${DateTime.now()}.png';
     await _camera.takePicture(path);
     var file = File(path);
+    // var pfile = await ImagePicker().getImage(source: ImageSource.camera);
+    // var file = File(pfile.path);
     var data = await file.readAsBytes();
     file.delete();
     return data;

@@ -66,53 +66,51 @@ class _PhotoViewState extends State<PhotoView> {
           ),
         ],
       ),
-      body: SafeArea(
-        child: Center(
-          child: FutureBuilder(
-            future: photo.loadPhotoOrigin(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == DONE && !snapshot.hasError) {
-                var completer = Completer<bool>();
-                Image.memory(photo.origin)
-                    .image
-                    .resolve(new ImageConfiguration())
-                    .addListener(ImageStreamListener(
-                  (info, sync) {
-                    var image = info.image;
-                    var media = MediaQuery.of(context).size;
-                    completer.complete(media.width < media.height &&
-                        image.width > image.height);
-                  },
-                ));
-                var image =
-                    phv.PhotoView(imageProvider: MemoryImage(photo.origin));
-                return FutureBuilder(
-                    future: completer.future,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        if (snapshot.data == true) {
-                          return RotatedBox(quarterTurns: 1, child: image);
-                        } else {
-                          return image;
-                        }
+      body: Center(
+        child: FutureBuilder(
+          future: photo.loadPhotoOrigin(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == DONE && !snapshot.hasError) {
+              var completer = Completer<bool>();
+              Image.memory(photo.origin)
+                  .image
+                  .resolve(new ImageConfiguration())
+                  .addListener(ImageStreamListener(
+                (info, sync) {
+                  var image = info.image;
+                  var media = MediaQuery.of(context).size;
+                  completer.complete(
+                      media.width < media.height && image.width > image.height);
+                },
+              ));
+              var image =
+                  phv.PhotoView(imageProvider: MemoryImage(photo.origin));
+              return FutureBuilder(
+                  future: completer.future,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      if (snapshot.data == true) {
+                        return RotatedBox(quarterTurns: 1, child: image);
                       } else {
-                        return Container();
+                        return image;
                       }
-                    });
-              } else {
-                return (snapshot.hasError)
-                    ? Stack(
-                        children: [
-                          Center(child: Image.memory(photo.thumbnail)),
-                          Padding(
-                              padding: EdgeInsets.all(30),
-                              child: SelectableText(snapshot.error.toString())),
-                        ],
-                      )
-                    : WaitingOrError();
-              }
-            },
-          ),
+                    } else {
+                      return Container();
+                    }
+                  });
+            } else {
+              return (snapshot.hasError)
+                  ? Stack(
+                      children: [
+                        Center(child: Image.memory(photo.thumbnail)),
+                        Padding(
+                            padding: EdgeInsets.all(30),
+                            child: SelectableText(snapshot.error.toString())),
+                      ],
+                    )
+                  : WaitingOrError();
+            }
+          },
         ),
       ),
     );

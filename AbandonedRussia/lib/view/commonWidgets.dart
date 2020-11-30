@@ -94,12 +94,11 @@ class ErrorScreen extends StatelessWidget {
       stackTrace = error.stackTrace.toString();
     } catch (_) {}
     return Scaffold(
-        //appBar: AppBar(title: Text('ОШИБКА')),
-        body: SingleChildScrollView(
-            padding: EdgeInsets.only(top: 30),
-            child: Center(
-                child: SelectableText(
-                    'ОШИБКА: ${error.toString()}\n$stackTrace'))));
+        body: SafeArea(
+            child: SingleChildScrollView(
+                child: Center(
+                    child: SelectableText(
+                        'ОШИБКА: ${error.toString()}\n$stackTrace')))));
   }
 }
 
