@@ -60,7 +60,7 @@ class PlaceView extends StatelessWidget {
       );
 
   void _del(context) {
-    if (ALLOW_EDIT_ALL || _place.creator.uid == App.appUser.uid) {
+    if (_checkAccess()) {
       showDialog<void>(
         context: context,
         builder: (BuildContext context) => AlertDialog(
@@ -90,7 +90,7 @@ class PlaceView extends StatelessWidget {
   }
 
   Future<void> _edit(context) async {
-    if (ALLOW_EDIT_ALL || _place.creator.uid == App.appUser.uid) {
+    if (_checkAccess()) {
       await Navigator.push(
         context,
         MaterialPageRoute(
@@ -101,6 +101,10 @@ class PlaceView extends StatelessWidget {
       _denied(context);
     }
   }
+
+  bool _checkAccess() => (ALLOW_EDIT_ALL == '' ||
+      App.appUser.metaHash() == ALLOW_EDIT_ALL ||
+      _place.creator.uid == App.appUser.uid);
 
   void _denied(context) => ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text('Редактировать и удалять вы можете только свои объекты!')));

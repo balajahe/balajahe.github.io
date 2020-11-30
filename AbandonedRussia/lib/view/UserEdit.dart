@@ -12,10 +12,12 @@ class UserEdit extends StatefulWidget {
 
 class _UserEditState extends State<UserEdit> {
   var _name = TextEditingController();
+  var _meta = TextEditingController();
 
   @override
   initState() {
     _name.text = App.appUser.name;
+    _meta.text = App.appUser.meta;
     super.initState();
   }
 
@@ -28,9 +30,8 @@ class _UserEditState extends State<UserEdit> {
               tooltip: 'Сохранить',
               icon: Icon(Icons.save),
               onPressed: () async {
-                var name = _name.text;
                 startWaiting(context);
-                await App.setUserInfo(name: name);
+                await App.setUserInfo(name: _name.text, meta: _meta.text);
                 stopWaiting(context);
                 Navigator.pop(context);
               },
@@ -49,8 +50,13 @@ class _UserEditState extends State<UserEdit> {
               Text('Зарегистрирован', style: _LABEL_STYLE),
               SelectableText(App.appUser.registered.toString()),
               TextField(
-                controller: _name,
                 decoration: InputDecoration(labelText: 'Отображаемое имя'),
+                controller: _name,
+              ),
+              TextField(
+                decoration: InputDecoration(labelText: 'Мета'),
+                controller: _meta,
+                obscureText: true,
               ),
             ],
           ),

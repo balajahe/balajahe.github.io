@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_file_dialog/flutter_file_dialog.dart';
+import 'package:image_picker/image_picker.dart';
+//import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:simple_location_picker/simple_location_picker_screen.dart';
 
 import '../settings.dart';
@@ -13,7 +14,7 @@ import 'commonWidgets.dart';
 import 'PhotoContainer.dart';
 //import 'PhotoContainerEdit.dart';
 import 'LocationMap.dart';
-import 'PhotoTake.dart';
+//import 'PhotoTake.dart';
 import 'PhotoApprove.dart';
 
 const _DEFAULT_LOCATION_LAT = 55.751654388022395;
@@ -226,28 +227,36 @@ class _PlaceAddEditState extends State<PlaceAddEdit> {
   }
 
   Future<void> _addPhotoFromCamera() async {
-    await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => ChangeNotifierProvider.value(
-          value: _place,
-          child: PhotoTake(),
-        ),
-      ),
-    );
-    setState(() {});
+    // await Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (_) => ChangeNotifierProvider.value(
+    //       value: _place,
+    //       child: PhotoTake(),
+    //     ),
+    //   ),
+    // );
+    var pfile = await ImagePicker().getImage(source: ImageSource.camera);
+    if (pfile != null) {
+      var file = File(pfile.path);
+      var photoData = await file.readAsBytes();
+      file.delete();
+      _place.addPhoto(photoData);
+    }
+    //setState(() {});
   }
 
   Future<void> _addPhotoFromFile() async {
-    var path = await FlutterFileDialog.pickFile(
-        params: OpenFileDialogParams(
-      dialogType: OpenFileDialogType.image,
-      sourceType: SourceType.photoLibrary,
-    ));
-    if (path != null) {
-      print(path);
-      var file = File(path);
+    // var path = await FlutterFileDialog.pickFile(
+    //     params: OpenFileDialogParams(
+    //   dialogType: OpenFileDialogType.image,
+    //   sourceType: SourceType.photoLibrary,
+    // ));
+    var pfile = await ImagePicker().getImage(source: ImageSource.gallery);
+    if (pfile != null) {
+      var file = File(pfile.path);
       var photoData = await file.readAsBytes();
+      file.delete();
       var approved = await Navigator.push(
           context, MaterialPageRoute(builder: (_) => PhotoApprove(photoData)));
       if (approved != null) {

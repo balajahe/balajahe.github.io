@@ -23,18 +23,19 @@ class Database {
 
     _dbUser = AppUser(
       uid: FirebaseAuth.instance.currentUser.uid,
-      name: (userInfo.exists) ? userInfo.data()['name'] : null,
       registered: FirebaseAuth.instance.currentUser.metadata.creationTime,
+      name: (userInfo.exists) ? userInfo.data()['name'] : null,
+      meta: (userInfo.exists) ? userInfo.data()['meta'] : null,
     );
   }
 
   static AppUser get dbUser => _dbUser;
 
-  static Future<void> setUserInfo({String name}) async {
+  static Future<void> setUserInfo({String name, String meta}) async {
     await FirebaseFirestore.instance
         .collection('Users')
         .doc(FirebaseAuth.instance.currentUser.uid)
-        .set({'name': name});
+        .set({'name': name, 'meta': meta});
     await _loadUserInfo();
   }
 }
