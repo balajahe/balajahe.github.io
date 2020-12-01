@@ -5,7 +5,7 @@ const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
   "manifest.json": "55a695e0731fd0a6880113ca498c07cf",
 "assets/AssetManifest.json": "7b55a61464a1a4ba6adc2c536f91ff3d",
-"assets/NOTICES": "6803617d1e7443550557cd0e9eab6550",
+"assets/NOTICES": "53a836ba345e295c5239edfd5bb6ea50",
 "assets/assets/icon.png": "76de6736df3624d3ccfa356ef9da6905",
 "assets/assets/article.txt": "f2847e90ab258f0be5aa7bb685fc868a",
 "assets/assets/ad.txt": "4b900bf003a27171e1f307da45bb7971",
@@ -14,10 +14,10 @@ const RESOURCES = {
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "b14fcf3ee94e3ace300b192e9e7c8c5d",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
 "privacy.html": "3f9601d6377b8a12616a03751733348e",
-"main.dart.js": "b8b2e13e5508645e4b676fdb5b266806",
-"index.html": "1d449a68747cef738ac4ab5b7b360892",
-"/": "1d449a68747cef738ac4ab5b7b360892",
-"version.json": "0d5e5b600388587cf92c49ed40d447f1",
+"main.dart.js": "2026abd3b58d67fbf2cfc2a9a3c4dad5",
+"index.html": "9a93bda9d25173222cdfa98fcc60dbd6",
+"/": "9a93bda9d25173222cdfa98fcc60dbd6",
+"version.json": "37afc8ef2a6cd6126f6099b224823c1a",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796"

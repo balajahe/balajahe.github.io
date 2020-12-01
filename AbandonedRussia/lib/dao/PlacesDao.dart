@@ -8,11 +8,11 @@ import '../model/App.dart';
 import '../model/Place.dart';
 import '../dao/Database.dart';
 import '../dao/PlacesDaoMobile.dart';
-import '../dao/PlacesDaoWeb.dart';
+//import '../dao/PlacesDaoWeb.dart';
 
 abstract class PlacesDao {
   static PlacesDao get instance =>
-      (kIsWeb) ? PlacesDaoWeb() : PlacesDaoMobile();
+      (kIsWeb) ? PlacesDaoMobile() : PlacesDaoMobile();
 
   Place fromMap(String id, Map<String, dynamic> data) {
     var place = Place(
