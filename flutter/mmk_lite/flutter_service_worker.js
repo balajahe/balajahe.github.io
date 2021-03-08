@@ -4,8 +4,8 @@ const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
   "version.json": "c0a195b4ed2da38979bae4b17be6895d",
-"index.html": "9313f5c4656c5abd61ae3e45e722a509",
-"/": "9313f5c4656c5abd61ae3e45e722a509",
+"index.html": "65c1519630ebe09efa00aa9c77a1b511",
+"/": "65c1519630ebe09efa00aa9c77a1b511",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
@@ -16,7 +16,7 @@ const RESOURCES = {
 "assets/assets/mmk_logo.png": "5406cbbf7e91978ac303edee68b8bf09",
 "assets/NOTICES": "036ec0cde092e5d0e6a37580e9e05702",
 "assets/AssetManifest.json": "210a7a8deead1ba728c76340d33f83d0",
-"main.dart.js": "31f9c6bf6ec63306f9812a5f33fd790d",
+"main.dart.js": "8d8769c8c27b01db2599840b054a589d",
 "manifest.json": "c32c899d2e6f3412ab5de4dcbc395f02"
 };
 
