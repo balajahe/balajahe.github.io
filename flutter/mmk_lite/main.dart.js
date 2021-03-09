@@ -62441,7 +62441,7 @@ s=H.b([new Q.uw(r),T.hv(H.b([new Q.rz(r),L.bA("\u0414\u043b\u044f \u043f\u0440\u
 q=s}else q=H.b([],s)}q=T.hv(q,C.a8,C.rH,C.ag)
 if(b.b===C.mr){s=P.ay(200,60,60,60)
 s=M.bR(r,T.jK(U.aaH(),r,r),s,r,r,r,r,r,r)}else s=M.bR(r,r,r,r,r,r,r,r,r)
-return M.w5(r,T.pQ(C.bC,H.b([new T.cj(new V.az(30,45,30,0),q,r),s],t.Z),C.cK),r,r)},
+return M.w5(r,T.pQ(C.bC,H.b([new T.cj(new V.az(30,40,30,0),q,r),s],t.Z),C.cK),r,r)},
 $C:"$2",
 $R:2,
 $S:397}
