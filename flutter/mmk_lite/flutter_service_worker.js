@@ -4,19 +4,20 @@ const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
   "version.json": "c0a195b4ed2da38979bae4b17be6895d",
-"index.html": "d4a58a8d32c402ede8350d8c2c7223ef",
-"/": "d4a58a8d32c402ede8350d8c2c7223ef",
+"index.html": "01518c27edb6c0400002fa3f84dd4735",
+"/": "01518c27edb6c0400002fa3f84dd4735",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
 "assets/fonts/MaterialIcons-Regular.otf": "1288c9e28052e028aba623321f7826ac",
+"assets/assets/blank_avatar.png": "ffbf271a1fb98ea6316e1d3031dfa889",
 "assets/assets/anon_avatar.png": "96ba6480ecb536c07185a4f2caf43bb9",
 "assets/assets/mmk_logo.png": "5406cbbf7e91978ac303edee68b8bf09",
 "assets/NOTICES": "036ec0cde092e5d0e6a37580e9e05702",
-"assets/AssetManifest.json": "210a7a8deead1ba728c76340d33f83d0",
-"main.dart.js": "894e0ea92551bed00f76bf3403c41ac4",
+"assets/AssetManifest.json": "dce60ef0f913c579269bb120bd288fbb",
+"main.dart.js": "7d0566ca502f46f7432365ab4c884b13",
 "manifest.json": "c32c899d2e6f3412ab5de4dcbc395f02"
 };
 
