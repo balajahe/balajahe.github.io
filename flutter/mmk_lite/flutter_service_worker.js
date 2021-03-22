@@ -4,8 +4,8 @@ const TEMP = 'flutter-temp-cache';
 const CACHE_NAME = 'flutter-app-cache';
 const RESOURCES = {
   "version.json": "c0a195b4ed2da38979bae4b17be6895d",
-"index.html": "4dba45a4a9f84324ae8f8bbbd2f4d939",
-"/": "4dba45a4a9f84324ae8f8bbbd2f4d939",
+"index.html": "1e6f1c5f00d418f26fbf167a1e303c21",
+"/": "1e6f1c5f00d418f26fbf167a1e303c21",
 "icons/Icon-192.png": "ac9a721a12bbc803b44f645561ecb1e1",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
@@ -15,9 +15,9 @@ const RESOURCES = {
 "assets/assets/blank_avatar.png": "ffbf271a1fb98ea6316e1d3031dfa889",
 "assets/assets/anon_avatar.png": "96ba6480ecb536c07185a4f2caf43bb9",
 "assets/assets/mmk_logo.png": "5406cbbf7e91978ac303edee68b8bf09",
-"assets/NOTICES": "8dc86de6c58736df5ee1a0cccb600ca6",
+"assets/NOTICES": "e930ef03ee62aba7b14cbdd24160f503",
 "assets/AssetManifest.json": "dce60ef0f913c579269bb120bd288fbb",
-"main.dart.js": "fee02432e144a7369175f6e256f1c27a",
+"main.dart.js": "b13163f6a05f40c08a0321aa91d5ed18",
 "manifest.json": "c32c899d2e6f3412ab5de4dcbc395f02"
 };
 
@@ -36,7 +36,7 @@ self.addEventListener("install", (event) => {
   return event.waitUntil(
     caches.open(TEMP).then((cache) => {
       return cache.addAll(
-        CORE.map((value) => new Request(value + '?revision=' + RESOURCES[value], {'cache': 'reload'})));
+        CORE.map((value) => new Request(value, {'cache': 'reload'})));
     })
   );
 });
