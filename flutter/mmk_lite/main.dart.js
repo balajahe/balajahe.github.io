@@ -11201,7 +11201,6 @@ abS:function abS(){},
 PW:function(a){var s=0,r=P.a_(t.NG),q,p,o,n,m,l
 var $async$PW=P.W(function(b,c){if(b===1)return P.X(c,r)
 while(true)switch(s){case 0:l=W.EK("file")
-l.accept="image/*"
 l.click()
 p=new W.ht(l,"change",!1,t.L)
 s=3
