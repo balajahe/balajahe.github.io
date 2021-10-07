@@ -9,11 +9,11 @@ const RESOURCES = {
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
-"index.html": "5d8bc509b6789c1d5690d7436df1964b",
-"/": "5d8bc509b6789c1d5690d7436df1964b",
+"index.html": "faed1cf52ff3e3e1dd103f78b3cdcb92",
+"/": "faed1cf52ff3e3e1dd103f78b3cdcb92",
 "assets/fonts/MaterialIcons-Regular.otf": "4e6447691c9509f7acdbf8a931a85ca1",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
-"assets/NOTICES": "cac96c2fa4d47c61ca5dc03f67e2b457",
+"assets/NOTICES": "57241abced515e604b2b563abc766ddb",
 "assets/assets/login-ok.png": "d3dbf72119dbffd888e210366af092c7",
 "assets/assets/login-yandex.png": "3cb9e2363c35f9ff649db8f45b6e921f",
 "assets/assets/login-vk.png": "15cb19201417a56eb662a989e2fac819",
@@ -22,7 +22,7 @@ const RESOURCES = {
 "assets/assets/login-apple.png": "5681cf3451575b501bf285733e5a9b9a",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
 "assets/AssetManifest.json": "8a7e6f8f3c9761c03867b21a39330628",
-"main.dart.js": "4f34afd65f1404f9a26ea227271ca2cc",
+"main.dart.js": "bf3ca94703743e48fa12d79ddf5e7baa",
 "manifest.json": "014c15ef7e64e9b9d669c6faa09041d7"
 };
 
