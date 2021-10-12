@@ -9,8 +9,8 @@ const RESOURCES = {
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-512.png": "96e752610906ba2a93c65f8abe1645f1",
 "favicon.png": "5dcef449791fa27946b3d35ad8803796",
-"index.html": "70ca6829f4a185840ee04ce9e3bfaf1d",
-"/": "70ca6829f4a185840ee04ce9e3bfaf1d",
+"index.html": "4ebb5203447e37a7ae7f5731f97c7511",
+"/": "4ebb5203447e37a7ae7f5731f97c7511",
 "assets/fonts/MaterialIcons-Regular.otf": "4e6447691c9509f7acdbf8a931a85ca1",
 "assets/packages/cupertino_icons/assets/CupertinoIcons.ttf": "6d342eb68f170c97609e9da345464e5e",
 "assets/packages/country_code_picker/i18n/mn.json": "6f69ca7a6a08753da82cb8437f39e9a9",
@@ -338,7 +338,7 @@ const RESOURCES = {
 "assets/packages/country_code_picker/flags/cu.png": "8d4a05799ef3d6bbe07b241dd4398114",
 "assets/packages/country_code_picker/flags/mr.png": "733d747ba4ec8cf120d5ebc0852de34a",
 "assets/packages/country_code_picker/flags/nc.png": "a3ee8fc05db66f7ce64bce533441da7f",
-"assets/NOTICES": "2c26bc3ef75a97eff106789ba6f131df",
+"assets/NOTICES": "de10208251d77c5054c5a5568cc0da1e",
 "assets/assets/login-ok.png": "d3dbf72119dbffd888e210366af092c7",
 "assets/assets/login-yandex.png": "3cb9e2363c35f9ff649db8f45b6e921f",
 "assets/assets/login-vk.png": "15cb19201417a56eb662a989e2fac819",
@@ -348,7 +348,7 @@ const RESOURCES = {
 "assets/assets/login-apple.png": "5681cf3451575b501bf285733e5a9b9a",
 "assets/FontManifest.json": "dc3d03800ccca4601324923c0b1d6d57",
 "assets/AssetManifest.json": "64781841791d792b389f7a2f3440105e",
-"main.dart.js": "547bafc5ca77aeb95bafb7fd5896614c",
+"main.dart.js": "5f859437884a84adc264935bb3d3d549",
 "manifest.json": "014c15ef7e64e9b9d669c6faa09041d7"
 };
 
